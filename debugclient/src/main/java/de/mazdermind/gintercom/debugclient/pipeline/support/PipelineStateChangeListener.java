@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.debugClient.pipeline.support;
+package de.mazdermind.gintercom.debugclient.pipeline.support;
 
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.GstObject;

@@ -1,6 +1,6 @@
-package de.mazdermind.gintercom.debugClient.gui;
+package de.mazdermind.gintercom.debugclient.gui;
 
-import static de.mazdermind.gintercom.debugClient.gui.Constants.BORDER;
+import static de.mazdermind.gintercom.debugclient.gui.Constants.BORDER;
 
 import java.awt.*;
 

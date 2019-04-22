@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.debugClient.gui;
+package de.mazdermind.gintercom.debugclient.gui;
 
 import java.awt.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -13,7 +13,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.debugClient.pipeline.audiolevel.AudioLevelEvent;
+import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
 
 @Component
 @Lazy

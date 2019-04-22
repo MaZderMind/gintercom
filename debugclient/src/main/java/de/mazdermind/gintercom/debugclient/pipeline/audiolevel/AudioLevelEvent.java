@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.debugClient.pipeline.audiolevel;
+package de.mazdermind.gintercom.debugclient.pipeline.audiolevel;
 
 import java.util.List;
 

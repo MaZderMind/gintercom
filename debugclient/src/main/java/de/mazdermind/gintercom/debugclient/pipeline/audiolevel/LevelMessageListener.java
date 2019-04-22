@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.debugClient.pipeline.audiolevel;
+package de.mazdermind.gintercom.debugclient.pipeline.audiolevel;
 
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.message.Message;

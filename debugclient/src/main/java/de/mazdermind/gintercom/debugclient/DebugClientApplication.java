@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.debugClient;
+package de.mazdermind.gintercom.debugclient;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

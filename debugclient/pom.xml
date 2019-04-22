@@ -9,9 +9,9 @@
 		<relativePath/>
 	</parent>
 	<groupId>de.mazdermind.gintercom</groupId>
-	<artifactId>debugClient</artifactId>
+	<artifactId>debugclient</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>debugClient</name>
+	<name>debugclient</name>
 	<description>Debug-Client to test various functionalities of the GIntercom-Matrix</description>
 
 	<properties>

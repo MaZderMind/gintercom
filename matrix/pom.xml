@@ -54,7 +54,6 @@
 			<version>2.4</version>
 		</dependency>
 
-
 		<!-- dev-dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

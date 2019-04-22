@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.debugClient.pipeline;
+package de.mazdermind.gintercom.debugclient.pipeline;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.ImmutableMap;
 
-import de.mazdermind.gintercom.debugClient.pipeline.audiolevel.LevelMessageListener;
-import de.mazdermind.gintercom.debugClient.pipeline.support.PipelineStateChangeListener;
+import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.LevelMessageListener;
+import de.mazdermind.gintercom.debugclient.pipeline.support.PipelineStateChangeListener;
 
 @Component
 public class Pipeline {

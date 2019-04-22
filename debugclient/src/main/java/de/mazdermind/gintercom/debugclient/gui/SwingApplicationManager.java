@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.debugClient.gui;
+package de.mazdermind.gintercom.debugclient.gui;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;
