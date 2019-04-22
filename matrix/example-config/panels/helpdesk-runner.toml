@@ -1,0 +1,9 @@
+display="Helpdesk Runner"
+rxGroups=["helpdesk"]
+txGroups=["helpdesk"]
+buttonsets=["helpdesk"]
+
+[fixedIp]
+ip="127.0.0.1"
+matrixPort=10003
+clientPort=20003

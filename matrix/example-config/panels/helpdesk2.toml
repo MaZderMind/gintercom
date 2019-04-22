@@ -1,0 +1,9 @@
+display="Helpdesk 2"
+rxGroups=["helpdesk"]
+txGroups=["helpdesk"]
+buttonsets=["helpdesk"]
+
+[fixedIp]
+ip="127.0.0.1"
+matrixPort=10002
+clientPort=20002

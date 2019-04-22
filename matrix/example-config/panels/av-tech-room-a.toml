@@ -1,0 +1,15 @@
+display="A/V Tech Romm A"
+rxGroups=["room-a", "av-tech"]
+txGroups=["av-tech"]
+buttonsets=["av-tech"]
+
+[buttons.6]
+display="Room A Broadcast"
+action="ptt"
+targetType="group"
+target="room-a"
+
+[fixedIp]
+ip="127.0.0.1"
+matrixPort=10004
+clientPort=20004
