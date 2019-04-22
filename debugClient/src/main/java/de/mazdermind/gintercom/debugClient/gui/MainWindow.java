@@ -11,11 +11,11 @@ import javax.swing.border.EmptyBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@Lazy
 public class MainWindow extends JFrame {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(640, 480);
 	private static Logger log = LoggerFactory.getLogger(MainWindow.class);

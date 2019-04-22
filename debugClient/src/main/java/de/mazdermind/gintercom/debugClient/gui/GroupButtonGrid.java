@@ -9,11 +9,11 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@Lazy
 public class GroupButtonGrid extends JPanel {
 	private final static int ROWS = 6;
 	private final static int COLS = 2;
