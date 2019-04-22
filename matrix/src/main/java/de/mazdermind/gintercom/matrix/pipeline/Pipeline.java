@@ -60,7 +60,7 @@ public class Pipeline {
 		});
 
 		log.debug("Generating Debug-dot-File (if GST_DEBUG_DUMP_DOT_DIR Env-Variable is set)");
-		pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, "gintercom");
+		pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, "matrix");
 
 		pipeline.getBus().connect((Bus.EOS) pipelineStateChangeListener);
 		pipeline.getBus().connect((Bus.STATE_CHANGED) pipelineStateChangeListener);
