@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
-import de.mazdermind.gintercom.matrix.pipeline.support.ElementFactory;
+import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
+import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 
 @Component
 @Scope("prototype")

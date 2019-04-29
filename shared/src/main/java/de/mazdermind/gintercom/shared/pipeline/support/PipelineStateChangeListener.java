@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.pipeline.support;
+package de.mazdermind.gintercom.shared.pipeline.support;
 
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.GstObject;
@@ -21,7 +21,7 @@ public class PipelineStateChangeListener implements Bus.EOS, Bus.STATE_CHANGED {
 	@Override
 	public void stateChanged(GstObject source, State old, State current, State pending) {
 		if (source instanceof Pipeline) {
-			log.info("State changed from {} to {} pending {}", old, current, pending);
+			log.info("State changed from {} to {} pending {} -- YAY", old, current, pending);
 		} else {
 			log.trace("State changed from {} to {} pending {}", old, current, pending);
 		}

@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
-import de.mazdermind.gintercom.matrix.pipeline.support.PipelineStateChangeListener;
+import de.mazdermind.gintercom.shared.pipeline.support.PipelineStateChangeListener;
 
 @Component
 public class Pipeline {

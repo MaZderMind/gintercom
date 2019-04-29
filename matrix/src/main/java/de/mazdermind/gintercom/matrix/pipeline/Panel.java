@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 
 @Component
 @Scope("prototype")

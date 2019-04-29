@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
-import de.mazdermind.gintercom.matrix.pipeline.support.ElementFactory;
+import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 
 @Component
 @Scope("prototype")

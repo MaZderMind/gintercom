@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 import com.google.common.collect.ImmutableMap;
 
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
-import de.mazdermind.gintercom.debugclient.pipeline.support.PipelineStateChangeListener;
+import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
+import de.mazdermind.gintercom.shared.pipeline.support.PipelineStateChangeListener;
 
 @Component
 public class Pipeline {

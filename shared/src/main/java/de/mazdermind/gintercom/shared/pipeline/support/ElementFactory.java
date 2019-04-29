@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.pipeline.support;
+package de.mazdermind.gintercom.shared.pipeline.support;
 
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Caps;

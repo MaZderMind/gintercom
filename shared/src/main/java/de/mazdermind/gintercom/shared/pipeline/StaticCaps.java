@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.debugclient.pipeline;
+package de.mazdermind.gintercom.shared.pipeline;
 
 import org.freedesktop.gstreamer.Caps;
 
