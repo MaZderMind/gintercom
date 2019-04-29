@@ -67,9 +67,9 @@ public class Pipeline {
 				.put("rtpcaps", StaticCaps.RTP)
 				.put("rawcaps", StaticCaps.AUDIO)
 				.put("rawcaps_be", StaticCaps.AUDIO_BE)
-				.put("matrix_host", "127.0.0.1")
-				.put("matrix_port", 20001)
-				.put("client_port", 10001)
+				.put("matrix_host", "127.0.0.1") // FIXME from Args
+				.put("matrix_port", 20001) // FIXME from Args
+				.put("client_port", 10001) // FIXME from Args
 				.build()
 		);
 
