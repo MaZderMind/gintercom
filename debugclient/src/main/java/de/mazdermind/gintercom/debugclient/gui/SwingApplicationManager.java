@@ -3,6 +3,7 @@ package de.mazdermind.gintercom.debugclient.gui;
 import java.awt.*;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.swing.*;
 
 import org.slf4j.Logger;
@@ -39,6 +40,14 @@ public class SwingApplicationManager {
 
 			log.info("Showing MainWindow");
 			mainWindow.setVisible(true);
+		});
+	}
+
+	@PreDestroy
+	public void dispose() {
+		EventQueue.invokeLater(() -> {
+			log.info("Application Shutting down, disposing MainWindow");
+			mainWindow.dispose();
 		});
 	}
 }
