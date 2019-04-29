@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import com.google.common.annotations.VisibleForTesting;
 
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
-import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
+import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEventEmitter;
 
 @Component
 @Scope("prototype")
@@ -26,10 +26,10 @@ public class AudioLevelDisplay extends JPanel {
 	private static int SPACING = 1;
 	private final AtomicReference<AudioLevelEvent> lastAudioLevelEvent = new AtomicReference<>();
 
-	public AudioLevelDisplay(@Autowired AudioLevelMessageListener audioLevelMessageListener) {
+	public AudioLevelDisplay(@Autowired AudioLevelEventEmitter eventEmitter) {
 		super();
 		log.debug("Subscribing for Audio-Level Events");
-		audioLevelMessageListener.getAudioLevelEventEmitter().subscribe(this::audioLevelEventHandler);
+		eventEmitter.subscribe(this::audioLevelEventHandler);
 	}
 
 	/**
