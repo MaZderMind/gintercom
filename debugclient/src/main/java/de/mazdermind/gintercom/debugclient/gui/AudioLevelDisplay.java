@@ -14,19 +14,17 @@ import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
-import de.mazdermind.gintercom.debugclient.util.Subscription;
 
 @Component
 @Scope("prototype")
 public class AudioLevelDisplay extends JPanel {
 	private static Logger log = LoggerFactory.getLogger(AudioLevelDisplay.class);
 	private final AtomicReference<AudioLevelEvent> lastAudioLevelEvent = new AtomicReference<>();
-	private final Subscription subscription;
 
 	public AudioLevelDisplay(@Autowired AudioLevelMessageListener audioLevelMessageListener) {
 		super();
 		log.debug("Subscribing for Audio-Level Events");
-		subscription = audioLevelMessageListener.getAudioLevelEventEmitter().subscribe(this::audioLevelEventHandler);
+		audioLevelMessageListener.getAudioLevelEventEmitter().subscribe(this::audioLevelEventHandler);
 	}
 
 	private void audioLevelEventHandler(AudioLevelEvent audioLevelEvent) {
@@ -58,12 +56,5 @@ public class AudioLevelDisplay extends JPanel {
 			log.info("Configuring");
 			setPreferredSize(new Dimension(48, Integer.MAX_VALUE));
 		});
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		log.debug("Unsubscribing from Audio-Level Events");
-		subscription.unsubscribe();
 	}
 }
