@@ -20,8 +20,10 @@ import de.mazdermind.gintercom.shared.pipeline.support.PipelineStateChangeListen
 
 @Component
 public class Pipeline {
-	private static final Logger log = LoggerFactory.getLogger(Pipeline.class);
+	private static final int MIX_PAD_MICROPHONE = 1;
+	private static final int MIX_PAD_TONE = 0;
 
+	private static final Logger log = LoggerFactory.getLogger(Pipeline.class);
 	private final PipelineStateChangeListener pipelineStateChangeListener;
 	private final AudioLevelMessageListener levelMessageListener;
 	private org.freedesktop.gstreamer.Pipeline pipeline;
@@ -91,5 +93,19 @@ public class Pipeline {
 	public void stop() {
 		log.info("stopping pipeline");
 		pipeline.stop();
+	}
+
+	public void configureTone(boolean status) {
+		log.info("{} Tone", status ? "Enabling" : "Disabling");
+		pipeline.getElementByName("mix").getSinkPads().get(MIX_PAD_TONE).set("volume", status ? 1.0 : 0.0);
+	}
+
+	public void configureMicrohpne(Boolean status) {
+		log.info("{} Microphone", status ? "Enabling" : "Disabling");
+		pipeline.getElementByName("mix").getSinkPads().get(MIX_PAD_MICROPHONE).set("volume", status ? 1.0 : 0.0);
+	}
+
+	public void configureSpeaker(Boolean status) {
+		pipeline.getElementByName("speaker_volume").set("volume", status ? 1.0 : 0.0);
 	}
 }

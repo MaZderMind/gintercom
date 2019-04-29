@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class GroupButtonGrid extends JPanel {
-	private final static int ROWS = 6;
+	private final static int ROWS = 3;
 	private final static int COLS = 2;
 	private static Logger log = LoggerFactory.getLogger(GroupButtonGrid.class);
 
@@ -25,6 +25,7 @@ public class GroupButtonGrid extends JPanel {
 			log.info("Configuring");
 			setLayout(new GridLayout(ROWS, COLS, BORDER, BORDER));
 			setBorder(BorderFactory.createEmptyBorder(0, 0, 0, BORDER));
+			setPreferredSize(new Dimension(400, Integer.MAX_VALUE));
 
 			for (int row = 0; row < ROWS; row++) {
 				for (int col = 0; col < COLS; col++) {
