@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.ImmutableMap;
 
-import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.LevelMessageListener;
+import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
 import de.mazdermind.gintercom.debugclient.pipeline.support.PipelineStateChangeListener;
 
 @Component
@@ -22,12 +22,12 @@ public class Pipeline {
 	private static final Logger log = LoggerFactory.getLogger(Pipeline.class);
 
 	private final PipelineStateChangeListener pipelineStateChangeListener;
-	private final LevelMessageListener levelMessageListener;
+	private final AudioLevelMessageListener levelMessageListener;
 	private org.freedesktop.gstreamer.Pipeline pipeline;
 
 	public Pipeline(
 		@Autowired PipelineStateChangeListener pipelineStateChangeListener,
-		@Autowired LevelMessageListener levelMessageListener
+		@Autowired AudioLevelMessageListener levelMessageListener
 	) {
 		this.pipelineStateChangeListener = pipelineStateChangeListener;
 		this.levelMessageListener = levelMessageListener;

@@ -45,7 +45,7 @@ public class SwingApplicationManager {
 				@Override
 				public void windowClosed(WindowEvent e) {
 					log.info("MainWindow closed, shutting down Application");
-					applicationContext.stop();
+					applicationContext.close();
 				}
 			});
 

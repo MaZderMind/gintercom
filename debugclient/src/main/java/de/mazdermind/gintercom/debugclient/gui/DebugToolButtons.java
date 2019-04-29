@@ -9,18 +9,18 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
+@Scope("prototype")
 public class DebugToolButtons extends JPanel {
 	private static Logger log = LoggerFactory.getLogger(DebugToolButtons.class);
 
 	@PostConstruct
 	public void configure() {
 		EventQueue.invokeLater(() -> {
-			log.info("Configuring GroupButtonGrid");
+			log.info("Configuring");
 			setLayout(new GridLayout(4, 1, BORDER, BORDER));
 			setBorder(BorderFactory.createEmptyBorder(0, BORDER, 0, 0));
 

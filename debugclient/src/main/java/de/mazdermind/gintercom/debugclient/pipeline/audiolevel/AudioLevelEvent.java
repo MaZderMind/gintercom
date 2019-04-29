@@ -3,18 +3,16 @@ package de.mazdermind.gintercom.debugclient.pipeline.audiolevel;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.context.ApplicationEvent;
 
 import com.google.common.base.Objects;
 import com.google.common.primitives.Doubles;
 
-public class AudioLevelEvent extends ApplicationEvent {
+public class AudioLevelEvent {
 	private final double[] peak;
 	private final double[] decay;
 	private final double[] rms;
 
-	public AudioLevelEvent(Object source, double[] peak, double[] decay, double[] rms) {
-		super(source);
+	public AudioLevelEvent(double[] peak, double[] decay, double[] rms) {
 		assert peak.length == decay.length && decay.length == rms.length;
 
 		this.peak = peak;
@@ -39,16 +37,6 @@ public class AudioLevelEvent extends ApplicationEvent {
 	}
 
 	@Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("#channels", getChannelCount())
-			.append("peak", peak)
-			.append("decay", decay)
-			.append("rms", rms)
-			.toString();
-	}
-
-	@Override
 	public int hashCode() {
 		return Objects.hashCode(peak, decay, rms);
 	}
@@ -61,5 +49,15 @@ public class AudioLevelEvent extends ApplicationEvent {
 		return Objects.equal(peak, that.peak) &&
 			Objects.equal(decay, that.decay) &&
 			Objects.equal(rms, that.rms);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+			.append("#channels", getChannelCount())
+			.append("peak", peak)
+			.append("decay", decay)
+			.append("rms", rms)
+			.toString();
 	}
 }

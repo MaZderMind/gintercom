@@ -10,34 +10,29 @@ import javax.swing.border.EmptyBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
+@Scope("prototype")
 public class MainWindow extends JFrame {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(640, 480);
 	private static Logger log = LoggerFactory.getLogger(MainWindow.class);
-	private final GroupButtonGrid groupButtonGrid;
-	private final AudioLevelDisplay audioLevelDisplay;
-	private final DebugToolButtons debugToolButtons;
+	private final BeanFactory beanFactory;
 
 	public MainWindow(
-		@Autowired GroupButtonGrid groupButtonGrid,
-		@Autowired AudioLevelDisplay audioLevelDisplay,
-		@Autowired DebugToolButtons debugToolButtons
+		@Autowired BeanFactory beanFactory
 	) {
 		super();
-		this.groupButtonGrid = groupButtonGrid;
-		this.audioLevelDisplay = audioLevelDisplay;
-		this.debugToolButtons = debugToolButtons;
+		this.beanFactory = beanFactory;
 	}
 
 	@PostConstruct
 	public void configure() {
 		EventQueue.invokeLater(() -> {
-			log.info("Configuring MainWindow");
+			log.info("Configuring");
 			setTitle("GIntercom Debug Client");
 			setSize(INITIAL_DIMENSION);
 
@@ -46,9 +41,9 @@ public class MainWindow extends JFrame {
 			contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 			setContentPane(contentPane);
 
-			add(groupButtonGrid);
-			add(audioLevelDisplay);
-			add(debugToolButtons);
+			add(beanFactory.getBean(GroupButtonGrid.class));
+			add(beanFactory.getBean(AudioLevelDisplay.class));
+			add(beanFactory.getBean(DebugToolButtons.class));
 		});
 	}
 }

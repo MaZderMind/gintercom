@@ -8,18 +8,35 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.event.EventListener;
-import org.springframework.lang.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
+import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
+import de.mazdermind.gintercom.debugclient.util.Subscription;
 
 @Component
-@Lazy
+@Scope("prototype")
 public class AudioLevelDisplay extends JPanel {
 	private static Logger log = LoggerFactory.getLogger(AudioLevelDisplay.class);
 	private final AtomicReference<AudioLevelEvent> lastAudioLevelEvent = new AtomicReference<>();
+	private final Subscription subscription;
+
+	public AudioLevelDisplay(@Autowired AudioLevelMessageListener audioLevelMessageListener) {
+		super();
+		log.debug("Subscribing for Audio-Level Events");
+		subscription = audioLevelMessageListener.getAudioLevelEventEmitter().subscribe(this::audioLevelEventHandler);
+	}
+
+	private void audioLevelEventHandler(AudioLevelEvent audioLevelEvent) {
+		log.debug("Received Audio-Level Event");
+		lastAudioLevelEvent.set(audioLevelEvent);
+		EventQueue.invokeLater(() -> {
+			this.invalidate();
+			this.repaint();
+		});
+	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -38,16 +55,15 @@ public class AudioLevelDisplay extends JPanel {
 	@PostConstruct
 	public void configure() {
 		EventQueue.invokeLater(() -> {
+			log.info("Configuring");
 			setPreferredSize(new Dimension(48, Integer.MAX_VALUE));
 		});
 	}
 
-	@EventListener
-	public void onAudioLevelEvent(@NonNull AudioLevelEvent audioLevelEvent) {
-		this.lastAudioLevelEvent.set(audioLevelEvent);
-		EventQueue.invokeLater(() -> {
-			this.invalidate();
-			this.repaint();
-		});
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		log.debug("Unsubscribing from Audio-Level Events");
+		subscription.unsubscribe();
 	}
 }
