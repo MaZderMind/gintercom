@@ -9,7 +9,7 @@ public class OhaiMessage {
 	private String clientId;
 
 	@NotNull
-	private String protocolVersion = "1.0";
+	private Integer protocolVersion;
 
 	@NotNull
 	private String clientModel;
@@ -26,11 +26,11 @@ public class OhaiMessage {
 		return this;
 	}
 
-	public String getProtocolVersion() {
+	public Integer getProtocolVersion() {
 		return protocolVersion;
 	}
 
-	public OhaiMessage setProtocolVersion(String protocolVersion) {
+	public OhaiMessage setProtocolVersion(Integer protocolVersion) {
 		this.protocolVersion = protocolVersion;
 		return this;
 	}

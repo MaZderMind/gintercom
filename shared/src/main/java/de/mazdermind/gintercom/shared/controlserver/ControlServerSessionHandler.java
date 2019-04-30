@@ -34,6 +34,7 @@ public class ControlServerSessionHandler implements StompSessionHandler {
 		stompSession.send("/ohai", new OhaiMessage()
 			.setClientId("foo")
 			.setClientModel("bar")
+			.setProtocolVersion(1)
 			.setCapabilities(new Capabilities()
 				.setButtons(ImmutableList.of("l", "m", "r"))));
 	}
