@@ -6,9 +6,11 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.freedesktop.gstreamer.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
+@Lazy
 public class PipelineStateChangeListener implements Bus.EOS, Bus.STATE_CHANGED {
 	private static Logger log = LoggerFactory.getLogger(PipelineStateChangeListener.class);
 
