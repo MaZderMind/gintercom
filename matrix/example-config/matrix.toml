@@ -1,9 +1,5 @@
 display="C3VOC Intercom"
 
-[controlserver]
-bind="0.0.0.0"
-port=9999
-
 [webui]
 bind="0.0.0.0"
 port=2380
