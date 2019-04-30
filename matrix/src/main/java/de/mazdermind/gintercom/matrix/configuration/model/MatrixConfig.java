@@ -13,10 +13,6 @@ public class MatrixConfig {
 
 	@Valid
 	@NotNull
-	private ServerConfig controlserver;
-
-	@Valid
-	@NotNull
 	private RtpConfig rtp;
 
 	public String getDisplay() {
@@ -25,10 +21,6 @@ public class MatrixConfig {
 
 	public ServerConfig getWebui() {
 		return webui;
-	}
-
-	public ServerConfig getControlserver() {
-		return controlserver;
 	}
 
 	public RtpConfig getRtp() {

@@ -1,0 +1,8 @@
+display="C3VOC Intercom"
+
+[webui]
+bind="0.0.0.0"
+port=2380
+
+[rtp]
+jitterbuffer=50 #ms

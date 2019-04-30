@@ -7,6 +7,9 @@ clean:
 package:
 	mvn package
 
+test:
+	mvn test
+
 # run development
 run-matrix:
 	GST_DEBUG_DUMP_DOT_DIR=./matrix/ mvn --projects matrix --also-make spring-boot:run -Dspring-boot.run.arguments="--config-directory=./matrix/example-config"

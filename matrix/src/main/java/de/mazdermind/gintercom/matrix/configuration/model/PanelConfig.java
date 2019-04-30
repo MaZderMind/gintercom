@@ -18,7 +18,7 @@ public class PanelConfig {
 	private Set<String> txGroups = emptySet();
 	private Set<String> buttonsets = emptySet();
 
-	@Valid
+	@Valid // TODO re-evaluate if required, add Tests if it is
 	private PanelFixedIpConfiguration fixedIp = null;
 
 	@Valid
