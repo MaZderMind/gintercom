@@ -10,23 +10,29 @@ import javax.swing.border.EmptyBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("prototype")
+@DependsOn(SwingGuiConfigurer.BEAN_NAME)
 public class MainWindow extends JFrame {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(640, 480);
 	private static Logger log = LoggerFactory.getLogger(MainWindow.class);
-	private final BeanFactory beanFactory;
+	private final GroupButtonGrid groupButtonGrid;
+	private final AudioLevelDisplay audioLevelDisplay;
+	private final DebugToolButtons debugToolButtons;
+
 
 	public MainWindow(
-		@Autowired BeanFactory beanFactory
+		@Autowired GroupButtonGrid groupButtonGrid,
+		@Autowired AudioLevelDisplay audioLevelDisplay,
+		@Autowired DebugToolButtons debugToolButtons
 	) {
 		super();
-		this.beanFactory = beanFactory;
+		this.groupButtonGrid = groupButtonGrid;
+		this.audioLevelDisplay = audioLevelDisplay;
+		this.debugToolButtons = debugToolButtons;
 	}
 
 	@PostConstruct
@@ -41,9 +47,9 @@ public class MainWindow extends JFrame {
 			contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 			setContentPane(contentPane);
 
-			add(beanFactory.getBean(GroupButtonGrid.class));
-			add(beanFactory.getBean(AudioLevelDisplay.class));
-			add(beanFactory.getBean(DebugToolButtons.class));
+			add(groupButtonGrid);
+			add(audioLevelDisplay);
+			add(debugToolButtons);
 		});
 	}
 }

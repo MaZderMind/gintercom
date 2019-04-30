@@ -8,33 +8,26 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 @Component
+@DependsOn(SwingGuiConfigurer.BEAN_NAME)
 public class SwingApplicationManager {
 	private static Logger log = LoggerFactory.getLogger(SwingApplicationManager.class);
 
-	private final BeanFactory beanFactory;
 	private MainWindow mainWindow;
 
 	public SwingApplicationManager(
-		@Autowired BeanFactory beanFactory
+		@Autowired MainWindow mainWindow
 	) {
-		this.beanFactory = beanFactory;
+		this.mainWindow = mainWindow;
 	}
 
 	@PostConstruct
-	public void show() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-		log.info("Configuring UI-Framework");
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		JFrame.setDefaultLookAndFeelDecorated(true);
-
+	public void show() {
 		EventQueue.invokeLater(() -> {
-			log.info("Creating MainWindow");
-			mainWindow = beanFactory.getBean(MainWindow.class);
-
 			// EXIT_ON_CLOSE will destroy the Spring Context correctly via a JVM Shutdown Hook
 			mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 

@@ -1,13 +1,12 @@
 package de.mazdermind.gintercom.debugclient.gui.components;
 
 import java.awt.event.ItemEvent;
+import java.util.function.Consumer;
 
 import javax.swing.*;
 
-import de.mazdermind.gintercom.debugclient.util.EventEmitter;
-
 public class ToggleButton extends JToggleButton {
-	private final EventEmitter<Boolean> stateChangedEventEmitter = new EventEmitter<>();
+	private Consumer<Boolean> stateChangedHandler;
 
 	public ToggleButton(String inactiveText, String activeText) {
 		setText(inactiveText);
@@ -15,15 +14,22 @@ public class ToggleButton extends JToggleButton {
 		addItemListener(event -> {
 			if (event.getStateChange() == ItemEvent.SELECTED) {
 				setText(activeText);
-				stateChangedEventEmitter.emit(true);
+				callStateChangedHandler(true);
 			} else if (event.getStateChange() == ItemEvent.DESELECTED) {
 				setText(inactiveText);
-				stateChangedEventEmitter.emit(false);
+				callStateChangedHandler(false);
 			}
 		});
 	}
 
-	public EventEmitter<Boolean> getStateChangedEventEmitter() {
-		return stateChangedEventEmitter;
+	private void callStateChangedHandler(boolean state) {
+		if (stateChangedHandler != null) {
+			stateChangedHandler.accept(state);
+		}
+	}
+
+	public ToggleButton setStateChangedHandler(Consumer<Boolean> consumer) {
+		this.stateChangedHandler = consumer;
+		return this;
 	}
 }

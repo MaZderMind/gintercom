@@ -10,27 +10,20 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.google.common.annotations.VisibleForTesting;
 
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
-import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEventEmitter;
 
 @Component
-@Scope("prototype")
+@DependsOn(SwingGuiConfigurer.BEAN_NAME)
 public class AudioLevelDisplay extends JPanel {
 	private static Logger log = LoggerFactory.getLogger(AudioLevelDisplay.class);
 	private static int SPACING = 1;
 	private final AtomicReference<AudioLevelEvent> lastAudioLevelEvent = new AtomicReference<>();
-
-	public AudioLevelDisplay(@Autowired AudioLevelEventEmitter eventEmitter) {
-		super();
-		log.debug("Subscribing for Audio-Level Events");
-		eventEmitter.subscribe(this::audioLevelEventHandler);
-	}
 
 	/**
 	 * Normalized a Decibel-Value to 0…1
@@ -99,7 +92,8 @@ public class AudioLevelDisplay extends JPanel {
 		});
 	}
 
-	private void audioLevelEventHandler(AudioLevelEvent audioLevelEvent) {
+	@EventListener
+	public void audioLevelEventHandler(AudioLevelEvent audioLevelEvent) {
 		log.trace("Received Audio-Level Event");
 		lastAudioLevelEvent.set(audioLevelEvent);
 		EventQueue.invokeLater(() -> {

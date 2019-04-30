@@ -4,17 +4,18 @@ import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.message.Message;
 import org.freedesktop.gstreamer.message.MessageType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AudioLevelMessageListener implements Bus.MESSAGE {
 	private static final String ELEMENT_NAME = "audiolevel";
-	private final AudioLevelEventEmitter eventEmitter;
+	private final ApplicationEventPublisher eventPublisher;
 
 	public AudioLevelMessageListener(
-		@Autowired AudioLevelEventEmitter eventEmitter
+		@Autowired ApplicationEventPublisher eventPublisher
 	) {
-		this.eventEmitter = eventEmitter;
+		this.eventPublisher = eventPublisher;
 	}
 
 	@Override
@@ -29,6 +30,6 @@ public class AudioLevelMessageListener implements Bus.MESSAGE {
 		double[] decay = message.getStructure().getDoubles("decay");
 		double[] rms = message.getStructure().getDoubles("rms");
 
-		eventEmitter.emit(new AudioLevelEvent(peak, decay, rms));
+		eventPublisher.publishEvent(new AudioLevelEvent(peak, decay, rms));
 	}
 }
