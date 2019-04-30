@@ -5,11 +5,9 @@ import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
@@ -18,13 +16,6 @@ import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 @Scope("prototype")
 public class PanelTransmitPath {
 	private static Logger log = LoggerFactory.getLogger(PanelTransmitPath.class);
-	private final Config config;
-
-	public PanelTransmitPath(
-		@Autowired Config config
-	) {
-		this.config = config;
-	}
 
 	public void configure(Pipeline pipeline, String panelId, PanelConfig panelConfig) {
 		log.info("Creating Transmit-Path for Panel {}", panelId);
