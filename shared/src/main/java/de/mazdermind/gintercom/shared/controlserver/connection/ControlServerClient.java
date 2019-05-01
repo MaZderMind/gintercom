@@ -73,12 +73,12 @@ public class ControlServerClient {
 
 	@PreDestroy
 	public void disconnect() {
-		if (stompSession != null) {
+		if (stompSession != null && stompSession.isConnected()) {
 			log.info("Disconnecting");
 			stompSession.disconnect();
 		}
 
-		if (stompClient != null) {
+		if (stompClient != null && stompClient.isRunning()) {
 			log.info("Stopping Client");
 			stompClient.stop();
 		}
