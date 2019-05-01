@@ -6,8 +6,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import de.mazdermind.gintercom.shared.controlserver.model.ohai.OhaiMessage;
-import de.mazdermind.gintercom.shared.controlserver.model.provision.ProvisionMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 
 @Controller
 public class PanelRegistrationController {

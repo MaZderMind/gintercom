@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.shared.controlserver.model.provision;
+package de.mazdermind.gintercom.shared.controlserver.messages.provision;
 
 import javax.validation.constraints.NotNull;
 

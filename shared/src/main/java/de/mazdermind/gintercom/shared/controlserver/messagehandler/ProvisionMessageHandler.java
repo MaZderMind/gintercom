@@ -1,17 +1,20 @@
-package de.mazdermind.gintercom.shared.controlserver;
+package de.mazdermind.gintercom.shared.controlserver.messagehandler;
 
 import java.lang.reflect.Type;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.shared.controlserver.model.provision.ProvisionMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 
 @Component
+@Lazy
+public
 class ProvisionMessageHandler implements StompFrameHandler {
 	private static Logger log = LoggerFactory.getLogger(ProvisionMessageHandler.class);
 

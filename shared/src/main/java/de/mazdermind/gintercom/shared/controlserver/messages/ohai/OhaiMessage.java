@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.shared.controlserver.model.ohai;
+package de.mazdermind.gintercom.shared.controlserver.messages.ohai;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

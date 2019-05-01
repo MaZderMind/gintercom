@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.shared.controlserver;
+package de.mazdermind.gintercom.shared.controlserver.connection;
 
 import java.lang.reflect.Type;
 
@@ -17,8 +17,9 @@ import org.springframework.stereotype.Component;
 
 import com.google.common.collect.ImmutableList;
 
-import de.mazdermind.gintercom.shared.controlserver.model.ohai.Capabilities;
-import de.mazdermind.gintercom.shared.controlserver.model.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messagehandler.ProvisionMessageHandler;
+import de.mazdermind.gintercom.shared.controlserver.messages.ohai.Capabilities;
+import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
 
 @Component
 @Lazy

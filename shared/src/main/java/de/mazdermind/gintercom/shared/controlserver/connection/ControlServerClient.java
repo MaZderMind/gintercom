@@ -1,4 +1,8 @@
-package de.mazdermind.gintercom.shared.controlserver;
+package de.mazdermind.gintercom.shared.controlserver.connection;
+
+import java.net.InetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.annotation.PreDestroy;
 
@@ -25,14 +29,20 @@ public class ControlServerClient {
 		log.info("Created");
 	}
 
-	public void connect() {
-		log.info("connecting to Server");
+	public void connect(InetAddress address, int port) {
+		URI websocketUri = null;
+		try {
+			websocketUri = new URI("ws", null, address.getHostAddress(), port, "/ws", null, null);
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e); // TODO decide what to do
+		}
+		log.info("connecting to Websocket-Server at {}", websocketUri);
 		StandardWebSocketClient client = new StandardWebSocketClient();
 
 		stompClient = new WebSocketStompClient(client);
 		stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
-		stompClient.connect("ws://localhost:8080/ws", sessionHandler);
+		stompClient.connect(websocketUri.toString(), sessionHandler);
 	}
 
 	@PreDestroy
