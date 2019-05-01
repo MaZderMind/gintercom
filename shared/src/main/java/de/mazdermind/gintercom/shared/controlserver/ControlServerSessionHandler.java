@@ -2,8 +2,11 @@ package de.mazdermind.gintercom.shared.controlserver;
 
 import java.lang.reflect.Type;
 
+import javax.annotation.PreDestroy;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -21,15 +24,25 @@ import de.mazdermind.gintercom.shared.controlserver.model.ohai.OhaiMessage;
 @Lazy
 public class ControlServerSessionHandler implements StompSessionHandler {
 	private static Logger log = LoggerFactory.getLogger(ControlServerSessionHandler.class);
+	private final ProvisionMessageHandler provisionMessageHandler;
+	private StompSession stompSession;
 
 	public ControlServerSessionHandler(
+		@Autowired ProvisionMessageHandler provisionMessageHandler
 	) {
+		this.provisionMessageHandler = provisionMessageHandler;
 		log.info("Created");
 	}
 
 	@Override
 	public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
-		stompSession.subscribe("/provision", new ProvisionMessageHandler());
+		if (this.stompSession != null) {
+			log.warn("Re-Connect -- closing existing Session");
+			this.stompSession.disconnect();
+		}
+
+		this.stompSession = stompSession;
+		stompSession.subscribe("/provision", provisionMessageHandler);
 
 		stompSession.send("/ohai", new OhaiMessage()
 			.setClientId("foo")
@@ -38,6 +51,7 @@ public class ControlServerSessionHandler implements StompSessionHandler {
 			.setCapabilities(new Capabilities()
 				.setButtons(ImmutableList.of("l", "m", "r"))));
 	}
+
 
 	@Override
 	public void handleException(@NonNull StompSession stompSession, StompCommand stompCommand, @NonNull StompHeaders stompHeaders, @NonNull byte[] bytes, @NonNull Throwable throwable) {
@@ -60,4 +74,11 @@ public class ControlServerSessionHandler implements StompSessionHandler {
 		log.info("handleFrame");
 	}
 
+	@PreDestroy
+	public void disconnectSession() {
+		if (stompSession != null) {
+			log.warn("Closing existing Session");
+			stompSession.disconnect();
+		}
+	}
 }

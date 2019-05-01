@@ -18,7 +18,9 @@ public class ControlServerClient {
 	private final ControlServerSessionHandler sessionHandler;
 	private WebSocketStompClient stompClient;
 
-	public ControlServerClient(@Autowired ControlServerSessionHandler sessionHandler) {
+	public ControlServerClient(
+		@Autowired ControlServerSessionHandler sessionHandler
+	) {
 		this.sessionHandler = sessionHandler;
 		log.info("Created");
 	}
@@ -36,6 +38,7 @@ public class ControlServerClient {
 	@PreDestroy
 	public void disconnect() {
 		if (stompClient != null) {
+			log.info("Stopping");
 			stompClient.stop();
 		}
 	}

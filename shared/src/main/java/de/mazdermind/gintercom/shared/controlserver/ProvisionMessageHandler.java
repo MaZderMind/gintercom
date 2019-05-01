@@ -7,9 +7,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.shared.controlserver.model.provision.ProvisionMessage;
 
+@Component
 class ProvisionMessageHandler implements StompFrameHandler {
 	private static Logger log = LoggerFactory.getLogger(ProvisionMessageHandler.class);
 
