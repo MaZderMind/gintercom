@@ -12,15 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SwingApplicationManager {
-	private static Logger log = LoggerFactory.getLogger(SwingApplicationManager.class);
+public class GuiManager {
+	private static Logger log = LoggerFactory.getLogger(GuiManager.class);
 
+	private final ConnectionLifecycleModalManager connectionLifecycleModalManager;
 	private MainWindowManager mainWindowManager;
 	private JFrame mainWindow;
 
-	public SwingApplicationManager(
+	public GuiManager(
+		@Autowired ConnectionLifecycleModalManager connectionLifecycleModalManager,
 		@Autowired MainWindowManager mainWindowManager
 	) {
+		this.connectionLifecycleModalManager = connectionLifecycleModalManager;
 		this.mainWindowManager = mainWindowManager;
 	}
 
@@ -31,13 +34,17 @@ public class SwingApplicationManager {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 
 		EventQueue.invokeLater(() -> {
+			log.info("Showing MainWindow");
 			mainWindow = mainWindowManager.create();
+			mainWindow.setLocationRelativeTo(null);
 
 			// EXIT_ON_CLOSE will destroy the Spring Context correctly via a JVM Shutdown Hook
 			mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-			log.info("Showing MainWindow");
 			mainWindow.setVisible(true);
+
+			log.info("Showing ConnectionLifecycleModal");
+			JDialog connectionLifecycleModal = connectionLifecycleModalManager.create(mainWindow);
+			connectionLifecycleModal.setVisible(true);
 		});
 	}
 
