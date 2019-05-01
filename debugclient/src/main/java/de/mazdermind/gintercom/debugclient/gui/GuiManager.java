@@ -42,9 +42,8 @@ public class GuiManager {
 			mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			mainWindow.setVisible(true);
 
-			log.info("Showing ConnectionLifecycleModal");
-			JDialog connectionLifecycleModal = connectionLifecycleModalManager.create(mainWindow);
-			connectionLifecycleModal.setVisible(true);
+			log.info("Creating ConnectionLifecycleModal");
+			connectionLifecycleModalManager.create(mainWindow);
 		});
 	}
 

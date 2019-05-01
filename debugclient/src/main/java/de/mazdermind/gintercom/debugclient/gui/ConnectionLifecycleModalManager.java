@@ -8,19 +8,28 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.debugclient.gui.components.WrappingLabel;
+import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycleManager;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEvent;
 
 @Component
 public class ConnectionLifecycleModalManager {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(300, 100);
 	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleModalManager.class);
+	private final ConnectionLifecycleManager lifecycleManager;
 	private JDialog dialog;
 	private JLabel label;
 	private boolean operational;
+
+	public ConnectionLifecycleModalManager(
+		@Autowired ConnectionLifecycleManager lifecycleManager
+	) {
+		this.lifecycleManager = lifecycleManager;
+	}
 
 	public JDialog create(JFrame owner) {
 		log.info("Creating");
@@ -49,6 +58,15 @@ public class ConnectionLifecycleModalManager {
 		label = new WrappingLabel("Starting Up…");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		dialog.add(label);
+
+		boolean isOperational = lifecycleManager.getLifecycle().isOperational();
+		if (isOperational) {
+			log.info("System is already Operational - skipping ConnectionLifecycleModal");
+			dialog.setVisible(false);
+		} else {
+			log.info("Showing ConnectionLifecycleModal");
+			dialog.setVisible(true);
+		}
 
 		assert this.dialog == null : "only one ConnectionLifecycleModal is supported";
 		this.dialog = dialog;
