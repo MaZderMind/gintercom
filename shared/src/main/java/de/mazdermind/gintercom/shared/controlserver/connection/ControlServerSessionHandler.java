@@ -2,8 +2,6 @@ package de.mazdermind.gintercom.shared.controlserver.connection;
 
 import java.lang.reflect.Type;
 
-import javax.annotation.PreDestroy;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
 public class ControlServerSessionHandler implements StompSessionHandler {
 	private static Logger log = LoggerFactory.getLogger(ControlServerSessionHandler.class);
 	private final ProvisionMessageHandler provisionMessageHandler;
-	private StompSession stompSession;
 
 	public ControlServerSessionHandler(
 		@Autowired ProvisionMessageHandler provisionMessageHandler
@@ -37,12 +34,6 @@ public class ControlServerSessionHandler implements StompSessionHandler {
 
 	@Override
 	public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
-		if (this.stompSession != null) {
-			log.warn("Re-Connect -- closing existing Session");
-			this.stompSession.disconnect();
-		}
-
-		this.stompSession = stompSession;
 		stompSession.subscribe("/provision", provisionMessageHandler);
 
 		stompSession.send("/ohai", new OhaiMessage()
@@ -56,12 +47,12 @@ public class ControlServerSessionHandler implements StompSessionHandler {
 
 	@Override
 	public void handleException(@NonNull StompSession stompSession, StompCommand stompCommand, @NonNull StompHeaders stompHeaders, @NonNull byte[] bytes, @NonNull Throwable throwable) {
-		log.info("handleException", throwable);
+		log.info("handleException {}", throwable.getMessage());
 	}
 
 	@Override
 	public void handleTransportError(@NonNull StompSession stompSession, @NonNull Throwable throwable) {
-		log.info("handleTransportError", throwable);
+		log.info("handleTransportError {}", throwable.getMessage());
 	}
 
 	@Override
@@ -75,11 +66,4 @@ public class ControlServerSessionHandler implements StompSessionHandler {
 		log.info("handleFrame");
 	}
 
-	@PreDestroy
-	public void disconnectSession() {
-		if (stompSession != null) {
-			log.warn("Closing existing Session");
-			stompSession.disconnect();
-		}
-	}
 }

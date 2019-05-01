@@ -2,7 +2,7 @@ package de.mazdermind.gintercom.shared.controlserver.discovery;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.slf4j.Logger;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-
-import de.mazdermind.gintercom.shared.controlserver.events.MatrixAddressDiscoveryEvent;
 
 @Component
 @Lazy
@@ -29,16 +27,14 @@ public class MatrixAddressDiscoveryService {
 		this.eventPublisher = eventPublisher;
 		assert implementations.size() > 0;
 		this.implementationsIterator = IteratorUtils.loopingIterator(implementations);
+		log.info("Found {} Discovery Implementations: {}",
+			implementations.size(),
+			implementations.stream()
+				.map(i -> i.getClass().getSimpleName())
+				.collect(Collectors.joining(", ")));
 	}
 
-	public Optional<MatrixAddressDiscoveryServiceResult> tryNext() {
-		MatrixAddressDiscoveryServiceImplementation discoveryMethod = implementationsIterator.next();
-		log.info("Trying {}", discoveryMethod.getClass().getSimpleName());
-		eventPublisher.publishEvent(new MatrixAddressDiscoveryEvent(
-			discoveryMethod.getClass().getSimpleName(),
-			discoveryMethod.getDisplayName()
-		));
-
-		return discoveryMethod.tryDiscovery();
+	public MatrixAddressDiscoveryServiceImplementation getNextImplementation() {
+		return implementationsIterator.next();
 	}
 }

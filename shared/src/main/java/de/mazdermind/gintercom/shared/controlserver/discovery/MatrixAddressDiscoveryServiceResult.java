@@ -3,7 +3,7 @@ package de.mazdermind.gintercom.shared.controlserver.discovery;
 import java.net.InetAddress;
 
 public class MatrixAddressDiscoveryServiceResult {
-	private static final int WELL_KNOWN_PORT = 2380;
+	private static final int WELL_KNOWN_PORT = 8080; // TODO 2380
 
 	private InetAddress address;
 
@@ -24,5 +24,10 @@ public class MatrixAddressDiscoveryServiceResult {
 
 	public int getPort() {
 		return port;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s:%d", address.getHostAddress(), port);
 	}
 }

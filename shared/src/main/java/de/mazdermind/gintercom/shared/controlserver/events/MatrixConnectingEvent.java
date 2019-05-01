@@ -1,19 +1,37 @@
 package de.mazdermind.gintercom.shared.controlserver.events;
 
-import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
+import java.net.InetAddress;
+
+import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycle;
 
 public class MatrixConnectingEvent implements MatrixConnectionLifecycleEvent {
-	private final MatrixAddressDiscoveryServiceResult discoveredMatrix;
 
-	public MatrixConnectingEvent(MatrixAddressDiscoveryServiceResult discoveredMatrix) {
-		this.discoveredMatrix = discoveredMatrix;
+	private final InetAddress address;
+	private final int port;
+
+	public MatrixConnectingEvent(InetAddress address, int port) {
+		this.address = address;
+		this.port = port;
 	}
 
 	@Override
-	public String getMessage() {
+	public ConnectionLifecycle getLifecycle() {
+		return ConnectionLifecycle.CONNECTING;
+	}
+
+	@Override
+	public String getDisplayText() {
 		return String.format("Trying to Connect to Matrix at %s (%s:%d)",
-			discoveredMatrix.getAddress().getHostName(),
-			discoveredMatrix.getAddress().getHostAddress(),
-			discoveredMatrix.getPort());
+			address.getHostName(),
+			address.getHostAddress(),
+			port);
+	}
+
+	public InetAddress getAddress() {
+		return address;
+	}
+
+	public int getPort() {
+		return port;
 	}
 }
