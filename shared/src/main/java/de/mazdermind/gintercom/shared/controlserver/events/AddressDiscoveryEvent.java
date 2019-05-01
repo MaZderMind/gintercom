@@ -13,7 +13,7 @@ public class AddressDiscoveryEvent implements ConnectionLifecycleEvent {
 
 	@Override
 	public String getDisplayText() {
-		return "Searching for Matrix using " + implementationName + "…";
+		return "Searching for Matrix";
 	}
 
 	@Override
