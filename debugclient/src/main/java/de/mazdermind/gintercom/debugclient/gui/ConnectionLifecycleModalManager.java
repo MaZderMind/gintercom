@@ -8,13 +8,19 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+
+import de.mazdermind.gintercom.debugclient.gui.components.WrappingLabel;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEvent;
 
 @Component
 public class ConnectionLifecycleModalManager {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(300, 100);
 	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleModalManager.class);
+	private JDialog dialog;
 	private JLabel label;
+	private boolean operational;
 
 	public JDialog create(JFrame owner) {
 		log.info("Creating");
@@ -28,7 +34,10 @@ public class ConnectionLifecycleModalManager {
 		dialog.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentHidden(ComponentEvent e) {
-				// TODO check connection status before terminating
+				if (operational) {
+					return;
+				}
+
 				log.info("Closed without successful connection - terminating Application");
 
 				// System.exit will destroy the Spring Context correctly via a JVM Shutdown Hook
@@ -37,10 +46,24 @@ public class ConnectionLifecycleModalManager {
 			}
 		});
 
-		label = new JLabel("Starting Up…");
+		label = new WrappingLabel("Starting Up…");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		dialog.add(label);
 
+		assert this.dialog == null : "only one ConnectionLifecycleModal is supported";
+		this.dialog = dialog;
 		return dialog;
+	}
+
+	@EventListener
+	public void handleLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
+		operational = lifecycleEvent.getLifecycle().isOperational();
+		log.info("Event: {}, Operational?: {}",
+			lifecycleEvent.getClass().getSimpleName(),
+			lifecycleEvent.getLifecycle().isOperational());
+		EventQueue.invokeLater(() -> {
+			label.setText(lifecycleEvent.getDisplayText());
+			dialog.setVisible(!lifecycleEvent.getLifecycle().isOperational());
+		});
 	}
 }

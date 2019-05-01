@@ -2,14 +2,14 @@ package de.mazdermind.gintercom.shared.controlserver.events;
 
 import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycle;
 
-public class MatrixProvisioningEvent implements MatrixConnectionLifecycleEvent {
+public class OperationalEvent implements ConnectionLifecycleEvent {
 	@Override
 	public String getDisplayText() {
-		return "Awaiting Provisioning";
+		return "Operational";
 	}
 
 	@Override
 	public ConnectionLifecycle getLifecycle() {
-		return ConnectionLifecycle.PROVISIONING;
+		return ConnectionLifecycle.OPERATIONAL;
 	}
 }

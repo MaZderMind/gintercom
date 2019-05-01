@@ -1,14 +1,14 @@
 package de.mazdermind.gintercom.shared.controlserver.discovery;
 
+import static de.mazdermind.gintercom.shared.utils.ObjectListClassNameUtil.classNamesList;
+
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.IteratorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -18,20 +18,13 @@ public class MatrixAddressDiscoveryService {
 	private static Logger log = LoggerFactory.getLogger(MatrixAddressDiscoveryService.class);
 
 	private final Iterator<MatrixAddressDiscoveryServiceImplementation> implementationsIterator;
-	private final ApplicationEventPublisher eventPublisher;
 
 	public MatrixAddressDiscoveryService(
-		@Autowired List<MatrixAddressDiscoveryServiceImplementation> implementations,
-		@Autowired ApplicationEventPublisher eventPublisher
+		@Autowired List<MatrixAddressDiscoveryServiceImplementation> implementations
 	) {
-		this.eventPublisher = eventPublisher;
 		assert implementations.size() > 0;
 		this.implementationsIterator = IteratorUtils.loopingIterator(implementations);
-		log.info("Found {} Discovery Implementations: {}",
-			implementations.size(),
-			implementations.stream()
-				.map(i -> i.getClass().getSimpleName())
-				.collect(Collectors.joining(", ")));
+		log.info("Found {} Discovery Implementations: {}", implementations.size(), classNamesList(implementations));
 	}
 
 	public MatrixAddressDiscoveryServiceImplementation getNextImplementation() {

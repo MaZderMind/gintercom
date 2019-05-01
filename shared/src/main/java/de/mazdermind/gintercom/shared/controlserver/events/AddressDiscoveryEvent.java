@@ -2,11 +2,11 @@ package de.mazdermind.gintercom.shared.controlserver.events;
 
 import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycle;
 
-public class MatrixAddressDiscoveryEvent implements MatrixConnectionLifecycleEvent {
+public class AddressDiscoveryEvent implements ConnectionLifecycleEvent {
 	private final String implementationId;
 	private final String implementationName;
 
-	public MatrixAddressDiscoveryEvent(String implementationId, String implementationName) {
+	public AddressDiscoveryEvent(String implementationId, String implementationName) {
 		this.implementationId = implementationId;
 		this.implementationName = implementationName;
 	}

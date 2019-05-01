@@ -7,7 +7,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycleManager;
-import de.mazdermind.gintercom.shared.controlserver.events.MatrixConnectionLifecycleEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEvent;
+import de.mazdermind.gintercom.shared.controlserver.messagehandler.DoProvisionEvent;
 
 @Component
 public class DummyConnectionLifecycleEventHandler {
@@ -23,10 +24,15 @@ public class DummyConnectionLifecycleEventHandler {
 	}
 
 	@EventListener
-	public void handleLifecycleEvent(MatrixConnectionLifecycleEvent lifecycleEvent) {
+	public void handleLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
 		log.info("Event: {}, Lifecycle-Phase: {} Operational?: {}",
 			lifecycleEvent.getDisplayText(),
 			lifecycleEvent.getLifecycle(),
 			lifecycleEvent.getLifecycle().isOperational());
+	}
+
+	@EventListener
+	public void handleDoProvisionEvent(DoProvisionEvent doProvisionEvent) {
+		log.info("Provisioning");
 	}
 }

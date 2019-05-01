@@ -7,28 +7,40 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
+import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerClient;
+import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerSessionTransportErrorEvent;
 import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDiscoveryService;
 import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDiscoveryServiceImplementation;
 import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
-import de.mazdermind.gintercom.shared.controlserver.events.MatrixAddressDiscoveryEvent;
-import de.mazdermind.gintercom.shared.controlserver.events.MatrixConnectingEvent;
-import de.mazdermind.gintercom.shared.controlserver.events.MatrixProvisioningEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.AddressDiscoveryEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
+import de.mazdermind.gintercom.shared.controlserver.messagehandler.DoProvisionEvent;
+import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
 
 @Component
 @ConditionalOnBean(GintercomClientConfiguration.class)
 public class ConnectionLifecycleManager {
+	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 5;
+	private static final int DISCOVERY_INITIAL_DELAY_SECONDS = 2;
+
 	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
 	private final MatrixAddressDiscoveryService addressDiscoveryService;
 	private final ControlServerClient controlServerClient;
+	private final GintercomClientConfiguration clientConfiguration;
 	private final ApplicationEventPublisher eventPublisher;
 	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
@@ -38,11 +50,13 @@ public class ConnectionLifecycleManager {
 	public ConnectionLifecycleManager(
 		@Autowired ApplicationEventPublisher eventPublisher,
 		@Autowired MatrixAddressDiscoveryService addressDiscoveryService,
-		@Autowired ControlServerClient controlServerClient
+		@Autowired ControlServerClient controlServerClient,
+		@Autowired GintercomClientConfiguration clientConfiguration
 	) {
 		this.eventPublisher = eventPublisher;
 		this.addressDiscoveryService = addressDiscoveryService;
 		this.controlServerClient = controlServerClient;
+		this.clientConfiguration = clientConfiguration;
 	}
 
 	public ConnectionLifecycle getLifecycle() {
@@ -54,13 +68,21 @@ public class ConnectionLifecycleManager {
 		lifecycle = ConnectionLifecycle.DISCOVERY;
 
 		log.info("Starting Discovery-Scheduler");
-		discoverySchedule = scheduler.scheduleWithFixedDelay(this::discoveryTryNext, 0, 5, TimeUnit.SECONDS);
+		discoverySchedule = scheduler
+			.scheduleWithFixedDelay(this::discoveryTryNext, DISCOVERY_INITIAL_DELAY_SECONDS, DISCOVERY_RETRY_INTERVAL_SECONDS, TimeUnit.SECONDS);
+	}
+
+	@PreDestroy
+	public void stopDiscovery() throws InterruptedException {
+		log.info("Shutting down Discovery-Scheduler");
+		scheduler.shutdownNow();
+		scheduler.awaitTermination(30, TimeUnit.SECONDS);
 	}
 
 	private void discoveryTryNext() {
 		MatrixAddressDiscoveryServiceImplementation discoveryImplementation = addressDiscoveryService.getNextImplementation();
 		log.info("Trying {}", discoveryImplementation.getClass().getSimpleName());
-		eventPublisher.publishEvent(new MatrixAddressDiscoveryEvent(
+		eventPublisher.publishEvent(new AddressDiscoveryEvent(
 			discoveryImplementation.getClass().getSimpleName(),
 			discoveryImplementation.getDisplayName()
 		));
@@ -78,30 +100,48 @@ public class ConnectionLifecycleManager {
 	private void tryConnect(MatrixAddressDiscoveryServiceResult discoveredMatrix) {
 		log.info("Trying to Connect to {}", discoveredMatrix);
 		lifecycle = ConnectionLifecycle.CONNECTING;
-		eventPublisher.publishEvent(new MatrixConnectingEvent(discoveredMatrix.getAddress(), discoveredMatrix.getPort()));
+		eventPublisher.publishEvent(new ConnectingEvent(discoveredMatrix.getAddress(), discoveredMatrix.getPort()));
 
-		boolean connected = controlServerClient.connect(
+		Optional<StompSession> stompSession = controlServerClient.connect(
 			discoveredMatrix.getAddress(),
 			discoveredMatrix.getPort()
 		);
 
-		if (!connected) {
+		if (!stompSession.isPresent()) {
 			log.info("Connection failed, Re-Starting Discovery");
 			lifecycle = ConnectionLifecycle.DISCOVERY;
 
 			log.info("Restarting Discovery-Scheduler");
-			discoverySchedule = scheduler.scheduleWithFixedDelay(this::discoveryTryNext, 0, 5, TimeUnit.SECONDS);
-		}
-
-		if (connected) {
-			log.info("Connected to {}, sending Provisioning-Request (Ohai)", discoveredMatrix);
-
-			initiateProvisioning();
+			discoverySchedule = scheduler
+				.scheduleWithFixedDelay(this::discoveryTryNext, DISCOVERY_RETRY_INTERVAL_SECONDS, DISCOVERY_RETRY_INTERVAL_SECONDS, TimeUnit.SECONDS);
+		} else {
+			log.info("Connected to {}", discoveredMatrix);
+			initiateProvisioning(stompSession.get());
 		}
 	}
 
-	private void initiateProvisioning() {
+	private void initiateProvisioning(StompSession stompSession) {
+		log.info("sending Provisioning-Request (Ohai)");
 		lifecycle = ConnectionLifecycle.PROVISIONING;
-		eventPublisher.publishEvent(new MatrixProvisioningEvent());
+		eventPublisher.publishEvent(new AwaitingProvisioningEvent());
+
+		stompSession.send("/ohai", OhaiMessage.fromClientConfiguration(clientConfiguration));
+	}
+
+	@EventListener
+	public void transportErrorEventHandler(ControlServerSessionTransportErrorEvent errorEvent) {
+		if (lifecycle == ConnectionLifecycle.PROVISIONING || lifecycle == ConnectionLifecycle.OPERATIONAL) {
+			log.info("ControlServer-Connection failed: {} -- disconnecting and restarting Discovery", errorEvent.getMessage());
+			controlServerClient.disconnect();
+			initiateDiscovery();
+		}
+	}
+
+	@EventListener
+	@Order(Integer.MAX_VALUE)
+	public void doProvisionEventHandler(DoProvisionEvent doProvisionEvent) {
+		log.info("Provisioning received, Client is now Operational");
+		lifecycle = ConnectionLifecycle.OPERATIONAL;
+		eventPublisher.publishEvent(new OperationalEvent());
 	}
 }

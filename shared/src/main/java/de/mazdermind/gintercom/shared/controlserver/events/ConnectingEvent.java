@@ -4,12 +4,12 @@ import java.net.InetAddress;
 
 import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycle;
 
-public class MatrixConnectingEvent implements MatrixConnectionLifecycleEvent {
+public class ConnectingEvent implements ConnectionLifecycleEvent {
 
 	private final InetAddress address;
 	private final int port;
 
-	public MatrixConnectingEvent(InetAddress address, int port) {
+	public ConnectingEvent(InetAddress address, int port) {
 		this.address = address;
 		this.port = port;
 	}

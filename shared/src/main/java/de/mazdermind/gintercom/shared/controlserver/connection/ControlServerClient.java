@@ -3,6 +3,7 @@ package de.mazdermind.gintercom.shared.controlserver.connection;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -35,7 +36,7 @@ public class ControlServerClient {
 		log.info("Created");
 	}
 
-	public boolean connect(InetAddress address, int port) {
+	public Optional<StompSession> connect(InetAddress address, int port) {
 		URI websocketUri = null;
 		try {
 			websocketUri = new URI("ws", null, address.getHostAddress(), port, "/ws", null, null);
@@ -53,20 +54,20 @@ public class ControlServerClient {
 		try {
 			stompSession = listenableFuture.get(2, TimeUnit.SECONDS);
 			log.info("Connected to Websocket-Server at {}", websocketUri);
-			return true;
+			return Optional.of(stompSession);
 		} catch (InterruptedException e) {
 			log.info("Connection Interrupted");
 			stompClient.stop();
-			return false;
+			return Optional.empty();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 			log.info("Connection Failed");
 			stompClient.stop();
-			return false;
+			return Optional.empty();
 		} catch (TimeoutException e) {
 			log.info("Connection Timed Out");
 			stompClient.stop();
-			return false;
+			return Optional.empty();
 		}
 	}
 
