@@ -4,7 +4,7 @@ ConnectionLifecycleManager Braindump
 - Main-Window starts with Modal Dialog - https://docs.oracle.com/javase/tutorial/uiswing/misc/modality.html
 - DebugClient exposes GintercomClientConfiguration (Interface from Shared)
 - Shared exposes a ConnectionLifecycleManager @ConditionalOnBean(GintercomClientConfiguration.class)
-- ConnectionLifecycleManager starts in DISCOVERY state and emits a MatrixConnectionLifecycleStateChangedEvent extends MatrixConnectionLifecycleEvent
+- ConnectionLifecycleManager starts in DISCOVERY state
 - ConnectionLifecycleManager uses a Timer and MatrixAddressDiscoveryService.tryNext() trying to find the Matrix
   - MatrixAddressDiscoveryServiceImplementation produces MatrixAddressDiscoveryServiceResult carrying IP and Port:
        (a) MatrixAddressDnsSdDiscoveryService: _gintercom._tcp / Port

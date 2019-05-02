@@ -1,8 +1,9 @@
-package de.mazdermind.gintercom.shared.controlserver;
+package de.mazdermind.gintercom.shared.controlserver.connection;
+
+import static de.mazdermind.gintercom.shared.utils.ObjectListClassNameUtil.classNamesList;
 
 import java.lang.reflect.Type;
-
-import javax.annotation.PreDestroy;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,52 +16,41 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.stereotype.Component;
 
-import com.google.common.collect.ImmutableList;
-
-import de.mazdermind.gintercom.shared.controlserver.model.ohai.Capabilities;
-import de.mazdermind.gintercom.shared.controlserver.model.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messagehandler.MatrixMessageHandler;
 
 @Component
 @Lazy
 public class ControlServerSessionHandler implements StompSessionHandler {
 	private static Logger log = LoggerFactory.getLogger(ControlServerSessionHandler.class);
-	private final ProvisionMessageHandler provisionMessageHandler;
-	private StompSession stompSession;
+	private final List<MatrixMessageHandler> messageHandlers;
+	private final ControlServerSessionTransportErrorMulticaster transportErrorMulticaster;
 
 	public ControlServerSessionHandler(
-		@Autowired ProvisionMessageHandler provisionMessageHandler
+		@Autowired List<MatrixMessageHandler> messageHandlers,
+		@Autowired ControlServerSessionTransportErrorMulticaster transportErrorMulticaster
 	) {
-		this.provisionMessageHandler = provisionMessageHandler;
 		log.info("Created");
+		this.messageHandlers = messageHandlers;
+		this.transportErrorMulticaster = transportErrorMulticaster;
 	}
 
 	@Override
 	public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
-		if (this.stompSession != null) {
-			log.warn("Re-Connect -- closing existing Session");
-			this.stompSession.disconnect();
-		}
+		log.info("Connected. Subscribing {} MessageHandlers: {}", messageHandlers.size(), classNamesList(messageHandlers));
 
-		this.stompSession = stompSession;
-		stompSession.subscribe("/provision", provisionMessageHandler);
-
-		stompSession.send("/ohai", new OhaiMessage()
-			.setClientId("foo")
-			.setClientModel("bar")
-			.setProtocolVersion(1)
-			.setCapabilities(new Capabilities()
-				.setButtons(ImmutableList.of("l", "m", "r"))));
+		messageHandlers.forEach(messageHandler ->
+			stompSession.subscribe(messageHandler.getDestination(), messageHandler));
 	}
-
 
 	@Override
 	public void handleException(@NonNull StompSession stompSession, StompCommand stompCommand, @NonNull StompHeaders stompHeaders, @NonNull byte[] bytes, @NonNull Throwable throwable) {
-		log.info("handleException", throwable);
+		log.info("Exception", throwable);
 	}
 
 	@Override
 	public void handleTransportError(@NonNull StompSession stompSession, @NonNull Throwable throwable) {
-		log.info("handleTransportError", throwable);
+		log.info("TransportError: {}", throwable.getMessage());
+		transportErrorMulticaster.dispatch(new ControlServerSessionTransportErrorEvent(throwable.getMessage()));
 	}
 
 	@Override
@@ -71,14 +61,5 @@ public class ControlServerSessionHandler implements StompSessionHandler {
 
 	@Override
 	public void handleFrame(@NonNull StompHeaders stompHeaders, Object o) {
-		log.info("handleFrame");
-	}
-
-	@PreDestroy
-	public void disconnectSession() {
-		if (stompSession != null) {
-			log.warn("Closing existing Session");
-			stompSession.disconnect();
-		}
 	}
 }

@@ -27,7 +27,7 @@ public class AudioLevelDisplayManager {
 		audioLevelDisplay.setPreferredSize(new Dimension(48, Integer.MAX_VALUE));
 		audioLevelDisplay.setVisible(true);
 
-		assert this.audioLevelDisplay == null : "currently only one AudioLevelDisplay is supported";
+		assert this.audioLevelDisplay == null : "only one AudioLevelDisplay is supported";
 		this.audioLevelDisplay = audioLevelDisplay;
 		return audioLevelDisplay;
 	}
