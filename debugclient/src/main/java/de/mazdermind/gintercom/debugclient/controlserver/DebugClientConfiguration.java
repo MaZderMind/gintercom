@@ -3,14 +3,14 @@ package de.mazdermind.gintercom.debugclient.controlserver;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.shared.controlserver.GintercomClientConfiguration;
 import de.mazdermind.gintercom.shared.hostid.FileBasedHostId;
 
-@Component
+@Configuration
 public class DebugClientConfiguration implements GintercomClientConfiguration {
 	private final FileBasedHostId fileBasedHostId;
 
