@@ -23,4 +23,8 @@ public class AwaitingProvisioningEvent implements ConnectionLifecycleEvent {
 	public ConnectionLifecycle getLifecycle() {
 		return ConnectionLifecycle.PROVISIONING;
 	}
+
+	public String getClientId() {
+		return clientId;
+	}
 }
