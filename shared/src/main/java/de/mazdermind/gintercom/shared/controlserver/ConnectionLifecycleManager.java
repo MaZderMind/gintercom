@@ -1,8 +1,8 @@
 package de.mazdermind.gintercom.shared.controlserver;
 
-import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
 
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.support.PeriodicTrigger;
 import org.springframework.stereotype.Component;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -35,7 +36,7 @@ import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInf
 @Component
 @ConditionalOnBean(GintercomClientConfiguration.class)
 public class ConnectionLifecycleManager implements ProvisioningInformationAware, ControlServerSessionTransportErrorAware {
-	private static final Duration DISCOVERY_RETRY_INTERVAL = Duration.ofSeconds(5);
+	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 3;
 
 	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
 
@@ -71,8 +72,13 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 		lifecycle = ConnectionLifecycle.DISCOVERY;
 
 		log.info("Starting Discovery-Scheduler");
-		discoverySchedule = scheduler
-			.scheduleWithFixedDelay(this::discoveryTryNext, DISCOVERY_RETRY_INTERVAL);
+		scheduleDiscovery(true);
+	}
+
+	private void scheduleDiscovery(boolean initial) {
+		PeriodicTrigger trigger = new PeriodicTrigger(DISCOVERY_RETRY_INTERVAL_SECONDS, TimeUnit.SECONDS);
+		trigger.setInitialDelay(initial ? 0 : DISCOVERY_RETRY_INTERVAL_SECONDS);
+		discoverySchedule = scheduler.schedule(this::discoveryTryNext, trigger);
 	}
 
 	@VisibleForTesting
@@ -109,7 +115,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 			lifecycle = ConnectionLifecycle.DISCOVERY;
 
 			log.info("Restarting Discovery-Scheduler");
-			discoverySchedule = scheduler.scheduleWithFixedDelay(this::discoveryTryNext, DISCOVERY_RETRY_INTERVAL);
+			scheduleDiscovery(false);
 		} else {
 			log.info("Connected to {}", discoveredMatrix);
 			initiateProvisioning(stompSession.get());
@@ -127,9 +133,12 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	@Override
 	public void handleTransportErrorEvent(ControlServerSessionTransportErrorEvent transportErrorEvent) {
 		if (lifecycle == ConnectionLifecycle.PROVISIONING || lifecycle == ConnectionLifecycle.OPERATIONAL) {
-			log.info("ControlServer-Connection failed: {} -- disconnecting and restarting Discovery", transportErrorEvent.getMessage());
+			log.info("ControlServer-Connection failed: {}", transportErrorEvent.getMessage());
 			controlServerClient.disconnect();
-			initiateDiscovery();
+
+			log.info("Restarting Discovery-Scheduler");
+			lifecycle = ConnectionLifecycle.DISCOVERY;
+			scheduleDiscovery(false);
 		}
 	}
 

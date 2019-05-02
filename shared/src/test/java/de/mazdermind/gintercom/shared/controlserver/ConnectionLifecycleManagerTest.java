@@ -14,7 +14,6 @@ import static org.mockito.Mockito.when;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 
@@ -24,6 +23,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.stubbing.Answer;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.Trigger;
 
 import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerClient;
 import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerSessionTransportErrorEvent;
@@ -55,7 +55,7 @@ public class ConnectionLifecycleManagerTest {
 		taskScheduler = mock(TaskScheduler.class);
 		scheduledDiscovery = mock(ScheduledFuture.class);
 		//noinspection unchecked
-		when(taskScheduler.scheduleWithFixedDelay(any(), any(Duration.class))).thenReturn(scheduledDiscovery);
+		when(taskScheduler.schedule(any(), any(Trigger.class))).thenReturn(scheduledDiscovery);
 
 		matrixAddressDiscoveryServiceImplementation = mock(MatrixAddressDiscoveryServiceImplementation.class);
 		when(matrixAddressDiscoveryServiceImplementation.getDisplayName()).thenReturn("Test-Discovery-Method");
@@ -92,7 +92,7 @@ public class ConnectionLifecycleManagerTest {
 	@Test
 	public void triesDiscoveryAfterStartup() {
 		connectionLifecycleManager.initiateDiscovery();
-		verify(taskScheduler, times(1)).scheduleWithFixedDelay(any(), any(Duration.class));
+		verify(taskScheduler, times(1)).schedule(any(), any(Trigger.class));
 
 		connectionLifecycleManager.discoveryTryNext();
 		verify(matrixAddressDiscoveryService, times(1)).getNextImplementation();
@@ -144,7 +144,7 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		verify(taskScheduler, times(2)).scheduleWithFixedDelay(any(), any(Duration.class));
+		verify(taskScheduler, times(2)).schedule(any(), any(Trigger.class));
 	}
 
 	@Test
@@ -231,7 +231,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.handleTransportErrorEvent(mock(ControlServerSessionTransportErrorEvent.class));
 
 		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.DISCOVERY));
-		verify(taskScheduler, times(2)).scheduleWithFixedDelay(any(), any(Duration.class));
+		verify(taskScheduler, times(2)).schedule(any(), any(Trigger.class));
 		verify(controlServerClient, times(1)).disconnect();
 	}
 
@@ -267,7 +267,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.handleTransportErrorEvent(mock(ControlServerSessionTransportErrorEvent.class));
 
 		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.DISCOVERY));
-		verify(taskScheduler, times(2)).scheduleWithFixedDelay(any(), any(Duration.class));
+		verify(taskScheduler, times(2)).schedule(any(), any(Trigger.class));
 		verify(controlServerClient, times(1)).disconnect();
 	}
 
