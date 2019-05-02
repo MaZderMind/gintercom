@@ -126,7 +126,7 @@ public class ConnectionLifecycleManager {
 	private void initiateProvisioning(StompSession stompSession) {
 		log.info("sending Provisioning-Request (Ohai)");
 		lifecycle = ConnectionLifecycle.PROVISIONING;
-		eventPublisher.publishEvent(new AwaitingProvisioningEvent());
+		eventPublisher.publishEvent(new AwaitingProvisioningEvent(clientConfiguration.getClientId()));
 
 		stompSession.send("/ohai", OhaiMessage.fromClientConfiguration(clientConfiguration));
 	}
