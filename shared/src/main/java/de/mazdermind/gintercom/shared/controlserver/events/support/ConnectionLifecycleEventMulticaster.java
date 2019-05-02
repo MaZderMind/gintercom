@@ -50,7 +50,6 @@ public class ConnectionLifecycleEventMulticaster {
 		});
 	}
 
-
 	public void dispatch(OperationalEvent operationalEvent) {
 		connectionLifecycleEventAwares.forEach(connectionLifecycleEventAware -> {
 			connectionLifecycleEventAware.handleGenericConnectionLifecycleEvent(operationalEvent);
