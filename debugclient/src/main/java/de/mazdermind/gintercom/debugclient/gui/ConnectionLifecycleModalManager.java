@@ -22,6 +22,10 @@ public class ConnectionLifecycleModalManager implements ConnectionLifecycleEvent
 	private JLabel detailsLabel;
 	private boolean operational;
 
+	private String initialDisplayText = "Starting Up…";
+	private String initialDetailsText = "";
+	private boolean initiallyOperational = false;
+
 	public ConnectionLifecycleModalManager() {
 		log.info("Constructed");
 	}
@@ -51,10 +55,10 @@ public class ConnectionLifecycleModalManager implements ConnectionLifecycleEvent
 		});
 
 		dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
-		label = new JLabel("Starting Up…");
+		label = new JLabel(initialDisplayText);
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
-		detailsLabel = new JLabel("");
+		detailsLabel = new JLabel(initialDetailsText);
 		detailsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		dialog.add(Box.createVerticalGlue());
@@ -68,7 +72,7 @@ public class ConnectionLifecycleModalManager implements ConnectionLifecycleEvent
 		} else {
 			log.info("Showing ConnectionLifecycleModal");
 			// setVisible(true) is actually blocking (who knew from the name…)
-			EventQueue.invokeLater(() -> dialog.setVisible(true));
+			EventQueue.invokeLater(() -> dialog.setVisible(!initiallyOperational));
 		}
 
 		assert this.dialog == null : "only one ConnectionLifecycleModal is supported";
@@ -83,12 +87,15 @@ public class ConnectionLifecycleModalManager implements ConnectionLifecycleEvent
 			lifecycleEvent.getClass().getSimpleName(),
 			lifecycleEvent.getLifecycle().isOperational());
 
-		if (label != null && dialog != null) {
-			EventQueue.invokeLater(() -> {
+		EventQueue.invokeLater(() -> {
+			initialDisplayText = lifecycleEvent.getDisplayText();
+			initialDetailsText = lifecycleEvent.getDetailsText();
+			initiallyOperational = lifecycleEvent.getLifecycle().isOperational();
+			if (label != null && dialog != null) {
 				label.setText(lifecycleEvent.getDisplayText());
 				detailsLabel.setText(lifecycleEvent.getDetailsText());
 				dialog.setVisible(!lifecycleEvent.getLifecycle().isOperational());
-			});
-		}
+			}
+		});
 	}
 }
