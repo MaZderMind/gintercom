@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 
 import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 
 @Controller
 public class PanelRegistrationController {
@@ -20,6 +21,7 @@ public class PanelRegistrationController {
 		log.info("Received Ohai-Message from {}, responding with Provision-Message", message.getClientId());
 
 		return new ProvisionMessage()
-			.setDisplay("Foobar 42!");
+			.setProvisioningInformation(new ProvisioningInformation()
+				.setDisplay("Foobar 42!"));
 	}
 }

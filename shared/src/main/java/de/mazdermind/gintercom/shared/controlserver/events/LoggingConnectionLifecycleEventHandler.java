@@ -2,13 +2,13 @@ package de.mazdermind.gintercom.shared.controlserver.events;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.shared.controlserver.messagehandler.DoProvisionEvent;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
-public class LoggingConnectionLifecycleEventHandler implements ConnectionLifecycleEventAware {
+public class LoggingConnectionLifecycleEventHandler implements ConnectionLifecycleEventAware, ProvisioningInformationAware {
 	private static Logger log = LoggerFactory.getLogger(LoggingConnectionLifecycleEventHandler.class);
 
 	@Override
@@ -20,8 +20,9 @@ public class LoggingConnectionLifecycleEventHandler implements ConnectionLifecyc
 			lifecycleEvent.getLifecycle().isOperational());
 	}
 
-	@EventListener
-	public void handleDoProvisionEvent(DoProvisionEvent doProvisionEvent) {
-		log.info("DoProvisionEvent");
+
+	@Override
+	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
+		log.info("ProvisioningInformation: {}", provisioningInformation);
 	}
 }

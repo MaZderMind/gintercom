@@ -5,25 +5,25 @@ import java.lang.reflect.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationMulticaster;
 
 @Component
 @Lazy
 public
 class ProvisionMessageHandler implements MatrixMessageHandler {
 	private static Logger log = LoggerFactory.getLogger(ProvisionMessageHandler.class);
-	private final ApplicationEventPublisher eventPublisher;
+	private final ProvisioningInformationMulticaster provisioningInformationMulticaster;
 
 	public ProvisionMessageHandler(
-		@Autowired ApplicationEventPublisher eventPublisher
-		) {
-		this.eventPublisher = eventPublisher;
+		@Autowired ProvisioningInformationMulticaster provisioningInformationMulticaster
+	) {
+		this.provisioningInformationMulticaster = provisioningInformationMulticaster;
 	}
 
 	@Override
@@ -35,9 +35,9 @@ class ProvisionMessageHandler implements MatrixMessageHandler {
 	@Override
 	public void handleFrame(@NonNull StompHeaders stompHeaders, Object o) {
 		ProvisionMessage provisionMessage = (ProvisionMessage) o;
-		log.info("Received ProvisionMessage with Display-Name {}", provisionMessage.getDisplay());
+		log.info("Received ProvisionMessage with Display-Name {}", provisionMessage.getProvisioningInformation().getDisplay());
 
-		eventPublisher.publishEvent(new DoProvisionEvent(provisionMessage));
+		provisioningInformationMulticaster.dispatch(provisionMessage.getProvisioningInformation());
 	}
 
 	@Override

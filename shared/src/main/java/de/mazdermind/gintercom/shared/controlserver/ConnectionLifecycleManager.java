@@ -1,6 +1,5 @@
 package de.mazdermind.gintercom.shared.controlserver;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.stereotype.Component;
 
@@ -27,15 +25,15 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDisco
 import de.mazdermind.gintercom.shared.controlserver.events.AddressDiscoveryEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
-import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEventAware;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEventMulticaster;
 import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
-import de.mazdermind.gintercom.shared.controlserver.messagehandler.DoProvisionEvent;
 import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
 @ConditionalOnBean(GintercomClientConfiguration.class)
-public class ConnectionLifecycleManager {
+public class ConnectionLifecycleManager implements ProvisioningInformationAware {
 	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 5;
 	private static final int DISCOVERY_INITIAL_DELAY_SECONDS = 2;
 
@@ -54,8 +52,7 @@ public class ConnectionLifecycleManager {
 		@Autowired ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster,
 		@Autowired MatrixAddressDiscoveryService addressDiscoveryService,
 		@Autowired ControlServerClient controlServerClient,
-		@Autowired GintercomClientConfiguration clientConfiguration,
-		@Autowired List<ConnectionLifecycleEventAware> eventHandlers
+		@Autowired GintercomClientConfiguration clientConfiguration
 	) {
 		this.connectionLifecycleEventMulticaster = connectionLifecycleEventMulticaster;
 		this.addressDiscoveryService = addressDiscoveryService;
@@ -141,9 +138,8 @@ public class ConnectionLifecycleManager {
 		}
 	}
 
-	@EventListener
-	@Order(Integer.MAX_VALUE)
-	public void doProvisionEventHandler(DoProvisionEvent doProvisionEvent) {
+	@Override
+	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
 		log.info("Provisioning received, Client is now Operational");
 		lifecycle = ConnectionLifecycle.OPERATIONAL;
 		connectionLifecycleEventMulticaster.dispatch(new OperationalEvent());

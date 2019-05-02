@@ -1,17 +1,21 @@
 package de.mazdermind.gintercom.shared.controlserver.messages.provision;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 
 public class ProvisionMessage {
 	@NotNull
-	private String display;
+	@Valid
+	private ProvisioningInformation provisioningInformation;
 
-	public String getDisplay() {
-		return display;
+	public ProvisioningInformation getProvisioningInformation() {
+		return provisioningInformation;
 	}
 
-	public ProvisionMessage setDisplay(String display) {
-		this.display = display;
+	public ProvisionMessage setProvisioningInformation(ProvisioningInformation provisioningInformation) {
+		this.provisioningInformation = provisioningInformation;
 		return this;
 	}
 }
