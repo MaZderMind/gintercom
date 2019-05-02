@@ -1,7 +1,21 @@
 package de.mazdermind.gintercom.shared.controlserver.events;
 
 /**
- * Implement this Interface to ensure, that your bean is Created before the first ConnectionLifecycleEvent is published
+ * Implement this Interface to receive ConnectionLifecycleEvents
  */
 public interface ConnectionLifecycleEventAware {
+	default void handleGenericConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
+	}
+
+	default void handleAddressDiscoveryEvent(AddressDiscoveryEvent addressDiscoveryEvent) {
+	}
+
+	default void handleAwaitingProvisioningEvent(AwaitingProvisioningEvent awaitingProvisioningEvent) {
+	}
+
+	default void handleConnectingEvent(ConnectingEvent connectingEvent) {
+	}
+
+	default void handleOperationalEvent(OperationalEvent operationalEvent) {
+	}
 }

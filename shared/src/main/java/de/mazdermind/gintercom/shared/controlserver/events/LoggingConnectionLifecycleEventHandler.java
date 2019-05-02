@@ -11,8 +11,8 @@ import de.mazdermind.gintercom.shared.controlserver.messagehandler.DoProvisionEv
 public class LoggingConnectionLifecycleEventHandler implements ConnectionLifecycleEventAware {
 	private static Logger log = LoggerFactory.getLogger(LoggingConnectionLifecycleEventHandler.class);
 
-	@EventListener
-	public void handleLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
+	@Override
+	public void handleGenericConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
 		log.info("ConnectionLifecycleEvent: {} ({}), Lifecycle-Phase: {} Operational?: {}",
 			lifecycleEvent.getClass().getSimpleName(),
 			lifecycleEvent.getDisplayText(),

@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -29,6 +28,7 @@ import de.mazdermind.gintercom.shared.controlserver.events.AddressDiscoveryEvent
 import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEventAware;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEventMulticaster;
 import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 import de.mazdermind.gintercom.shared.controlserver.messagehandler.DoProvisionEvent;
 import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
@@ -40,23 +40,24 @@ public class ConnectionLifecycleManager {
 	private static final int DISCOVERY_INITIAL_DELAY_SECONDS = 2;
 
 	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
+
+	private final ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster;
 	private final MatrixAddressDiscoveryService addressDiscoveryService;
 	private final ControlServerClient controlServerClient;
 	private final GintercomClientConfiguration clientConfiguration;
-	private final ApplicationEventPublisher eventPublisher;
 	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
 	private ConnectionLifecycle lifecycle = ConnectionLifecycle.STARTING;
 	private ScheduledFuture<?> discoverySchedule;
 
 	public ConnectionLifecycleManager(
-		@Autowired ApplicationEventPublisher eventPublisher,
+		@Autowired ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster,
 		@Autowired MatrixAddressDiscoveryService addressDiscoveryService,
 		@Autowired ControlServerClient controlServerClient,
 		@Autowired GintercomClientConfiguration clientConfiguration,
 		@Autowired List<ConnectionLifecycleEventAware> eventHandlers
 	) {
-		this.eventPublisher = eventPublisher;
+		this.connectionLifecycleEventMulticaster = connectionLifecycleEventMulticaster;
 		this.addressDiscoveryService = addressDiscoveryService;
 		this.controlServerClient = controlServerClient;
 		this.clientConfiguration = clientConfiguration;
@@ -85,7 +86,7 @@ public class ConnectionLifecycleManager {
 	private void discoveryTryNext() {
 		MatrixAddressDiscoveryServiceImplementation discoveryImplementation = addressDiscoveryService.getNextImplementation();
 		log.info("Trying {}", discoveryImplementation.getClass().getSimpleName());
-		eventPublisher.publishEvent(new AddressDiscoveryEvent(
+		connectionLifecycleEventMulticaster.dispatch(new AddressDiscoveryEvent(
 			discoveryImplementation.getClass().getSimpleName(),
 			discoveryImplementation.getDisplayName()
 		));
@@ -103,7 +104,7 @@ public class ConnectionLifecycleManager {
 	private void tryConnect(MatrixAddressDiscoveryServiceResult discoveredMatrix) {
 		log.info("Trying to Connect to {}", discoveredMatrix);
 		lifecycle = ConnectionLifecycle.CONNECTING;
-		eventPublisher.publishEvent(new ConnectingEvent(discoveredMatrix.getAddress(), discoveredMatrix.getPort()));
+		connectionLifecycleEventMulticaster.dispatch(new ConnectingEvent(discoveredMatrix.getAddress(), discoveredMatrix.getPort()));
 
 		Optional<StompSession> stompSession = controlServerClient.connect(
 			discoveredMatrix.getAddress(),
@@ -126,7 +127,7 @@ public class ConnectionLifecycleManager {
 	private void initiateProvisioning(StompSession stompSession) {
 		log.info("sending Provisioning-Request (Ohai)");
 		lifecycle = ConnectionLifecycle.PROVISIONING;
-		eventPublisher.publishEvent(new AwaitingProvisioningEvent(clientConfiguration.getClientId()));
+		connectionLifecycleEventMulticaster.dispatch(new AwaitingProvisioningEvent(clientConfiguration.getClientId()));
 
 		stompSession.send("/ohai", OhaiMessage.fromClientConfiguration(clientConfiguration));
 	}
@@ -145,6 +146,6 @@ public class ConnectionLifecycleManager {
 	public void doProvisionEventHandler(DoProvisionEvent doProvisionEvent) {
 		log.info("Provisioning received, Client is now Operational");
 		lifecycle = ConnectionLifecycle.OPERATIONAL;
-		eventPublisher.publishEvent(new OperationalEvent());
+		connectionLifecycleEventMulticaster.dispatch(new OperationalEvent());
 	}
 }
