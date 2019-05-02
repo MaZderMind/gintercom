@@ -24,6 +24,8 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 @Component
 @Lazy
 public class ControlServerClient {
+	private static final int CONNECTION_TIMEOUT_SECONDS = 5;
+
 	private static Logger log = LoggerFactory.getLogger(ControlServerClient.class);
 	private final ControlServerSessionHandler sessionHandler;
 	private WebSocketStompClient stompClient;
@@ -52,7 +54,7 @@ public class ControlServerClient {
 
 		ListenableFuture<StompSession> listenableFuture = stompClient.connect(websocketUri.toString(), sessionHandler);
 		try {
-			stompSession = listenableFuture.get(2, TimeUnit.SECONDS);
+			stompSession = listenableFuture.get(CONNECTION_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 			log.info("Connected to Websocket-Server at {}", websocketUri);
 			return Optional.of(stompSession);
 		} catch (InterruptedException e) {

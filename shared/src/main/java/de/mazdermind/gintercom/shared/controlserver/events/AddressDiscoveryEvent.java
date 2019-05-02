@@ -17,6 +17,11 @@ public class AddressDiscoveryEvent implements ConnectionLifecycleEvent {
 	}
 
 	@Override
+	public String getDetailsText() {
+		return "using " + implementationName + "…";
+	}
+
+	@Override
 	public ConnectionLifecycle getLifecycle() {
 		return ConnectionLifecycle.DISCOVERY;
 	}

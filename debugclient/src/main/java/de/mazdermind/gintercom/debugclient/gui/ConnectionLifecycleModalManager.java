@@ -8,27 +8,23 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.debugclient.gui.components.WrappingLabel;
-import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycleManager;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEventAware;
 
 @Component
-public class ConnectionLifecycleModalManager {
-	private static final Dimension INITIAL_DIMENSION = new Dimension(300, 100);
+public class ConnectionLifecycleModalManager implements ConnectionLifecycleEventAware {
+	private static final Dimension INITIAL_DIMENSION = new Dimension(400, 100);
 	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleModalManager.class);
-	private final ConnectionLifecycleManager lifecycleManager;
 	private JDialog dialog;
 	private JLabel label;
+	private JLabel detailsLabel;
 	private boolean operational;
 
-	public ConnectionLifecycleModalManager(
-		@Autowired ConnectionLifecycleManager lifecycleManager
-	) {
-		this.lifecycleManager = lifecycleManager;
+	public ConnectionLifecycleModalManager() {
+		log.info("Constructed");
 	}
 
 	public JDialog create(JFrame owner) {
@@ -55,17 +51,24 @@ public class ConnectionLifecycleModalManager {
 			}
 		});
 
-		label = new WrappingLabel("Starting Up…");
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		dialog.add(label);
+		dialog.setLayout(new BoxLayout(dialog.getContentPane(), BoxLayout.Y_AXIS));
+		label = new JLabel("Starting Up…");
+		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
-		boolean isOperational = lifecycleManager.getLifecycle().isOperational();
-		if (isOperational) {
+		detailsLabel = new JLabel("");
+		detailsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+
+		dialog.add(Box.createVerticalGlue());
+		dialog.add(label, java.awt.Component.CENTER_ALIGNMENT);
+		dialog.add(detailsLabel, java.awt.Component.CENTER_ALIGNMENT);
+		dialog.add(Box.createVerticalGlue());
+
+		if (operational) {
 			log.info("System is already Operational - skipping ConnectionLifecycleModal");
-			// setVisible is actually blocking (who knew from the name…)
-			EventQueue.invokeLater(() -> dialog.setVisible(false));
+			dialog.setVisible(false);
 		} else {
 			log.info("Showing ConnectionLifecycleModal");
+			// setVisible(true) is actually blocking (who knew from the name…)
 			EventQueue.invokeLater(() -> dialog.setVisible(true));
 		}
 
@@ -77,13 +80,16 @@ public class ConnectionLifecycleModalManager {
 	@EventListener
 	public void handleLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
 		operational = lifecycleEvent.getLifecycle().isOperational();
-		log.info("Event: {}, Operational?: {}",
+		log.info("ConnectionLifecycleEvent: {}, Operational?: {}",
 			lifecycleEvent.getClass().getSimpleName(),
 			lifecycleEvent.getLifecycle().isOperational());
 
-		EventQueue.invokeLater(() -> {
-			label.setText(lifecycleEvent.getDisplayText());
-			dialog.setVisible(!lifecycleEvent.getLifecycle().isOperational());
-		});
+		if (label != null && dialog != null) {
+			EventQueue.invokeLater(() -> {
+				label.setText(lifecycleEvent.getDisplayText());
+				detailsLabel.setText(lifecycleEvent.getDetailsText());
+				dialog.setVisible(!lifecycleEvent.getLifecycle().isOperational());
+			});
+		}
 	}
 }

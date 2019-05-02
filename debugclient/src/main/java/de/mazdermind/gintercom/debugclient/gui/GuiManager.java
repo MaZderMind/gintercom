@@ -42,7 +42,6 @@ public class GuiManager {
 			mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			mainWindow.setVisible(true);
 
-			log.info("Creating ConnectionLifecycleModal");
 			connectionLifecycleModalManager.create(mainWindow);
 		});
 	}

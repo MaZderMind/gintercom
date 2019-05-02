@@ -15,16 +15,21 @@ public class ConnectingEvent implements ConnectionLifecycleEvent {
 	}
 
 	@Override
-	public ConnectionLifecycle getLifecycle() {
-		return ConnectionLifecycle.CONNECTING;
+	public String getDisplayText() {
+		return "Trying to Connect to Matrix";
 	}
 
 	@Override
-	public String getDisplayText() {
-		return String.format("Trying to Connect to Matrix at %s (%s:%d)",
+	public String getDetailsText() {
+		return String.format("at %s (%s:%d)",
 			address.getHostName(),
 			address.getHostAddress(),
 			port);
+	}
+
+	@Override
+	public ConnectionLifecycle getLifecycle() {
+		return ConnectionLifecycle.CONNECTING;
 	}
 
 	public InetAddress getAddress() {

@@ -1,5 +1,6 @@
 package de.mazdermind.gintercom.shared.controlserver;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -27,6 +28,7 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDisco
 import de.mazdermind.gintercom.shared.controlserver.events.AddressDiscoveryEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEventAware;
 import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 import de.mazdermind.gintercom.shared.controlserver.messagehandler.DoProvisionEvent;
 import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
@@ -51,7 +53,8 @@ public class ConnectionLifecycleManager {
 		@Autowired ApplicationEventPublisher eventPublisher,
 		@Autowired MatrixAddressDiscoveryService addressDiscoveryService,
 		@Autowired ControlServerClient controlServerClient,
-		@Autowired GintercomClientConfiguration clientConfiguration
+		@Autowired GintercomClientConfiguration clientConfiguration,
+		@Autowired List<ConnectionLifecycleEventAware> eventHandlers
 	) {
 		this.eventPublisher = eventPublisher;
 		this.addressDiscoveryService = addressDiscoveryService;
