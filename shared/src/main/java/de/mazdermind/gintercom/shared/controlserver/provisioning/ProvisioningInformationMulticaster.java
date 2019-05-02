@@ -26,6 +26,7 @@ public class ProvisioningInformationMulticaster {
 		// Avoid cyclic dependency with ConnectionLifecycleManager
 		Collection<ProvisioningInformationAware> provisioningInformationAwares = beanFactory
 			.getBeansOfType(ProvisioningInformationAware.class).values();
+
 		log.info("Found {} ProvisioningInformationAware Implementations: {}",
 			provisioningInformationAwares.size(), classNamesList(provisioningInformationAwares));
 

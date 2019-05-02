@@ -1,23 +1,24 @@
 package de.mazdermind.gintercom.shared.controlserver;
 
+import java.time.Duration;
 import java.util.Optional;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerClient;
+import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerSessionTransportErrorAware;
 import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerSessionTransportErrorEvent;
 import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDiscoveryService;
 import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDiscoveryServiceImplementation;
@@ -25,17 +26,16 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDisco
 import de.mazdermind.gintercom.shared.controlserver.events.AddressDiscoveryEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
-import de.mazdermind.gintercom.shared.controlserver.events.support.ConnectionLifecycleEventMulticaster;
 import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.support.ConnectionLifecycleEventMulticaster;
 import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
 @ConditionalOnBean(GintercomClientConfiguration.class)
-public class ConnectionLifecycleManager implements ProvisioningInformationAware {
-	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 5;
-	private static final int DISCOVERY_INITIAL_DELAY_SECONDS = 2;
+public class ConnectionLifecycleManager implements ProvisioningInformationAware, ControlServerSessionTransportErrorAware {
+	private static final Duration DISCOVERY_RETRY_INTERVAL = Duration.ofSeconds(5);
 
 	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
 
@@ -43,7 +43,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware 
 	private final MatrixAddressDiscoveryService addressDiscoveryService;
 	private final ControlServerClient controlServerClient;
 	private final GintercomClientConfiguration clientConfiguration;
-	private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+	private final TaskScheduler scheduler;
 
 	private ConnectionLifecycle lifecycle = ConnectionLifecycle.STARTING;
 	private ScheduledFuture<?> discoverySchedule;
@@ -52,12 +52,14 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware 
 		@Autowired ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster,
 		@Autowired MatrixAddressDiscoveryService addressDiscoveryService,
 		@Autowired ControlServerClient controlServerClient,
+		@Qualifier("gintercomTaskScheduler") @Autowired TaskScheduler scheduler,
 		@Autowired GintercomClientConfiguration clientConfiguration
 	) {
 		this.connectionLifecycleEventMulticaster = connectionLifecycleEventMulticaster;
 		this.addressDiscoveryService = addressDiscoveryService;
 		this.controlServerClient = controlServerClient;
 		this.clientConfiguration = clientConfiguration;
+		this.scheduler = scheduler;
 	}
 
 	public ConnectionLifecycle getLifecycle() {
@@ -70,17 +72,11 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware 
 
 		log.info("Starting Discovery-Scheduler");
 		discoverySchedule = scheduler
-			.scheduleWithFixedDelay(this::discoveryTryNext, DISCOVERY_INITIAL_DELAY_SECONDS, DISCOVERY_RETRY_INTERVAL_SECONDS, TimeUnit.SECONDS);
+			.scheduleWithFixedDelay(this::discoveryTryNext, DISCOVERY_RETRY_INTERVAL);
 	}
 
-	@PreDestroy
-	public void stopDiscovery() throws InterruptedException {
-		log.info("Shutting down Discovery-Scheduler");
-		scheduler.shutdownNow();
-		scheduler.awaitTermination(30, TimeUnit.SECONDS);
-	}
-
-	private void discoveryTryNext() {
+	@VisibleForTesting
+	void discoveryTryNext() {
 		MatrixAddressDiscoveryServiceImplementation discoveryImplementation = addressDiscoveryService.getNextImplementation();
 		log.info("Trying {}", discoveryImplementation.getClass().getSimpleName());
 		connectionLifecycleEventMulticaster.dispatch(new AddressDiscoveryEvent(
@@ -113,8 +109,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware 
 			lifecycle = ConnectionLifecycle.DISCOVERY;
 
 			log.info("Restarting Discovery-Scheduler");
-			discoverySchedule = scheduler
-				.scheduleWithFixedDelay(this::discoveryTryNext, DISCOVERY_RETRY_INTERVAL_SECONDS, DISCOVERY_RETRY_INTERVAL_SECONDS, TimeUnit.SECONDS);
+			discoverySchedule = scheduler.scheduleWithFixedDelay(this::discoveryTryNext, DISCOVERY_RETRY_INTERVAL);
 		} else {
 			log.info("Connected to {}", discoveredMatrix);
 			initiateProvisioning(stompSession.get());
@@ -129,10 +124,10 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware 
 		stompSession.send("/ohai", OhaiMessage.fromClientConfiguration(clientConfiguration));
 	}
 
-	@EventListener
-	public void transportErrorEventHandler(ControlServerSessionTransportErrorEvent errorEvent) {
+	@Override
+	public void handleTransportErrorEvent(ControlServerSessionTransportErrorEvent transportErrorEvent) {
 		if (lifecycle == ConnectionLifecycle.PROVISIONING || lifecycle == ConnectionLifecycle.OPERATIONAL) {
-			log.info("ControlServer-Connection failed: {} -- disconnecting and restarting Discovery", errorEvent.getMessage());
+			log.info("ControlServer-Connection failed: {} -- disconnecting and restarting Discovery", transportErrorEvent.getMessage());
 			controlServerClient.disconnect();
 			initiateDiscovery();
 		}
