@@ -25,7 +25,7 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDisco
 import de.mazdermind.gintercom.shared.controlserver.events.AddressDiscoveryEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
-import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEventMulticaster;
+import de.mazdermind.gintercom.shared.controlserver.events.support.ConnectionLifecycleEventMulticaster;
 import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;

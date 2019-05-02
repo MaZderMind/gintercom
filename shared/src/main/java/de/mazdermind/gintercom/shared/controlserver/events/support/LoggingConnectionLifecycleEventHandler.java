@@ -1,9 +1,10 @@
-package de.mazdermind.gintercom.shared.controlserver.events;
+package de.mazdermind.gintercom.shared.controlserver.events.support;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEvent;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 

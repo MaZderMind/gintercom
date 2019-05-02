@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.shared.controlserver.events;
+package de.mazdermind.gintercom.shared.controlserver.events.support;
 
 import static de.mazdermind.gintercom.shared.utils.ObjectListClassNameUtil.classNamesList;
 
@@ -9,6 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+
+import de.mazdermind.gintercom.shared.controlserver.events.AddressDiscoveryEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 
 @Service
 @Lazy

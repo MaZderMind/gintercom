@@ -1,4 +1,10 @@
-package de.mazdermind.gintercom.shared.controlserver.events;
+package de.mazdermind.gintercom.shared.controlserver.events.support;
+
+import de.mazdermind.gintercom.shared.controlserver.events.AddressDiscoveryEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEvent;
+import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 
 /**
  * Implement this Interface to receive ConnectionLifecycleEvents
