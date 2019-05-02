@@ -62,10 +62,11 @@ public class ConnectionLifecycleModalManager {
 		boolean isOperational = lifecycleManager.getLifecycle().isOperational();
 		if (isOperational) {
 			log.info("System is already Operational - skipping ConnectionLifecycleModal");
-			dialog.setVisible(false);
+			// setVisible is actually blocking (who knew from the name…)
+			EventQueue.invokeLater(() -> dialog.setVisible(false));
 		} else {
 			log.info("Showing ConnectionLifecycleModal");
-			dialog.setVisible(true);
+			EventQueue.invokeLater(() -> dialog.setVisible(true));
 		}
 
 		assert this.dialog == null : "only one ConnectionLifecycleModal is supported";
@@ -79,6 +80,7 @@ public class ConnectionLifecycleModalManager {
 		log.info("Event: {}, Operational?: {}",
 			lifecycleEvent.getClass().getSimpleName(),
 			lifecycleEvent.getLifecycle().isOperational());
+
 		EventQueue.invokeLater(() -> {
 			label.setText(lifecycleEvent.getDisplayText());
 			dialog.setVisible(!lifecycleEvent.getLifecycle().isOperational());

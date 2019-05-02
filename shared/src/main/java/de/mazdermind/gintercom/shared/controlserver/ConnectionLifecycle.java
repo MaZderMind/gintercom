@@ -10,7 +10,6 @@ public enum ConnectionLifecycle {
 	private final String displayText;
 
 	ConnectionLifecycle(String displayText) {
-
 		this.displayText = displayText;
 	}
 
