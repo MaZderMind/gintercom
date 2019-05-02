@@ -1,4 +1,4 @@
-HELP.md
+/dist
 */target/
 !.mvn/wrapper/maven-wrapper.jar
 *.dot
@@ -28,7 +28,3 @@ HELP.md
 
 ### VS Code ###
 /.vscode/
-/.idea
-*/.idea
-/.mvn
-*/.mvn

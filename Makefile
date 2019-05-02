@@ -7,6 +7,14 @@ clean:
 package:
 	mvn package
 
+dist: clean package
+	rm -rf dist
+	mkdir -p dist
+	cp matrix/target/matrix-*.jar dist/matrix.jar
+	cp debugclient/target/debugclient-*.jar dist/debugclient.jar
+	cd dist && sha1sum *.* >SHA1SUMS
+	cd dist && sha256sum *.* >SHA256SUMS
+
 test:
 	mvn test
 
@@ -30,3 +38,6 @@ run-packaged-matrix:
 
 run-packaged-debugclient:
 	java -jar debugclient/target/debugclient-*.jar
+
+.PHONY: dist
+
