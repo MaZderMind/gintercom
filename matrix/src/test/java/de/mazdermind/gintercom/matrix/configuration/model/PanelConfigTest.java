@@ -49,10 +49,6 @@ public class PanelConfigTest {
 		assertThat(buttonConfig.getAction(), is(ButtonAction.PTT));
 		assertThat(buttonConfig.getTargetType(), is(ButtonTargetType.GROUP));
 		assertThat(buttonConfig.getTarget(), is("room-a"));
-
-		assertThat(panelConfig.getFixedIp().getIp().getHostAddress(), is("127.0.0.1"));
-		assertThat(panelConfig.getFixedIp().getMatrixPort(), is(10004));
-		assertThat(panelConfig.getFixedIp().getClientPort(), is(20004));
 	}
 
 	@Test
@@ -66,9 +62,6 @@ public class PanelConfigTest {
 
 		assertThat(panelConfig.getButtons(), notNullValue());
 		assertThat(panelConfig.getButtons().size(), is(0));
-
-		assertThat(panelConfig.hasFixedIp(), is(false));
-		assertThat(panelConfig.getFixedIp(), nullValue());
 	}
 
 	@Test

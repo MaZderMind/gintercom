@@ -20,9 +20,6 @@ public class PanelConfig {
 	private Set<String> txGroups = emptySet();
 	private Set<String> buttonsets = emptySet();
 
-	@Valid // TODO re-evaluate if required, add Tests if it is
-	private PanelFixedIpConfiguration fixedIp = null;
-
 	@Valid
 	private Map<String, ButtonConfig> buttons = emptyMap();
 
@@ -44,14 +41,6 @@ public class PanelConfig {
 
 	public Set<String> getButtonsets() {
 		return buttonsets;
-	}
-
-	public PanelFixedIpConfiguration getFixedIp() {
-		return fixedIp;
-	}
-
-	public boolean hasFixedIp() {
-		return fixedIp != null;
 	}
 
 	public Map<String, ButtonConfig> getButtons() {
