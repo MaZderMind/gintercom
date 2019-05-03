@@ -2,8 +2,3 @@ display="Helpdesk 1"
 rxGroups=["helpdesk"]
 txGroups=["helpdesk"]
 buttonsets=["helpdesk"]
-
-[fixedIp]
-ip="127.0.0.1"
-matrixPort=10001
-clientPort=20001

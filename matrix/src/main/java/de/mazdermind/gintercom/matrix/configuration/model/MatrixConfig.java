@@ -15,6 +15,10 @@ public class MatrixConfig {
 	@NotNull
 	private RtpConfig rtp;
 
+	@Valid
+	@NotNull
+	private PortsConfig ports;
+
 	public String getDisplay() {
 		return display;
 	}
@@ -27,4 +31,7 @@ public class MatrixConfig {
 		return rtp;
 	}
 
+	public PortsConfig getPorts() {
+		return ports;
+	}
 }

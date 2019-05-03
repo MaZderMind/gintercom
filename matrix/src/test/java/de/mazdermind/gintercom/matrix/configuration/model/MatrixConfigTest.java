@@ -31,6 +31,11 @@ public class MatrixConfigTest {
 		assertThat(matrixConfig.getWebui().getPort(), is(2380));
 
 		assertThat(matrixConfig.getRtp().getJitterbuffer(), is(50L));
+
+		assertThat(matrixConfig.getPorts().getPanelToMatrix().getStart(), is(20000));
+		assertThat(matrixConfig.getPorts().getPanelToMatrix().getLimit(), is(9999));
+		assertThat(matrixConfig.getPorts().getMatrixToPanel().getStart(), is(40000));
+		assertThat(matrixConfig.getPorts().getMatrixToPanel().getLimit(), is(9999));
 	}
 
 
@@ -92,6 +97,41 @@ public class MatrixConfigTest {
 	@Test
 	public void validationFailsWithoutRtpSection() {
 		testJson.remove("rtp");
+		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
+		assertThat(matrixConfig, not(validates()));
+	}
+
+	@Test
+	public void validationFailsWithoutPanelToMatrixConfig() {
+		testJson.getObject("ports").remove("panelToMatrix");
+		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
+		assertThat(matrixConfig, not(validates()));
+	}
+
+	@Test
+	public void validationFailsWithoutMatrixToPanelConfig() {
+		testJson.getObject("ports").remove("matrixToPanel");
+		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
+		assertThat(matrixConfig, not(validates()));
+	}
+
+	@Test
+	public void validationFailsWithInvalidPanelToMatrixConfig() {
+		testJson.getObject("ports").getObject("panelToMatrix").remove("start");
+		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
+		assertThat(matrixConfig, not(validates()));
+	}
+
+	@Test
+	public void validationFailsWithInvalidMatrixToPanelConfig() {
+		testJson.getObject("ports").getObject("matrixToPanel").remove("start");
+		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
+		assertThat(matrixConfig, not(validates()));
+	}
+
+	@Test
+	public void validationFailsWithoutPortsConfig() {
+		testJson.remove("ports");
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig, not(validates()));
 	}

@@ -8,8 +8,3 @@ display="Room A Broadcast"
 action="ptt"
 targetType="group"
 target="room-a"
-
-[fixedIp]
-ip="127.0.0.1"
-matrixPort=10004
-clientPort=20004
