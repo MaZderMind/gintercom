@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
-import de.mazdermind.gintercom.shared.controlserver.GintercomClientConfiguration;
+import de.mazdermind.gintercom.shared.controlserver.ClientConfiguration;
 import de.mazdermind.gintercom.shared.hostid.FileBasedHostId;
 
 @Configuration
-public class DebugClientConfiguration implements GintercomClientConfiguration {
+public class DebugClientConfiguration implements ClientConfiguration {
 	private final FileBasedHostId fileBasedHostId;
 	private final CliArguments cliArguments;
 

@@ -3,7 +3,7 @@ package de.mazdermind.gintercom.shared.controlserver.messages.ohai;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import de.mazdermind.gintercom.shared.controlserver.GintercomClientConfiguration;
+import de.mazdermind.gintercom.shared.controlserver.ClientConfiguration;
 
 
 public class OhaiMessage {
@@ -19,7 +19,7 @@ public class OhaiMessage {
 	@Valid
 	private Capabilities capabilities;
 
-	public static OhaiMessage fromClientConfiguration(GintercomClientConfiguration clientConfiguration) {
+	public static OhaiMessage fromClientConfiguration(ClientConfiguration clientConfiguration) {
 		return new OhaiMessage()
 			.setClientId(clientConfiguration.getClientId())
 			.setClientModel(clientConfiguration.getClientModel())
