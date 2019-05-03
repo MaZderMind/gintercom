@@ -1,8 +1,7 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
-import static de.mazdermind.gintercom.matchers.ValidatesMatcher.validates;
-import static de.mazdermind.gintercom.utils.JsonMapUtils.convertJsonTo;
-import static de.mazdermind.gintercom.utils.JsonMapUtils.getJsonMap;
+import static de.mazdermind.gintercom.testutils.JsonMapUtils.convertJsonTo;
+import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -13,27 +12,25 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import de.mazdermind.gintercom.utils.JsonMapUtils;
+import de.mazdermind.gintercom.testutils.JsonMap;
+import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
 public class PanelConfigTest {
 
-	private Map<String, Object> testJsonFull;
-	private Map<String, Object> testJsonMinimal;
+	private JsonMap testJsonFull;
+	private JsonMap testJsonMinimal;
 
-	private Map<String, Object> buttonJson;
+	private JsonMap buttonJson;
 
 	@Before
 	public void prepare() {
 		testJsonFull = JsonMapUtils.readTomlToMap("config/model/panel-full.toml");
 		testJsonMinimal = JsonMapUtils.readTomlToMap("config/model/panel-minimal.toml");
 
-		Map<String, Object> buttonsJson = getJsonMap(testJsonFull, "buttons");
-		buttonJson = getJsonMap(buttonsJson, "6");
+		buttonJson = testJsonFull.getObject("buttons").getObject("6");
 	}
 
 

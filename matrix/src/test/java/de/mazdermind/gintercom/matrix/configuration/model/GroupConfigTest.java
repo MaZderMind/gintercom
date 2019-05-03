@@ -1,7 +1,7 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
-import static de.mazdermind.gintercom.matchers.ValidatesMatcher.validates;
-import static de.mazdermind.gintercom.utils.JsonMapUtils.convertJsonTo;
+import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
+import static de.mazdermind.gintercom.testutils.JsonMapUtils.convertJsonTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
@@ -11,7 +11,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.mazdermind.gintercom.utils.JsonMapUtils;
+import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
 public class GroupConfigTest {
 

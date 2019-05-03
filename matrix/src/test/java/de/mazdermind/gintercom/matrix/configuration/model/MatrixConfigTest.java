@@ -1,22 +1,20 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
-import static de.mazdermind.gintercom.matchers.ValidatesMatcher.validates;
-import static de.mazdermind.gintercom.utils.JsonMapUtils.convertJsonTo;
-import static de.mazdermind.gintercom.utils.JsonMapUtils.getJsonMap;
+import static de.mazdermind.gintercom.testutils.JsonMapUtils.convertJsonTo;
+import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import de.mazdermind.gintercom.utils.JsonMapUtils;
+import de.mazdermind.gintercom.testutils.JsonMap;
+import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
 public class MatrixConfigTest {
 
-	private Map<String, Object> testJson;
+	private JsonMap testJson;
 
 	@Before
 	public void prepare() {
@@ -38,7 +36,7 @@ public class MatrixConfigTest {
 
 	@Test
 	public void deserializesIpv6Correctly() {
-		getJsonMap(testJson, "webui").put("bind", "2a03:4000:6:d080::1");
+		testJson.getObject("webui").put("bind", "2a03:4000:6:d080::1");
 
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig.getWebui().getBind().getHostAddress(), is("2a03:4000:6:d080:0:0:0:1"));
@@ -46,7 +44,7 @@ public class MatrixConfigTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void deserializationFailsWithInvalidAddress() {
-		getJsonMap(testJson, "webui").put("bind", "127.0..");
+		testJson.getObject("webui").put("bind", "127.0..");
 		convertJsonTo(MatrixConfig.class, testJson);
 	}
 
@@ -58,14 +56,14 @@ public class MatrixConfigTest {
 
 	@Test
 	public void validationFailsWithoutBindAddress() {
-		getJsonMap(testJson, "webui").remove("bind");
+		testJson.getObject("webui").remove("bind");
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig, not(validates()));
 	}
 
 	@Test
 	public void validationFailsWithoutPort() {
-		getJsonMap(testJson, "webui").remove("port");
+		testJson.getObject("webui").remove("port");
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig, not(validates()));
 	}
@@ -79,7 +77,7 @@ public class MatrixConfigTest {
 
 	@Test
 	public void validationFailsWithoutJitterbufffer() {
-		getJsonMap(testJson, "rtp").remove("jitterbuffer");
+		testJson.getObject("rtp").remove("jitterbuffer");
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig, not(validates()));
 	}

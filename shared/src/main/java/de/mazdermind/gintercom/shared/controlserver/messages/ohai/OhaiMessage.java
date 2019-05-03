@@ -17,6 +17,7 @@ public class OhaiMessage {
 	private String clientModel;
 
 	@Valid
+	@NotNull
 	private Capabilities capabilities;
 
 	public static OhaiMessage fromClientConfiguration(ClientConfiguration clientConfiguration) {

@@ -1,31 +1,28 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
-import static de.mazdermind.gintercom.matchers.ValidatesMatcher.validates;
-import static de.mazdermind.gintercom.utils.JsonMapUtils.convertJsonTo;
-import static de.mazdermind.gintercom.utils.JsonMapUtils.getJsonMap;
+import static de.mazdermind.gintercom.testutils.JsonMapUtils.convertJsonTo;
+import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
-import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import de.mazdermind.gintercom.utils.JsonMapUtils;
+import de.mazdermind.gintercom.testutils.JsonMap;
+import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
 public class ButtonSetConfigTest {
 
-	private Map<String, Object> testJson;
-	private Map<String, Object> buttonJson;
+	private JsonMap testJson;
+	private JsonMap buttonJson;
 
 	@Before
 	public void prepare() {
 		testJson = JsonMapUtils.readTomlToMap("config/model/buttonset.toml");
 
-		Map<String, Object> buttonsJson = getJsonMap(testJson, "buttons");
-		buttonJson = getJsonMap(buttonsJson, "1");
+		buttonJson = testJson.getObject("buttons").getObject("1");
 	}
 
 	@Test

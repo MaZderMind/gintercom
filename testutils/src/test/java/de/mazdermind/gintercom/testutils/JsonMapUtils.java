@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.utils;
+package de.mazdermind.gintercom.testutils;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -20,17 +20,19 @@ public class JsonMapUtils {
 		toml = new Toml();
 	}
 
-	public static Map<String, Object> getJsonMap(Map<String, ?> parent, String key) {
-		//noinspection unchecked
-		return (Map<String, Object>) parent.get(key);
-	}
-
 	public static <T> T convertJsonTo(Class<T> klazz, Map<String, ?> map) {
 		return objectMapper.convertValue(map, klazz);
 	}
 
-	public static Map<String, Object> readTomlToMap(String file) {
+	public static JsonMap readTomlToMap(String file) {
 		InputStream stream = JsonMapUtils.class.getClassLoader().getResourceAsStream(file);
-		return toml.read(Objects.requireNonNull(stream)).toMap();
+		Map<String, Object> map = toml.read(Objects.requireNonNull(stream)).toMap();
+		return new JsonMap(map);
 	}
+
+	public static <T> JsonMap convertToJson(T object) {
+		//noinspection unchecked
+		return new JsonMap(objectMapper.convertValue(object, Map.class));
+	}
+
 }

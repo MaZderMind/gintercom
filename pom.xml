@@ -19,6 +19,7 @@
 		<module>shared</module>
 		<module>matrix</module>
 		<module>debugclient</module>
+		<module>testutils</module>
 	</modules>
 
 	<build>

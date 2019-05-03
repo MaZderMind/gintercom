@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matchers;
+package de.mazdermind.gintercom.testutils.matchers;
 
 import java.util.Set;
 

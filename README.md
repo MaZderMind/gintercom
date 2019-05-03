@@ -31,7 +31,7 @@ ls -la {matrix,debugclient}/target/*.jar
 
 
 ## Run (for Development)
-I recommend IntelliJ ´Ultimate (or Community, which lacks Spring Support but is otherwise still a great IDE). You won't get far with a Text-Editor.
+I recommend IntelliJ Ultimate (or Community, which lacks Spring Support but is otherwise still a great IDE). You won't get far with a Text-Editor.
 
 Install Build-and Runtime-Dependencies (Tested on Debian Stretch):
 ```bash

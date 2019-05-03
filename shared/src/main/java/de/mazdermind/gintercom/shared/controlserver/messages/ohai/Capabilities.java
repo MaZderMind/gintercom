@@ -5,10 +5,10 @@ import static java.util.Collections.unmodifiableList;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 public class Capabilities {
-	@NotNull
+	@NotEmpty
 	private List<String> buttons = new ArrayList<>();
 
 	public List<String> getButtons() {
