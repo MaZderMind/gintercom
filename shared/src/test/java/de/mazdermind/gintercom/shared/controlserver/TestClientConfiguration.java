@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 
 @SuppressWarnings("WeakerAccess")
-public class TestClientConfiguration implements GintercomClientConfiguration {
+public class TestClientConfiguration implements ClientConfiguration {
 	public static final String CLIENT_ID = "TEST:TEST";
 	public static final String CLIENT_MODEL = "testclient";
 	public static final int PROTOCOL_VERSION = 42;

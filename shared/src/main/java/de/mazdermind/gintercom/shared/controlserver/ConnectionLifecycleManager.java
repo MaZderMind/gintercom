@@ -34,7 +34,7 @@ import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInf
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
-@ConditionalOnBean(GintercomClientConfiguration.class)
+@ConditionalOnBean(ClientConfiguration.class)
 public class ConnectionLifecycleManager implements ProvisioningInformationAware, ControlServerSessionTransportErrorAware {
 	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 3;
 
@@ -43,7 +43,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	private final ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster;
 	private final MatrixAddressDiscoveryService addressDiscoveryService;
 	private final ControlServerClient controlServerClient;
-	private final GintercomClientConfiguration clientConfiguration;
+	private final ClientConfiguration clientConfiguration;
 	private final TaskScheduler scheduler;
 
 	private ConnectionLifecycle lifecycle = ConnectionLifecycle.STARTING;
@@ -54,7 +54,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 		@Autowired MatrixAddressDiscoveryService addressDiscoveryService,
 		@Autowired ControlServerClient controlServerClient,
 		@Qualifier("gintercomTaskScheduler") @Autowired TaskScheduler scheduler,
-		@Autowired GintercomClientConfiguration clientConfiguration
+		@Autowired ClientConfiguration clientConfiguration
 	) {
 		this.connectionLifecycleEventMulticaster = connectionLifecycleEventMulticaster;
 		this.addressDiscoveryService = addressDiscoveryService;
