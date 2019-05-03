@@ -14,6 +14,8 @@ public class PanelConfig {
 	@NotNull
 	private String display;
 
+	private String hostId;
+
 	private Set<String> rxGroups = emptySet();
 	private Set<String> txGroups = emptySet();
 	private Set<String> buttonsets = emptySet();
@@ -26,6 +28,10 @@ public class PanelConfig {
 
 	public String getDisplay() {
 		return display;
+	}
+
+	public String getHostId() {
+		return hostId;
 	}
 
 	public Set<String> getRxGroups() {

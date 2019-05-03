@@ -38,6 +38,7 @@ public class PanelConfigTest {
 	public void deserializesCorrectly() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
 		assertThat(panelConfig.getDisplay(), is("A/V Tech Romm A"));
+		assertThat(panelConfig.getHostId(), is("DEAD-BEEF"));
 		assertThat(panelConfig.getRxGroups(), containsInAnyOrder("room-a", "av-tech"));
 		assertThat(panelConfig.getTxGroups(), contains("av-tech"));
 		assertThat(panelConfig.getButtonsets(), contains("av-tech"));
@@ -58,6 +59,7 @@ public class PanelConfigTest {
 	public void deserializesMinimalConfigCorrectly() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonMinimal);
 		assertThat(panelConfig.getDisplay(), is("A/V Tech Romm A"));
+		assertThat(panelConfig.getHostId(), nullValue());
 		assertThat(panelConfig.getRxGroups(), empty());
 		assertThat(panelConfig.getTxGroups(), empty());
 		assertThat(panelConfig.getButtonsets(), empty());

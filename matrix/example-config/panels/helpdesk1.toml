@@ -2,3 +2,4 @@ display="Helpdesk 1"
 rxGroups=["helpdesk"]
 txGroups=["helpdesk"]
 buttonsets=["helpdesk"]
+hostId="0000-0001"
