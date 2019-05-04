@@ -1,0 +1,16 @@
+Ablauf Registrierungsphase
+
+Ohai-Message
+ - Host-ID unbekannt? --> Später
+ - Host-ID bekannt --> Config lesen, PortAllocationManager::allocatePortsForPanel(String panelId)
+ - PanelRegistrationAware::handlePanelRegistration(PanelConfiguration, AllocatedPorts)
+   - Erzeugt neues Panel in der Pipeline
+ - Antwort mit ProvisionMessage(PanelConfiguration, AllocatedPorts)
+   - Client konfiguriert Pipeline
+   - Pipeline startet
+ - Disconnect(Matrix)
+   - PanelRegistrationAware::handlePanelDeRegistration(PanelConfiguration, AllocatedPorts)
+   - Pipeline entfernt Panel
+   - PortAllocationManager behält sich die Ports für dieses Panel für eine zukünftige, erneute Registrierung
+ - TransportError(Client)
+   - Pipeline Stoppen
