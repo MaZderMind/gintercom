@@ -41,8 +41,8 @@ public class ConfigFactory {
 	private final Validator validator;
 
 	public ConfigFactory(
-			@Autowired CliArguments cliArguments,
-			@Autowired Validator validator
+		@Autowired CliArguments cliArguments,
+		@Autowired Validator validator
 	) {
 		this.cliArguments = cliArguments;
 		this.validator = validator;
@@ -56,12 +56,11 @@ public class ConfigFactory {
 		String configDirectory = cliArguments.getConfigDirectory();
 		log.info("Loading Configuration from Directory {}", configDirectory);
 
-		Config config = new Config(
-				loadConfigFile(Paths.get(configDirectory, "matrix.toml"), MatrixConfig.class),
-				loadConfigFiles(Paths.get(configDirectory, "panels"), PanelConfig.class),
-				loadConfigFiles(Paths.get(configDirectory, "groups"), GroupConfig.class),
-				loadConfigFiles(Paths.get(configDirectory, "buttonsets"), ButtonSetConfig.class)
-		);
+		Config config = new Config()
+			.setMatrixConfig(loadConfigFile(Paths.get(configDirectory, "matrix.toml"), MatrixConfig.class))
+			.setPanels(loadConfigFiles(Paths.get(configDirectory, "panels"), PanelConfig.class))
+			.setGroups(loadConfigFiles(Paths.get(configDirectory, "groups"), GroupConfig.class))
+			.setButtonsets(loadConfigFiles(Paths.get(configDirectory, "buttonsets"), ButtonSetConfig.class));
 
 		log.info("Validating Config");
 		Set<ConstraintViolation<Config>> constraintViolations = validator.validate(config);
@@ -77,9 +76,9 @@ public class ConfigFactory {
 		config.validateReferences();
 
 		log.info("Loaded {} Panels, {} Groups and {} Buttonsets from Config",
-				config.getPanels().size(),
-				config.getGroups().size(),
-				config.getButtonsets().size());
+			config.getPanels().size(),
+			config.getGroups().size(),
+			config.getButtonsets().size());
 
 		return config;
 	}
@@ -98,14 +97,14 @@ public class ConfigFactory {
 
 	private <T> Map<String, T> loadConfigFiles(Path folder, Class<T> klazz) throws IOException {
 		return Files.list(folder).collect(Collectors.toMap(
-				path -> FilenameUtils.getBaseName(path.getFileName().toString()),
-				path -> {
-					try {
-						return loadConfigFile(path, klazz);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
+			path -> FilenameUtils.getBaseName(path.getFileName().toString()),
+			path -> {
+				try {
+					return loadConfigFile(path, klazz);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
+			}
 		));
 	}
 }

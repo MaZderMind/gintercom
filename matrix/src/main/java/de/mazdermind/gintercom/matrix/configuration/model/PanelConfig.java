@@ -33,24 +33,54 @@ public class PanelConfig {
 		return display;
 	}
 
+	public PanelConfig setDisplay(String display) {
+		this.display = display;
+		return this;
+	}
+
 	public String getHostId() {
 		return hostId;
+	}
+
+	public PanelConfig setHostId(String hostId) {
+		this.hostId = hostId;
+		return this;
 	}
 
 	public Set<String> getRxGroups() {
 		return rxGroups;
 	}
 
+	public PanelConfig setRxGroups(Set<String> rxGroups) {
+		this.rxGroups = rxGroups;
+		return this;
+	}
+
 	public Set<String> getTxGroups() {
 		return txGroups;
+	}
+
+	public PanelConfig setTxGroups(Set<String> txGroups) {
+		this.txGroups = txGroups;
+		return this;
 	}
 
 	public Set<String> getButtonsets() {
 		return buttonsets;
 	}
 
+	public PanelConfig setButtonsets(Set<String> buttonsets) {
+		this.buttonsets = buttonsets;
+		return this;
+	}
+
 	public Map<String, ButtonConfig> getButtons() {
 		return unmodifiableMap(buttons);
+	}
+
+	public PanelConfig setButtons(Map<String, ButtonConfig> buttons) {
+		this.buttons = buttons;
+		return this;
 	}
 
 	@Override

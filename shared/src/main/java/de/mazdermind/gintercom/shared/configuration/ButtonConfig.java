@@ -23,16 +23,36 @@ public class ButtonConfig {
 		return display;
 	}
 
+	public ButtonConfig setDisplay(String display) {
+		this.display = display;
+		return this;
+	}
+
 	public ButtonAction getAction() {
 		return action;
+	}
+
+	public ButtonConfig setAction(ButtonAction action) {
+		this.action = action;
+		return this;
 	}
 
 	public ButtonTargetType getTargetType() {
 		return targetType;
 	}
 
+	public ButtonConfig setTargetType(ButtonTargetType targetType) {
+		this.targetType = targetType;
+		return this;
+	}
+
 	public String getTarget() {
 		return target;
+	}
+
+	public ButtonConfig setTarget(String target) {
+		this.target = target;
+		return this;
 	}
 
 	@Override

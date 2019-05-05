@@ -27,16 +27,36 @@ public class MatrixConfig {
 		return display;
 	}
 
+	public MatrixConfig setDisplay(String display) {
+		this.display = display;
+		return this;
+	}
+
 	public ServerConfig getWebui() {
 		return webui;
+	}
+
+	public MatrixConfig setWebui(ServerConfig webui) {
+		this.webui = webui;
+		return this;
 	}
 
 	public RtpConfig getRtp() {
 		return rtp;
 	}
 
+	public MatrixConfig setRtp(RtpConfig rtp) {
+		this.rtp = rtp;
+		return this;
+	}
+
 	public PortsConfig getPorts() {
 		return ports;
+	}
+
+	public MatrixConfig setPorts(PortsConfig ports) {
+		this.ports = ports;
+		return this;
 	}
 
 	@Override

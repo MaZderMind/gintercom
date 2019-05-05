@@ -20,8 +20,18 @@ public class PortsConfig {
 		return panelToMatrix;
 	}
 
+	public PortsConfig setPanelToMatrix(PortPoolConfig panelToMatrix) {
+		this.panelToMatrix = panelToMatrix;
+		return this;
+	}
+
 	public PortPoolConfig getMatrixToPanel() {
 		return matrixToPanel;
+	}
+
+	public PortsConfig setMatrixToPanel(PortPoolConfig matrixToPanel) {
+		this.matrixToPanel = matrixToPanel;
+		return this;
 	}
 
 	@Override

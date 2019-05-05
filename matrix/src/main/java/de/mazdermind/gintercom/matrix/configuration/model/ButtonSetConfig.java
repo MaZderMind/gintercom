@@ -14,10 +14,16 @@ import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
 
 public class ButtonSetConfig {
 	@NotNull
+	@Valid
 	private Map<String, ButtonConfig> buttons;
 
 	public Map<String, ButtonConfig> getButtons() {
 		return unmodifiableMap(buttons);
+	}
+
+	public ButtonSetConfig setButtons(Map<String, ButtonConfig> buttons) {
+		this.buttons = buttons;
+		return this;
 	}
 
 	@Override

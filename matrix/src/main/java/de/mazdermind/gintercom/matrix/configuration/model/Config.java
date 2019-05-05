@@ -30,27 +30,43 @@ public class Config {
 	@Valid
 	private Map<String, ButtonSetConfig> buttonsets;
 
-	public Config(MatrixConfig matrixConfig, Map<String, PanelConfig> panels, Map<String, GroupConfig> groups, Map<String, ButtonSetConfig> buttonsets) {
-		this.matrixConfig = matrixConfig;
-		this.panels = panels;
-		this.groups = groups;
-		this.buttonsets = buttonsets;
+	public Config() {
 	}
 
 	public MatrixConfig getMatrixConfig() {
 		return matrixConfig;
 	}
 
+	public Config setMatrixConfig(MatrixConfig matrixConfig) {
+		this.matrixConfig = matrixConfig;
+		return this;
+	}
+
 	public Map<String, PanelConfig> getPanels() {
 		return panels;
+	}
+
+	public Config setPanels(Map<String, PanelConfig> panels) {
+		this.panels = panels;
+		return this;
 	}
 
 	public Map<String, GroupConfig> getGroups() {
 		return groups;
 	}
 
+	public Config setGroups(Map<String, GroupConfig> groups) {
+		this.groups = groups;
+		return this;
+	}
+
 	public Map<String, ButtonSetConfig> getButtonsets() {
 		return buttonsets;
+	}
+
+	public Config setButtonsets(Map<String, ButtonSetConfig> buttonsets) {
+		this.buttonsets = buttonsets;
+		return this;
 	}
 
 	public void validateReferences() {

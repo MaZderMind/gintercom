@@ -24,6 +24,16 @@ public class PortPoolConfig {
 		return limit;
 	}
 
+	public PortPoolConfig setStart(Integer start) {
+		this.start = start;
+		return this;
+	}
+
+	public PortPoolConfig setLimit(Integer limit) {
+		this.limit = limit;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(start, limit);

@@ -14,6 +14,11 @@ public class GroupConfig {
 		return display;
 	}
 
+	public GroupConfig setDisplay(String display) {
+		this.display = display;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(display);

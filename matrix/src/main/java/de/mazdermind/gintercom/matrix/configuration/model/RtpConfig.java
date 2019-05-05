@@ -14,6 +14,11 @@ public class RtpConfig {
 		return jitterbuffer;
 	}
 
+	public RtpConfig setJitterbuffer(Long jitterbuffer) {
+		this.jitterbuffer = jitterbuffer;
+		return this;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(jitterbuffer);

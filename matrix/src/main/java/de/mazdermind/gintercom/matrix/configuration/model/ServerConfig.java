@@ -19,8 +19,18 @@ public class ServerConfig {
 		return bind;
 	}
 
+	public ServerConfig setBind(InetAddress bind) {
+		this.bind = bind;
+		return this;
+	}
+
 	public Integer getPort() {
 		return port;
+	}
+
+	public ServerConfig setPort(Integer port) {
+		this.port = port;
+		return this;
 	}
 
 	@Override
