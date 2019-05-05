@@ -6,14 +6,14 @@ import com.google.common.collect.ImmutableList;
 
 @SuppressWarnings("WeakerAccess")
 public class TestClientConfiguration implements ClientConfiguration {
-	public static final String CLIENT_ID = "TEST:TEST";
+	public static final String HOST_ID = "TEST:TEST";
 	public static final String CLIENT_MODEL = "testclient";
 	public static final int PROTOCOL_VERSION = 42;
 	public static final ImmutableList<String> BUTTONS = ImmutableList.of("A", "B", "C");
 
 	@Override
-	public String getClientId() {
-		return CLIENT_ID;
+	public String getHostId() {
+		return HOST_ID;
 	}
 
 	@Override

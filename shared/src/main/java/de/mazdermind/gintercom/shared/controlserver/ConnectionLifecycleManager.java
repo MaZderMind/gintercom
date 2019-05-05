@@ -125,7 +125,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	private void initiateProvisioning(StompSession stompSession) {
 		log.info("sending PanelRegistrationMessage");
 		lifecycle = ConnectionLifecycle.PROVISIONING;
-		connectionLifecycleEventMulticaster.dispatch(new AwaitingProvisioningEvent(clientConfiguration.getClientId()));
+		connectionLifecycleEventMulticaster.dispatch(new AwaitingProvisioningEvent(clientConfiguration.getHostId()));
 
 		stompSession.send("/registration", PanelRegistrationMessage.fromClientConfiguration(clientConfiguration));
 	}

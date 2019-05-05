@@ -7,7 +7,7 @@ import java.util.List;
  * announce its existence to the Matrix and requests Provisioning.
  */
 public interface ClientConfiguration {
-	String getClientId();
+	String getHostId();
 
 	Integer getProtocolVersion();
 

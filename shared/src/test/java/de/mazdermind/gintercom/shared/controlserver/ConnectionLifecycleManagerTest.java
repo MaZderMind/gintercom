@@ -194,7 +194,7 @@ public class ConnectionLifecycleManagerTest {
 		ArgumentCaptor<PanelRegistrationMessage> captor = ArgumentCaptor.forClass(PanelRegistrationMessage.class);
 		verify(stompSession).send(eq("/registration"), captor.capture());
 		PanelRegistrationMessage panelRegistrationMessage = captor.getValue();
-		assertThat(panelRegistrationMessage.getClientId(), is(TestClientConfiguration.CLIENT_ID));
+		assertThat(panelRegistrationMessage.getHostId(), is(TestClientConfiguration.HOST_ID));
 		assertThat(panelRegistrationMessage.getClientModel(), is(TestClientConfiguration.CLIENT_MODEL));
 		assertThat(panelRegistrationMessage.getProtocolVersion(), is(TestClientConfiguration.PROTOCOL_VERSION));
 		assertThat(panelRegistrationMessage.getCapabilities().getButtons(), is(TestClientConfiguration.BUTTONS));
@@ -209,7 +209,7 @@ public class ConnectionLifecycleManagerTest {
 
 		ArgumentCaptor<AwaitingProvisioningEvent> captor = ArgumentCaptor.forClass(AwaitingProvisioningEvent.class);
 		verify(connectionLifecycleEventMulticaster).dispatch(captor.capture());
-		assertThat(captor.getValue().getClientId(), is(TestClientConfiguration.CLIENT_ID));
+		assertThat(captor.getValue().getHostId(), is(TestClientConfiguration.HOST_ID));
 	}
 
 	@Test

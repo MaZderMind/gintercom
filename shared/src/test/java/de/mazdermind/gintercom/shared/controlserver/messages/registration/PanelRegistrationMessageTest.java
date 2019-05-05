@@ -18,7 +18,7 @@ import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
 public class PanelRegistrationMessageTest {
 
-	private static final String CLIENT_ID = "DEAD:BEEF";
+	private static final String HOST_ID = "DEAD:BEEF";
 	private static final String CLIENT_MODEL = "test-client";
 	private static final int PROTOCOL_VERSION = 42;
 	private static final List<String> BUTTONS = ImmutableList.of("1", "2", "3", "4", "X1", "X2");
@@ -28,7 +28,7 @@ public class PanelRegistrationMessageTest {
 	@Before
 	public void generateTestdata() {
 		panelRegistrationMessage = new PanelRegistrationMessage()
-			.setClientId(CLIENT_ID)
+			.setHostId(HOST_ID)
 			.setClientModel(CLIENT_MODEL)
 			.setProtocolVersion(PROTOCOL_VERSION)
 			.setCapabilities(new Capabilities()
@@ -38,7 +38,7 @@ public class PanelRegistrationMessageTest {
 	@Test
 	public void serializesCorrectly() {
 		JsonMap json = JsonMapUtils.convertToJson(panelRegistrationMessage);
-		assertThat(json.get("clientId"), is(CLIENT_ID));
+		assertThat(json.get("hostId"), is(HOST_ID));
 		assertThat(json.get("clientModel"), is(CLIENT_MODEL));
 		assertThat(json.get("protocolVersion"), is(PROTOCOL_VERSION));
 		assertThat(json.getObject("capabilities").get("buttons"), is(BUTTONS));
@@ -49,7 +49,7 @@ public class PanelRegistrationMessageTest {
 		JsonMap json = JsonMapUtils.convertToJson(this.panelRegistrationMessage);
 		PanelRegistrationMessage panelRegistrationMessage = JsonMapUtils.convertJsonTo(PanelRegistrationMessage.class, json);
 
-		assertThat(panelRegistrationMessage.getClientId(), is(CLIENT_ID));
+		assertThat(panelRegistrationMessage.getHostId(), is(HOST_ID));
 		assertThat(panelRegistrationMessage.getClientModel(), is(CLIENT_MODEL));
 		assertThat(panelRegistrationMessage.getProtocolVersion(), is(PROTOCOL_VERSION));
 		assertThat(panelRegistrationMessage.getCapabilities().getButtons(), is(BUTTONS));
@@ -61,8 +61,8 @@ public class PanelRegistrationMessageTest {
 	}
 
 	@Test
-	public void failsValidationWithoutClientId() {
-		panelRegistrationMessage.setClientId(null);
+	public void failsValidationWithoutHostId() {
+		panelRegistrationMessage.setHostId(null);
 		assertThat(panelRegistrationMessage, not(validates()));
 	}
 

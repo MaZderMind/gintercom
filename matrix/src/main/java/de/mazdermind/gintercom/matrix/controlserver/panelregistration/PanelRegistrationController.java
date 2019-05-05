@@ -54,7 +54,7 @@ public class PanelRegistrationController {
 	) {
 		String sessionId = headerAccessor.getSessionId();
 		InetAddress hostAddress = (InetAddress) headerAccessor.getSessionAttributes().get(IP_ADDRESS_ATTRIBUTE);
-		String hostId = message.getClientId();
+		String hostId = message.getHostId();
 		log.info("Host-Id {}: Received PanelRegistration-Message", hostId);
 
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);

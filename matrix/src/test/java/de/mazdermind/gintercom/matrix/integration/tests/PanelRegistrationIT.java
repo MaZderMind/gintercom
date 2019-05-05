@@ -38,7 +38,7 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 	public void prepare() {
 		client = new ControlServerTestClient(serverPort);
 		panelRegistrationMessage = new PanelRegistrationMessage()
-			.setClientId(UNKNOWN_HOST_ID)
+			.setHostId(UNKNOWN_HOST_ID)
 			.setClientModel(TEST_CLIENT_MODEL)
 			.setProtocolVersion(1)
 			.setCapabilities(new Capabilities()
@@ -67,7 +67,7 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 	public void panelRegistrationWithKnownHostIdRespondsWithExpectedProvisionMessage() {
 		client.connect();
 
-		panelRegistrationMessage.setClientId(HOST_ID);
+		panelRegistrationMessage.setHostId(HOST_ID);
 		client.send("/registration", panelRegistrationMessage);
 
 		ProvisionMessage provisionMessage = client.awaitMessage("/user/provision", ProvisionMessage.class);

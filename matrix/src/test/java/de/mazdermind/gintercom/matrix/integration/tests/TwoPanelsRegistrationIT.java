@@ -43,14 +43,14 @@ public class TwoPanelsRegistrationIT extends IntegrationTestBase {
 		client2 = new ControlServerTestClient(serverPort);
 
 		panelRegistrationMessage1 = new PanelRegistrationMessage()
-			.setClientId(HOST_ID_1)
+			.setHostId(HOST_ID_1)
 			.setClientModel(TEST_CLIENT_MODEL)
 			.setProtocolVersion(1)
 			.setCapabilities(new Capabilities()
 				.setButtons(TEST_CLIENT_BUTTONS));
 
 		panelRegistrationMessage2 = new PanelRegistrationMessage()
-			.setClientId(HOST_ID_2)
+			.setHostId(HOST_ID_2)
 			.setClientModel(TEST_CLIENT_MODEL)
 			.setProtocolVersion(1)
 			.setCapabilities(new Capabilities()

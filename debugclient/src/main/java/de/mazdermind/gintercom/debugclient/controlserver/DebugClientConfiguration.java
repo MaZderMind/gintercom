@@ -25,7 +25,7 @@ public class DebugClientConfiguration implements ClientConfiguration {
 	}
 
 	@Override
-	public String getClientId() {
+	public String getHostId() {
 		return cliArguments.getHostId().orElseGet(fileBasedHostId::getHostId);
 	}
 

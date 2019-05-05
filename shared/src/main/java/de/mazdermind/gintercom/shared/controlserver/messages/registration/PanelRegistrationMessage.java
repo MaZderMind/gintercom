@@ -13,7 +13,7 @@ import de.mazdermind.gintercom.shared.controlserver.ClientConfiguration;
 
 public class PanelRegistrationMessage {
 	@NotNull
-	private String clientId;
+	private String hostId;
 
 	@NotNull
 	private Integer protocolVersion;
@@ -27,19 +27,19 @@ public class PanelRegistrationMessage {
 
 	public static PanelRegistrationMessage fromClientConfiguration(ClientConfiguration clientConfiguration) {
 		return new PanelRegistrationMessage()
-			.setClientId(clientConfiguration.getClientId())
+			.setHostId(clientConfiguration.getHostId())
 			.setClientModel(clientConfiguration.getClientModel())
 			.setProtocolVersion(clientConfiguration.getProtocolVersion())
 			.setCapabilities(new Capabilities()
 				.setButtons(clientConfiguration.getButtons()));
 	}
 
-	public String getClientId() {
-		return clientId;
+	public String getHostId() {
+		return hostId;
 	}
 
-	public PanelRegistrationMessage setClientId(String clientId) {
-		this.clientId = clientId;
+	public PanelRegistrationMessage setHostId(String hostId) {
+		this.hostId = hostId;
 		return this;
 	}
 
@@ -72,7 +72,7 @@ public class PanelRegistrationMessage {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(clientId, protocolVersion, clientModel, capabilities);
+		return Objects.hashCode(hostId, protocolVersion, clientModel, capabilities);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class PanelRegistrationMessage {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		PanelRegistrationMessage that = (PanelRegistrationMessage) o;
-		return Objects.equal(clientId, that.clientId) &&
+		return Objects.equal(hostId, that.hostId) &&
 			Objects.equal(protocolVersion, that.protocolVersion) &&
 			Objects.equal(clientModel, that.clientModel) &&
 			Objects.equal(capabilities, that.capabilities);
@@ -89,7 +89,7 @@ public class PanelRegistrationMessage {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
-			.append("clientId", clientId)
+			.append("hostId", hostId)
 			.append("protocolVersion", protocolVersion)
 			.append("clientModel", clientModel)
 			.append("capabilities", capabilities)
