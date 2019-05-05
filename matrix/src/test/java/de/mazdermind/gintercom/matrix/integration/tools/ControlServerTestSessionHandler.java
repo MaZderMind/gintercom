@@ -33,11 +33,13 @@ public class ControlServerTestSessionHandler extends StompSessionHandlerAdapter 
 
 	@Override
 	public void handleFrame(StompHeaders headers, Object payload) {
+		if (headers.getDestination() == null) {
+			return;
+		}
 		log.info("Received Frame for {}", headers.getDestination());
 
 		FutureMessage futureMessage = this.futureMessage.get();
 		if (futureMessage != null && futureMessage.getDestination().equals(headers.getDestination())) {
-			log.info("Completing waiting Future for this Destination");
 			futureMessage.getFuture().complete(payload);
 			return;
 		}
