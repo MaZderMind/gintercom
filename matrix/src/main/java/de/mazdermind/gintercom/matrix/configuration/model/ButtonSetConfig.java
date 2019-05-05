@@ -10,6 +10,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.common.base.Objects;
 
+import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
+
 public class ButtonSetConfig {
 	@NotNull
 	private Map<String, ButtonConfig> buttons;

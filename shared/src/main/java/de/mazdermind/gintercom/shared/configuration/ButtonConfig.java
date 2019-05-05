@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.configuration.model;
+package de.mazdermind.gintercom.shared.configuration;
 
 import javax.validation.constraints.NotNull;
 

@@ -10,6 +10,9 @@ import static org.hamcrest.Matchers.notNullValue;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.mazdermind.gintercom.shared.configuration.ButtonAction;
+import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
+import de.mazdermind.gintercom.shared.configuration.ButtonTargetType;
 import de.mazdermind.gintercom.testutils.JsonMap;
 import de.mazdermind.gintercom.testutils.JsonMapUtils;
 

@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Objects;
 
+import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
+import de.mazdermind.gintercom.shared.configuration.ButtonTargetType;
+
 public class Config {
 	private static Logger log = LoggerFactory.getLogger(Config.class);
 

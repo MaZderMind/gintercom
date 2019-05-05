@@ -17,12 +17,13 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import de.mazdermind.gintercom.matrix.configuration.ButtonSetResolver;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
-import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 
 @Controller
@@ -32,17 +33,20 @@ public class PanelRegistrationController {
 	private final Config config;
 	private final PortAllocationManager portAllocationManager;
 	private final PanelRegistrationAwareMulticaster panelRegistrationAwareMulticaster;
+	private final ButtonSetResolver buttonSetResolver;
 
 	private final Map<String, String> registeredPanels = new HashMap<>();
 
 	public PanelRegistrationController(
 		@Autowired Config config,
 		@Autowired PortAllocationManager portAllocationManager,
-		@Autowired PanelRegistrationAwareMulticaster panelRegistrationAwareMulticaster
+		@Autowired PanelRegistrationAwareMulticaster panelRegistrationAwareMulticaster,
+		@Autowired ButtonSetResolver buttonSetResolver
 	) {
 		this.portAllocationManager = portAllocationManager;
 		this.config = config;
 		this.panelRegistrationAwareMulticaster = panelRegistrationAwareMulticaster;
+		this.buttonSetResolver = buttonSetResolver;
 	}
 
 	@SuppressWarnings("unused")
@@ -79,7 +83,10 @@ public class PanelRegistrationController {
 		log.info("Responding with ProvisionMessage");
 		return new ProvisionMessage()
 			.setProvisioningInformation(new ProvisioningInformation()
-				.setDisplay(panelConfig.getDisplay()));
+				.setDisplay(panelConfig.getDisplay())
+				.setMatrixToPanelPort(portSet.getMatrixToPanel())
+				.setPanelToPanelPort(portSet.getPanelToMatrix())
+				.setButtons(buttonSetResolver.resolveButtons(panelConfig)));
 	}
 
 	@EventListener

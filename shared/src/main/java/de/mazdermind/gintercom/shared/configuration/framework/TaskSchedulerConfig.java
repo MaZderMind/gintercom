@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.shared.configuration;
+package de.mazdermind.gintercom.shared.configuration.framework;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
