@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import de.mazdermind.gintercom.matrix.MatrixApplication;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = MatrixApplication.class)
-@ActiveProfiles({ "test" })
+@SpringBootTest(classes = MatrixApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles({ "IT" })
 public abstract class IntegrationTestBase {
 }

@@ -16,7 +16,7 @@ dist: clean package
 	cd dist && sha256sum *.* >SHA256SUMS
 
 test:
-	mvn test
+	mvn verify
 
 # run development
 run-matrix:

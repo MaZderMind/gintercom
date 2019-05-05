@@ -1,8 +1,11 @@
 package de.mazdermind.gintercom.shared.controlserver.provisioning;
 
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ProvisioningInformation {
+	@NotNull
 	private String display;
 
 	public String getDisplay() {
