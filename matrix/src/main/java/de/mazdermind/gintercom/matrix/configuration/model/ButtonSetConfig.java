@@ -4,6 +4,7 @@ import static java.util.Collections.unmodifiableMap;
 
 import java.util.Map;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
