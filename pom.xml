@@ -31,6 +31,13 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<!-- Ermöglicht Integrationstests mit der Endung '*IT.java' bei maven goal 'mvn verify' -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.18.1</version>
+			</plugin>
 		</plugins>
 	</build>
 </project>

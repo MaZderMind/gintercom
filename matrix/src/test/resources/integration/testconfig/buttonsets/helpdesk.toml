@@ -1,0 +1,5 @@
+[buttons.4]
+display="Helpdesk Broadcast"
+action="ptt"
+targetType="group"
+target="helpdesk"

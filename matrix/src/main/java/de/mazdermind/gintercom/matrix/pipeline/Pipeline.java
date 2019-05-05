@@ -9,6 +9,7 @@ import javax.annotation.PreDestroy;
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Gst;
+import org.freedesktop.gstreamer.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
@@ -100,5 +101,9 @@ public class Pipeline implements PanelRegistrationAware {
 		Panel panel = panels.remove(event.getPanelId());
 		panel.deconfigure();
 		updateDotFile();
+	}
+
+	public State getState() {
+		return pipeline.getState();
 	}
 }
