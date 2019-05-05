@@ -10,7 +10,7 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 
 @Component
 public class IpAddressHandshakeInterceptor implements HandshakeInterceptor {
-	public static final String IP_ADDRESS_ATTRIBUTR = "IP_ADDRESS";
+	public static final String IP_ADDRESS_ATTRIBUTE = "IP_ADDRESS";
 
 	@Override
 	public boolean beforeHandshake(
@@ -20,7 +20,7 @@ public class IpAddressHandshakeInterceptor implements HandshakeInterceptor {
 		Map<String, Object> attributes
 	) {
 		// Bind IP attribute to WebSocket session
-		attributes.put(IP_ADDRESS_ATTRIBUTR, request.getRemoteAddress().getAddress());
+		attributes.put(IP_ADDRESS_ATTRIBUTE, request.getRemoteAddress().getAddress());
 
 		return true;
 	}

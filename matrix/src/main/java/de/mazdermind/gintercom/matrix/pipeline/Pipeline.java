@@ -87,7 +87,8 @@ public class Pipeline implements PanelRegistrationAware {
 	}
 
 	@Override
-	public void handlePanelRegistration(PanelRegistrationEvent event) {
+	// TODO check if synchronized is required
+	public synchronized void handlePanelRegistration(PanelRegistrationEvent event) {
 		log.info("Creating Panel {}", event.getPanelId());
 		Panel panel = beanFactory.getBean(Panel.class);
 		panel.configure(pipeline, event.getPanelId(), event.getPanelConfig(), event.getPortSet(), event.getHostAddress());
@@ -96,7 +97,8 @@ public class Pipeline implements PanelRegistrationAware {
 	}
 
 	@Override
-	public void handlePanelDeRegistration(PanelDeRegistrationEvent event) {
+	// TODO check if synchronized is required
+	public synchronized void handlePanelDeRegistration(PanelDeRegistrationEvent event) {
 		log.info("Removing Panel {}", event.getPanelId());
 		Panel panel = panels.remove(event.getPanelId());
 		panel.deconfigure();

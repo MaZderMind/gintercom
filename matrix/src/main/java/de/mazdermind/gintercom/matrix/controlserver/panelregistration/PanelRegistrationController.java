@@ -1,5 +1,7 @@
 package de.mazdermind.gintercom.matrix.controlserver.panelregistration;
 
+import static de.mazdermind.gintercom.matrix.configuration.framework.IpAddressHandshakeInterceptor.IP_ADDRESS_ATTRIBUTE;
+
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,18 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import de.mazdermind.gintercom.matrix.configuration.framework.IpAddressHandshakeInterceptor;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 
 @Controller
 public class PanelRegistrationController {
@@ -44,31 +47,39 @@ public class PanelRegistrationController {
 
 	@SuppressWarnings("unused")
 	@MessageMapping("/ohai")
-	public void handleRegistrationRequest(
-		OhaiMessage message,
-		StompSession stompSession,
-		@Header(name = IpAddressHandshakeInterceptor.IP_ADDRESS_ATTRIBUTR) InetAddress hostAdress
+	@SendToUser("/provision")
+	public ProvisionMessage handleRegistrationRequest(
+		SimpMessageHeaderAccessor headerAccessor,
+		OhaiMessage message
 	) {
+		String sessionId = headerAccessor.getSessionId();
+		InetAddress hostAddress = (InetAddress) headerAccessor.getSessionAttributes().get(IP_ADDRESS_ATTRIBUTE);
 		String hostId = message.getClientId();
-		log.info("Received Ohai-Message from Host-Id {} at {}", hostId, hostAdress);
+		log.info("Host-Id {}: Received Ohai-Message", hostId);
 
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
 		if (!maybePanelId.isPresent()) {
-			log.info("Host-Id {} is currently unknown in Config and needs to be Provisioned in WebUI.", hostId);
-			return;
+			log.info("Host-Id {}: Currently unknown in Config and needs to be Provisioned in WebUI.", hostId);
+			return null;
 		}
 
 		String panelId = maybePanelId.get();
 		PanelConfig panelConfig = config.getPanels().get(panelId);
 		PortSet portSet = portAllocationManager.allocatePortSet(hostId);
 
-		log.info("Host-Id {} is known in Config as Panel {} ({}). Allocated Ports {} for it.",
-			hostId, panelId, panelConfig.getDisplay(), portSet);
+		log.info("Host-Id {}: is known in Config as Panel {} ({}). Allocated Ports {} for it. Localized it at {}. Mapped Stomp-Session-ID {} to it.",
+			hostId, panelId, panelConfig.getDisplay(), portSet, hostAddress.getHostAddress(), sessionId);
 
-		registeredPanels.put(stompSession.getSessionId(), panelId);
+		registeredPanels.put(sessionId, panelId);
+
 		panelRegistrationAwareMulticaster.dispatchPanelRegistration(new PanelRegistrationEvent(
-			panelId, panelConfig, portSet, hostAdress
+			panelId, panelConfig, portSet, hostAddress
 		));
+
+		log.info("Responding with ProvisionMessage");
+		return new ProvisionMessage()
+			.setProvisioningInformation(new ProvisioningInformation()
+				.setDisplay(panelConfig.getDisplay()));
 	}
 
 	@EventListener
@@ -76,6 +87,8 @@ public class PanelRegistrationController {
 		String sessionId = sessionDisconnectEvent.getSessionId();
 		String panelId = registeredPanels.remove(sessionId);
 		if (panelId != null) {
+			log.info("Found Panel-ID {} for Stomp-Session-ID {}", panelId, sessionId);
+
 			PanelConfig panelConfig = config.getPanels().get(panelId);
 			log.info("Session of Panel {} ({}) closed", panelId, panelConfig.getDisplay());
 
