@@ -3,8 +3,6 @@ package de.mazdermind.gintercom.matrix.portpool;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,25 +20,19 @@ public class PortAllocationManagerTest {
 
 	@Before
 	public void prepare() {
-		Config config = mock(Config.class);
+		PortPoolConfig matrixToPanelConfig = new PortPoolConfig()
+			.setStart(2000)
+			.setLimit(500);
 
-		MatrixConfig matrixConfig = mock(MatrixConfig.class);
-		when(config.getMatrixConfig()).thenReturn(matrixConfig);
+		PortPoolConfig panelToMatrixConfig = new PortPoolConfig()
+			.setStart(3000)
+			.setLimit(500);
 
-		PortsConfig portsConfig = mock(PortsConfig.class);
-		when(matrixConfig.getPorts()).thenReturn(portsConfig);
-
-		PortPoolConfig matrixToPanelConfig = mock(PortPoolConfig.class);
-		when(portsConfig.getMatrixToPanel()).thenReturn(matrixToPanelConfig);
-
-		PortPoolConfig panelToMatrixConfig = mock(PortPoolConfig.class);
-		when(portsConfig.getPanelToMatrix()).thenReturn(panelToMatrixConfig);
-
-		when(matrixToPanelConfig.getStart()).thenReturn(2000);
-		when(matrixToPanelConfig.getLimit()).thenReturn(500);
-
-		when(panelToMatrixConfig.getStart()).thenReturn(3000);
-		when(panelToMatrixConfig.getLimit()).thenReturn(500);
+		Config config = new Config()
+			.setMatrixConfig(new MatrixConfig()
+				.setPorts(new PortsConfig()
+					.setMatrixToPanel(matrixToPanelConfig)
+					.setPanelToMatrix(panelToMatrixConfig)));
 
 		portAllocationManager = new PortAllocationManager(config);
 	}
