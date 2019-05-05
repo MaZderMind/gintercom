@@ -35,7 +35,7 @@ import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningE
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.support.ConnectionLifecycleEventMulticaster;
-import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 
 public class ConnectionLifecycleManagerTest {
@@ -191,13 +191,13 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
 
-		ArgumentCaptor<OhaiMessage> captor = ArgumentCaptor.forClass(OhaiMessage.class);
-		verify(stompSession).send(eq("/ohai"), captor.capture());
-		OhaiMessage ohaiMessage = captor.getValue();
-		assertThat(ohaiMessage.getClientId(), is(TestClientConfiguration.CLIENT_ID));
-		assertThat(ohaiMessage.getClientModel(), is(TestClientConfiguration.CLIENT_MODEL));
-		assertThat(ohaiMessage.getProtocolVersion(), is(TestClientConfiguration.PROTOCOL_VERSION));
-		assertThat(ohaiMessage.getCapabilities().getButtons(), is(TestClientConfiguration.BUTTONS));
+		ArgumentCaptor<PanelRegistrationMessage> captor = ArgumentCaptor.forClass(PanelRegistrationMessage.class);
+		verify(stompSession).send(eq("/registration"), captor.capture());
+		PanelRegistrationMessage panelRegistrationMessage = captor.getValue();
+		assertThat(panelRegistrationMessage.getClientId(), is(TestClientConfiguration.CLIENT_ID));
+		assertThat(panelRegistrationMessage.getClientModel(), is(TestClientConfiguration.CLIENT_MODEL));
+		assertThat(panelRegistrationMessage.getProtocolVersion(), is(TestClientConfiguration.PROTOCOL_VERSION));
+		assertThat(panelRegistrationMessage.getCapabilities().getButtons(), is(TestClientConfiguration.BUTTONS));
 	}
 
 	@Test

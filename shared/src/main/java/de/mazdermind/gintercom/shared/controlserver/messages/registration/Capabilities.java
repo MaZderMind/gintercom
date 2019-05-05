@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.shared.controlserver.messages.ohai;
+package de.mazdermind.gintercom.shared.controlserver.messages.registration;
 
 import static java.util.Collections.unmodifiableList;
 

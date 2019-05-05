@@ -14,8 +14,8 @@ import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
 import de.mazdermind.gintercom.matrix.integration.tools.ControlServerTestClient;
-import de.mazdermind.gintercom.shared.controlserver.messages.ohai.Capabilities;
-import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.registration.Capabilities;
+import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 
 public class TwoPanelsRegistrationIT extends IntegrationTestBase {
@@ -28,8 +28,8 @@ public class TwoPanelsRegistrationIT extends IntegrationTestBase {
 	private static final String TEST_CLIENT_MODEL = "TwoPanelsRegistrationIT-client";
 	private static final List<String> TEST_CLIENT_BUTTONS = ImmutableList.of("X1", "X2");
 
-	private OhaiMessage ohaiMessage1;
-	private OhaiMessage ohaiMessage2;
+	private PanelRegistrationMessage panelRegistrationMessage1;
+	private PanelRegistrationMessage panelRegistrationMessage2;
 
 	@LocalServerPort
 	private int serverPort;
@@ -42,14 +42,14 @@ public class TwoPanelsRegistrationIT extends IntegrationTestBase {
 		client1 = new ControlServerTestClient(serverPort);
 		client2 = new ControlServerTestClient(serverPort);
 
-		ohaiMessage1 = new OhaiMessage()
+		panelRegistrationMessage1 = new PanelRegistrationMessage()
 			.setClientId(HOST_ID_1)
 			.setClientModel(TEST_CLIENT_MODEL)
 			.setProtocolVersion(1)
 			.setCapabilities(new Capabilities()
 				.setButtons(TEST_CLIENT_BUTTONS));
 
-		ohaiMessage2 = new OhaiMessage()
+		panelRegistrationMessage2 = new PanelRegistrationMessage()
 			.setClientId(HOST_ID_2)
 			.setClientModel(TEST_CLIENT_MODEL)
 			.setProtocolVersion(1)
@@ -73,8 +73,8 @@ public class TwoPanelsRegistrationIT extends IntegrationTestBase {
 		client1.connect();
 		client2.connect();
 
-		client1.send("/ohai", ohaiMessage1);
-		client2.send("/ohai", ohaiMessage2);
+		client1.send("/registration", panelRegistrationMessage1);
+		client2.send("/registration", panelRegistrationMessage2);
 
 		ProvisionMessage provisionMessage1 = client1.awaitMessage("/user/provision", ProvisionMessage.class);
 		ProvisionMessage provisionMessage2 = client2.awaitMessage("/user/provision", ProvisionMessage.class);

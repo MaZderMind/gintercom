@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.shared.controlserver.messages.ohai;
+package de.mazdermind.gintercom.shared.controlserver.messages.registration;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -11,7 +11,7 @@ import com.google.common.base.Objects;
 import de.mazdermind.gintercom.shared.controlserver.ClientConfiguration;
 
 
-public class OhaiMessage {
+public class PanelRegistrationMessage {
 	@NotNull
 	private String clientId;
 
@@ -25,8 +25,8 @@ public class OhaiMessage {
 	@NotNull
 	private Capabilities capabilities;
 
-	public static OhaiMessage fromClientConfiguration(ClientConfiguration clientConfiguration) {
-		return new OhaiMessage()
+	public static PanelRegistrationMessage fromClientConfiguration(ClientConfiguration clientConfiguration) {
+		return new PanelRegistrationMessage()
 			.setClientId(clientConfiguration.getClientId())
 			.setClientModel(clientConfiguration.getClientModel())
 			.setProtocolVersion(clientConfiguration.getProtocolVersion())
@@ -38,7 +38,7 @@ public class OhaiMessage {
 		return clientId;
 	}
 
-	public OhaiMessage setClientId(String clientId) {
+	public PanelRegistrationMessage setClientId(String clientId) {
 		this.clientId = clientId;
 		return this;
 	}
@@ -47,7 +47,7 @@ public class OhaiMessage {
 		return protocolVersion;
 	}
 
-	public OhaiMessage setProtocolVersion(Integer protocolVersion) {
+	public PanelRegistrationMessage setProtocolVersion(Integer protocolVersion) {
 		this.protocolVersion = protocolVersion;
 		return this;
 	}
@@ -56,7 +56,7 @@ public class OhaiMessage {
 		return clientModel;
 	}
 
-	public OhaiMessage setClientModel(String clientModel) {
+	public PanelRegistrationMessage setClientModel(String clientModel) {
 		this.clientModel = clientModel;
 		return this;
 	}
@@ -65,7 +65,7 @@ public class OhaiMessage {
 		return capabilities;
 	}
 
-	public OhaiMessage setCapabilities(Capabilities capabilities) {
+	public PanelRegistrationMessage setCapabilities(Capabilities capabilities) {
 		this.capabilities = capabilities;
 		return this;
 	}
@@ -79,7 +79,7 @@ public class OhaiMessage {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		OhaiMessage that = (OhaiMessage) o;
+		PanelRegistrationMessage that = (PanelRegistrationMessage) o;
 		return Objects.equal(clientId, that.clientId) &&
 			Objects.equal(protocolVersion, that.protocolVersion) &&
 			Objects.equal(clientModel, that.clientModel) &&

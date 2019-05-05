@@ -29,7 +29,7 @@ import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningE
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.support.ConnectionLifecycleEventMulticaster;
-import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 
@@ -123,11 +123,11 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	}
 
 	private void initiateProvisioning(StompSession stompSession) {
-		log.info("sending Provisioning-Request (Ohai)");
+		log.info("sending PanelRegistrationMessage");
 		lifecycle = ConnectionLifecycle.PROVISIONING;
 		connectionLifecycleEventMulticaster.dispatch(new AwaitingProvisioningEvent(clientConfiguration.getClientId()));
 
-		stompSession.send("/ohai", OhaiMessage.fromClientConfiguration(clientConfiguration));
+		stompSession.send("/registration", PanelRegistrationMessage.fromClientConfiguration(clientConfiguration));
 	}
 
 	@Override

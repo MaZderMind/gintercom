@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.shared.controlserver.messages.ohai;
+package de.mazdermind.gintercom.shared.controlserver.messages.registration;
 
 import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
 import static java.util.Collections.emptyList;
@@ -16,18 +16,18 @@ import com.google.common.collect.ImmutableList;
 import de.mazdermind.gintercom.testutils.JsonMap;
 import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
-public class OhaiMessageTest {
+public class PanelRegistrationMessageTest {
 
 	private static final String CLIENT_ID = "DEAD:BEEF";
 	private static final String CLIENT_MODEL = "test-client";
 	private static final int PROTOCOL_VERSION = 42;
 	private static final List<String> BUTTONS = ImmutableList.of("1", "2", "3", "4", "X1", "X2");
 
-	private OhaiMessage ohaiMessage;
+	private PanelRegistrationMessage panelRegistrationMessage;
 
 	@Before
 	public void generateTestdata() {
-		ohaiMessage = new OhaiMessage()
+		panelRegistrationMessage = new PanelRegistrationMessage()
 			.setClientId(CLIENT_ID)
 			.setClientModel(CLIENT_MODEL)
 			.setProtocolVersion(PROTOCOL_VERSION)
@@ -37,7 +37,7 @@ public class OhaiMessageTest {
 
 	@Test
 	public void serializesCorrectly() {
-		JsonMap json = JsonMapUtils.convertToJson(ohaiMessage);
+		JsonMap json = JsonMapUtils.convertToJson(panelRegistrationMessage);
 		assertThat(json.get("clientId"), is(CLIENT_ID));
 		assertThat(json.get("clientModel"), is(CLIENT_MODEL));
 		assertThat(json.get("protocolVersion"), is(PROTOCOL_VERSION));
@@ -46,48 +46,48 @@ public class OhaiMessageTest {
 
 	@Test
 	public void deserializesCorrectly() {
-		JsonMap json = JsonMapUtils.convertToJson(ohaiMessage);
-		OhaiMessage ohaiMessage = JsonMapUtils.convertJsonTo(OhaiMessage.class, json);
+		JsonMap json = JsonMapUtils.convertToJson(this.panelRegistrationMessage);
+		PanelRegistrationMessage panelRegistrationMessage = JsonMapUtils.convertJsonTo(PanelRegistrationMessage.class, json);
 
-		assertThat(ohaiMessage.getClientId(), is(CLIENT_ID));
-		assertThat(ohaiMessage.getClientModel(), is(CLIENT_MODEL));
-		assertThat(ohaiMessage.getProtocolVersion(), is(PROTOCOL_VERSION));
-		assertThat(ohaiMessage.getCapabilities().getButtons(), is(BUTTONS));
+		assertThat(panelRegistrationMessage.getClientId(), is(CLIENT_ID));
+		assertThat(panelRegistrationMessage.getClientModel(), is(CLIENT_MODEL));
+		assertThat(panelRegistrationMessage.getProtocolVersion(), is(PROTOCOL_VERSION));
+		assertThat(panelRegistrationMessage.getCapabilities().getButtons(), is(BUTTONS));
 	}
 
 	@Test
 	public void messageValidates() {
-		assertThat(ohaiMessage, validates());
+		assertThat(panelRegistrationMessage, validates());
 	}
 
 	@Test
 	public void failsValidationWithoutClientId() {
-		ohaiMessage.setClientId(null);
-		assertThat(ohaiMessage, not(validates()));
+		panelRegistrationMessage.setClientId(null);
+		assertThat(panelRegistrationMessage, not(validates()));
 	}
 
 	@Test
 	public void failsValidationWithoutProtocolVersion() {
-		ohaiMessage.setProtocolVersion(null);
-		assertThat(ohaiMessage, not(validates()));
+		panelRegistrationMessage.setProtocolVersion(null);
+		assertThat(panelRegistrationMessage, not(validates()));
 
 	}
 
 	@Test
 	public void failsValidationWithoutClientModel() {
-		ohaiMessage.setClientModel(null);
-		assertThat(ohaiMessage, not(validates()));
+		panelRegistrationMessage.setClientModel(null);
+		assertThat(panelRegistrationMessage, not(validates()));
 	}
 
 	@Test
 	public void failsValidationWithoutCapabilities() {
-		ohaiMessage.setCapabilities(null);
-		assertThat(ohaiMessage, not(validates()));
+		panelRegistrationMessage.setCapabilities(null);
+		assertThat(panelRegistrationMessage, not(validates()));
 	}
 
 	@Test
 	public void failsValidationWithoutButtons() {
-		ohaiMessage.getCapabilities().setButtons(emptyList());
-		assertThat(ohaiMessage, not(validates()));
+		panelRegistrationMessage.getCapabilities().setButtons(emptyList());
+		assertThat(panelRegistrationMessage, not(validates()));
 	}
 }

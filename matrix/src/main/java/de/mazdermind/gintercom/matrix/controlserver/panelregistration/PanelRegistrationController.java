@@ -21,7 +21,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
-import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 
@@ -46,16 +46,16 @@ public class PanelRegistrationController {
 	}
 
 	@SuppressWarnings("unused")
-	@MessageMapping("/ohai")
+	@MessageMapping("/registration")
 	@SendToUser("/provision")
 	public ProvisionMessage handleRegistrationRequest(
 		SimpMessageHeaderAccessor headerAccessor,
-		OhaiMessage message
+		PanelRegistrationMessage message
 	) {
 		String sessionId = headerAccessor.getSessionId();
 		InetAddress hostAddress = (InetAddress) headerAccessor.getSessionAttributes().get(IP_ADDRESS_ATTRIBUTE);
 		String hostId = message.getClientId();
-		log.info("Host-Id {}: Received Ohai-Message", hostId);
+		log.info("Host-Id {}: Received PanelRegistration-Message", hostId);
 
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
 		if (!maybePanelId.isPresent()) {
