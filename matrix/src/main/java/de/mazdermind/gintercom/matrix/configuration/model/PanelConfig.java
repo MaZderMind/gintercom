@@ -1,9 +1,11 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,7 +26,7 @@ public class PanelConfig {
 
 	private Set<String> rxGroups = emptySet();
 	private Set<String> txGroups = emptySet();
-	private Set<String> buttonsets = emptySet();
+	private List<String> buttonsets = emptyList();
 
 	@Valid
 	private Map<String, ButtonConfig> buttons = emptyMap();
@@ -65,11 +67,11 @@ public class PanelConfig {
 		return this;
 	}
 
-	public Set<String> getButtonsets() {
+	public List<String> getButtonsets() {
 		return buttonsets;
 	}
 
-	public PanelConfig setButtonsets(Set<String> buttonsets) {
+	public PanelConfig setButtonsets(List<String> buttonsets) {
 		this.buttonsets = buttonsets;
 		return this;
 	}
