@@ -1,8 +1,7 @@
 package de.mazdermind.gintercom.debugclient.configuration;
 
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresentAnd;
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresentAndIs;
+import static com.spotify.hamcrest.optional.OptionalMatchers.emptyOptional;
+import static com.spotify.hamcrest.optional.OptionalMatchers.optionalWithValue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,10 +42,10 @@ public class CliArgumentsTest {
 		cliArguments.parseArgs();
 
 		assertThat(cliArguments.hasManualMatrixAddress(), is(false));
-		assertThat(cliArguments.getMatrixPort(), isEmpty());
-		assertThat(cliArguments.getMatrixHost(), isEmpty());
-		assertThat(cliArguments.getButtons(), isEmpty());
-		assertThat(cliArguments.getHostId(), isEmpty());
+		assertThat(cliArguments.getMatrixPort(), emptyOptional());
+		assertThat(cliArguments.getMatrixHost(), emptyOptional());
+		assertThat(cliArguments.getButtons(), emptyOptional());
+		assertThat(cliArguments.getHostId(), emptyOptional());
 	}
 
 	@Test
@@ -55,8 +54,8 @@ public class CliArgumentsTest {
 		cliArguments.parseArgs();
 
 		assertThat(cliArguments.hasManualMatrixAddress(), is(true));
-		assertThat(cliArguments.getMatrixHost(), isPresentAnd(equalTo(InetAddress.getByName("10.219.42.32"))));
-		assertThat(cliArguments.getMatrixPort(), isPresentAndIs(9999));
+		assertThat(cliArguments.getMatrixHost(), optionalWithValue(equalTo(InetAddress.getByName("10.219.42.32"))));
+		assertThat(cliArguments.getMatrixPort(), optionalWithValue(equalTo(9999)));
 	}
 
 	@Test
@@ -80,7 +79,7 @@ public class CliArgumentsTest {
 		sourceArgs = ImmutableList.of("--host-id", "FOO:BAR");
 		cliArguments.parseArgs();
 
-		assertThat(cliArguments.getHostId(), isPresentAndIs("FOO:BAR"));
+		assertThat(cliArguments.getHostId(), optionalWithValue(equalTo("FOO:BAR")));
 	}
 
 	@Test
@@ -88,9 +87,9 @@ public class CliArgumentsTest {
 		sourceArgs = ImmutableList.of("--buttons", " 1,2,,3 , X1 ,X2,,Reply ");
 		cliArguments.parseArgs();
 
-		assertThat(cliArguments.getButtons(), isPresentAndIs(ImmutableList.of(
+		assertThat(cliArguments.getButtons(), optionalWithValue(equalTo(ImmutableList.of(
 			"1", "2", "3", "X1", "X2", "Reply"
-		)));
+		))));
 
 	}
 
