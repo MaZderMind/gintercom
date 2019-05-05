@@ -21,7 +21,7 @@ import de.mazdermind.gintercom.shared.controlserver.messagehandler.MatrixMessage
 @Component
 @Lazy
 public class ControlServerSessionHandler implements StompSessionHandler {
-	private static Logger log = LoggerFactory.getLogger(ControlServerSessionHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(ControlServerSessionHandler.class);
 	private final List<MatrixMessageHandler> messageHandlers;
 	private final ControlServerSessionTransportErrorMulticaster transportErrorMulticaster;
 

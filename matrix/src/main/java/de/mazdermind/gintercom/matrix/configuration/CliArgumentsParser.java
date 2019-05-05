@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Lazy
 public class CliArgumentsParser implements CliArguments {
-	private static Logger log = LoggerFactory.getLogger(CliArgumentsParser.class);
+	private static final Logger log = LoggerFactory.getLogger(CliArgumentsParser.class);
 	private CommandLine commandLine;
 
 	public CliArgumentsParser(

@@ -38,7 +38,7 @@ import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInf
 public class ConnectionLifecycleManager implements ProvisioningInformationAware, ControlServerSessionTransportErrorAware {
 	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 3;
 
-	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
+	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
 
 	private final ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster;
 	private final MatrixAddressDiscoveryService addressDiscoveryService;

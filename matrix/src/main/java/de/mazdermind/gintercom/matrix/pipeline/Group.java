@@ -14,7 +14,7 @@ import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 @Component
 @Scope("prototype")
 public class Group {
-	private static Logger log = LoggerFactory.getLogger(Group.class);
+	private static final Logger log = LoggerFactory.getLogger(Group.class);
 
 	public void configure(Pipeline pipeline, String groupId, GroupConfig groupConfig) {
 		log.info("Creating Pipeline-Elements for Group {}", groupId);

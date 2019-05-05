@@ -19,7 +19,7 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 public class ControlServerTestSessionHandler extends StompSessionHandlerAdapter {
-	private static Logger log = LoggerFactory.getLogger(ControlServerTestSessionHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(ControlServerTestSessionHandler.class);
 
 	private List<Throwable> errors = new ArrayList<>();
 	private List<StompMessage> messages = new ArrayList<>();

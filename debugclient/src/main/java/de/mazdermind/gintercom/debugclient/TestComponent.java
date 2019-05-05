@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TestComponent {
-	private static Logger log = LoggerFactory.getLogger(TestComponent.class);
+	private static final Logger log = LoggerFactory.getLogger(TestComponent.class);
 
 	@PostConstruct
 	public void postConstruct() {

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Lazy
 public class PipelineStateChangeListener implements Bus.EOS, Bus.STATE_CHANGED {
-	private static Logger log = LoggerFactory.getLogger(PipelineStateChangeListener.class);
+	private static final Logger log = LoggerFactory.getLogger(PipelineStateChangeListener.class);
 
 	@Override
 	public void endOfStream(GstObject source) {

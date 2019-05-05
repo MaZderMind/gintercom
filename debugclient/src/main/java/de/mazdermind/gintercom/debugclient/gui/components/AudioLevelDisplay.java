@@ -15,7 +15,7 @@ import com.google.common.annotations.VisibleForTesting;
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
 
 public class AudioLevelDisplay extends JPanel {
-	private static Logger log = LoggerFactory.getLogger(AudioLevelDisplay.class);
+	private static final Logger log = LoggerFactory.getLogger(AudioLevelDisplay.class);
 	private static int SPACING = 1;
 	private final AtomicReference<AudioLevelEvent> lastAudioLevelEvent = new AtomicReference<>();
 

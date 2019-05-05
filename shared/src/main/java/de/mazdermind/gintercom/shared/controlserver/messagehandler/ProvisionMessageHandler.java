@@ -17,7 +17,7 @@ import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInf
 @Lazy
 public
 class ProvisionMessageHandler implements MatrixMessageHandler {
-	private static Logger log = LoggerFactory.getLogger(ProvisionMessageHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(ProvisionMessageHandler.class);
 	private final ProvisioningInformationMulticaster provisioningInformationMulticaster;
 
 	public ProvisionMessageHandler(

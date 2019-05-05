@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MainWindowManager {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(640, 480);
-	private static Logger log = LoggerFactory.getLogger(MainWindowManager.class);
+	private static final Logger log = LoggerFactory.getLogger(MainWindowManager.class);
 	private final GroupButtonGridManager groupButtonGridManager;
 	private final AudioLevelDisplayManager audioLevelDisplayManager;
 	private final DebugToolButtonsManager debugToolButtonsManager;

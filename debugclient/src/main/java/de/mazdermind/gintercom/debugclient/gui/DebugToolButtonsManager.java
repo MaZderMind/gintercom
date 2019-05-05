@@ -16,7 +16,7 @@ import de.mazdermind.gintercom.debugclient.pipeline.Pipeline;
 
 @Component
 public class DebugToolButtonsManager {
-	private static Logger log = LoggerFactory.getLogger(DebugToolButtonsManager.class);
+	private static final Logger log = LoggerFactory.getLogger(DebugToolButtonsManager.class);
 	private final Pipeline pipeline;
 
 	public DebugToolButtonsManager(

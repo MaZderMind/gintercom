@@ -16,7 +16,7 @@ import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
 import de.mazdermind.gintercom.shared.configuration.ButtonTargetType;
 
 public class Config {
-	private static Logger log = LoggerFactory.getLogger(Config.class);
+	private static final Logger log = LoggerFactory.getLogger(Config.class);
 
 	@Valid
 	private MatrixConfig matrixConfig;

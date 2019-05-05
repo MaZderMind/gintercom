@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Lazy
 public class ControlServerSessionTransportErrorMulticaster {
-	private static Logger log = LoggerFactory.getLogger(ControlServerSessionTransportErrorMulticaster.class);
+	private static final Logger log = LoggerFactory.getLogger(ControlServerSessionTransportErrorMulticaster.class);
 	private final ListableBeanFactory beanFactory;
 
 	public ControlServerSessionTransportErrorMulticaster(

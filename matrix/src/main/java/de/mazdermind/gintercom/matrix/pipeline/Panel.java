@@ -17,7 +17,7 @@ import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 @Component
 @Scope("prototype")
 public class Panel {
-	private static Logger log = LoggerFactory.getLogger(Panel.class);
+	private static final Logger log = LoggerFactory.getLogger(Panel.class);
 
 	private final PanelReceivePath panelReceivePath;
 	private final PanelTransmitPath panelTransmitPath;

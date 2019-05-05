@@ -26,7 +26,7 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 public class ControlServerClient {
 	private static final int CONNECTION_TIMEOUT_SECONDS = 5;
 
-	private static Logger log = LoggerFactory.getLogger(ControlServerClient.class);
+	private static final Logger log = LoggerFactory.getLogger(ControlServerClient.class);
 	private final ControlServerSessionHandler sessionHandler;
 	private WebSocketStompClient stompClient;
 	private StompSession stompSession;

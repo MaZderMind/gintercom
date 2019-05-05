@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Lazy
 public class ProvisioningInformationMulticaster {
-	private static Logger log = LoggerFactory.getLogger(ProvisioningInformationMulticaster.class);
+	private static final Logger log = LoggerFactory.getLogger(ProvisioningInformationMulticaster.class);
 	private final ListableBeanFactory beanFactory;
 
 	public ProvisioningInformationMulticaster(

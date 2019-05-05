@@ -27,7 +27,7 @@ public class ControlServerTestClient {
 	private static final String HOST = "127.0.0.1";
 	private static final String PATH = "/ws";
 	private static final Set<String> EXPECTED_MESSAGES = ImmutableSet.of("/user/provision");
-	private static Logger log = LoggerFactory.getLogger(ControlServerTestClient.class);
+	private static final Logger log = LoggerFactory.getLogger(ControlServerTestClient.class);
 	private final ObjectMapper objectMapper;
 
 	private final int serverPort;

@@ -16,7 +16,7 @@ import de.mazdermind.gintercom.shared.controlserver.events.support.ConnectionLif
 @Component
 public class ConnectionLifecycleModalManager implements ConnectionLifecycleEventAware {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(400, 100);
-	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleModalManager.class);
+	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleModalManager.class);
 	private JDialog dialog;
 	private JLabel label;
 	private JLabel detailsLabel;

@@ -13,7 +13,7 @@ import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerSess
 
 @Component
 public class PanelRegistrationAwareMulticaster {
-	private static Logger log = LoggerFactory.getLogger(ControlServerSessionTransportErrorMulticaster.class);
+	private static final Logger log = LoggerFactory.getLogger(ControlServerSessionTransportErrorMulticaster.class);
 	private final List<PanelRegistrationAware> panelRegistrationAwares;
 
 	public PanelRegistrationAwareMulticaster(

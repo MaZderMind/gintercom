@@ -28,7 +28,7 @@ import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInf
 
 @Controller
 public class PanelRegistrationController {
-	private static Logger log = LoggerFactory.getLogger(PanelRegistrationController.class);
+	private static final Logger log = LoggerFactory.getLogger(PanelRegistrationController.class);
 
 	private final Config config;
 	private final PortAllocationManager portAllocationManager;

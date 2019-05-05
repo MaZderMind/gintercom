@@ -21,7 +21,7 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.manualconfig.Manua
 @Component
 @Lazy
 public class MatrixAddressDiscoveryService {
-	private static Logger log = LoggerFactory.getLogger(MatrixAddressDiscoveryService.class);
+	private static final Logger log = LoggerFactory.getLogger(MatrixAddressDiscoveryService.class);
 
 	private final Iterator<MatrixAddressDiscoveryServiceImplementation> implementationsIterator;
 

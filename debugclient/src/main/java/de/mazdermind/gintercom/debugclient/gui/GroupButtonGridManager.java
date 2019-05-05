@@ -21,7 +21,7 @@ import de.mazdermind.gintercom.shared.controlserver.ClientConfiguration;
 @Component
 public class GroupButtonGridManager {
 	private final static int COLS = 2;
-	private static Logger log = LoggerFactory.getLogger(GroupButtonGridManager.class);
+	private static final Logger log = LoggerFactory.getLogger(GroupButtonGridManager.class);
 	private final ClientConfiguration clientConfiguration;
 
 

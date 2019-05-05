@@ -32,7 +32,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 
 @Service
 public class ConfigFactory {
-	private static Logger log = LoggerFactory.getLogger(ConfigFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(ConfigFactory.class);
 
 	private final ObjectMapper objectMapper;
 	private final Toml toml = new Toml();

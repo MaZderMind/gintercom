@@ -16,7 +16,7 @@ import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 @Component
 @Scope("prototype")
 public class PanelTransmitPath {
-	private static Logger log = LoggerFactory.getLogger(PanelTransmitPath.class);
+	private static final Logger log = LoggerFactory.getLogger(PanelTransmitPath.class);
 
 	private Bin bin;
 	private Pipeline pipeline;

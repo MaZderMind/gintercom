@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GuiManager {
-	private static Logger log = LoggerFactory.getLogger(GuiManager.class);
+	private static final Logger log = LoggerFactory.getLogger(GuiManager.class);
 
 	private final ConnectionLifecycleModalManager connectionLifecycleModalManager;
 	private MainWindowManager mainWindowManager;
