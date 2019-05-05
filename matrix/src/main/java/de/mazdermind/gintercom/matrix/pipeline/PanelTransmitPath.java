@@ -44,6 +44,9 @@ public class PanelTransmitPath {
 		udpsink.set("host", host.getHostAddress());
 		udpsink.set("port", txPort);
 		Element.linkPadsFiltered(payload, "src", udpsink, "sink", StaticCaps.RTP);
+
+		log.info("Starting Receive-Path for Panel {}", panelId);
+		bin.play();
 	}
 
 	public void deconfigure() {

@@ -55,6 +55,9 @@ public class PanelReceivePath {
 
 		Element tee = factory.createAndAddElement("tee", String.format("panel-rx-%s", panelId));
 		Element.linkPadsFiltered(audioconvert, "src", tee, "sink", StaticCaps.AUDIO);
+
+		log.info("Starting Receive-Path for Panel {}", panelId);
+		bin.play();
 	}
 
 	public void deconfigure() {
