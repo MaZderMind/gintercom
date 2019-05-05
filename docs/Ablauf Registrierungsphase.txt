@@ -8,7 +8,7 @@ Ohai-Message
  - Antwort mit ProvisionMessage(PanelConfiguration, AllocatedPorts)
    - Client konfiguriert Pipeline
    - Pipeline startet
- - Disconnect(Matrix)
+ - Disconnect(Matrix) -- SessionDisconnectEvent - check idempotent
    - PanelRegistrationAware::handlePanelDeRegistration(PanelConfiguration, AllocatedPorts)
    - Pipeline entfernt Panel
    - PortAllocationManager behält sich die Ports für dieses Panel für eine zukünftige, erneute Registrierung

@@ -1,5 +1,7 @@
 package de.mazdermind.gintercom.matrix.pipeline;
 
+import java.net.InetAddress;
+
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 
 @Component
@@ -18,6 +21,7 @@ public class Panel {
 
 	private final PanelReceivePath panelReceivePath;
 	private final PanelTransmitPath panelTransmitPath;
+	private String panelId;
 
 	public Panel(
 		@Autowired PanelReceivePath panelReceivePath,
@@ -27,12 +31,21 @@ public class Panel {
 		this.panelTransmitPath = panelTransmitPath;
 	}
 
-	public void configure(Pipeline pipeline, String panelId, PanelConfig panelConfig) {
-		log.info("Creating Pipeline-Elements for Panel {}", panelId);
-		panelReceivePath.configure(pipeline, panelId, panelConfig);
-		panelTransmitPath.configure(pipeline, panelId, panelConfig);
+	public void configure(Pipeline pipeline, String panelId, PanelConfig panelConfig, PortSet portSet, InetAddress hostAddress) {
+		log.info("Configuring Pipeline-Elements for Panel {}", panelId);
+		this.panelId = panelId;
+
+		panelReceivePath.configure(pipeline, panelId, portSet.getPanelToMatrix());
+		panelTransmitPath.configure(pipeline, panelId, hostAddress, portSet.getMatrixToPanel());
 
 		linkRxGroups(pipeline, panelId, panelConfig);
+		linkTxGroups(pipeline, panelId, panelConfig);
+	}
+
+	public void deconfigure() {
+		log.info("De-Configuring Pipeline-Elements for Panel {}", panelId);
+		panelReceivePath.deconfigure();
+		panelTransmitPath.deconfigure();
 	}
 
 	private void linkRxGroups(Pipeline pipeline, String panelId, PanelConfig panelConfig) {
@@ -46,7 +59,9 @@ public class Panel {
 				log.error("Link unsuccessful");
 			}
 		});
+	}
 
+	private void linkTxGroups(Pipeline pipeline, String panelId, PanelConfig panelConfig) {
 		log.info("Linking Panel {} to Tx-Groups {}", panelId, panelConfig.getTxGroups());
 		panelConfig.getRxGroups().forEach(txGroup -> {
 			Element panelTee = pipeline.getElementByName(String.format("panel-rx-%s", panelId));

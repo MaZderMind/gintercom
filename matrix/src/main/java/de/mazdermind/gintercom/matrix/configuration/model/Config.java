@@ -1,6 +1,7 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
@@ -106,5 +107,12 @@ public class Config {
 				}
 			}
 		});
+	}
+
+	public Optional<String> findPanelIdForHostId(String hostId) {
+		return panels.entrySet().stream()
+			.filter(entry -> hostId.equals(entry.getValue().getHostId()))
+			.findFirst()
+			.map(Map.Entry::getKey);
 	}
 }

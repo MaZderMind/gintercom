@@ -16,10 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
+import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelDeRegistrationEvent;
+import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegistrationAware;
+import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegistrationEvent;
 import de.mazdermind.gintercom.shared.pipeline.support.PipelineStateChangeListener;
 
 @Component
-public class Pipeline {
+public class Pipeline implements PanelRegistrationAware {
 	private static final Logger log = LoggerFactory.getLogger(Pipeline.class);
 	private final Config config;
 	private final PipelineStateChangeListener pipelineStateChangeListener;
@@ -47,20 +50,22 @@ public class Pipeline {
 		log.info("creating pipeline");
 		pipeline = new org.freedesktop.gstreamer.Pipeline("matrix");
 
+		log.info("Creating Groups");
 		config.getGroups().forEach((groupId, groupConfig) -> {
 			Group group = beanFactory.getBean(Group.class);
 			group.configure(pipeline, groupId, groupConfig);
 			groups.put(groupId, group);
 		});
 
+/*
 		config.getPanels().forEach((panelId, panelConfig) -> {
 			Panel panel = beanFactory.getBean(Panel.class);
 			panel.configure(pipeline, panelId, panelConfig);
 			panels.put(panelId, panel);
 		});
+*/
 
-		log.debug("Generating Debug-dot-File (if GST_DEBUG_DUMP_DOT_DIR Env-Variable is set)");
-		pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, "matrix");
+		updateDotFile();
 
 		pipeline.getBus().connect((Bus.EOS) pipelineStateChangeListener);
 		pipeline.getBus().connect((Bus.STATE_CHANGED) pipelineStateChangeListener);
@@ -73,5 +78,27 @@ public class Pipeline {
 	public void stop() {
 		log.info("stopping pipeline");
 		pipeline.stop();
+	}
+
+	private void updateDotFile() {
+		log.debug("Generating Debug-dot-File (if GST_DEBUG_DUMP_DOT_DIR Env-Variable is set)");
+		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, "matrix");
+	}
+
+	@Override
+	public void handlePanelRegistration(PanelRegistrationEvent event) {
+		log.info("Creating Panel {}", event.getPanelId());
+		Panel panel = beanFactory.getBean(Panel.class);
+		panel.configure(pipeline, event.getPanelId(), event.getPanelConfig(), event.getPortSet(), event.getHostAddress());
+		panels.put(event.getPanelId(), panel);
+		updateDotFile();
+	}
+
+	@Override
+	public void handlePanelDeRegistration(PanelDeRegistrationEvent event) {
+		log.info("Removing Panel {}", event.getPanelId());
+		Panel panel = panels.remove(event.getPanelId());
+		panel.deconfigure();
+		updateDotFile();
 	}
 }
