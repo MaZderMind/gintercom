@@ -1,5 +1,9 @@
 package de.mazdermind.gintercom.shared.controlserver.events;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.google.common.base.Objects;
+
 import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycle;
 
 public class AddressDiscoveryEvent implements ConnectionLifecycleEvent {
@@ -32,5 +36,27 @@ public class AddressDiscoveryEvent implements ConnectionLifecycleEvent {
 
 	public String getImplementationName() {
 		return implementationName;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(implementationId, implementationName);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AddressDiscoveryEvent that = (AddressDiscoveryEvent) o;
+		return Objects.equal(implementationId, that.implementationId) &&
+			Objects.equal(implementationName, that.implementationName);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+			.append("implementationId", implementationId)
+			.append("implementationName", implementationName)
+			.toString();
 	}
 }

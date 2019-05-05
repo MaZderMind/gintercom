@@ -1,7 +1,6 @@
 package de.mazdermind.gintercom.matrix.portpool;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.google.common.base.Objects;
 
@@ -38,7 +37,7 @@ public class PortSet {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
+		return new ToStringBuilder(this)
 			.append("matrixToPanel", matrixToPanel)
 			.append("panelToMatrix", panelToMatrix)
 			.toString();

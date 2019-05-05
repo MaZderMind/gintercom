@@ -10,6 +10,10 @@ import java.util.Set;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.google.common.base.Objects;
+
 public class PanelConfig {
 	@NotNull
 	private String display;
@@ -45,5 +49,35 @@ public class PanelConfig {
 
 	public Map<String, ButtonConfig> getButtons() {
 		return unmodifiableMap(buttons);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(display, hostId, rxGroups, txGroups, buttonsets, buttons);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PanelConfig that = (PanelConfig) o;
+		return Objects.equal(display, that.display) &&
+			Objects.equal(hostId, that.hostId) &&
+			Objects.equal(rxGroups, that.rxGroups) &&
+			Objects.equal(txGroups, that.txGroups) &&
+			Objects.equal(buttonsets, that.buttonsets) &&
+			Objects.equal(buttons, that.buttons);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+			.append("display", display)
+			.append("hostId", hostId)
+			.append("rxGroups", rxGroups)
+			.append("txGroups", txGroups)
+			.append("buttonsets", buttonsets)
+			.append("buttons", buttons)
+			.toString();
 	}
 }

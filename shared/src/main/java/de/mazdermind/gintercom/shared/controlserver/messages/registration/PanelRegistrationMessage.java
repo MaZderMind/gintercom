@@ -4,7 +4,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.google.common.base.Objects;
 
@@ -88,7 +87,7 @@ public class PanelRegistrationMessage {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.NO_CLASS_NAME_STYLE)
+		return new ToStringBuilder(this)
 			.append("hostId", hostId)
 			.append("protocolVersion", protocolVersion)
 			.append("clientModel", clientModel)
