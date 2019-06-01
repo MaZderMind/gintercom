@@ -9,33 +9,41 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.ImmutableList;
 
+import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.integration.IntegrationWithoutGstreamerPipelineTestBase;
-import de.mazdermind.gintercom.matrix.integration.tools.ControlServerTestClient;
+import de.mazdermind.gintercom.matrix.integration.TestConfig;
+import de.mazdermind.gintercom.matrix.integration.tools.controlserver.ControlServerTestClient;
 import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.registration.Capabilities;
 import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 
 public class PanelRegistrationIT extends IntegrationWithoutGstreamerPipelineTestBase {
-	private static final String UNKNOWN_HOST_ID = "9999:9999";
+	public static final String PANEL_ID = "helpdesk";
+	private static final String PANEL_NAME = "Helpdesk 1";
+	private static final String HOST_ID = "0000:0000";
+
 	private static final String TEST_CLIENT_MODEL = "PanelRegistrationIT-client";
 	private static final List<String> TEST_CLIENT_BUTTONS = ImmutableList.of("X1", "X2");
-
-	private static final String HOST_ID = "0000-0001";
-	private static final String PANEL_NAME = "Helpdesk 1";
 
 	private PanelRegistrationMessage panelRegistrationMessage;
 
 	private ControlServerTestClient client;
 
+	@Autowired
+	private TestConfig testConfig;
+
 	@Before
 	public void prepare() {
-		client = createControlServerTestClient();
+		client = new ControlServerTestClient(getServerPort());
+
+		testConfig.reset();
 
 		panelRegistrationMessage = new PanelRegistrationMessage()
-			.setHostId(UNKNOWN_HOST_ID)
+			.setHostId(HOST_ID)
 			.setClientModel(TEST_CLIENT_MODEL)
 			.setProtocolVersion(1)
 			.setCapabilities(new Capabilities()
@@ -64,7 +72,11 @@ public class PanelRegistrationIT extends IntegrationWithoutGstreamerPipelineTest
 	public void panelRegistrationWithKnownHostIdRespondsWithExpectedProvisionMessage() {
 		client.connect();
 
-		panelRegistrationMessage.setHostId(HOST_ID);
+		testConfig.getPanels()
+			.put(PANEL_ID, new PanelConfig()
+				.setDisplay(PANEL_NAME)
+				.setHostId(HOST_ID));
+
 		client.send("/registration", panelRegistrationMessage);
 
 		ProvisionMessage provisionMessage = client.awaitMessage("/user/provision", ProvisionMessage.class);

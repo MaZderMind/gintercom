@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.integration.tools;
+package de.mazdermind.gintercom.matrix.integration.tools.controlserver;
 
 public class StompMessage {
 	private String destination;

@@ -8,7 +8,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import de.mazdermind.gintercom.matrix.MatrixApplication;
-import de.mazdermind.gintercom.matrix.integration.tools.ControlServerTestClient;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration
@@ -23,7 +22,4 @@ public abstract class IntegrationTestBase {
 		return serverPort;
 	}
 
-	protected ControlServerTestClient createControlServerTestClient() {
-		return new ControlServerTestClient(getServerPort());
-	}
 }

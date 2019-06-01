@@ -17,6 +17,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
@@ -31,16 +32,16 @@ import de.mazdermind.gintercom.matrix.configuration.model.MatrixConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 
 @Service
-public class ConfigFactory {
-	private static final Logger log = LoggerFactory.getLogger(ConfigFactory.class);
+public class ConfigParser {
+	private static final Logger log = LoggerFactory.getLogger(ConfigParser.class);
 
 	private final ObjectMapper objectMapper;
-	private final Toml toml = new Toml();
+	private final Toml toml;
 
 	private final CliArguments cliArguments;
 	private final Validator validator;
 
-	public ConfigFactory(
+	public ConfigParser(
 		@Autowired CliArguments cliArguments,
 		@Autowired Validator validator
 	) {
@@ -49,9 +50,12 @@ public class ConfigFactory {
 
 		objectMapper = new ObjectMapper();
 		objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+
+		toml = new Toml();
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(Config.class)
 	public Config loadConfig() throws IOException {
 		String configDirectory = cliArguments.getConfigDirectory();
 		log.info("Loading Configuration from Directory {}", configDirectory);

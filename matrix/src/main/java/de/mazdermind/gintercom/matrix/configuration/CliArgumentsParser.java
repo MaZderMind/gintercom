@@ -11,18 +11,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 @Service
-@Lazy
-public class CliArgumentsParser implements CliArguments {
+public class CliArgumentsParser {
 	private static final Logger log = LoggerFactory.getLogger(CliArgumentsParser.class);
-	private CommandLine commandLine;
+	private final ApplicationArguments arguments;
 
 	public CliArgumentsParser(
 		@Autowired ApplicationArguments arguments
-	) throws ParseException {
+	) {
+		this.arguments = arguments;
+	}
+
+	@Bean
+	@ConditionalOnMissingBean(CliArguments.class)
+	public CliArguments getCliArgs() throws ParseException {
 		Options options = new Options();
 
 		Option input = new Option("c", "config-directory", true, "Path of the Directory containing the Configuration-Files");
@@ -34,7 +40,10 @@ public class CliArgumentsParser implements CliArguments {
 
 		try {
 			log.info("Parsing Comand-Line Arguments");
-			commandLine = parser.parse(options, arguments.getSourceArgs());
+			CommandLine commandLine = parser.parse(options, arguments.getSourceArgs());
+			return new CliArguments()
+				.setConfigDirectory(commandLine.getOptionValue("config-directory"));
+
 		} catch (ParseException e) {
 			System.out.println(e.getMessage());
 			formatter.printHelp("java -jar matrix.jar", options);
@@ -42,10 +51,5 @@ public class CliArgumentsParser implements CliArguments {
 			System.exit(1);
 			throw e;
 		}
-	}
-
-	@Override
-	public String getConfigDirectory() {
-		return commandLine.getOptionValue("config-directory");
 	}
 }

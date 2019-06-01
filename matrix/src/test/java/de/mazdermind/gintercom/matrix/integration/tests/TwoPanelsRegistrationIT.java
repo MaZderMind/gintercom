@@ -8,22 +8,27 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.google.common.collect.ImmutableList;
 
-import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
-import de.mazdermind.gintercom.matrix.integration.tools.ControlServerTestClient;
+import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import de.mazdermind.gintercom.matrix.integration.IntegrationWithoutGstreamerPipelineTestBase;
+import de.mazdermind.gintercom.matrix.integration.TestConfig;
+import de.mazdermind.gintercom.matrix.integration.tools.controlserver.ControlServerTestClient;
+import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.registration.Capabilities;
 import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
-import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 
-public class TwoPanelsRegistrationIT extends IntegrationTestBase {
+public class TwoPanelsRegistrationIT extends IntegrationWithoutGstreamerPipelineTestBase {
 	private static final String HOST_ID_1 = "0000-0001";
 	private static final String HOST_ID_2 = "0000-0002";
 
 	private static final String PANEL_NAME1 = "Helpdesk 1";
 	private static final String PANEL_NAME2 = "Helpdesk 2";
+
+	private static final String PANEL_ID1 = "helpdesk1";
+	private static final String PANEL_ID2 = "helpdesk2";
 
 	private static final String TEST_CLIENT_MODEL = "TwoPanelsRegistrationIT-client";
 	private static final List<String> TEST_CLIENT_BUTTONS = ImmutableList.of("X1", "X2");
@@ -31,16 +36,27 @@ public class TwoPanelsRegistrationIT extends IntegrationTestBase {
 	private PanelRegistrationMessage panelRegistrationMessage1;
 	private PanelRegistrationMessage panelRegistrationMessage2;
 
-	@LocalServerPort
-	private int serverPort;
-
 	private ControlServerTestClient client1;
 	private ControlServerTestClient client2;
 
+	@Autowired
+	private TestConfig testConfig;
+
 	@Before
 	public void prepare() {
-		client1 = new ControlServerTestClient(serverPort);
-		client2 = new ControlServerTestClient(serverPort);
+		client1 = new ControlServerTestClient(getServerPort());
+		client2 = new ControlServerTestClient(getServerPort());
+
+		testConfig.reset();
+		testConfig.getPanels()
+			.put(PANEL_ID1, new PanelConfig()
+				.setHostId(HOST_ID_1)
+				.setDisplay(PANEL_NAME1));
+
+		testConfig.getPanels()
+			.put(PANEL_ID2, new PanelConfig()
+				.setHostId(HOST_ID_2)
+				.setDisplay(PANEL_NAME2));
 
 		panelRegistrationMessage1 = new PanelRegistrationMessage()
 			.setHostId(HOST_ID_1)

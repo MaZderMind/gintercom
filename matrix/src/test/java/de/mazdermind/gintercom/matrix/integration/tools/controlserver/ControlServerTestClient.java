@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.integration.tools;
+package de.mazdermind.gintercom.matrix.integration.tools.controlserver;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
