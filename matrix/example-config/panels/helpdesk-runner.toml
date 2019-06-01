@@ -1,5 +1,3 @@
 display="Helpdesk Runner"
 rxGroups=["helpdesk"]
 txGroups=["helpdesk"]
-buttonsets=["helpdesk"]
-hostId="0000-0003"

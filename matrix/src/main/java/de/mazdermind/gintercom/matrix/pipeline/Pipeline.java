@@ -58,16 +58,6 @@ public class Pipeline implements PanelRegistrationAware {
 			groups.put(groupId, group);
 		});
 
-/*
-		config.getPanels().forEach((panelId, panelConfig) -> {
-			Panel panel = beanFactory.getBean(Panel.class);
-			panel.configure(pipeline, panelId, panelConfig);
-			panels.put(panelId, panel);
-		});
-*/
-
-		updateDotFile();
-
 		pipeline.getBus().connect((Bus.EOS) pipelineStateChangeListener);
 		pipeline.getBus().connect((Bus.STATE_CHANGED) pipelineStateChangeListener);
 
@@ -81,28 +71,26 @@ public class Pipeline implements PanelRegistrationAware {
 		pipeline.stop();
 	}
 
-	private void updateDotFile() {
-		log.debug("Generating Debug-dot-File (if GST_DEBUG_DUMP_DOT_DIR Env-Variable is set)");
-		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, "matrix");
-	}
-
 	@Override
-	// TODO check if synchronized is required
 	public synchronized void handlePanelRegistration(PanelRegistrationEvent event) {
-		log.info("Creating Panel {}", event.getPanelId());
+		log.info("Configuring Panel {}", event.getPanelId());
 		Panel panel = beanFactory.getBean(Panel.class);
 		panel.configure(pipeline, event.getPanelId(), event.getPanelConfig(), event.getPortSet(), event.getHostAddress());
 		panels.put(event.getPanelId(), panel);
-		updateDotFile();
+		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-configure", event.getPanelId()));
+
+		log.info("Linking Panel {} to configured Rx/Tx Groups", event.getPanelId());
+		event.getPanelConfig().getRxGroups().forEach(groupName -> panel.startReceivingFromGroup(groups.get(groupName)));
+		event.getPanelConfig().getTxGroups().forEach(groupName -> panel.startTransmittingToGroup(groups.get(groupName)));
+		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-link-rx-groups", event.getPanelId()));
 	}
 
 	@Override
-	// TODO check if synchronized is required
 	public synchronized void handlePanelDeRegistration(PanelDeRegistrationEvent event) {
-		log.info("Removing Panel {}", event.getPanelId());
+		log.info("Deconfiguring Panel {}", event.getPanelId());
 		Panel panel = panels.remove(event.getPanelId());
 		panel.deconfigure();
-		updateDotFile();
+		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-deconfigure", event.getPanelId()));
 	}
 
 	public State getState() {

@@ -1,8 +1,12 @@
 package de.mazdermind.gintercom.matrix.pipeline;
 
-import java.net.InetAddress;
+import static de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck.expectNull;
 
-import org.freedesktop.gstreamer.Element;
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.freedesktop.gstreamer.Pad;
 import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,65 +16,58 @@ import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
-import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 
 @Component
 @Scope("prototype")
 public class Panel {
 	private static final Logger log = LoggerFactory.getLogger(Panel.class);
 
-	private final PanelReceivePath panelReceivePath;
-	private final PanelTransmitPath panelTransmitPath;
+	private final PanelReceivePath receivePath;
+	private final PanelTransmitPath transmitPath;
+
+	private final Map<Group, Pad> transmitPathPads = new HashMap<>();
+	private final Map<Group, Pad> receivePathPads = new HashMap<>();
+
 	private String panelId;
 
 	public Panel(
-		@Autowired PanelReceivePath panelReceivePath,
-		@Autowired PanelTransmitPath panelTransmitPath
+		@Autowired PanelReceivePath receivePath,
+		@Autowired PanelTransmitPath transmitPath
 	) {
-		this.panelReceivePath = panelReceivePath;
-		this.panelTransmitPath = panelTransmitPath;
+		this.receivePath = receivePath;
+		this.transmitPath = transmitPath;
 	}
 
 	public void configure(Pipeline pipeline, String panelId, PanelConfig panelConfig, PortSet portSet, InetAddress hostAddress) {
 		log.info("Configuring Pipeline-Elements for Panel {}", panelId);
 		this.panelId = panelId;
 
-		panelReceivePath.configure(pipeline, panelId, portSet.getPanelToMatrix());
-		panelTransmitPath.configure(pipeline, panelId, hostAddress, portSet.getMatrixToPanel());
-
-		linkRxGroups(pipeline, panelId, panelConfig);
-		linkTxGroups(pipeline, panelId, panelConfig);
+		receivePath.configure(pipeline, panelId, portSet.getPanelToMatrix());
+		transmitPath.configure(pipeline, panelId, hostAddress, portSet.getMatrixToPanel());
 	}
 
 	public void deconfigure() {
 		log.info("De-Configuring Pipeline-Elements for Panel {}", panelId);
-		panelReceivePath.deconfigure();
-		panelTransmitPath.deconfigure();
+		receivePath.deconfigure();
+		transmitPath.deconfigure();
 	}
 
-	private void linkRxGroups(Pipeline pipeline, String panelId, PanelConfig panelConfig) {
-		log.info("Linking Panel {} to Rx-Groups {}", panelId, panelConfig.getRxGroups());
-		panelConfig.getRxGroups().forEach(rxGroup -> {
-			Element groupTee = pipeline.getElementByName(String.format("group-tee-%s", rxGroup));
-			Element panelMixer = pipeline.getElementByName(String.format("panel-tx-%s", panelId));
-
-			boolean success = Element.linkPadsFiltered(groupTee, "src_%u", panelMixer, "sink_%u", StaticCaps.AUDIO);
-			if (!success) {
-				log.error("Link unsuccessful");
-			}
-		});
+	public void startTransmittingToGroup(Group group) {
+		Pad sinkPad = transmitPath.requestSinkPad();
+		expectNull(transmitPathPads.put(group, sinkPad));
+		Pad srcPad = group.requestSrcPad();
+		srcPad.link(sinkPad);
 	}
 
-	private void linkTxGroups(Pipeline pipeline, String panelId, PanelConfig panelConfig) {
-		log.info("Linking Panel {} to Tx-Groups {}", panelId, panelConfig.getTxGroups());
-		panelConfig.getRxGroups().forEach(txGroup -> {
-			Element panelTee = pipeline.getElementByName(String.format("panel-rx-%s", panelId));
-			Element groupMixer = pipeline.getElementByName(String.format("group-mixer-%s", txGroup));
-			boolean success = Element.linkPadsFiltered(panelTee, "src_%u", groupMixer, "sink_%u", StaticCaps.AUDIO);
+	public void stopsTransmittingToGroup(Group group) {
 
-			if (!success) {
-				log.error("Link unsuccessful");
-			}
-		});
+	}
+
+	public void startReceivingFromGroup(Group group) {
+
+	}
+
+	public void stopReceivingToGroup(Group group) {
+
 	}
 }

@@ -1,9 +1,13 @@
 package de.mazdermind.gintercom.matrix.pipeline;
 
+import static de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck.expectTrue;
+
 import java.net.InetAddress;
 
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Element;
+import org.freedesktop.gstreamer.GhostPad;
+import org.freedesktop.gstreamer.Pad;
 import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,21 +25,25 @@ public class PanelTransmitPath {
 	private Bin bin;
 	private Pipeline pipeline;
 	private String panelId;
+	private Element mixer;
 
 	public void configure(Pipeline pipeline, String panelId, InetAddress host, int txPort) {
 		log.info("Creating Transmit-Path for Panel {}", panelId);
 
 		this.pipeline = pipeline;
 		this.panelId = panelId;
-		this.bin = new ElementFactory(pipeline).createAndAddBin(String.format("bin-panel-tx-%s", panelId));
-
+		bin = new ElementFactory(pipeline).createAndAddBin(String.format("panel-%s-tx", panelId));
 		ElementFactory factory = new ElementFactory(bin);
 
-		// audiomixer name=sink_3 ! {rawcaps} ! audioconvert ! {rawcaps_be} ! rtpL16pay ! {rtpcaps} ! udpsink host=127.0.0.1 port=10003
-		Element audiomixer = factory.createAndAddElement("audiomixer", String.format("panel-tx-%s", panelId));
+		Element silenceSrc = factory.createAndAddElement("audiotestsrc");
+		silenceSrc.set("is-live", true);
+		silenceSrc.set("freq", 220); // TODO wave=silence
+
+		mixer = factory.createAndAddElement("audiomixer");
+		Element.linkPadsFiltered(silenceSrc, "src", mixer, "sink_%u", StaticCaps.AUDIO);
 
 		Element audioconvert = factory.createAndAddElement("audioconvert");
-		Element.linkPadsFiltered(audiomixer, "src", audioconvert, "sink", StaticCaps.AUDIO);
+		mixer.link(audioconvert);
 
 		Element payload = factory.createAndAddElement("rtpL16pay");
 		Element.linkPadsFiltered(audioconvert, "src", payload, "sink", StaticCaps.AUDIO_BE);
@@ -45,8 +53,7 @@ public class PanelTransmitPath {
 		udpsink.set("port", txPort);
 		Element.linkPadsFiltered(payload, "src", udpsink, "sink", StaticCaps.RTP);
 
-		log.info("Starting Receive-Path for Panel {}", panelId);
-		bin.play();
+		bin.syncStateWithParent();
 	}
 
 	public void deconfigure() {
@@ -56,4 +63,19 @@ public class PanelTransmitPath {
 		log.info("Removing Transmit-Path for Panel {} from Pipeline", panelId);
 		pipeline.remove(bin);
 	}
+
+	public Pad requestSinkPad() {
+		Pad mixerPad = mixer.getRequestPad("sink_%u");
+		GhostPad ghostPad = new GhostPad(null, mixerPad);
+		expectTrue(ghostPad.setActive(true));
+		expectTrue(bin.addPad(ghostPad));
+		return ghostPad;
+	}
+
+	public void releaseSinkPad(GhostPad ghostPad) {
+		Pad mixerPad = ghostPad.getTarget();
+		expectTrue(bin.removePad(ghostPad));
+		mixer.releaseRequestPad(mixerPad);
+	}
+
 }
