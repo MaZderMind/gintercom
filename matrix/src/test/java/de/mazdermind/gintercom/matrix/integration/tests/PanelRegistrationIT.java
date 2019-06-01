@@ -9,17 +9,16 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.web.server.LocalServerPort;
 
 import com.google.common.collect.ImmutableList;
 
-import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
+import de.mazdermind.gintercom.matrix.integration.IntegrationWithoutGstreamerPipelineTestBase;
 import de.mazdermind.gintercom.matrix.integration.tools.ControlServerTestClient;
+import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.registration.Capabilities;
 import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
-import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 
-public class PanelRegistrationIT extends IntegrationTestBase {
+public class PanelRegistrationIT extends IntegrationWithoutGstreamerPipelineTestBase {
 	private static final String UNKNOWN_HOST_ID = "9999:9999";
 	private static final String TEST_CLIENT_MODEL = "PanelRegistrationIT-client";
 	private static final List<String> TEST_CLIENT_BUTTONS = ImmutableList.of("X1", "X2");
@@ -29,14 +28,12 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 
 	private PanelRegistrationMessage panelRegistrationMessage;
 
-	@LocalServerPort
-	private int serverPort;
-
 	private ControlServerTestClient client;
 
 	@Before
 	public void prepare() {
-		client = new ControlServerTestClient(serverPort);
+		client = createControlServerTestClient();
+
 		panelRegistrationMessage = new PanelRegistrationMessage()
 			.setHostId(UNKNOWN_HOST_ID)
 			.setClientModel(TEST_CLIENT_MODEL)
