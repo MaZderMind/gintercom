@@ -1,9 +1,10 @@
 package de.mazdermind.gintercom.matrix.controlserver.panelregistration;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static de.mazdermind.gintercom.matrix.configuration.framework.IpAddressHandshakeInterceptor.IP_ADDRESS_ATTRIBUTE;
 
 import java.net.InetAddress;
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
@@ -22,6 +22,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
+import de.mazdermind.gintercom.shared.controlserver.messages.provision.AlreadyRegisteredMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
@@ -34,37 +35,58 @@ public class PanelRegistrationController {
 	private final PortAllocationManager portAllocationManager;
 	private final PanelRegistrationAwareMulticaster panelRegistrationAwareMulticaster;
 	private final ButtonSetResolver buttonSetResolver;
-
-	private final Map<String, String> registeredPanels = new HashMap<>();
+	private final PanelConnectionManager panelConnectionManager;
+	private final SimpReponder simpReponder;
 
 	public PanelRegistrationController(
 		@Autowired Config config,
 		@Autowired PortAllocationManager portAllocationManager,
 		@Autowired PanelRegistrationAwareMulticaster panelRegistrationAwareMulticaster,
-		@Autowired ButtonSetResolver buttonSetResolver
+		@Autowired ButtonSetResolver buttonSetResolver,
+		@Autowired PanelConnectionManager panelConnectionManager,
+		@Autowired SimpReponder simpReponder
 	) {
 		this.portAllocationManager = portAllocationManager;
 		this.config = config;
 		this.panelRegistrationAwareMulticaster = panelRegistrationAwareMulticaster;
 		this.buttonSetResolver = buttonSetResolver;
+		this.panelConnectionManager = panelConnectionManager;
+		this.simpReponder = simpReponder;
 	}
 
 	@SuppressWarnings("unused")
 	@MessageMapping("/registration")
-	@SendToUser("/provision")
-	public ProvisionMessage handleRegistrationRequest(
+	public void handleRegistrationRequest(
 		SimpMessageHeaderAccessor headerAccessor,
 		PanelRegistrationMessage message
 	) {
-		String sessionId = headerAccessor.getSessionId();
-		InetAddress hostAddress = (InetAddress) headerAccessor.getSessionAttributes().get(IP_ADDRESS_ATTRIBUTE);
+		String sessionId = checkNotNull(headerAccessor.getSessionId());
+		Map<String, Object> sessionAttributes = checkNotNull(headerAccessor.getSessionAttributes());
+		InetAddress hostAddress = (InetAddress) sessionAttributes.get(IP_ADDRESS_ATTRIBUTE);
 		String hostId = message.getHostId();
-		log.info("Host-Id {}: Received PanelRegistration-Message", hostId);
+		log.info("Host-Id {}: Received PanelRegistration-Message on Session {}", hostId, sessionId);
+
+		Optional<PanelConnectionInformation> maybyPanelAlreadyRegistered = panelConnectionManager.getConnectionInformationForHostId(hostId);
+		if (maybyPanelAlreadyRegistered.isPresent()) {
+			PanelConnectionInformation panelConnectionInformation = maybyPanelAlreadyRegistered.get();
+			log.info("Host-Id {} is already registered at {} since {}, rejecting second registration",
+				hostId, panelConnectionInformation.getRemoteIp(), panelConnectionInformation.getConnectionTime());
+
+			AlreadyRegisteredMessage alreadyRegisteredMessage = new AlreadyRegisteredMessage()
+				.setRemoteIp(panelConnectionInformation.getRemoteIp())
+				.setConnectionTime(panelConnectionInformation.getConnectionTime());
+
+			simpReponder.convertAndRespondeToUser(sessionId,
+				"/provision/already-registered", alreadyRegisteredMessage);
+
+			return;
+		}
 
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
 		if (!maybePanelId.isPresent()) {
 			log.info("Host-Id {}: Currently unknown in Config and needs to be Provisioned in WebUI.", hostId);
-			return null;
+
+			return;
 		}
 
 		String panelId = maybePanelId.get();
@@ -74,26 +96,41 @@ public class PanelRegistrationController {
 		log.info("Host-Id {}: is known in Config as Panel {} ({}). Allocated Ports {} for it. Localized it at {}. Mapped Stomp-Session-ID {} to it.",
 			hostId, panelId, panelConfig.getDisplay(), portSet, hostAddress.getHostAddress(), sessionId);
 
-		registeredPanels.put(sessionId, panelId);
+		panelConnectionManager.registerPanelConnection(sessionId, new PanelConnectionInformation()
+			.setConnectionTime(LocalDateTime.now())
+			.setHostId(hostId)
+			.setRemoteIp(hostAddress)
+			.setSessionId(sessionId));
 
 		panelRegistrationAwareMulticaster.dispatchPanelRegistration(new PanelRegistrationEvent(
 			panelId, panelConfig, portSet, hostAddress
 		));
 
 		log.info("Responding with ProvisionMessage");
-		return new ProvisionMessage()
+		ProvisionMessage provisionMessage = new ProvisionMessage()
 			.setProvisioningInformation(new ProvisioningInformation()
 				.setDisplay(panelConfig.getDisplay())
 				.setMatrixToPanelPort(portSet.getMatrixToPanel())
 				.setPanelToPanelPort(portSet.getPanelToMatrix())
 				.setButtons(buttonSetResolver.resolveButtons(panelConfig)));
+
+		simpReponder.convertAndRespondeToUser(sessionId, "/provision", provisionMessage);
 	}
 
 	@EventListener
 	public void handlePanelDisconnect(SessionDisconnectEvent sessionDisconnectEvent) {
 		String sessionId = sessionDisconnectEvent.getSessionId();
-		String panelId = registeredPanels.remove(sessionId);
-		if (panelId != null) {
+		PanelConnectionInformation panelConnectionInformation = panelConnectionManager.deregisterPanelConnection(sessionId);
+		if (panelConnectionInformation == null) {
+			log.info("Received Disconnect-Event for Stomp-Session-ID {} which is not Registered", sessionId);
+			return;
+		}
+
+		String hostId = panelConnectionInformation.getHostId();
+		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
+
+		if (maybePanelId.isPresent()) {
+			String panelId = maybePanelId.get();
 			log.info("Found Panel-ID {} for Stomp-Session-ID {}", panelId, sessionId);
 
 			PanelConfig panelConfig = config.getPanels().get(panelId);

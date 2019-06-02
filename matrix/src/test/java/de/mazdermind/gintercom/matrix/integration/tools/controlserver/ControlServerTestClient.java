@@ -14,6 +14,10 @@ import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestComponent;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Scope;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -22,24 +26,27 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 
+@TestComponent
+@Scope("prototype")
 public class ControlServerTestClient {
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(1);
 	private static final String HOST = "127.0.0.1";
 	private static final String PATH = "/ws";
-	private static final Set<String> EXPECTED_MESSAGES = ImmutableSet.of("/user/provision");
+	private static final Set<String> EXPECTED_MESSAGES = ImmutableSet.of(
+		"/user/provision",
+		"/user/provision/already-registered"
+	);
 	private static final Logger log = LoggerFactory.getLogger(ControlServerTestClient.class);
-	private final ObjectMapper objectMapper;
-
-	private final int serverPort;
 
 	private StompSession stompSession;
 	private WebSocketStompClient stompClient;
 	private ControlServerTestSessionHandler sessionHandler;
 
-	public ControlServerTestClient(int serverPort) {
-		objectMapper = new ObjectMapper();
-		this.serverPort = serverPort;
-	}
+	@LocalServerPort
+	private int serverPort;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	/**
 	 * Connect to the ControlServer under Test
@@ -223,10 +230,14 @@ public class ControlServerTestClient {
 	}
 
 	public void assertNoOtherMessages() {
-		assertThat(sessionHandler.getMessages(), empty());
+		if (sessionHandler != null) {
+			assertThat(sessionHandler.getMessages(), empty());
+		}
 	}
 
 	public void assertNoErrors() {
-		assertThat(sessionHandler.getErrors(), empty());
+		if (sessionHandler != null) {
+			assertThat(sessionHandler.getErrors(), empty());
+		}
 	}
 }

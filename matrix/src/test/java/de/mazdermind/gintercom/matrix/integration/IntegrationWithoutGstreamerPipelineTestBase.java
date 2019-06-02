@@ -4,7 +4,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import de.mazdermind.gintercom.matrix.pipeline.Pipeline;
 
-public class IntegrationWithoutGstreamerPipelineTestBase extends IntegrationTestBase {
+public abstract class IntegrationWithoutGstreamerPipelineTestBase extends IntegrationTestBase {
 	@MockBean
 	private Pipeline pipeline;
 

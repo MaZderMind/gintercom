@@ -36,7 +36,10 @@ public class TwoPanelsRegistrationIT extends IntegrationWithoutGstreamerPipeline
 	private PanelRegistrationMessage panelRegistrationMessage1;
 	private PanelRegistrationMessage panelRegistrationMessage2;
 
+	@Autowired
 	private ControlServerTestClient client1;
+
+	@Autowired
 	private ControlServerTestClient client2;
 
 	@Autowired
@@ -44,9 +47,6 @@ public class TwoPanelsRegistrationIT extends IntegrationWithoutGstreamerPipeline
 
 	@Before
 	public void prepare() {
-		client1 = new ControlServerTestClient(getServerPort());
-		client2 = new ControlServerTestClient(getServerPort());
-
 		testConfig.reset();
 		testConfig.getPanels()
 			.put(PANEL_ID1, new PanelConfig()
