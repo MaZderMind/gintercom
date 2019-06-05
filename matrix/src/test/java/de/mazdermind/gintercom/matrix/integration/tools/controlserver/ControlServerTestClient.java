@@ -220,16 +220,10 @@ public class ControlServerTestClient {
 	 * {@param klazz}.
 	 */
 	public <T> T awaitMessage(String destination, Class<T> klazz, Duration timeout) {
-		Object message = awaitMessage(destination, timeout);
-		return objectMapper.convertValue(message, klazz);
-	}
-
-	public Object awaitMessage(String destination) {
-		return awaitMessage(destination, DEFAULT_TIMEOUT);
-	}
-
-	public Object awaitMessage(String destination, Duration timeout) {
-		return sessionHandler.awaitMessage(destination, timeout);
+		Object payload = sessionHandler.awaitMessage(destination, timeout);
+		T converted = objectMapper.convertValue(payload, klazz);
+		log.debug("received Message for {}:\n{}", destination, converted);
+		return converted;
 	}
 
 	private void assertNoOtherMessages() {
