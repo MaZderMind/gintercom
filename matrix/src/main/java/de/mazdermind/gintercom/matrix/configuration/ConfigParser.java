@@ -49,6 +49,7 @@ public class ConfigParser {
 		this.validator = validator;
 
 		objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
 		objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
 
 		toml = new Toml();

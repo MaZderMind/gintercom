@@ -15,6 +15,7 @@ public class JsonMapUtils {
 
 	static {
 		objectMapper = new ObjectMapper();
+		objectMapper.findAndRegisterModules();
 		objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
 
 		toml = new Toml();
