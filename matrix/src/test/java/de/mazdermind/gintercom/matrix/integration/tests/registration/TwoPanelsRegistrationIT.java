@@ -1,6 +1,6 @@
 package de.mazdermind.gintercom.matrix.integration.tests.registration;
 
-import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelRegistrationMessageBuilder.randomPanelRegistrationMessage;
+import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelRegistrationMessageBuilder.randomPanelRegistrationMessageForPanelConfig;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -38,11 +38,8 @@ public class TwoPanelsRegistrationIT extends IntegrationWithoutGstreamerPipeline
 		panelConfig1 = testConfig.addRandomPanel();
 		panelConfig2 = testConfig.addRandomPanel();
 
-		panelRegistrationMessage1 = randomPanelRegistrationMessage()
-			.setHostId(panelConfig1.getHostId());
-
-		panelRegistrationMessage2 = randomPanelRegistrationMessage()
-			.setHostId(panelConfig2.getHostId());
+		panelRegistrationMessage1 = randomPanelRegistrationMessageForPanelConfig(panelConfig1);
+		panelRegistrationMessage2 = randomPanelRegistrationMessageForPanelConfig(panelConfig2);
 	}
 
 	@After
