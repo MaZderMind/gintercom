@@ -129,6 +129,9 @@ public class ControlServerTestClient {
 	 * usually called inside a @After method
 	 */
 	public void cleanup() {
+		assertNoOtherMessages();
+		assertNoErrors();
+
 		try {
 			if (stompSession != null && stompSession.isConnected()) {
 				log.warn("Cleaning Up still connected Stomp-Session");
@@ -229,13 +232,13 @@ public class ControlServerTestClient {
 		return sessionHandler.awaitMessage(destination, timeout);
 	}
 
-	public void assertNoOtherMessages() {
+	private void assertNoOtherMessages() {
 		if (sessionHandler != null) {
 			assertThat(sessionHandler.getMessages(), empty());
 		}
 	}
 
-	public void assertNoErrors() {
+	private void assertNoErrors() {
 		if (sessionHandler != null) {
 			assertThat(sessionHandler.getErrors(), empty());
 		}

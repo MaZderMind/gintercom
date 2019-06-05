@@ -1,5 +1,7 @@
 package de.mazdermind.gintercom.matrix.integration;
 
+import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelConfigBuilder.randomPanelConfig;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
@@ -9,6 +11,7 @@ import org.springframework.context.annotation.Primary;
 
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.MatrixConfig;
+import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PortPoolConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PortsConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.RtpConfig;
@@ -43,5 +46,11 @@ public class TestConfig extends Config {
 		setButtonsets(new HashMap<>());
 		setGroups(new HashMap<>());
 		setPanels(new HashMap<>());
+	}
+
+	public PanelConfig addRandomPanel() {
+		PanelConfig panelConfig = randomPanelConfig();
+		getPanels().put(panelConfig.getDisplay(), panelConfig);
+		return panelConfig;
 	}
 }
