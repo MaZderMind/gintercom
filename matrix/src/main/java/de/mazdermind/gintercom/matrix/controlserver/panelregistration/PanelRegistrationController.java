@@ -111,7 +111,7 @@ public class PanelRegistrationController {
 			.setProvisioningInformation(new ProvisioningInformation()
 				.setDisplay(panelConfig.getDisplay())
 				.setMatrixToPanelPort(portSet.getMatrixToPanel())
-				.setPanelToPanelPort(portSet.getPanelToMatrix())
+				.setPanelToMatrixPort(portSet.getPanelToMatrix())
 				.setButtons(buttonSetResolver.resolveButtons(panelConfig)));
 
 		simpReponder.convertAndRespondeToUser(sessionId, "/provision", provisionMessage);

@@ -18,7 +18,7 @@ public class ProvisioningInformation {
 	private Integer matrixToPanelPort;
 
 	@NotNull
-	private Integer panelToPanelPort;
+	private Integer panelToMatrixPort;
 
 	@NotNull
 	private Map<String, ButtonConfig> buttons;
@@ -41,12 +41,12 @@ public class ProvisioningInformation {
 		return this;
 	}
 
-	public Integer getPanelToPanelPort() {
-		return panelToPanelPort;
+	public Integer getPanelToMatrixPort() {
+		return panelToMatrixPort;
 	}
 
-	public ProvisioningInformation setPanelToPanelPort(Integer panelToPanelPort) {
-		this.panelToPanelPort = panelToPanelPort;
+	public ProvisioningInformation setPanelToMatrixPort(Integer panelToMatrixPort) {
+		this.panelToMatrixPort = panelToMatrixPort;
 		return this;
 	}
 
@@ -61,7 +61,7 @@ public class ProvisioningInformation {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(display, matrixToPanelPort, panelToPanelPort, buttons);
+		return Objects.hashCode(display, matrixToPanelPort, panelToMatrixPort, buttons);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class ProvisioningInformation {
 		ProvisioningInformation that = (ProvisioningInformation) o;
 		return Objects.equal(display, that.display) &&
 			Objects.equal(matrixToPanelPort, that.matrixToPanelPort) &&
-			Objects.equal(panelToPanelPort, that.panelToPanelPort) &&
+			Objects.equal(panelToMatrixPort, that.panelToMatrixPort) &&
 			Objects.equal(buttons, that.buttons);
 	}
 
@@ -80,7 +80,7 @@ public class ProvisioningInformation {
 		return new ToStringBuilder(this)
 			.append("display", display)
 			.append("matrixToPanelPort", matrixToPanelPort)
-			.append("panelToPanelPort", panelToPanelPort)
+			.append("panelToMatrixPort", panelToMatrixPort)
 			.append("buttons", buttons)
 			.toString();
 	}
