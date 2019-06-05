@@ -10,7 +10,7 @@ public class GstErrorCheck {
 	}
 
 	public static void expectSuccess(StateChangeReturn stateChangeReturn) {
-		if (stateChangeReturn == StateChangeReturn.SUCCESS) {
+		if (stateChangeReturn != StateChangeReturn.SUCCESS) {
 			throw new GstError(String.format("Expected a return-value of SUCCESS, was %s", stateChangeReturn));
 		}
 	}
