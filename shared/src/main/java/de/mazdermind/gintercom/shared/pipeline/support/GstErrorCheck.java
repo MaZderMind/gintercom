@@ -9,6 +9,12 @@ public class GstErrorCheck {
 		}
 	}
 
+	public static void expectAsyncOrSuccess(StateChangeReturn stateChangeReturn) {
+		if (stateChangeReturn != StateChangeReturn.SUCCESS && stateChangeReturn != StateChangeReturn.ASYNC) {
+			throw new GstError(String.format("Expected a return-value of SUCCESS or ASYNC, was %s", stateChangeReturn));
+		}
+	}
+
 	public static void expectSuccess(StateChangeReturn stateChangeReturn) {
 		if (stateChangeReturn != StateChangeReturn.SUCCESS) {
 			throw new GstError(String.format("Expected a return-value of SUCCESS, was %s", stateChangeReturn));
