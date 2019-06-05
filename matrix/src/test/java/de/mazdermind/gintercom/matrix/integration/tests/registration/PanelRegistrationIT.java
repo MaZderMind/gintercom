@@ -81,6 +81,13 @@ public class PanelRegistrationIT extends IntegrationWithoutGstreamerPipelineTest
 		client2.send("/registration", panelRegistrationMessage);
 		ProvisionMessage provisionMessage2 = client2.awaitMessage("/user/provision", ProvisionMessage.class);
 		assertThat(provisionMessage2.getProvisioningInformation().getDisplay(), is(panelConfig.getDisplay()));
+
+		assertThat(provisionMessage2.getProvisioningInformation().getPanelToMatrixPort(),
+			is(provisionMessage1.getProvisioningInformation().getPanelToMatrixPort()));
+
+		assertThat(provisionMessage2.getProvisioningInformation().getPanelToMatrixPort(),
+			is(provisionMessage1.getProvisioningInformation().getPanelToMatrixPort()));
+
 		client2.disconnect();
 	}
 
