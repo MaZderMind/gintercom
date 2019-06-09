@@ -34,7 +34,7 @@ public class RtpTestClientRx {
 	private static Logger log = LoggerFactory.getLogger(RtpTestClientRx.class);
 
 	private final DataProbe dataProbe = new DataProbe();
-	private final AtomicReference<CompletableFuture<Void>> awaitDataFuture = new AtomicReference<>(new CompletableFuture<>());
+	private final AtomicReference<CompletableFuture<Void>> awaitDataFuture = new AtomicReference<>();
 
 	private Pipeline pipeline;
 	private Pad sinkPad;
