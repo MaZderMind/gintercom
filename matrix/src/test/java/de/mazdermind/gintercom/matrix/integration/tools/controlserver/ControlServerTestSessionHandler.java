@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -13,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -27,6 +29,7 @@ public class ControlServerTestSessionHandler extends StompSessionHandlerAdapter 
 	private AtomicReference<FutureMessage> futureMessage = new AtomicReference<>();
 
 	@Override
+	@NonNull
 	public Type getPayloadType(StompHeaders headers) {
 		return Map.class;
 	}
@@ -86,4 +89,20 @@ public class ControlServerTestSessionHandler extends StompSessionHandlerAdapter 
 		throw new AssertionError(String.format("Expected Message to %s has not been received within the Timeout %s", destination, timeout));
 	}
 
+	static class FutureMessage {
+		private final String destination;
+		private final CompletableFuture<Object> future = new CompletableFuture<>();
+
+		FutureMessage(String destination) {
+			this.destination = destination;
+		}
+
+		String getDestination() {
+			return destination;
+		}
+
+		CompletableFuture<Object> getFuture() {
+			return future;
+		}
+	}
 }
