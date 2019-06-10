@@ -80,7 +80,7 @@ public class RtpTestClientRx {
 		try {
 			future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
 			awaitDataFuture.set(null);
-			// Successfull received Audio in the given Timeout
+			log.info("Successfull received Audio in the given Timeout");
 			return;
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			// Timed Out waiting for Audio within Window
@@ -105,7 +105,7 @@ public class RtpTestClientRx {
 		while (LocalTime.now().isBefore(end)) {
 			try {
 				awaitNoAudioData(window);
-				// Successfully Timed Out waiting for Audio within Window
+				log.info("Successfully Timed Out waiting for Audio within Window");
 				return;
 			} catch (AssertionError e) {
 				// Received Audio within Window but the Timeout is not yet over -- retry
