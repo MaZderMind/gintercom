@@ -48,7 +48,7 @@ public class RtpTestClientRx {
 
 		Element jitterbuffer = factory.createAndAddElement("rtpjitterbuffer");
 		jitterbuffer.set("latency", 50);
-		Element.linkPadsFiltered(udpsrc, "src", jitterbuffer, "sink", StaticCaps.RTP);
+		udpsrc.linkFiltered(jitterbuffer, StaticCaps.RTP);
 
 		Element depay = factory.createAndAddElement("rtpL16depay");
 		jitterbuffer.link(depay);

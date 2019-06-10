@@ -44,7 +44,7 @@ public class Group {
 		silenceSrc.set("is-live", true);
 
 		mixer = elementFactory.createAndAddElement("audiomixer");
-		Element.linkPadsFiltered(silenceSrc, "src", mixer, "sink_%u", StaticCaps.AUDIO);
+		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);
 
 		tee = elementFactory.createAndAddElement("tee");
 		tee.set("allow-not-linked", true);

@@ -40,18 +40,18 @@ public class PanelTransmitPath {
 		silenceSrc.set("freq", 220); // TODO wave=silence
 
 		mixer = factory.createAndAddElement("audiomixer");
-		Element.linkPadsFiltered(silenceSrc, "src", mixer, "sink_%u", StaticCaps.AUDIO);
+		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);
 
 		Element audioconvert = factory.createAndAddElement("audioconvert");
 		mixer.link(audioconvert);
 
 		Element payload = factory.createAndAddElement("rtpL16pay");
-		Element.linkPadsFiltered(audioconvert, "src", payload, "sink", StaticCaps.AUDIO_BE);
+		audioconvert.linkFiltered(payload, StaticCaps.AUDIO_BE);
 
 		Element udpsink = factory.createAndAddElement("udpsink");
 		udpsink.set("host", host.getHostAddress());
 		udpsink.set("port", txPort);
-		Element.linkPadsFiltered(payload, "src", udpsink, "sink", StaticCaps.RTP);
+		payload.linkFiltered(udpsink, StaticCaps.RTP);
 
 		bin.syncStateWithParent();
 	}
