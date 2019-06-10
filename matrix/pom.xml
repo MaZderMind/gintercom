@@ -28,9 +28,10 @@
 			<artifactId>spring-boot-starter-mustache</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.freedesktop.gstreamer</groupId>
+			<!-- imported from git while awaiting the 1.1 release -->
+			<groupId>com.github.gstreamer-java</groupId>
 			<artifactId>gst1-java-core</artifactId>
-			<version>1.0.0</version>
+			<version>f77c505</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -101,6 +102,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
