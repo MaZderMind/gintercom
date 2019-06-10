@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 
 public class PeakDetectorBin extends Bin {
-	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(3);
+	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(60);
 	private static final int NUMBER_OF_BANDS = 1020; // Should be a multiple of 30 (which equals being dividable by b 2, 3, and 5) for best performance
 	private static final float THRESHOLD = -60.0f;
 
@@ -74,12 +74,6 @@ public class PeakDetectorBin extends Bin {
 		return peaks;
 	}
 
-	private static List<Float> mapPeaksToCenterFrequencies(List<Integer> localPeaks, float peakBandWidth) {
-		return localPeaks.stream()
-			.map(f -> f * peakBandWidth)
-			.collect(Collectors.toList());
-	}
-
 	public void expectPeaks(List<Integer> peakFrequencies) {
 		expectPeaks(peakFrequencies, DEFAULT_TIMEOUT);
 	}
@@ -88,16 +82,26 @@ public class PeakDetectorBin extends Bin {
 		AwaitedPeaks awaitedPeaks = new AwaitedPeaks(peakFrequencies);
 		this.awaitedPeaks.set(awaitedPeaks);
 		try {
-			awaitedPeaks.getFuture().get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+			Boolean success = awaitedPeaks.getFuture().get(timeout.toMillis(), TimeUnit.MILLISECONDS);
+			if (success) {
+				return;
+			}
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
-			throw new AssertionError(String.format("Awaited Peaks %s not detected in Timeout %s", peakFrequencies, timeout));
+			//
 		}
+
+		throw new AssertionError(String.format("Awaited Peaks %s not detected in Timeout %s", peakFrequencies, timeout));
 	}
 
 	private void spectrumMessageCallback(List<Float> foundMagnitudes) {
 		AwaitedPeaks awaitedPeaks = this.awaitedPeaks.get();
 		if (awaitedPeaks != null && !awaitedPeaks.getFuture().isDone()) {
-			log.debug("analyzing {} magnitudes", foundMagnitudes.size());
+			int remainingTries = awaitedPeaks.decrementMismatches();
+			if (remainingTries == 0) {
+				log.warn("too many mismatches, resigning");
+				awaitedPeaks.getFuture().complete(false);
+			}
+			log.debug("try {} - analyzing {} magnitudes", remainingTries, foundMagnitudes.size());
 
 			List<Integer> foundPeaks = findLocalPeaks(foundMagnitudes, THRESHOLD + 10.0f);
 			log.debug("found peaks in the following bands: {}", foundPeaks);
@@ -134,7 +138,7 @@ public class PeakDetectorBin extends Bin {
 
 			if (matchesExpectedPeaks) {
 				log.debug("all expected peaks were found");
-				awaitedPeaks.getFuture().complete(null);
+				awaitedPeaks.getFuture().complete(true);
 			}
 		}
 	}
@@ -174,7 +178,8 @@ public class PeakDetectorBin extends Bin {
 
 	private static class AwaitedPeaks {
 		private final List<Integer> awaitedPeaks;
-		private final CompletableFuture<Object> future = new CompletableFuture<>();
+		private final CompletableFuture<Boolean> future = new CompletableFuture<>();
+		private int mismatches = 5;
 
 		public AwaitedPeaks(List<Integer> awaitedPeaks) {
 			this.awaitedPeaks = awaitedPeaks;
@@ -184,8 +189,12 @@ public class PeakDetectorBin extends Bin {
 			return unmodifiableList(awaitedPeaks);
 		}
 
-		public CompletableFuture<Object> getFuture() {
+		public CompletableFuture<Boolean> getFuture() {
 			return future;
+		}
+
+		public int decrementMismatches() {
+			return --mismatches;
 		}
 	}
 
