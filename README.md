@@ -3,7 +3,7 @@
 ## Run (for Production)
 Install Runtime-Dependencies (Tested on Debian Stretch):
 ```bash
-apt install openjdk-8-jre 
+apt install openjdk-8-jre
 apt install libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
 ```
 
