@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.matrix.integration.tools.rtp;
 
 import static de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck.expectAsyncOrSuccess;
 import static de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck.expectSuccess;
+import static de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck.expectTrue;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -48,19 +49,24 @@ public class RtpTestClientRx {
 
 		Element jitterbuffer = factory.createAndAddElement("rtpjitterbuffer");
 		jitterbuffer.set("latency", 50);
-		udpsrc.linkFiltered(jitterbuffer, StaticCaps.RTP);
+		expectTrue(udpsrc.linkFiltered(jitterbuffer, StaticCaps.RTP));
 
 		Element depay = factory.createAndAddElement("rtpL16depay");
-		jitterbuffer.link(depay);
+		expectTrue(jitterbuffer.link(depay));
 
-		Element sink = factory.createAndAddElement("fakesink");
-		sinkPad = sink.getStaticPad("sink");
+		Element audioconvert = factory.createAndAddElement("audioconvert");
+		expectTrue(depay.link(audioconvert));
+
+		PeakDetectorBin peakDetector = new PeakDetectorBin();
+		pipeline.add(peakDetector);
+
+		sinkPad = peakDetector.getStaticPad("sink");
 		sinkPad.addDataProbe(dataProbe);
-		depay.link(sink);
+		expectTrue(audioconvert.linkFiltered(peakDetector, StaticCaps.AUDIO));
 
 		log.info("Starting Test-RTP-Rx-Client on Port {}", matrixToPanelPort);
 		expectAsyncOrSuccess(pipeline.play());
-		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, "ttp-test-client-rx");
+		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, "rtp-test-client-rx");
 	}
 
 	public void awaitAudioData() {
