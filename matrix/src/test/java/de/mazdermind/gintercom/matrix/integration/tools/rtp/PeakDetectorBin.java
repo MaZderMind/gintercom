@@ -74,11 +74,11 @@ public class PeakDetectorBin extends Bin {
 		return peaks;
 	}
 
-	public void expectPeaks(List<Integer> peakFrequencies) {
-		expectPeaks(peakFrequencies, DEFAULT_TIMEOUT);
+	public void awaitPeaks(List<Integer> peakFrequencies) {
+		awaitPeaks(peakFrequencies, DEFAULT_TIMEOUT);
 	}
 
-	public void expectPeaks(List<Integer> peakFrequencies, Duration timeout) {
+	public void awaitPeaks(List<Integer> peakFrequencies, Duration timeout) {
 		AwaitedPeaks awaitedPeaks = new AwaitedPeaks(peakFrequencies);
 		this.awaitedPeaks.set(awaitedPeaks);
 		try {

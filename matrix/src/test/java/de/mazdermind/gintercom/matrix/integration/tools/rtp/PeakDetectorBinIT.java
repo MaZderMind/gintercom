@@ -29,19 +29,19 @@ public class PeakDetectorBinIT {
 	@Test
 	public void detectsSilence() {
 		PeakDetectorBin peakDetector = setupTestPipeline("audiotestsrc wave=silence volume=0.2 ! audiomixer name=mix");
-		peakDetector.expectPeaks(emptyList());
+		peakDetector.awaitPeaks(emptyList());
 	}
 
 	@Test(expected = AssertionError.class)
 	public void discriminatesSilenceFromSingleTone() {
 		PeakDetectorBin peakDetector = setupTestPipeline("audiotestsrc wave=sine freq=440 volume=0.2 ! audiomixer name=mix");
-		peakDetector.expectPeaks(emptyList());
+		peakDetector.awaitPeaks(emptyList());
 	}
 
 	@Test
 	public void detectsSingleTone() {
 		PeakDetectorBin peakDetector = setupTestPipeline("audiotestsrc wave=sine freq=660 volume=0.2 ! audiomixer name=mix");
-		peakDetector.expectPeaks(ImmutableList.of(660));
+		peakDetector.awaitPeaks(ImmutableList.of(660));
 	}
 
 	@Test(expected = AssertionError.class)
@@ -51,7 +51,7 @@ public class PeakDetectorBinIT {
 				"audiotestsrc wave=sine freq=660 volume=0.2 ! mix. " +
 				"audiotestsrc wave=sine freq=880 volume=0.2 ! mix."
 		);
-		peakDetector.expectPeaks(ImmutableList.of(880));
+		peakDetector.awaitPeaks(ImmutableList.of(880));
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class PeakDetectorBinIT {
 				"audiotestsrc wave=sine freq=1020 volume=0.2 ! mix. " +
 				"audiotestsrc wave=sine freq=880 volume=0.2 ! mix."
 		);
-		peakDetector.expectPeaks(ImmutableList.of(880, 1020));
+		peakDetector.awaitPeaks(ImmutableList.of(880, 1020));
 
 	}
 
@@ -73,7 +73,7 @@ public class PeakDetectorBinIT {
 				"audiotestsrc wave=sine freq=880 volume=0.2 ! mix. " +
 				"audiotestsrc wave=sine freq=3000 volume=0.2 ! mix."
 		);
-		peakDetector.expectPeaks(ImmutableList.of(880, 1020));
+		peakDetector.awaitPeaks(ImmutableList.of(880, 1020));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class PeakDetectorBinIT {
 				"audiotestsrc wave=sine freq=220 volume=0.2 ! mix. " +
 				"audiotestsrc wave=sine freq=880 volume=0.2 ! mix."
 		);
-		peakDetector.expectPeaks(ImmutableList.of(220, 880, 3000));
+		peakDetector.awaitPeaks(ImmutableList.of(220, 880, 3000));
 	}
 
 	private PeakDetectorBin setupTestPipeline(String pipelineDescription) {
@@ -105,7 +105,7 @@ public class PeakDetectorBinIT {
 		for (int freq = 200; freq <= 10_000; freq += 100) {
 			PeakDetectorBin peakDetector = setupTestPipeline(
 				String.format("audiotestsrc wave=sine freq=%d volume=0.2 ! audiomixer name=mix", freq));
-			peakDetector.expectPeaks(ImmutableList.of(freq));
+			peakDetector.awaitPeaks(ImmutableList.of(freq));
 			pipeline.getBus().disconnect(messageHandler);
 			pipeline.stop();
 		}
