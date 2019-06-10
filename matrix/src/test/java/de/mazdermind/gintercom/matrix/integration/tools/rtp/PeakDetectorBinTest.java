@@ -78,4 +78,10 @@ public class PeakDetectorBinTest {
 		List<Integer> peaks = PeakDetectorBin.findLocalPeaks(Collections.emptyList());
 		MatcherAssert.assertThat(peaks, emptyIterable());
 	}
+
+	@Test
+	public void ignoresPeaksUnderThreshold() {
+		List<Integer> peaks = PeakDetectorBin.findLocalPeaks(ImmutableList.of(0f, 1f, 0f, 3f, 5f, 1f, -1f, 1f, 0f), 1f);
+		MatcherAssert.assertThat(peaks, contains(4));
+	}
 }
