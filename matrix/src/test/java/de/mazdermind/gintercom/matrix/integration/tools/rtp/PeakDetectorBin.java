@@ -38,7 +38,7 @@ public class PeakDetectorBin extends Bin {
 	private Element spectrum;
 
 	public PeakDetectorBin() {
-		super();
+		super("PeakDetectorBin");
 
 		ElementFactory factory = new ElementFactory(this);
 		spectrum = factory.createAndAddElement("spectrum");
@@ -101,7 +101,7 @@ public class PeakDetectorBin extends Bin {
 				log.warn("too many mismatches, resigning");
 				awaitedPeaks.getFuture().complete(false);
 			}
-			log.debug("try {} - analyzing {} magnitudes", remainingTries, foundMagnitudes.size());
+			log.debug("remaining tries: {}", remainingTries);
 
 			List<Integer> foundPeaks = findLocalPeaks(foundMagnitudes, THRESHOLD + 10.0f);
 			log.debug("found peaks in the following bands: {}", foundPeaks);
