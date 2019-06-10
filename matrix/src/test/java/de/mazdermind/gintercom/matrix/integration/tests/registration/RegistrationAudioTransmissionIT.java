@@ -62,7 +62,7 @@ public class RegistrationAudioTransmissionIT extends IntegrationTestBase {
 	}
 
 	@Test
-	public void receivesAudioDataAfterReRegistering() {
+	public void receivesAudioDataAfterReRegistration() {
 		log.info("Connection 1");
 		client.connect();
 		client.send("/registration", panelRegistrationMessage);
