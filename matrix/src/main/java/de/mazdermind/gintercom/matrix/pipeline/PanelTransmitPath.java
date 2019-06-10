@@ -21,6 +21,7 @@ import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 @Scope("prototype")
 public class PanelTransmitPath {
 	private static final Logger log = LoggerFactory.getLogger(PanelTransmitPath.class);
+	private static final int WAVE_SILENCE = 4;
 
 	private Bin bin;
 	private Pipeline pipeline;
@@ -37,7 +38,7 @@ public class PanelTransmitPath {
 
 		Element silenceSrc = factory.createAndAddElement("audiotestsrc");
 		silenceSrc.set("is-live", true);
-		silenceSrc.set("freq", 220); // TODO wave=silence
+		silenceSrc.set("wave", WAVE_SILENCE);
 
 		mixer = factory.createAndAddElement("audiomixer");
 		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);

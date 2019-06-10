@@ -6,6 +6,7 @@ import static de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck.expe
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,7 @@ public class RtpTestClientRx {
 
 	private Pipeline pipeline;
 	private Pad sinkPad;
+	private PeakDetectorBin peakDetector;
 
 	public void connect(Integer matrixToPanelPort) {
 		pipeline = new Pipeline();
@@ -57,8 +59,9 @@ public class RtpTestClientRx {
 		Element audioconvert = factory.createAndAddElement("audioconvert");
 		expectTrue(depay.link(audioconvert));
 
-		PeakDetectorBin peakDetector = new PeakDetectorBin();
+		peakDetector = new PeakDetectorBin();
 		pipeline.add(peakDetector);
+		pipeline.getBus().connect(new PeakDetectorBin.ElementMessageHandler(peakDetector));
 
 		sinkPad = peakDetector.getStaticPad("sink");
 		sinkPad.addDataProbe(dataProbe);
@@ -137,6 +140,10 @@ public class RtpTestClientRx {
 	public void cleanup() {
 		sinkPad.removeDataProbe(dataProbe);
 		expectSuccess(pipeline.stop());
+	}
+
+	public void awaitPeaks(List<Integer> peakFrequencies) {
+		peakDetector.awaitPeaks(peakFrequencies);
 	}
 
 	private class DataProbe implements Pad.DATA_PROBE {

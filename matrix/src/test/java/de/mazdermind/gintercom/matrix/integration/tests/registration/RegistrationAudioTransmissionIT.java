@@ -1,6 +1,7 @@
 package de.mazdermind.gintercom.matrix.integration.tests.registration;
 
 import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelRegistrationMessageBuilder.randomPanelRegistrationMessageForPanelConfig;
+import static java.util.Collections.emptyList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -88,5 +89,18 @@ public class RegistrationAudioTransmissionIT extends IntegrationTestBase {
 		client.disconnect();
 		rtpClient.getRx().awaitNoAudioData();
 		log.info("Done");
+	}
+
+	@Test
+	public void receivesSilenceAfterRegistration() {
+		client.connect();
+		client.send("/registration", panelRegistrationMessage);
+
+		ProvisionMessage provisionMessage = client.awaitMessage("/user/provision", ProvisionMessage.class);
+		rtpClient.connect(provisionMessage.getProvisioningInformation());
+
+		rtpClient.getRx().awaitPeaks(emptyList());
+
+		client.disconnect();
 	}
 }
