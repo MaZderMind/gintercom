@@ -117,7 +117,7 @@ public class PeakDetectorBin extends Bin {
 				.map(band -> new FrequencySpan((band - 1) * bandWidth, (band + 1) * bandWidth))
 				.collect(Collectors.toList());
 
-			log.debug("calculated expected bands to be {}", foundFrequencyBands);
+			log.debug("calculated found bands to be {}", foundFrequencyBands);
 
 			Iterator<Integer> awaitedPeaksIterator = awaitedPeaks.getAwaitedPeaks().iterator();
 			boolean matchesExpectedPeaks = foundFrequencyBands.stream().allMatch(band -> {
@@ -135,6 +135,13 @@ public class PeakDetectorBin extends Bin {
 					return false;
 				}
 			});
+
+			if (awaitedPeaksIterator.hasNext()) {
+				ArrayList<Integer> missingPeaks = new ArrayList<>();
+				awaitedPeaksIterator.forEachRemaining(missingPeaks::add);
+				log.debug("did not find expexted peaks: {}", missingPeaks);
+				return;
+			}
 
 			if (matchesExpectedPeaks) {
 				log.debug("all expected peaks were found");

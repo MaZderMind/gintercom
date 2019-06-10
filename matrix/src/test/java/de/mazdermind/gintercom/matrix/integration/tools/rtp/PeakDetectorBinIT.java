@@ -38,6 +38,13 @@ public class PeakDetectorBinIT {
 		peakDetector.awaitPeaks(emptyList());
 	}
 
+
+	@Test(expected = AssertionError.class)
+	public void discriminatesSingleToneFromSilence() {
+		PeakDetectorBin peakDetector = setupTestPipeline("audiotestsrc wave=silence volume=0.2 ! audiomixer name=mix");
+		peakDetector.awaitPeaks(ImmutableList.of(2000));
+	}
+
 	@Test
 	public void detectsSingleTone() {
 		PeakDetectorBin peakDetector = setupTestPipeline("audiotestsrc wave=sine freq=660 volume=0.2 ! audiomixer name=mix");
