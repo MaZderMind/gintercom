@@ -1,5 +1,6 @@
 package de.mazdermind.gintercom.matrix.integration;
 
+import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomGroupConfigBuilder.randomGroupConfig;
 import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelConfigBuilder.randomPanelConfig;
 
 import java.net.InetAddress;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.context.TestComponent;
 import org.springframework.context.annotation.Primary;
 
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
+import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.MatrixConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PortPoolConfig;
@@ -52,5 +54,11 @@ public class TestConfig extends Config {
 		PanelConfig panelConfig = randomPanelConfig();
 		getPanels().put(panelConfig.getDisplay(), panelConfig);
 		return panelConfig;
+	}
+
+	public GroupConfig addRandomGroup() {
+		GroupConfig groupConfig = randomGroupConfig();
+		getGroups().put(groupConfig.getDisplay(), groupConfig);
+		return groupConfig;
 	}
 }
