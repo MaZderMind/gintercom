@@ -32,6 +32,7 @@ public class PeakDetectorBin extends Bin {
 	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(60);
 	private static final int NUMBER_OF_BANDS = 1020; // Should be a multiple of 30 (which equals being dividable by b 2, 3, and 5) for best performance
 	private static final float THRESHOLD = -60.0f;
+	private static final int ALLOWED_NUMBER_OF_MISMATCHES = 50;
 
 	private static Logger log = LoggerFactory.getLogger(PeakDetectorBin.class);
 	private final AtomicReference<AwaitedPeaks> awaitedPeaks = new AtomicReference<>();
@@ -186,7 +187,7 @@ public class PeakDetectorBin extends Bin {
 	private static class AwaitedPeaks {
 		private final List<Integer> awaitedPeaks;
 		private final CompletableFuture<Boolean> future = new CompletableFuture<>();
-		private int mismatches = 5;
+		private int mismatches = ALLOWED_NUMBER_OF_MISMATCHES;
 
 		public AwaitedPeaks(List<Integer> awaitedPeaks) {
 			this.awaitedPeaks = awaitedPeaks;

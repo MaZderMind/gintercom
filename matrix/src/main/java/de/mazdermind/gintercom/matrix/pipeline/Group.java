@@ -21,8 +21,8 @@ import de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck;
 @Component
 @Scope("prototype")
 public class Group {
+	public static final int WAVE_SILENCE = 4;
 	private static final Logger log = LoggerFactory.getLogger(Group.class);
-
 	private Pipeline pipeline;
 	private String groupId;
 
@@ -40,7 +40,7 @@ public class Group {
 		ElementFactory elementFactory = new ElementFactory(bin);
 
 		Element silenceSrc = elementFactory.createAndAddElement("audiotestsrc");
-		silenceSrc.set("freq", 440); // TODO wave=silence
+		silenceSrc.set("wave", WAVE_SILENCE);
 		silenceSrc.set("is-live", true);
 
 		mixer = elementFactory.createAndAddElement("audiomixer");
@@ -72,9 +72,9 @@ public class Group {
 		return ghostPad;
 	}
 
-	public void releaseSrcPad(GhostPad ghostPad) {
-		Pad teePad = ghostPad.getTarget();
-		bin.removePad(teePad);
+	public void releaseSrcPad(Pad ghostPad) {
+		Pad teePad = ((GhostPad) ghostPad).getTarget();
+		bin.removePad(ghostPad);
 		tee.releaseRequestPad(teePad);
 	}
 
@@ -86,8 +86,8 @@ public class Group {
 		return ghostPad;
 	}
 
-	public void releaseSinkPad(GhostPad ghostPad) {
-		Pad mixerPad = ghostPad.getTarget();
+	public void releaseSinkPad(Pad ghostPad) {
+		Pad mixerPad = ((GhostPad) ghostPad).getTarget();
 		bin.removePad(ghostPad);
 		mixer.releaseRequestPad(mixerPad);
 	}

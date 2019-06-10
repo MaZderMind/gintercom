@@ -74,23 +74,27 @@ public class Pipeline implements PanelRegistrationAware {
 	@Override
 	public synchronized void handlePanelRegistration(PanelRegistrationEvent event) {
 		log.info("Configuring Panel {}", event.getPanelId());
-		Panel panel = beanFactory.getBean(Panel.class);
-		panel.configure(pipeline, event.getPanelId(), event.getPanelConfig(), event.getPortSet(), event.getHostAddress());
-		panels.put(event.getPanelId(), panel);
-		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-configure", event.getPanelId()));
+		Gst.invokeLater(() -> {
+			Panel panel = beanFactory.getBean(Panel.class);
+			panel.configure(pipeline, event.getPanelId(), event.getPanelConfig(), event.getPortSet(), event.getHostAddress());
+			panels.put(event.getPanelId(), panel);
+			pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-configure", event.getPanelId()));
 
-		log.info("Linking Panel {} to configured Rx/Tx Groups", event.getPanelId());
-		event.getPanelConfig().getRxGroups().forEach(groupName -> panel.startReceivingFromGroup(groups.get(groupName)));
-		event.getPanelConfig().getTxGroups().forEach(groupName -> panel.startTransmittingToGroup(groups.get(groupName)));
-		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-link-rx-groups", event.getPanelId()));
+			log.info("Linking Panel {} to configured Rx/Tx Groups", event.getPanelId());
+			event.getPanelConfig().getRxGroups().forEach(groupName -> panel.startReceivingFromGroup(groups.get(groupName)));
+			event.getPanelConfig().getTxGroups().forEach(groupName -> panel.startTransmittingToGroup(groups.get(groupName)));
+			pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-link-static-groups", event.getPanelId()));
+		});
 	}
 
 	@Override
 	public synchronized void handlePanelDeRegistration(PanelDeRegistrationEvent event) {
 		log.info("Deconfiguring Panel {}", event.getPanelId());
 		Panel panel = panels.remove(event.getPanelId());
-		panel.deconfigure();
-		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-deconfigure", event.getPanelId()));
+		Gst.invokeLater(() -> {
+			panel.deconfigure();
+			pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-deconfigure", event.getPanelId()));
+		});
 	}
 
 	public State getState() {

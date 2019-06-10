@@ -22,6 +22,10 @@ import de.mazdermind.gintercom.matrix.configuration.model.ServerConfig;
 @TestComponent
 @Primary
 public class TestConfig extends Config {
+
+	public static final GroupConfig GROUP_TEST_1 = new GroupConfig().setDisplay("TEST-1");
+	public static final GroupConfig GROUP_TEST_2 = new GroupConfig().setDisplay("TEST-2");
+
 	public TestConfig() {
 		reset();
 	}
@@ -48,6 +52,11 @@ public class TestConfig extends Config {
 		setButtonsets(new HashMap<>());
 		setGroups(new HashMap<>());
 		setPanels(new HashMap<>());
+
+		// Test-Groups are used by some Tests (ie StaticGroupsMixingIT), because at the moment registering Groups dynamic is not implemented yet
+		// TODO move into Tests once registering Groups dynamic is not implemented
+		getGroups().put(GROUP_TEST_1.getDisplay(), GROUP_TEST_1);
+		getGroups().put(GROUP_TEST_2.getDisplay(), GROUP_TEST_2);
 	}
 
 	public PanelConfig addRandomPanel() {

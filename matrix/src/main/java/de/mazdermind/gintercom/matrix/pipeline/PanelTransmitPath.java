@@ -58,6 +58,9 @@ public class PanelTransmitPath {
 	}
 
 	public void deconfigure() {
+		// TODO ensure that no data ia flowing to the Tx-Bin by
+		//  a) unlinking from all groups first or
+		//  b) using a Pad-IDLE-Probe
 		log.info("Stopping Transmit-Path for Panel {}", panelId);
 		bin.stop();
 

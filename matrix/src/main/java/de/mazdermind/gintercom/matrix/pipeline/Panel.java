@@ -1,7 +1,5 @@
 package de.mazdermind.gintercom.matrix.pipeline;
 
-import static de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck.expectNull;
-
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +23,8 @@ public class Panel {
 	private final PanelReceivePath receivePath;
 	private final PanelTransmitPath transmitPath;
 
-	private final Map<Group, Pad> transmitPathPads = new HashMap<>();
-	private final Map<Group, Pad> receivePathPads = new HashMap<>();
+	private final Map<Group, Pad> txPads = new HashMap<>();
+	private final Map<Group, Pad> rxPads = new HashMap<>();
 
 	private String panelId;
 
@@ -47,27 +45,38 @@ public class Panel {
 	}
 
 	public void deconfigure() {
+		log.info("Releasing Rx-Pads");
+		txPads.forEach(Group::releaseSinkPad);
+		txPads.clear();
+
+		log.info("Releasing Tx-Pads");
+		rxPads.forEach(Group::releaseSrcPad);
+		rxPads.clear();
+
 		log.info("De-Configuring Pipeline-Elements for Panel {}", panelId);
 		receivePath.deconfigure();
 		transmitPath.deconfigure();
 	}
 
 	public void startTransmittingToGroup(Group group) {
-		Pad sinkPad = transmitPath.requestSinkPad();
-		expectNull(transmitPathPads.put(group, sinkPad));
-		Pad srcPad = group.requestSrcPad();
+		Pad srcPad = receivePath.requestSrcPad();
+		Pad sinkPad = group.requestSinkPad();
+		txPads.put(group, sinkPad);
 		srcPad.link(sinkPad);
 	}
 
-	public void stopsTransmittingToGroup(Group group) {
-
+	public void stopTransmittingToGroup(Group group) {
+		// FIXME implement me
 	}
 
 	public void startReceivingFromGroup(Group group) {
-
+		Pad sinkPad = transmitPath.requestSinkPad();
+		Pad srcPad = group.requestSrcPad();
+		rxPads.put(group, srcPad);
+		srcPad.link(sinkPad);
 	}
 
 	public void stopReceivingToGroup(Group group) {
-
+		// FIXME implement me
 	}
 }
