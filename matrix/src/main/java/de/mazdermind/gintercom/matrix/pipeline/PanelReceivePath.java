@@ -49,6 +49,7 @@ public class PanelReceivePath {
 
 		Element jitterbuffer = factory.createAndAddElement("rtpjitterbuffer");
 		jitterbuffer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer());
+		jitterbuffer.set("drop-on-latency", true);
 		udpsrc.link(jitterbuffer);
 
 		Element depayloader = factory.createAndAddElement("rtpL16depay");

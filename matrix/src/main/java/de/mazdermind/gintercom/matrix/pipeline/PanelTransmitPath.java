@@ -11,9 +11,11 @@ import org.freedesktop.gstreamer.Pad;
 import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 
@@ -22,11 +24,18 @@ import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 public class PanelTransmitPath {
 	private static final Logger log = LoggerFactory.getLogger(PanelTransmitPath.class);
 	private static final int WAVE_SILENCE = 4;
+	private final Config config;
 
 	private Bin bin;
 	private Pipeline pipeline;
 	private String panelId;
 	private Element mixer;
+
+	public PanelTransmitPath(
+		@Autowired Config config
+	) {
+		this.config = config;
+	}
 
 	public void configure(Pipeline pipeline, String panelId, InetAddress host, int txPort) {
 		log.info("Creating Transmit-Path for Panel {}", panelId);
@@ -41,6 +50,7 @@ public class PanelTransmitPath {
 		silenceSrc.set("wave", WAVE_SILENCE);
 
 		mixer = factory.createAndAddElement("audiomixer");
+		mixer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer() * 1_000_000);
 		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);
 
 		Element audioconvert = factory.createAndAddElement("audioconvert");

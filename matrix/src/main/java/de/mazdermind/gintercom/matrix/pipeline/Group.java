@@ -10,9 +10,11 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.freedesktop.gstreamer.State;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
@@ -23,12 +25,19 @@ import de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck;
 public class Group {
 	public static final int WAVE_SILENCE = 4;
 	private static final Logger log = LoggerFactory.getLogger(Group.class);
+	private final Config config;
 	private Pipeline pipeline;
 	private String groupId;
 
 	private Bin bin;
 	private Element mixer;
 	private Element tee;
+
+	public Group(
+		@Autowired Config config
+	) {
+		this.config = config;
+	}
 
 	public void configure(Pipeline pipeline, String groupId, GroupConfig groupConfig) {
 		log.info("configuring Bin for Group {}", groupId);
@@ -44,6 +53,7 @@ public class Group {
 		silenceSrc.set("is-live", true);
 
 		mixer = elementFactory.createAndAddElement("audiomixer");
+		mixer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer() * 1_000_000);
 		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);
 
 		tee = elementFactory.createAndAddElement("tee");
