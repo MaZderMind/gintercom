@@ -73,8 +73,9 @@ public class Pipeline implements PanelRegistrationAware {
 
 	@Override
 	public synchronized void handlePanelRegistration(PanelRegistrationEvent event) {
-		log.info("Configuring Panel {}", event.getPanelId());
+		log.info("Scheduling deconfiguring of Panel {}", event.getPanelId());
 		Gst.invokeLater(() -> {
+			log.info("Configuring Panel {}", event.getPanelId());
 			Panel panel = beanFactory.getBean(Panel.class);
 			panel.configure(pipeline, event.getPanelId(), event.getPanelConfig(), event.getPortSet(), event.getHostAddress());
 			panels.put(event.getPanelId(), panel);
@@ -89,9 +90,10 @@ public class Pipeline implements PanelRegistrationAware {
 
 	@Override
 	public synchronized void handlePanelDeRegistration(PanelDeRegistrationEvent event) {
-		log.info("Deconfiguring Panel {}", event.getPanelId());
+		log.info("Scheduling deconfiguringation of Panel {}", event.getPanelId());
 		Panel panel = panels.remove(event.getPanelId());
 		Gst.invokeLater(() -> {
+			log.info("Deconfiguring Panel {}", event.getPanelId());
 			panel.deconfigure();
 			pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-deconfigure", event.getPanelId()));
 		});
