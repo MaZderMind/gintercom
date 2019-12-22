@@ -30,14 +30,13 @@ public class RegistrationAudioTransmissionIT extends IntegrationTestBase {
 	@Autowired
 	private TestConfig testConfig;
 
-	private PanelConfig panelConfig;
 	private PanelRegistrationMessage panelRegistrationMessage;
 
 	@Before
 	public void prepare() {
 		testConfig.reset();
 
-		panelConfig = testConfig.addRandomPanel();
+		PanelConfig panelConfig = testConfig.addRandomPanel();
 		panelRegistrationMessage = randomPanelRegistrationMessageForPanelConfig(panelConfig);
 	}
 

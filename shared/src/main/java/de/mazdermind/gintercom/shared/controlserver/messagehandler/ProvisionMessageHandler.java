@@ -42,6 +42,6 @@ class ProvisionMessageHandler implements MatrixMessageHandler {
 
 	@Override
 	public String getDestination() {
-		return "/provision";
+		return "/user/provision";
 	}
 }
