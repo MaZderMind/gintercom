@@ -1,4 +1,4 @@
-display="A/V Tech Romm A"
+display="A/V Tech Room A"
 rxGroups=["room-a", "av-tech"]
 txGroups=["av-tech"]
 buttonsets=["av-tech"]
