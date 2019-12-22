@@ -40,7 +40,7 @@ public class DebugToolButtonsManager {
 			.setStateChangedHandler(pipeline::configureTone));
 
 		panel.add(new ToggleButton("Enable Microphone", "Disable Microphone")
-			.setStateChangedHandler(pipeline::configureMicrohpne));
+			.setStateChangedHandler(pipeline::configureMicrophone));
 
 		panel.add(new ToggleButton("Enable Speaker", "Disable Speaker")
 			.setStateChangedHandler(pipeline::configureSpeaker));

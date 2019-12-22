@@ -100,12 +100,12 @@ public class Pipeline {
 		pipeline.getElementByName("mix").getSinkPads().get(MIX_PAD_TONE).set("volume", status ? 1.0 : 0.0);
 	}
 
-	public void configureMicrohpne(Boolean status) {
+	public void configureMicrophone(boolean status) {
 		log.info("{} Microphone", status ? "Enabling" : "Disabling");
 		pipeline.getElementByName("mix").getSinkPads().get(MIX_PAD_MICROPHONE).set("volume", status ? 1.0 : 0.0);
 	}
 
-	public void configureSpeaker(Boolean status) {
+	public void configureSpeaker(boolean status) {
 		log.info("{} Speaker", status ? "Enabling" : "Disabling");
 		pipeline.getElementByName("speaker_volume").set("volume", status ? 1.0 : 0.0);
 	}
