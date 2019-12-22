@@ -106,6 +106,7 @@ public class Pipeline {
 	}
 
 	public void configureSpeaker(Boolean status) {
+		log.info("{} Speaker", status ? "Enabling" : "Disabling");
 		pipeline.getElementByName("speaker_volume").set("volume", status ? 1.0 : 0.0);
 	}
 }
