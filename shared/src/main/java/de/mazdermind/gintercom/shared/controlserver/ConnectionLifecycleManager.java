@@ -48,6 +48,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 
 	private ConnectionLifecycle lifecycle = ConnectionLifecycle.STARTING;
 	private ScheduledFuture<?> discoverySchedule;
+	private MatrixAddressDiscoveryServiceResult discoveredMatrix = null;
 
 	public ConnectionLifecycleManager(
 		@Autowired ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster,
@@ -118,6 +119,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 			scheduleDiscovery(false);
 		} else {
 			log.info("Connected to {}", discoveredMatrix);
+			this.discoveredMatrix = discoveredMatrix;
 			initiateProvisioning(stompSession.get());
 		}
 	}
@@ -134,6 +136,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	public void handleTransportErrorEvent(ControlServerSessionTransportErrorEvent transportErrorEvent) {
 		if (lifecycle == ConnectionLifecycle.PROVISIONING || lifecycle == ConnectionLifecycle.OPERATIONAL) {
 			log.info("ControlServer-Connection failed: {}", transportErrorEvent.getMessage());
+			this.discoveredMatrix = null;
 			controlServerClient.disconnect();
 
 			log.info("Restarting Discovery-Scheduler");
@@ -147,5 +150,9 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 		log.info("Provisioning received, Client is now Operational");
 		lifecycle = ConnectionLifecycle.OPERATIONAL;
 		connectionLifecycleEventMulticaster.dispatch(new OperationalEvent());
+	}
+
+	public Optional<MatrixAddressDiscoveryServiceResult> getDiscoveredMatrix() {
+		return Optional.ofNullable(discoveredMatrix);
 	}
 }
