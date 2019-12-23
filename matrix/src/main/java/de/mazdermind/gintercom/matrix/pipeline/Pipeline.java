@@ -20,6 +20,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelDeRegistrationEvent;
 import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegistrationAware;
 import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegistrationEvent;
+import de.mazdermind.gintercom.shared.pipeline.support.GstInvoker;
 import de.mazdermind.gintercom.shared.pipeline.support.PipelineStateChangeListener;
 
 @Component
@@ -73,9 +74,8 @@ public class Pipeline implements PanelRegistrationAware {
 
 	@Override
 	public synchronized void handlePanelRegistration(PanelRegistrationEvent event) {
-		log.info("Scheduling deconfiguring of Panel {}", event.getPanelId());
-		Gst.invokeLater(() -> {
-			log.info("Configuring Panel {}", event.getPanelId());
+		log.info("Configuring Panel {}", event.getPanelId());
+		GstInvoker.invokeAndWait(() -> {
 			Panel panel = beanFactory.getBean(Panel.class);
 			panel.configure(pipeline, event.getPanelId(), event.getPanelConfig(), event.getPortSet(), event.getHostAddress());
 			panels.put(event.getPanelId(), panel);
@@ -90,10 +90,10 @@ public class Pipeline implements PanelRegistrationAware {
 
 	@Override
 	public synchronized void handlePanelDeRegistration(PanelDeRegistrationEvent event) {
-		log.info("Scheduling deconfiguringation of Panel {}", event.getPanelId());
+		log.info("Deconfiguring Panel {}", event.getPanelId());
 		Panel panel = panels.remove(event.getPanelId());
-		Gst.invokeLater(() -> {
-			log.info("Deconfiguring Panel {}", event.getPanelId());
+
+		GstInvoker.invokeAndWait(() -> {
 			panel.deconfigure();
 			pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("panel-%s-deconfigure", event.getPanelId()));
 		});

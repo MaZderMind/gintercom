@@ -22,6 +22,7 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDisco
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
+import de.mazdermind.gintercom.shared.pipeline.support.GstInvoker;
 import de.mazdermind.gintercom.shared.pipeline.support.PipelineStateChangeListener;
 
 @Component
@@ -58,21 +59,21 @@ public class Pipeline implements ProvisioningInformationAware {
 	}
 
 	public void configureTone(boolean status) {
-		Gst.invokeLater(() -> {
+		GstInvoker.invokeAndWait(() -> {
 			log.info("{} Tone", status ? "Enabling" : "Disabling");
 			pipeline.getElementByName("mix").getSinkPads().get(MIX_PAD_TONE).set("volume", status ? 1.0 : 0.0);
 		});
 	}
 
 	public void configureMicrophone(boolean status) {
-		Gst.invokeLater(() -> {
+		GstInvoker.invokeAndWait(() -> {
 			log.info("{} Microphone", status ? "Enabling" : "Disabling");
 			pipeline.getElementByName("mix").getSinkPads().get(MIX_PAD_MICROPHONE).set("volume", status ? 1.0 : 0.0);
 		});
 	}
 
 	public void configureSpeaker(boolean status) {
-		Gst.invokeLater(() -> {
+		GstInvoker.invokeAndWait(() -> {
 			log.info("{} Speaker", status ? "Enabling" : "Disabling");
 			pipeline.getElementByName("speaker_volume").set("volume", status ? 1.0 : 0.0);
 		});
@@ -86,7 +87,7 @@ public class Pipeline implements ProvisioningInformationAware {
 			return;
 		}
 
-		Gst.invokeLater(() -> {
+		GstInvoker.invokeAndWait(() -> {
 			log.info("creating pipeline");
 			String pipelineSpec = StringSubstitutor.replace("" +
 					"audiotestsrc freq=${test_freq} ! ${rawcaps} ! mix.\n" +
