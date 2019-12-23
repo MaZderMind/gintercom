@@ -1,25 +1,61 @@
 package de.mazdermind.gintercom.matrix.integration.tests.mixing;
 
-import org.junit.Before;
+import static com.oblac.nomen.Nomen.randomName;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
+
+import java.net.InetAddress;
+
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+
+import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelDeRegistrationEvent;
+import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegistrationEvent;
 import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
 import de.mazdermind.gintercom.matrix.integration.TestConfig;
+import de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelConfigBuilder;
+import de.mazdermind.gintercom.matrix.integration.tools.rtp.RtpTestClient;
+import de.mazdermind.gintercom.matrix.pipeline.Pipeline;
+import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
+import de.mazdermind.gintercom.matrix.portpool.PortSet;
 
 public class StaticGroupsMixingIT extends IntegrationTestBase {
-	@Autowired
-	private TestConfig testConfig;
+	private static final Logger log = LoggerFactory.getLogger(StaticGroupsMixingIT.class);
 
-	@Before
-	public void prepare() {
-		testConfig.reset();
-	}
+	@Autowired
+	private Pipeline pipeline;
+
+	@Autowired
+	private PortAllocationManager portAllocationManager;
 
 	@Test
-	@Ignore("Not yet implemented")
-	public void panelTransmittingIntoAGroupItIsAlsoReceivingFromHearsItsOwnAudio() {
+	public void panelTransmittingIntoAGroupItIsAlsoReceivingFromHearsItsOwnAudio() throws InterruptedException {
+		String panelId = randomName();
+		String hostId = String.format("%s-%s", randomNumeric(4), randomNumeric(4));
+
+		PortSet portSet = portAllocationManager.allocatePortSet(hostId);
+		PanelConfig panelConfig = RandomPanelConfigBuilder.randomPanelConfig()
+			.setHostId(hostId)
+			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay()))
+			.setTxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay()));
+
+		pipeline.handlePanelRegistration(new PanelRegistrationEvent(panelId, panelConfig, portSet, InetAddress.getLoopbackAddress()));
+
+		//Thread.sleep(250); // prevents the problem for a while (250 test runs)
+
+		new RtpTestClient(portSet)
+			.enableSine(650)
+			.awaitPeaks(ImmutableList.of(650))
+			.stop();
+
+		pipeline.handlePanelDeRegistration(new PanelDeRegistrationEvent(panelId));
+
 		// 1 Group, 1 Panel
 		// Panel 1 txGroups = Group 1
 		// Panel 1 rxGroups = Group 1
