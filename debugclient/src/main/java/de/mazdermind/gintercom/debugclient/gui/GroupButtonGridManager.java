@@ -4,6 +4,7 @@ import static de.mazdermind.gintercom.debugclient.gui.Constants.BORDER;
 
 import java.awt.*;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
@@ -17,12 +18,15 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.math.IntMath;
 
 import de.mazdermind.gintercom.shared.controlserver.ClientConfiguration;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
-public class GroupButtonGridManager {
+public class GroupButtonGridManager implements ProvisioningInformationAware {
 	private final static int COLS = 2;
-	private static Logger log = LoggerFactory.getLogger(GroupButtonGridManager.class);
+	private static final Logger log = LoggerFactory.getLogger(GroupButtonGridManager.class);
 	private final ClientConfiguration clientConfiguration;
+	private List<JButton> buttonList = new ArrayList<>();
 
 
 	public GroupButtonGridManager(
@@ -45,10 +49,10 @@ public class GroupButtonGridManager {
 		List<String> buttons = clientConfiguration.getButtons();
 		int rows = calcularNumberOfRows(buttons.size(), COLS);
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridLayout(rows, COLS, BORDER, BORDER));
-		panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, BORDER));
-		panel.setPreferredSize(new Dimension(400, Integer.MAX_VALUE));
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new GridLayout(rows, COLS, BORDER, BORDER));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, BORDER));
+		buttonPanel.setPreferredSize(new Dimension(400, Integer.MAX_VALUE));
 
 		for (int row = 0; row < rows; row++) {
 			for (int col = 0; col < COLS; col++) {
@@ -57,10 +61,22 @@ public class GroupButtonGridManager {
 					break;
 				}
 
-				panel.add(new JButton(buttons.get(i)));
+				JButton button = new JButton(buttons.get(i));
+				buttonList.add(button);
+				buttonPanel.add(button);
 			}
 		}
 
-		return panel;
+		return buttonPanel;
+	}
+
+	@Override
+	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
+		EventQueue.invokeLater(() -> {
+			provisioningInformation.getButtons().forEach((buttonName, buttonConfig) -> {
+				int buttonIndex = Integer.parseInt(buttonName) - 1;
+				buttonList.get(buttonIndex).setText(buttonConfig.getDisplay());
+			});
+		});
 	}
 }

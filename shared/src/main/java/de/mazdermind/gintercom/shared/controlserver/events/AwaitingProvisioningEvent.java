@@ -1,12 +1,16 @@
 package de.mazdermind.gintercom.shared.controlserver.events;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.google.common.base.Objects;
+
 import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycle;
 
 public class AwaitingProvisioningEvent implements ConnectionLifecycleEvent {
-	private final String clientId;
+	private final String hostId;
 
-	public AwaitingProvisioningEvent(String clientId) {
-		this.clientId = clientId;
+	public AwaitingProvisioningEvent(String hostId) {
+		this.hostId = hostId;
 	}
 
 	@Override
@@ -16,7 +20,7 @@ public class AwaitingProvisioningEvent implements ConnectionLifecycleEvent {
 
 	@Override
 	public String getDetailsText() {
-		return "Client-ID: " + clientId;
+		return "Host-ID: " + hostId;
 	}
 
 	@Override
@@ -24,7 +28,27 @@ public class AwaitingProvisioningEvent implements ConnectionLifecycleEvent {
 		return ConnectionLifecycle.PROVISIONING;
 	}
 
-	public String getClientId() {
-		return clientId;
+	public String getHostId() {
+		return hostId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(hostId);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AwaitingProvisioningEvent that = (AwaitingProvisioningEvent) o;
+		return Objects.equal(hostId, that.hostId);
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this)
+			.append("hostId", hostId)
+			.toString();
 	}
 }

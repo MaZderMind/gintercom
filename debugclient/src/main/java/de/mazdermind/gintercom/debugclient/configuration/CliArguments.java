@@ -24,7 +24,7 @@ import com.google.common.base.Splitter;
 
 @Service
 public class CliArguments {
-	private static Logger log = LoggerFactory.getLogger(CliArguments.class);
+	private static final Logger log = LoggerFactory.getLogger(CliArguments.class);
 	private final ApplicationArguments arguments;
 	private CommandLine commandLine;
 

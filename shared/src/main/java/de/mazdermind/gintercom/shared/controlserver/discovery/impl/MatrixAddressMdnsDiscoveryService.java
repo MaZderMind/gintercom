@@ -18,7 +18,7 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDisco
 @Order(3)
 public class MatrixAddressMdnsDiscoveryService implements MatrixAddressDiscoveryServiceImplementation {
 	private static final String MDNS_DOMAIN = "matrix.gintercom.local";
-	private static Logger log = LoggerFactory.getLogger(MatrixAddressMdnsDiscoveryService.class);
+	private static final Logger log = LoggerFactory.getLogger(MatrixAddressMdnsDiscoveryService.class);
 
 	@Override
 	public Optional<MatrixAddressDiscoveryServiceResult> tryDiscovery() {

@@ -18,7 +18,7 @@ import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 @Service
 @Lazy
 public class ConnectionLifecycleEventMulticaster {
-	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleEventMulticaster.class);
+	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleEventMulticaster.class);
 	private final List<ConnectionLifecycleEventAware> connectionLifecycleEventAwares;
 
 	public ConnectionLifecycleEventMulticaster(

@@ -10,7 +10,7 @@ import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInf
 
 @Component
 public class LoggingConnectionLifecycleEventHandler implements ConnectionLifecycleEventAware, ProvisioningInformationAware {
-	private static Logger log = LoggerFactory.getLogger(LoggingConnectionLifecycleEventHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(LoggingConnectionLifecycleEventHandler.class);
 
 	@Override
 	public void handleGenericConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {

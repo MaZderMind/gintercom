@@ -18,7 +18,7 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDisco
 @Order(1)
 public class MatrixAddressWellKnownDnsNameDiscoveryService implements MatrixAddressDiscoveryServiceImplementation {
 	private static final String WELL_KNOWN_DOMAIN = "matrix.gintercom.lan";
-	private static Logger log = LoggerFactory.getLogger(MatrixAddressWellKnownDnsNameDiscoveryService.class);
+	private static final Logger log = LoggerFactory.getLogger(MatrixAddressWellKnownDnsNameDiscoveryService.class);
 
 	@Override
 	public Optional<MatrixAddressDiscoveryServiceResult> tryDiscovery() {

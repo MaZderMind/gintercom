@@ -1,7 +1,7 @@
-/dist
+/dist/
+/target/
 */target/
-!.mvn/wrapper/maven-wrapper.jar
-*.dot
+/matrix/*.dot
 
 ### STS ###
 .apt_generated

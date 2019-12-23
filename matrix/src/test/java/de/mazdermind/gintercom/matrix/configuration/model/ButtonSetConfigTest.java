@@ -10,6 +10,9 @@ import static org.hamcrest.Matchers.notNullValue;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.mazdermind.gintercom.shared.configuration.ButtonAction;
+import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
+import de.mazdermind.gintercom.shared.configuration.ButtonTargetType;
 import de.mazdermind.gintercom.testutils.JsonMap;
 import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
@@ -51,34 +54,42 @@ public class ButtonSetConfigTest {
 	}
 
 	@Test
+	public void validationFailsWithoutButtons() {
+		testJson.remove("buttons");
+
+		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
+		assertThat(buttonSetConfig, not(validates()));
+	}
+
+	@Test
 	public void validationFailsWithoutButtonDisplay() {
 		buttonJson.remove("display");
 
-		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJson);
-		assertThat(panelConfig, not(validates()));
+		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
+		assertThat(buttonSetConfig, not(validates()));
 	}
 
 	@Test
 	public void validationFailsWithoutButtonAction() {
 		buttonJson.remove("action");
 
-		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJson);
-		assertThat(panelConfig, not(validates()));
+		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
+		assertThat(buttonSetConfig, not(validates()));
 	}
 
 	@Test
 	public void validationFailsWithoutButtonTargetType() {
 		buttonJson.remove("targetType");
 
-		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJson);
-		assertThat(panelConfig, not(validates()));
+		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
+		assertThat(buttonSetConfig, not(validates()));
 	}
 
 	@Test
 	public void validationFailsWithoutButtonTarget() {
 		buttonJson.remove("target");
 
-		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJson);
-		assertThat(panelConfig, not(validates()));
+		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
+		assertThat(buttonSetConfig, not(validates()));
 	}
 }

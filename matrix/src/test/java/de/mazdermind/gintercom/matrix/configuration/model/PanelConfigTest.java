@@ -15,6 +15,9 @@ import static org.hamcrest.Matchers.nullValue;
 import org.junit.Before;
 import org.junit.Test;
 
+import de.mazdermind.gintercom.shared.configuration.ButtonAction;
+import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
+import de.mazdermind.gintercom.shared.configuration.ButtonTargetType;
 import de.mazdermind.gintercom.testutils.JsonMap;
 import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
@@ -38,6 +41,7 @@ public class PanelConfigTest {
 	public void deserializesCorrectly() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
 		assertThat(panelConfig.getDisplay(), is("A/V Tech Romm A"));
+		assertThat(panelConfig.getHostId(), is("DEAD-BEEF"));
 		assertThat(panelConfig.getRxGroups(), containsInAnyOrder("room-a", "av-tech"));
 		assertThat(panelConfig.getTxGroups(), contains("av-tech"));
 		assertThat(panelConfig.getButtonsets(), contains("av-tech"));
@@ -48,25 +52,19 @@ public class PanelConfigTest {
 		assertThat(buttonConfig.getAction(), is(ButtonAction.PTT));
 		assertThat(buttonConfig.getTargetType(), is(ButtonTargetType.GROUP));
 		assertThat(buttonConfig.getTarget(), is("room-a"));
-
-		assertThat(panelConfig.getFixedIp().getIp().getHostAddress(), is("127.0.0.1"));
-		assertThat(panelConfig.getFixedIp().getMatrixPort(), is(10004));
-		assertThat(panelConfig.getFixedIp().getClientPort(), is(20004));
 	}
 
 	@Test
 	public void deserializesMinimalConfigCorrectly() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonMinimal);
 		assertThat(panelConfig.getDisplay(), is("A/V Tech Romm A"));
+		assertThat(panelConfig.getHostId(), nullValue());
 		assertThat(panelConfig.getRxGroups(), empty());
 		assertThat(panelConfig.getTxGroups(), empty());
 		assertThat(panelConfig.getButtonsets(), empty());
 
 		assertThat(panelConfig.getButtons(), notNullValue());
 		assertThat(panelConfig.getButtons().size(), is(0));
-
-		assertThat(panelConfig.hasFixedIp(), is(false));
-		assertThat(panelConfig.getFixedIp(), nullValue());
 	}
 
 	@Test

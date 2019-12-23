@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Lazy
 public class FileBasedHostId {
-	private static Logger log = LoggerFactory.getLogger(FileBasedHostId.class);
+	private static final Logger log = LoggerFactory.getLogger(FileBasedHostId.class);
 	private String hostId;
 
 	@PostConstruct

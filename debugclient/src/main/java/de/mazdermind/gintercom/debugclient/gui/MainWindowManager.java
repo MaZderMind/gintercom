@@ -12,13 +12,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
+import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
+
 @Component
-public class MainWindowManager {
+public class MainWindowManager implements ProvisioningInformationAware {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(640, 480);
-	private static Logger log = LoggerFactory.getLogger(MainWindowManager.class);
+	private static final Logger log = LoggerFactory.getLogger(MainWindowManager.class);
 	private final GroupButtonGridManager groupButtonGridManager;
 	private final AudioLevelDisplayManager audioLevelDisplayManager;
 	private final DebugToolButtonsManager debugToolButtonsManager;
+	private JFrame mainWindow;
 
 
 	public MainWindowManager(
@@ -37,7 +41,7 @@ public class MainWindowManager {
 	 */
 	public JFrame create() {
 		log.info("Creating");
-		JFrame mainWindow = new JFrame();
+		mainWindow = new JFrame();
 		mainWindow.setTitle("GIntercom Debug Client");
 		mainWindow.setSize(INITIAL_DIMENSION);
 
@@ -51,5 +55,12 @@ public class MainWindowManager {
 		mainWindow.add(debugToolButtonsManager.create());
 
 		return mainWindow;
+	}
+
+	@Override
+	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
+		EventQueue.invokeLater(() -> {
+			mainWindow.setTitle(provisioningInformation.getDisplay());
+		});
 	}
 }

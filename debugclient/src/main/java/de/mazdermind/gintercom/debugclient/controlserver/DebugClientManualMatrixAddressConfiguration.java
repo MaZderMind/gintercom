@@ -12,7 +12,7 @@ import de.mazdermind.gintercom.shared.controlserver.discovery.manualconfig.Simpl
 
 @Configuration
 public class DebugClientManualMatrixAddressConfiguration {
-	private static Logger log = LoggerFactory.getLogger(DebugClientManualMatrixAddressConfiguration.class);
+	private static final Logger log = LoggerFactory.getLogger(DebugClientManualMatrixAddressConfiguration.class);
 	private final CliArguments cliArguments;
 
 	public DebugClientManualMatrixAddressConfiguration(

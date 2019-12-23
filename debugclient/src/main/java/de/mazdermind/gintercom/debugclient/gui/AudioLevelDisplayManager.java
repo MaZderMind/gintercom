@@ -14,7 +14,7 @@ import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
 
 @Component
 public class AudioLevelDisplayManager {
-	private static Logger log = LoggerFactory.getLogger(AudioLevelDisplayManager.class);
+	private static final Logger log = LoggerFactory.getLogger(AudioLevelDisplayManager.class);
 	private AudioLevelDisplay audioLevelDisplay;
 
 	/**

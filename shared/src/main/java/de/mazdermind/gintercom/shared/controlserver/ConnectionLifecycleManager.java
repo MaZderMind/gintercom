@@ -29,7 +29,7 @@ import de.mazdermind.gintercom.shared.controlserver.events.AwaitingProvisioningE
 import de.mazdermind.gintercom.shared.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.OperationalEvent;
 import de.mazdermind.gintercom.shared.controlserver.events.support.ConnectionLifecycleEventMulticaster;
-import de.mazdermind.gintercom.shared.controlserver.messages.ohai.OhaiMessage;
+import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
 import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
 
@@ -38,7 +38,7 @@ import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInf
 public class ConnectionLifecycleManager implements ProvisioningInformationAware, ControlServerSessionTransportErrorAware {
 	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 3;
 
-	private static Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
+	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
 
 	private final ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster;
 	private final MatrixAddressDiscoveryService addressDiscoveryService;
@@ -48,6 +48,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 
 	private ConnectionLifecycle lifecycle = ConnectionLifecycle.STARTING;
 	private ScheduledFuture<?> discoverySchedule;
+	private MatrixAddressDiscoveryServiceResult discoveredMatrix = null;
 
 	public ConnectionLifecycleManager(
 		@Autowired ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster,
@@ -118,22 +119,24 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 			scheduleDiscovery(false);
 		} else {
 			log.info("Connected to {}", discoveredMatrix);
+			this.discoveredMatrix = discoveredMatrix;
 			initiateProvisioning(stompSession.get());
 		}
 	}
 
 	private void initiateProvisioning(StompSession stompSession) {
-		log.info("sending Provisioning-Request (Ohai)");
+		log.info("sending PanelRegistrationMessage");
 		lifecycle = ConnectionLifecycle.PROVISIONING;
-		connectionLifecycleEventMulticaster.dispatch(new AwaitingProvisioningEvent(clientConfiguration.getClientId()));
+		connectionLifecycleEventMulticaster.dispatch(new AwaitingProvisioningEvent(clientConfiguration.getHostId()));
 
-		stompSession.send("/ohai", OhaiMessage.fromClientConfiguration(clientConfiguration));
+		stompSession.send("/registration", PanelRegistrationMessage.fromClientConfiguration(clientConfiguration));
 	}
 
 	@Override
 	public void handleTransportErrorEvent(ControlServerSessionTransportErrorEvent transportErrorEvent) {
 		if (lifecycle == ConnectionLifecycle.PROVISIONING || lifecycle == ConnectionLifecycle.OPERATIONAL) {
 			log.info("ControlServer-Connection failed: {}", transportErrorEvent.getMessage());
+			this.discoveredMatrix = null;
 			controlServerClient.disconnect();
 
 			log.info("Restarting Discovery-Scheduler");
@@ -147,5 +150,9 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 		log.info("Provisioning received, Client is now Operational");
 		lifecycle = ConnectionLifecycle.OPERATIONAL;
 		connectionLifecycleEventMulticaster.dispatch(new OperationalEvent());
+	}
+
+	public Optional<MatrixAddressDiscoveryServiceResult> getDiscoveredMatrix() {
+		return Optional.ofNullable(discoveredMatrix);
 	}
 }

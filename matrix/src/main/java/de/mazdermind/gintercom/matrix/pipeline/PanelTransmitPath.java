@@ -1,40 +1,95 @@
 package de.mazdermind.gintercom.matrix.pipeline;
 
+import static de.mazdermind.gintercom.shared.pipeline.support.GstErrorCheck.expectTrue;
+
+import java.net.InetAddress;
+
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Element;
+import org.freedesktop.gstreamer.GhostPad;
+import org.freedesktop.gstreamer.Pad;
 import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 
 @Component
 @Scope("prototype")
 public class PanelTransmitPath {
-	private static Logger log = LoggerFactory.getLogger(PanelTransmitPath.class);
+	private static final Logger log = LoggerFactory.getLogger(PanelTransmitPath.class);
+	private static final int WAVE_SILENCE = 4;
+	private final Config config;
 
-	public void configure(Pipeline pipeline, String panelId, PanelConfig panelConfig) {
+	private Bin bin;
+	private Pipeline pipeline;
+	private String panelId;
+	private Element mixer;
+
+	public PanelTransmitPath(
+		@Autowired Config config
+	) {
+		this.config = config;
+	}
+
+	public void configure(Pipeline pipeline, String panelId, InetAddress host, int txPort) {
 		log.info("Creating Transmit-Path for Panel {}", panelId);
-		Bin bin = new ElementFactory(pipeline).createAndAddBin(String.format("bin-panel-tx-%s", panelId));
 
+		this.pipeline = pipeline;
+		this.panelId = panelId;
+		bin = new ElementFactory(pipeline).createAndAddBin(String.format("panel-%s-tx", panelId));
 		ElementFactory factory = new ElementFactory(bin);
 
-		// audiomixer name=sink_3 ! {rawcaps} ! audioconvert ! {rawcaps_be} ! rtpL16pay ! {rtpcaps} ! udpsink host=127.0.0.1 port=10003
-		Element audiomixer = factory.createAndAddElement("audiomixer", String.format("panel-tx-%s", panelId));
+		Element silenceSrc = factory.createAndAddElement("audiotestsrc");
+		silenceSrc.set("is-live", true);
+		silenceSrc.set("wave", WAVE_SILENCE);
+
+		mixer = factory.createAndAddElement("audiomixer");
+		mixer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer() * 1_000_000);
+		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);
 
 		Element audioconvert = factory.createAndAddElement("audioconvert");
-		Element.linkPadsFiltered(audiomixer, "src", audioconvert, "sink", StaticCaps.AUDIO);
+		mixer.link(audioconvert);
 
 		Element payload = factory.createAndAddElement("rtpL16pay");
-		Element.linkPadsFiltered(audioconvert, "src", payload, "sink", StaticCaps.AUDIO_BE);
+		audioconvert.linkFiltered(payload, StaticCaps.AUDIO_BE);
 
 		Element udpsink = factory.createAndAddElement("udpsink");
-		udpsink.set("host", panelConfig.getFixedIp().getIp().getHostAddress());  //FIXME is actually optional in config
-		udpsink.set("port", panelConfig.getFixedIp().getMatrixPort());  //FIXME is actually optional in config
-		Element.linkPadsFiltered(payload, "src", udpsink, "sink", StaticCaps.RTP);
+		udpsink.set("host", host.getHostAddress());
+		udpsink.set("port", txPort);
+		payload.linkFiltered(udpsink, StaticCaps.RTP);
+
+		bin.syncStateWithParent();
 	}
+
+	public void deconfigure() {
+		// TODO ensure that no data ia flowing to the Tx-Bin by
+		//  a) unlinking from all groups first or
+		//  b) using a Pad-IDLE-Probe
+		log.info("Stopping Transmit-Path for Panel {}", panelId);
+		bin.stop();
+
+		log.info("Removing Transmit-Path for Panel {} from Pipeline", panelId);
+		pipeline.remove(bin);
+	}
+
+	public Pad requestSinkPad() {
+		Pad mixerPad = mixer.getRequestPad("sink_%u");
+		GhostPad ghostPad = new GhostPad(null, mixerPad);
+		expectTrue(ghostPad.setActive(true));
+		expectTrue(bin.addPad(ghostPad));
+		return ghostPad;
+	}
+
+	public void releaseSinkPad(GhostPad ghostPad) {
+		Pad mixerPad = ghostPad.getTarget();
+		expectTrue(bin.removePad(ghostPad));
+		mixer.releaseRequestPad(mixerPad);
+	}
+
 }

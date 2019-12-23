@@ -20,7 +20,7 @@ ConnectionLifecycleManager Braindump
   - in Case of Failure ConnectionLifecycleManager goes back to in DISCOVERY and Emits a matching Event
 - ConnectionLifecycleManager switches to PROVISIONING state and emits a MatrixConnectionLifecycleStateChangedEvent extends MatrixConnectionLifecycleEvent
 - ConnectionLifecycleManager invokes GintercomClientConfiguration to aquire Client configuration Details
-  - ConnectionLifecycleManager builds an Ohai-Message based of that information and sends it to the /ohai endpoint
+  - ConnectionLifecycleManager builds an PanelRegistrationMessage based of that information and sends it to the /registration endpoint
 - ConnectionLifecycleManager awaits a Provision-Message
   - ConnectionLifecycleManager emits an ProvisionUpdatedEvent
     - The Group-Buttons are Configured
