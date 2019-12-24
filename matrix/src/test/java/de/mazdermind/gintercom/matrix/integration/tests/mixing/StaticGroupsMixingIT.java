@@ -47,8 +47,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 
 		pipeline.handlePanelRegistration(new PanelRegistrationEvent(panelId, panelConfig, portSet, InetAddress.getLoopbackAddress()));
 
-		//Thread.sleep(250); // prevents the problem for a while (250 test runs)
-
 		new RtpTestClient(portSet)
 			.enableSine(650)
 			.awaitPeaks(ImmutableList.of(650))

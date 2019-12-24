@@ -90,7 +90,7 @@ public class Pipeline implements ProvisioningInformationAware {
 		GstInvoker.invokeAndWait(() -> {
 			log.info("creating pipeline");
 			String pipelineSpec = StringSubstitutor.replace("" +
-					"audiotestsrc freq=${test_freq} ! ${rawcaps} ! mix.\n" +
+					"audiotestsrc freq=${test_freq} ! ${rawcaps} is-live=true ! mix.\n" +
 					"autoaudiosrc ! ${rawcaps} ! mix.\n" +
 					"\n" +
 					"audiomixer name=mix sink_0::volume=0.0 sink_1::volume=0.0 !\n" +

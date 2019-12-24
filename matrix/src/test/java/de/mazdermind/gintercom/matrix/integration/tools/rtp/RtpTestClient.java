@@ -18,11 +18,13 @@ import com.google.common.collect.ImmutableMap;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.GstInvoker;
+import de.mazdermind.gintercom.shared.pipeline.support.PipelineException;
 
 public class RtpTestClient {
 	private final PortSet portSet;
 	private Pipeline pipeline;
 	private PeakDetectorBin peakDetector;
+	private PeakDetectorBin.ElementMessageHandler messageHandler;
 
 	public RtpTestClient(PortSet portSet) {
 		this.portSet = portSet;
@@ -65,7 +67,7 @@ public class RtpTestClient {
 
 		GstInvoker.invokeAndWait(() -> {
 			String pipelineSpec = StringSubstitutor.replace("" +
-					"audiotestsrc name=test_src freq=440 volume=0.0 !\n" +
+					"audiotestsrc name=test_src freq=440 volume=0.0 is-live=true !\n" +
 					"	${rawcaps} !\n" +
 					"	audioconvert !\n" +
 					"	${rawcaps_be} !\n" +
@@ -75,7 +77,8 @@ public class RtpTestClient {
 					"\n" +
 					"udpsrc port=${client_port} !\n" +
 					"	${rtpcaps} !\n" +
-					"	rtpjitterbuffer latency=50 !\n" +
+					"	rtpjitterbuffer latency=50 drop-on-latency=true !\n" +
+					"	identity sync=true !\n" +
 					"	rtpL16depay !\n" +
 					"	${rawcaps_be} !\n" +
 					"	audioconvert name=convert",
@@ -93,14 +96,15 @@ public class RtpTestClient {
 
 			peakDetector = new PeakDetectorBin();
 			pipeline.add(peakDetector);
-			pipeline.getBus().connect(new PeakDetectorBin.ElementMessageHandler(peakDetector));
-
+			messageHandler = new PeakDetectorBin.ElementMessageHandler(peakDetector);
+			pipeline.getBus().connect(messageHandler);
 			pipeline.getElementByName("convert").link(peakDetector);
 
 
 			pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, "rtp-test-client");
 			PipelineStateChangeLogger stateChangeLogger = new PipelineStateChangeLogger();
 			pipeline.getBus().connect((Bus.EOS) stateChangeLogger);
+			pipeline.getBus().connect((Bus.ERROR) stateChangeLogger);
 			pipeline.getBus().connect((Bus.STATE_CHANGED) stateChangeLogger);
 
 			pipeline.play();
@@ -112,6 +116,8 @@ public class RtpTestClient {
 	public RtpTestClient stop() {
 		GstInvoker.invokeAndWait(() -> {
 			pipeline.stop();
+			pipeline.getBus().disconnect(messageHandler);
+			messageHandler = null;
 			pipeline = null;
 		});
 
@@ -124,7 +130,7 @@ public class RtpTestClient {
 		}
 	}
 
-	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED {
+	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.ERROR {
 		private static final Logger log = LoggerFactory.getLogger(PipelineStateChangeLogger.class);
 
 		@Override
@@ -140,6 +146,11 @@ public class RtpTestClient {
 			} else {
 				log.trace("State changed from {} to {} pending {}", old, current, pending);
 			}
+		}
+
+		@Override
+		public void errorMessage(GstObject source, int code, String message) {
+			throw new PipelineException(message);
 		}
 	}
 }
