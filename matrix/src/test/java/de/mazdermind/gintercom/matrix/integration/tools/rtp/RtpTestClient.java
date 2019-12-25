@@ -25,6 +25,7 @@ public class RtpTestClient {
 	private final PortSet portSet;
 	private Pipeline pipeline;
 
+	private NoDataDetector noDataDetector;
 	private PeakDetectorBin peakDetector;
 	private PeakDetectorBin.ElementMessageHandler messageHandler;
 
@@ -70,7 +71,7 @@ public class RtpTestClient {
 					"	${rtpcaps} !\n" +
 					"	udpsink host=${matrix_host} port=${matrix_port}\n" +
 					"\n" +
-					"udpsrc port=${client_port} !\n" +
+					"udpsrc port=${client_port} name=udp !\n" +
 					"	${rtpcaps} !\n" +
 					"	rtpjitterbuffer latency=50 drop-on-latency=true !\n" +
 					"	identity sync=true !\n" +
@@ -89,29 +90,53 @@ public class RtpTestClient {
 
 			pipeline = (Pipeline) Gst.parseLaunch(pipelineSpec);
 
-			peakDetector = new PeakDetectorBin();
-			pipeline.add(peakDetector);
-			messageHandler = new PeakDetectorBin.ElementMessageHandler(peakDetector);
-			pipeline.getBus().connect(messageHandler);
-			pipeline.getElementByName("convert").link(peakDetector);
+			installNoDataDetector();
+			installPeakDetector();
+			installStateChangeLogger();
 
 			pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, "rtp-test-client");
-			PipelineStateChangeLogger stateChangeLogger = new PipelineStateChangeLogger();
-			pipeline.getBus().connect((Bus.EOS) stateChangeLogger);
-			pipeline.getBus().connect((Bus.ERROR) stateChangeLogger);
-			pipeline.getBus().connect((Bus.STATE_CHANGED) stateChangeLogger);
-
 			pipeline.play();
 		});
 
 		return this;
 	}
 
+	private void installStateChangeLogger() {
+		PipelineStateChangeLogger stateChangeLogger = new PipelineStateChangeLogger();
+		pipeline.getBus().connect((Bus.EOS) stateChangeLogger);
+		pipeline.getBus().connect((Bus.ERROR) stateChangeLogger);
+		pipeline.getBus().connect((Bus.STATE_CHANGED) stateChangeLogger);
+	}
+
+	private void installPeakDetector() {
+		peakDetector = new PeakDetectorBin();
+		pipeline.add(peakDetector);
+		messageHandler = new PeakDetectorBin.ElementMessageHandler(peakDetector);
+		pipeline.getBus().connect(messageHandler);
+		pipeline.getElementByName("convert").link(peakDetector);
+	}
+
+	private void uninstallPeakDetector() {
+		pipeline.getBus().disconnect(messageHandler);
+		messageHandler = null;
+	}
+
+	private void installNoDataDetector() {
+		noDataDetector = new NoDataDetector();
+		pipeline.getElementByName("udp").getSrcPads().get(0)
+			.addDataProbe(noDataDetector);
+	}
+
+	private void uninstallNoDataDetector() {
+		pipeline.getElementByName("udp").getSrcPads().get(0).removeDataProbe(noDataDetector);
+		noDataDetector = null;
+	}
+
 	public RtpTestClient stop() {
 		GstInvoker.invokeAndWait(() -> {
 			pipeline.stop();
-			pipeline.getBus().disconnect(messageHandler);
-			messageHandler = null;
+			uninstallPeakDetector();
+			uninstallNoDataDetector();
 			pipeline = null;
 		});
 
@@ -141,6 +166,16 @@ public class RtpTestClient {
 	 */
 	public RtpTestClient awaitSilence() {
 		return awaitPeaks(Collections.emptyList());
+	}
+
+	/**
+	 * Waits up to {@link NoDataDetector#DEFAULT_TIMEOUT} for a period of {@link NoDataDetector#DEFAULT_PERIOD} length, where no data
+	 * arrives.
+	 * Throws an AssertionError when no period without data of the required length was found before reaching the timeout.
+	 */
+	public RtpTestClient awaitNoMoreData() {
+		noDataDetector.awaitNoMoreData();
+		return this;
 	}
 
 	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.ERROR {

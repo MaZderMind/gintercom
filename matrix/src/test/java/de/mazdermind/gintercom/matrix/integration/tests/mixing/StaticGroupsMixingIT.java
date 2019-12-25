@@ -73,9 +73,9 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 		RtpTestClient client1 = new RtpTestClient(panel1.getPortSet())
 			.enableSine(800);
 
+		log.info("assert that Panel 2 hears Panel 1");
 		RtpTestClient client2 = new RtpTestClient(panel2.getPortSet())
 			.awaitPeaks(ImmutableList.of(800));
-		log.info("assert that Panel 2 hears Panel 1");
 
 		client1.stop();
 		client2.stop();
@@ -110,7 +110,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 			.setDisplay("3")
 			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay())));
 
-
 		pipeline.handlePanelRegistration(panel1);
 		pipeline.handlePanelRegistration(panel2);
 
@@ -133,13 +132,18 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 
 		log.info("Panel 3 leaves");
 		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel3));
-		client3.stop();
+
+		log.info("assert that Panel 3 receives more data");
+		client3
+			.awaitNoMoreData()
+			.stop();
 
 		log.info("assert that Panel 2 still hears Panel 1");
-		client2.awaitPeaks(ImmutableList.of(800));
+		client2
+			.awaitPeaks(ImmutableList.of(800))
+			.stop();
 
 		client1.stop();
-		client2.stop();
 
 		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel1));
 		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel2));

@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-public class PeakDetectorBinIT {
+public class PeakDetectorBinFunctionalTest {
 
 	private static final Duration SHORT_DURATION = Duration.ofMillis(500);
 
