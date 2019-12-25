@@ -106,20 +106,20 @@ public class PeakDetectorBin extends Bin {
 		AwaitedPeaks awaitedPeaks = this.awaitedPeaks.get();
 		if (awaitedPeaks != null && !awaitedPeaks.getFuture().isDone()) {
 			List<Integer> foundPeaks = findLocalPeaks(foundMagnitudes, THRESHOLD + 10.0f);
-			log.debug("found peaks in the following bands: {}", foundPeaks);
+			log.trace("found peaks in the following bands: {}", foundPeaks);
 
 			Float bandWidth = calculateBandWidth();
 			if (bandWidth == null) {
 				log.info("pads not ready yet");
 				return;
 			}
-			log.debug("calculated the frequency width of one band to be {} Hz", bandWidth);
+			log.trace("calculated the frequency width of one band to be {} Hz", bandWidth);
 
 			List<FrequencySpan> foundFrequencyBands = foundPeaks.stream()
 				.map(band -> new FrequencySpan((band - 1) * bandWidth, (band + 1) * bandWidth))
 				.collect(Collectors.toList());
 
-			log.debug("calculated found bands to be {}", foundFrequencyBands);
+			log.trace("calculated found bands to be {}", foundFrequencyBands);
 
 			Iterator<Integer> awaitedPeaksIterator = awaitedPeaks.getAwaitedPeaks().iterator();
 			boolean foundPeaksAreExpected = foundFrequencyBands.stream().allMatch(band -> {
@@ -130,7 +130,7 @@ public class PeakDetectorBin extends Bin {
 
 				Integer awaitedPeak = awaitedPeaksIterator.next();
 				if (band.contains(awaitedPeak)) {
-					log.debug("found expected peak at {} in band {}", awaitedPeak, band);
+					log.info("found expected peak at {} in band {}", awaitedPeak, band);
 					return true;
 				} else {
 					log.warn("expected Peak {} but instead found Peak in Band {}", awaitedPeak, band);
@@ -142,12 +142,12 @@ public class PeakDetectorBin extends Bin {
 			if (allExpectedPeaksFound) {
 				ArrayList<Integer> missingPeaks = new ArrayList<>();
 				awaitedPeaksIterator.forEachRemaining(missingPeaks::add);
-				log.debug("did not find expected peaks: {}", missingPeaks);
+				log.trace("did not find expected peaks: {}, continuing", missingPeaks);
 				return;
 			}
 
 			if (foundPeaksAreExpected) {
-				log.debug("all expected peaks were found");
+				log.info("all expected peaks were found");
 				awaitedPeaks.getFuture().complete(true);
 			}
 		}
