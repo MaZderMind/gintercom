@@ -26,11 +26,18 @@ import org.freedesktop.gstreamer.message.MessageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import de.mazdermind.gintercom.shared.pipeline.support.ElementFactory;
 
 public class PeakDetectorBin extends Bin {
-	private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
-	private static final int NUMBER_OF_BANDS = 1020; // Should be a multiple of 30 (which equals being dividable by b 2, 3, and 5) for best performance
+	public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
+
+	/**
+	 * Should be a multiple of 30 (which equals being dividable by b 2, 3, and 5) for best performance.
+	 * A Band will be SampleRate (48000) / 2 / numberOfBands wide (= 40 Hz)
+	 */
+	private static final int NUMBER_OF_BANDS = 600;
 	private static final float THRESHOLD = -60.0f;
 
 	private static Logger log = LoggerFactory.getLogger(PeakDetectorBin.class);
@@ -53,10 +60,12 @@ public class PeakDetectorBin extends Bin {
 		addPad(ghostPad);
 	}
 
+	@VisibleForTesting
 	static List<Integer> findLocalPeaks(List<Float> magnitudes) {
 		return findLocalPeaks(magnitudes, Float.NEGATIVE_INFINITY);
 	}
 
+	@VisibleForTesting
 	static List<Integer> findLocalPeaks(List<Float> magnitudes, float threshold) {
 		List<Integer> peaks = new ArrayList<>();
 
