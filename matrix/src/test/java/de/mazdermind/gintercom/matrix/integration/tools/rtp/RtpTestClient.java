@@ -1,5 +1,6 @@
 package de.mazdermind.gintercom.matrix.integration.tools.rtp;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.text.StringSubstitutor;
@@ -23,6 +24,7 @@ import de.mazdermind.gintercom.shared.pipeline.support.PipelineException;
 public class RtpTestClient {
 	private final PortSet portSet;
 	private Pipeline pipeline;
+
 	private PeakDetectorBin peakDetector;
 	private PeakDetectorBin.ElementMessageHandler messageHandler;
 
@@ -50,13 +52,6 @@ public class RtpTestClient {
 			testSrc.set("volume", 0.0);
 		});
 
-		return this;
-	}
-
-	public RtpTestClient awaitPeaks(List<Integer> peaks) {
-		ensureStarted();
-
-		peakDetector.awaitPeaks(peaks);
 		return this;
 	}
 
@@ -100,7 +95,6 @@ public class RtpTestClient {
 			pipeline.getBus().connect(messageHandler);
 			pipeline.getElementByName("convert").link(peakDetector);
 
-
 			pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, "rtp-test-client");
 			PipelineStateChangeLogger stateChangeLogger = new PipelineStateChangeLogger();
 			pipeline.getBus().connect((Bus.EOS) stateChangeLogger);
@@ -128,6 +122,25 @@ public class RtpTestClient {
 		if (pipeline == null) {
 			this.start();
 		}
+	}
+
+	/**
+	 * Waits up to {@link PeakDetectorBin#DEFAULT_TIMEOUT} for Peaks in the Frequency Spectrum at the expected positions.
+	 * Throws an AssertionError when the expected set of Peaks was not found before reaching the Timeout.
+	 */
+	public RtpTestClient awaitPeaks(List<Integer> peaks) {
+		ensureStarted();
+
+		peakDetector.awaitPeaks(peaks);
+		return this;
+	}
+
+	/**
+	 * Waits up to {@link PeakDetectorBin#DEFAULT_TIMEOUT} for Silence.
+	 * Throws an AssertionError when no Silence was not found before reaching the Timeout.
+	 */
+	public RtpTestClient awaitSilence() {
+		return awaitPeaks(Collections.emptyList());
 	}
 
 	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.ERROR {

@@ -1,9 +1,6 @@
 package de.mazdermind.gintercom.matrix.integration.tests.mixing;
 
-import static com.oblac.nomen.Nomen.randomName;
-import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
-
-import java.net.InetAddress;
+import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelConfigBuilder.randomPanelConfig;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,16 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelDeRegistrationEvent;
 import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegistrationEvent;
 import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
 import de.mazdermind.gintercom.matrix.integration.TestConfig;
-import de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelConfigBuilder;
+import de.mazdermind.gintercom.matrix.integration.tools.builder.PanelRegistrationEventBuilder;
 import de.mazdermind.gintercom.matrix.integration.tools.rtp.RtpTestClient;
 import de.mazdermind.gintercom.matrix.pipeline.Pipeline;
-import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
-import de.mazdermind.gintercom.matrix.portpool.PortSet;
 
 public class StaticGroupsMixingIT extends IntegrationTestBase {
 	private static final Logger log = LoggerFactory.getLogger(StaticGroupsMixingIT.class);
@@ -32,55 +25,124 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 	private Pipeline pipeline;
 
 	@Autowired
-	private PortAllocationManager portAllocationManager;
+	private PanelRegistrationEventBuilder panelRegistrationEventBuilder;
 
+	/**
+	 * 1 Group, 1 Panel
+	 * Panel 1 txGroups = Group 1
+	 * Panel 1 rxGroups = Group 1
+	 * assert that Panel 1 hears itself
+	 */
 	@Test
-	public void panelTransmittingIntoAGroupItIsAlsoReceivingFromHearsItsOwnAudio() throws InterruptedException {
-		String panelId = randomName();
-		String hostId = String.format("%s-%s", randomNumeric(4), randomNumeric(4));
-
-		PortSet portSet = portAllocationManager.allocatePortSet(hostId);
-		PanelConfig panelConfig = RandomPanelConfigBuilder.randomPanelConfig()
-			.setHostId(hostId)
+	public void panelTransmittingIntoAGroupItIsAlsoReceivingFromHearsItsOwnAudio() {
+		PanelRegistrationEvent panel = panelRegistrationEventBuilder.buildPanelRegistrationEvent(randomPanelConfig()
+			.setDisplay("1")
 			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay()))
-			.setTxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay()));
+			.setTxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay())));
 
-		pipeline.handlePanelRegistration(new PanelRegistrationEvent(panelId, panelConfig, portSet, InetAddress.getLoopbackAddress()));
+		pipeline.handlePanelRegistration(panel);
 
-		new RtpTestClient(portSet)
+		log.info("assert that Panel 1 hears itself");
+		new RtpTestClient(panel.getPortSet())
 			.enableSine(650)
 			.awaitPeaks(ImmutableList.of(650))
 			.stop();
 
-		pipeline.handlePanelDeRegistration(new PanelDeRegistrationEvent(panelId));
-
-		// 1 Group, 1 Panel
-		// Panel 1 txGroups = Group 1
-		// Panel 1 rxGroups = Group 1
-		// assert that Panel 1 hears itself
+		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel));
 	}
 
+	/**
+	 * 1 Group, 2 Panels
+	 * Panel 1 txGroups = Group 1
+	 * Panel 2 rxGroups = Group 1
+	 * assert that Panel 2 hears Panel 1
+	 */
 	@Test
-	@Ignore("Not yet implemented")
 	public void panelReceivingFromAGroupHearsAudioTransmittedFromAnotherPanelIntoThisGroup() {
-		// 1 Group, 2 Panels
-		// Panel 1 txGroups = Group 1
-		// Panel 2 rxGroups = Group 1
-		// assert that Panel 2 hears Panel 1
+		PanelRegistrationEvent panel1 = panelRegistrationEventBuilder.buildPanelRegistrationEvent(randomPanelConfig()
+			.setDisplay("1")
+			.setTxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay())));
+
+		PanelRegistrationEvent panel2 = panelRegistrationEventBuilder.buildPanelRegistrationEvent(randomPanelConfig()
+			.setDisplay("2")
+			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay())));
+
+		pipeline.handlePanelRegistration(panel1);
+		pipeline.handlePanelRegistration(panel2);
+
+		RtpTestClient client1 = new RtpTestClient(panel1.getPortSet())
+			.enableSine(800);
+
+		RtpTestClient client2 = new RtpTestClient(panel2.getPortSet())
+			.awaitPeaks(ImmutableList.of(800));
+		log.info("assert that Panel 2 hears Panel 1");
+
+		client1.stop();
+		client2.stop();
+
+		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel1));
+		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel2));
 	}
 
+	/**
+	 * 1 Group, 3 Panels
+	 * Panel 1 txGroups = Group 1
+	 * Panel 2 rxGroups = Group 1
+	 * Panel 3 rxGroups = Group 1
+	 * assert that Panel 2 hears Panel 1
+	 * Panel 3 joins
+	 * assert that Panel 3 also hears Panel 1
+	 * assert that Panel 2 still hears Panel 1
+	 * Panel 3 leaves
+	 * assert that Panel 2 still hears Panel 1
+	 */
 	@Test
-	@Ignore("Not yet implemented")
 	public void panelCanJoinAndLeaveGroupWithoutDisturbingOtherPanels() {
-		// 1 Group, 3 Panels
-		// Panel 1 txGroups = Group 1
-		// Panel 2 rxGroups = Group 1
-		// Panel 3 rxGroups = Group 1
-		// assert that Panel 2 hears Panel 1
-		// Panel 3 joins
-		// assert that Panel 2 hears Panel 1
-		// Panel 3 leaves
-		// assert that Panel 2 hears Panel 1
+		PanelRegistrationEvent panel1 = panelRegistrationEventBuilder.buildPanelRegistrationEvent(randomPanelConfig()
+			.setDisplay("1")
+			.setTxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay())));
+
+		PanelRegistrationEvent panel2 = panelRegistrationEventBuilder.buildPanelRegistrationEvent(randomPanelConfig()
+			.setDisplay("2")
+			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay())));
+
+		PanelRegistrationEvent panel3 = panelRegistrationEventBuilder.buildPanelRegistrationEvent(randomPanelConfig()
+			.setDisplay("3")
+			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay())));
+
+
+		pipeline.handlePanelRegistration(panel1);
+		pipeline.handlePanelRegistration(panel2);
+
+		RtpTestClient client1 = new RtpTestClient(panel1.getPortSet())
+			.enableSine(800);
+
+		log.info("assert that Panel 2 hears Panel 1");
+		RtpTestClient client2 = new RtpTestClient(panel2.getPortSet())
+			.awaitPeaks(ImmutableList.of(800));
+
+		log.info("Panel 3 joins");
+		pipeline.handlePanelRegistration(panel3);
+
+		log.info("assert that Panel 3 also hears Panel 1");
+		RtpTestClient client3 = new RtpTestClient(panel3.getPortSet())
+			.awaitPeaks(ImmutableList.of(800));
+
+		log.info("assert that Panel 2 still hears Panel 1");
+		client2.awaitPeaks(ImmutableList.of(800));
+
+		log.info("Panel 3 leaves");
+		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel3));
+		client3.stop();
+
+		log.info("assert that Panel 2 still hears Panel 1");
+		client2.awaitPeaks(ImmutableList.of(800));
+
+		client1.stop();
+		client2.stop();
+
+		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel1));
+		pipeline.handlePanelDeRegistration(panelRegistrationEventBuilder.buildPanelDeRegistrationEvent(panel2));
 	}
 
 	@Test
