@@ -17,11 +17,15 @@ public class AudioAnalyser {
 	public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 	public static final Duration DEFAULT_PERIOD = Duration.ofMillis(250);
 	public static final Duration POLL_TIMEOUT = Duration.ofMillis(500);
-	private static final Logger log = LoggerFactory.getLogger(AudioAnalyser.class);
-	private final PeakDetector peakDetector;
 
-	public AudioAnalyser(int sampleRate) {
-		peakDetector = new PeakDetector(sampleRate);
+	private static final Logger log = LoggerFactory.getLogger(AudioAnalyser.class);
+
+	private final PeakDetector peakDetector;
+	private final String identifier;
+
+	public AudioAnalyser(int sampleRate, String identifier) {
+		peakDetector = new PeakDetector(sampleRate, PeakDetector.DEFAULT_FFT_BANDS, identifier);
+		this.identifier = identifier;
 	}
 
 	public void awaitFrequencies(Duration period, Duration timeout, Set<Double> expectedFrequencies) {
@@ -50,8 +54,8 @@ public class AudioAnalyser {
 			}
 
 			if (LocalDateTime.now().isAfter(periodStart.plus(period))) {
-				log.info("found expected frequencies {} over a period of {}ms",
-					expectedFrequencies, ChronoUnit.MILLIS.between(periodStart, LocalDateTime.now()));
+				log.info("{}: found expected frequencies {} over a period of {}ms",
+					identifier, expectedFrequencies, ChronoUnit.MILLIS.between(periodStart, LocalDateTime.now()));
 
 				return;
 			}
@@ -78,8 +82,8 @@ public class AudioAnalyser {
 				"During the timeout of %s not enough data was received", timeout));
 		}
 
-		log.info("received data within a timeout of {}ms",
-			ChronoUnit.MILLIS.between(start, LocalDateTime.now()));
+		log.info("{}: received data within a timeout of {}ms",
+			identifier, ChronoUnit.MILLIS.between(start, LocalDateTime.now()));
 	}
 
 	public void awaitNoData(Duration period, Duration timeout) {
@@ -103,8 +107,8 @@ public class AudioAnalyser {
 			}
 
 			if (LocalDateTime.now().isAfter(periodStart.plus(period))) {
-				log.info("received no data over a period of {}ms",
-					ChronoUnit.MILLIS.between(periodStart, LocalDateTime.now()));
+				log.info("{}: received no data over a period of {}ms",
+					identifier, ChronoUnit.MILLIS.between(periodStart, LocalDateTime.now()));
 
 				return;
 			}

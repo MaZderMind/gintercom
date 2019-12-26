@@ -30,8 +30,10 @@ public class PeakDetector {
 
 	private final CircularFifoQueue<Long> sampleBuffer;
 	private final FastFourierTransformer transformer;
+	private final String identifier;
 
-	public PeakDetector(int sampleRate, int fftBands) {
+	public PeakDetector(int sampleRate, int fftBands, String identifier) {
+		this.identifier = identifier;
 		if (!ArithmeticUtils.isPowerOfTwo(fftBands)) {
 			throw new IllegalArgumentException(String.format("fftBands must be a power of 2, %s isn't", fftBands));
 		}
@@ -44,16 +46,12 @@ public class PeakDetector {
 
 	}
 
-	public PeakDetector(int sampleRate) {
-		this(sampleRate, DEFAULT_FFT_BANDS);
-	}
-
 	public void appendSamples(long[] samples) {
 		LongStream.of(samples).forEach(sampleBuffer::add);
-		log.trace("received {} samples, sampleBuffer now at {}", samples.length, sampleBuffer.size());
+		log.trace("{}: received {} samples, sampleBuffer now at {}", identifier, samples.length, sampleBuffer.size());
 
 		if (sampleBuffer.size() >= fftSize) {
-			log.trace("sampleBuffer now over {}, performing fft", fftSize);
+			log.trace("{}: sampleBuffer now over {}, performing fft", identifier, fftSize);
 			double[] magnitudes = performFft();
 			List<Peak> peaks = performPeakSearch(magnitudes);
 
@@ -72,7 +70,7 @@ public class PeakDetector {
 
 	private double[] performFft() {
 		double[] batch = IntStream.range(0, fftSize).mapToDouble(i -> sampleBuffer.remove()).toArray();
-		log.trace("extracted set of {} values for fft, sampleBuffer now at {}", batch.length, sampleBuffer.size());
+		log.trace("{}: extracted set of {} values for fft, sampleBuffer now at {}", identifier, batch.length, sampleBuffer.size());
 
 		Complex[] fft = transformer.transform(batch, TransformType.FORWARD);
 		double[] magnitudes = Stream.of(fft).limit(fft.length / 2).mapToDouble(bin -> {
@@ -82,7 +80,7 @@ public class PeakDetector {
 			return Math.sqrt((rr * rr) + (ri * ri));
 		}).toArray();
 
-		log.trace("magnitudes: {}", magnitudes);
+		log.trace("{}: magnitudes: {}", identifier, magnitudes);
 		return magnitudes;
 	}
 
@@ -107,7 +105,7 @@ public class PeakDetector {
 			.map(bin -> new Peak(bin, binWidth))
 			.collect(Collectors.toList());
 
-		log.trace("found peaks in bins {} which correspond to frequencies {}", binsWithPeaks, frequencyPeaks);
+		log.debug("{}: found peaks in bins {} which correspond to frequencies {}", identifier, binsWithPeaks, frequencyPeaks);
 		return frequencyPeaks;
 	}
 }

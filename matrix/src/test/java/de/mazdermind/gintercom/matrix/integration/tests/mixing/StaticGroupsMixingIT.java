@@ -33,7 +33,7 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 	 * assert that Panel 1 hears itself
 	 */
 	@Test
-	public void panelTransmittingIntoAGroupItIsAlsoReceivingFromHearsItsOwnAudio() throws InterruptedException {
+	public void panelTransmittingIntoAGroupItIsAlsoReceivingFromHearsItsOwnAudio() {
 		RtpTestClient client1 = clientRegisterer.registerTestClient(randomPanelConfig()
 			.setDisplay("1")
 			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay()))
@@ -165,7 +165,7 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 	 * assert that Panel 1 hears both Panel 2 and Panel 3
 	 */
 	@Test
-	public void panelReceivingMultipleGroupsHearsAudioFromAllOfThem() throws InterruptedException {
+	public void panelReceivingMultipleGroupsHearsAudioFromAllOfThem() {
 		RtpTestClient client1 = clientRegisterer.registerTestClient(randomPanelConfig()
 			.setDisplay("1")
 			.setRxGroups(ImmutableSet.of(
@@ -184,7 +184,7 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 		client2.enableSine(600);
 		client3.enableSine(900);
 
-		client1.start().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600., 900.));
+		client1.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600., 900.));
 	}
 
 	/**

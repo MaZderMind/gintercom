@@ -33,15 +33,15 @@ public class PeakDetectorFunctionalTest {
 	public void init() {
 		Gst.init();
 
-		peakDetector = new PeakDetector(48000);
+		peakDetector = new PeakDetector(48000, PeakDetector.DEFAULT_FFT_BANDS, null);
 		pipeline = (Pipeline) Gst.parseLaunch("" +
-				"audiomixer name=mix ! " +
-				"  audio/x-raw,format=S16LE,channels=1,rate=48000 ! " +
-				"  appsink name=sink " +
-				"" +
-				"audiotestsrc is-live=true wave=silence name=src1 volume=0.2 ! audio/x-raw,format=S16LE,channels=1,rate=48000 ! mix. " +
-				"audiotestsrc is-live=true wave=silence name=src2 volume=0.2 ! audio/x-raw,format=S16LE,channels=1,rate=48000 ! mix. " +
-				"audiotestsrc is-live=true wave=silence name=src3 volume=0.2 ! audio/x-raw,format=S16LE,channels=1,rate=48000 ! mix. "
+			"audiomixer name=mix ! " +
+			"  audio/x-raw,format=S16LE,channels=1,rate=48000 ! " +
+			"  appsink name=sink " +
+			"" +
+			"audiotestsrc is-live=true wave=silence name=src1 volume=0.2 ! audio/x-raw,format=S16LE,channels=1,rate=48000 ! mix. " +
+			"audiotestsrc is-live=true wave=silence name=src2 volume=0.2 ! audio/x-raw,format=S16LE,channels=1,rate=48000 ! mix. " +
+			"audiotestsrc is-live=true wave=silence name=src3 volume=0.2 ! audio/x-raw,format=S16LE,channels=1,rate=48000 ! mix. "
 		);
 
 		src1 = pipeline.getElementByName("src1");

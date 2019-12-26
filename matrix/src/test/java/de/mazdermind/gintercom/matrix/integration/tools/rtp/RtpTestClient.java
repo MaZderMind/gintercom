@@ -23,20 +23,22 @@ import de.mazdermind.gintercom.shared.pipeline.support.GstInvoker;
 import de.mazdermind.gintercom.shared.pipeline.support.PipelineException;
 
 public class RtpTestClient {
-	private static final Logger log = LoggerFactory.getLogger(RtpTestClient.class);
-	private PortSet portSet;
-	private String panelId = null;
-	private Pipeline pipeline;
+	private final PortSet portSet;
+	private final String panelId;
+	private final AudioAnalyser audioAnalyser;
 
-	private AudioAnalyser audioAnalyser = new AudioAnalyser(48000);
+	private Pipeline pipeline;
 
 	public RtpTestClient(PortSet portSet) {
 		this.portSet = portSet;
+		this.panelId = null;
+		this.audioAnalyser = new AudioAnalyser(48000, null);
 	}
 
 	public RtpTestClient(PortSet portSet, String panelId) {
-		this(portSet);
+		this.portSet = portSet;
 		this.panelId = panelId;
+		this.audioAnalyser = new AudioAnalyser(48000, panelId);
 	}
 
 	public RtpTestClient enableSine(double freq) {
