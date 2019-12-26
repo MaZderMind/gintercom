@@ -14,7 +14,7 @@ import de.mazdermind.gintercom.matrix.integration.tools.peakdetector.PeakDetecto
 import de.mazdermind.gintercom.matrix.integration.tools.peakdetector.PeakSet;
 
 public class AudioAnalyser {
-	public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(1);
+	public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 	public static final Duration DEFAULT_PERIOD = Duration.ofMillis(250);
 	public static final Duration POLL_TIMEOUT = Duration.ofMillis(500);
 	private static final Logger log = LoggerFactory.getLogger(AudioAnalyser.class);
