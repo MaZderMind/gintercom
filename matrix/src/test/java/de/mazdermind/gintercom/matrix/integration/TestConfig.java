@@ -54,7 +54,7 @@ public class TestConfig extends Config {
 		setPanels(new HashMap<>());
 
 		// Test-Groups are used by some Tests (ie StaticGroupsMixingIT), because at the moment registering Groups dynamic is not implemented yet
-		// TODO move into Tests once registering Groups dynamic is not implemented
+		// TODO move into Tests once registering dynamic Groups is implemented
 		getGroups().put(GROUP_TEST_1.getDisplay(), GROUP_TEST_1);
 		getGroups().put(GROUP_TEST_2.getDisplay(), GROUP_TEST_2);
 	}

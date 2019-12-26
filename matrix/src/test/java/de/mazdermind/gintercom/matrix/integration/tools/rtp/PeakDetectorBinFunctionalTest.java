@@ -2,6 +2,8 @@ package de.mazdermind.gintercom.matrix.integration.tools.rtp;
 
 import static java.util.Collections.emptyList;
 
+import java.time.Duration;
+
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
 import org.junit.After;
@@ -10,7 +12,9 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-public class PeakDetectorBinIT {
+public class PeakDetectorBinFunctionalTest {
+
+	private static final Duration SHORT_DURATION = Duration.ofMillis(500);
 
 	private Pipeline pipeline;
 	private PeakDetectorBin.ElementMessageHandler messageHandler;
@@ -35,14 +39,14 @@ public class PeakDetectorBinIT {
 	@Test(expected = AssertionError.class)
 	public void discriminatesSilenceFromSingleTone() {
 		PeakDetectorBin peakDetector = setupTestPipeline("audiotestsrc wave=sine freq=440 volume=0.2 ! audiomixer name=mix");
-		peakDetector.awaitPeaks(emptyList());
+		peakDetector.awaitPeaks(emptyList(), SHORT_DURATION);
 	}
 
 
 	@Test(expected = AssertionError.class)
 	public void discriminatesSingleToneFromSilence() {
 		PeakDetectorBin peakDetector = setupTestPipeline("audiotestsrc wave=silence volume=0.2 ! audiomixer name=mix");
-		peakDetector.awaitPeaks(ImmutableList.of(2000));
+		peakDetector.awaitPeaks(ImmutableList.of(2000), SHORT_DURATION);
 	}
 
 	@Test
@@ -58,7 +62,7 @@ public class PeakDetectorBinIT {
 				"audiotestsrc wave=sine freq=660 volume=0.2 ! mix. " +
 				"audiotestsrc wave=sine freq=880 volume=0.2 ! mix."
 		);
-		peakDetector.awaitPeaks(ImmutableList.of(880));
+		peakDetector.awaitPeaks(ImmutableList.of(880), SHORT_DURATION);
 	}
 
 	@Test
@@ -80,7 +84,7 @@ public class PeakDetectorBinIT {
 				"audiotestsrc wave=sine freq=880 volume=0.2 ! mix. " +
 				"audiotestsrc wave=sine freq=3000 volume=0.2 ! mix."
 		);
-		peakDetector.awaitPeaks(ImmutableList.of(880, 1020));
+		peakDetector.awaitPeaks(ImmutableList.of(880, 1020), SHORT_DURATION);
 	}
 
 	@Test
@@ -94,6 +98,17 @@ public class PeakDetectorBinIT {
 		peakDetector.awaitPeaks(ImmutableList.of(220, 880, 3000));
 	}
 
+	@Test
+	public void detectsSingleTonesBetween200hzAnd10KHz() {
+		for (int freq = 200; freq <= 10_000; freq += 100) {
+			PeakDetectorBin peakDetector = setupTestPipeline(
+				String.format("audiotestsrc wave=sine freq=%d volume=0.2 ! audiomixer name=mix", freq));
+			peakDetector.awaitPeaks(ImmutableList.of(freq));
+			pipeline.getBus().disconnect(messageHandler);
+			pipeline.stop();
+		}
+	}
+
 	private PeakDetectorBin setupTestPipeline(String pipelineDescription) {
 		PeakDetectorBin peakDetector = new PeakDetectorBin();
 		pipeline = (Pipeline) Gst.parseLaunch(pipelineDescription);
@@ -105,16 +120,5 @@ public class PeakDetectorBinIT {
 		pipeline.play();
 
 		return peakDetector;
-	}
-
-	@Test
-	public void detectsSingleTonesBetween200hzAnd10KHz() {
-		for (int freq = 200; freq <= 10_000; freq += 100) {
-			PeakDetectorBin peakDetector = setupTestPipeline(
-				String.format("audiotestsrc wave=sine freq=%d volume=0.2 ! audiomixer name=mix", freq));
-			peakDetector.awaitPeaks(ImmutableList.of(freq));
-			pipeline.getBus().disconnect(messageHandler);
-			pipeline.stop();
-		}
 	}
 }

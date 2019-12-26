@@ -28,10 +28,9 @@
 			<artifactId>spring-boot-starter-mustache</artifactId>
 		</dependency>
 		<dependency>
-			<!-- imported from git while awaiting the 1.1 release -->
-			<groupId>com.github.gstreamer-java</groupId>
+			<groupId>org.freedesktop.gstreamer</groupId>
 			<artifactId>gst1-java-core</artifactId>
-			<version>f77c505</version>
+			<version>1.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -99,6 +98,12 @@
 			<groupId>com.oblac</groupId>
 			<artifactId>nomen-est-omen</artifactId>
 			<version>1.2.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.6</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
