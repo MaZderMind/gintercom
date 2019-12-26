@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.matrix.integration.tests.mixing;
 
 import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelConfigBuilder.randomPanelConfig;
 
+import org.junit.After;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,11 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 
 	@Autowired
 	private RtpTestClientRegisterer clientRegisterer;
+
+	@After
+	public void after() {
+		clientRegisterer.stopAndDeregisterAllTestClients();
+	}
 
 	/**
 	 * 1 Group, 1 Panel
@@ -38,8 +44,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 			.enableSine(650)
 			.getAudioAnalyser()
 			.awaitFrequencies(ImmutableSet.of(650.));
-
-		clientRegisterer.stopAndDeregisterTestClient(client1);
 	}
 
 	/**
@@ -62,8 +66,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 
 		log.info("assert that Panel 2 hears Panel 1");
 		client2.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(800.));
-
-		clientRegisterer.stopAndDeregisterTestClients(client1, client2);
 	}
 
 	/**
@@ -116,8 +118,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 
 		log.info("assert that Panel 2 still hears Panel 1");
 		client2.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(800.));
-
-		clientRegisterer.stopAndDeregisterTestClients(client1, client2);
 	}
 
 	/**
@@ -155,8 +155,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 
 		log.info("Awaiting client 1");
 		client1.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(5000.));
-
-		clientRegisterer.stopAndDeregisterTestClients(client1, client2);
 	}
 
 	/**
@@ -187,8 +185,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 		client3.enableSine(900);
 
 		client1.start().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600., 900.));
-
-		clientRegisterer.stopAndDeregisterTestClients(client1, client2, client3);
 	}
 
 	/**
@@ -220,8 +216,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 		client2.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
 		client3.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
 		client1.getAudioAnalyser().awaitSilence();
-
-		clientRegisterer.stopAndDeregisterTestClients(client1, client2, client3);
 	}
 
 	/**
@@ -258,7 +252,5 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 
 		client2.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(200.));
 		client4.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
-
-		clientRegisterer.stopAndDeregisterTestClients(client1, client2, client3, client4);
 	}
 }
