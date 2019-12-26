@@ -63,6 +63,7 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_1.getDisplay())));
 
 		client1.enableSine(800);
+		client2.start();
 
 		log.info("assert that Panel 2 hears Panel 1");
 		client2.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(800.));
@@ -212,6 +213,8 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_2.getDisplay())));
 
 		client1.enableSine(1000);
+		client2.start();
+		client3.start();
 
 		client2.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
 		client3.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
@@ -248,7 +251,9 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 			.setRxGroups(ImmutableSet.of(TestConfig.GROUP_TEST_2.getDisplay())));
 
 		client1.enableSine(200);
+		client2.start();
 		client3.enableSine(600);
+		client4.start();
 
 		client2.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(200.));
 		client4.getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));

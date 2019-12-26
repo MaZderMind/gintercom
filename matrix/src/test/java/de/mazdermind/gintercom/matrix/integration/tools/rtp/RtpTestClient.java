@@ -23,17 +23,15 @@ import de.mazdermind.gintercom.shared.pipeline.support.GstInvoker;
 import de.mazdermind.gintercom.shared.pipeline.support.PipelineException;
 
 public class RtpTestClient {
+	private static final Logger log = LoggerFactory.getLogger(RtpTestClient.class);
+
 	private final PortSet portSet;
 	private final String panelId;
 	private final AudioAnalyser audioAnalyser;
 
 	private Pipeline pipeline;
-
-	public RtpTestClient(PortSet portSet) {
-		this.portSet = portSet;
-		this.panelId = null;
-		this.audioAnalyser = new AudioAnalyser(48000, null);
-	}
+	private AppSink.NEW_SAMPLE new_sample;
+	private PipelineStateChangeLogger stateChangeLogger;
 
 	public RtpTestClient(PortSet portSet, String panelId) {
 		this.portSet = portSet;
@@ -111,22 +109,38 @@ public class RtpTestClient {
 	}
 
 	private void installStateChangeLogger() {
-		PipelineStateChangeLogger stateChangeLogger = new PipelineStateChangeLogger();
+		stateChangeLogger = new PipelineStateChangeLogger(panelId);
 		pipeline.getBus().connect((Bus.EOS) stateChangeLogger);
 		pipeline.getBus().connect((Bus.ERROR) stateChangeLogger);
+		pipeline.getBus().connect((Bus.WARNING) stateChangeLogger);
+		pipeline.getBus().connect((Bus.INFO) stateChangeLogger);
 		pipeline.getBus().connect((Bus.STATE_CHANGED) stateChangeLogger);
+	}
+
+	private void uninstallStateChangeLogger() {
+		pipeline.getBus().disconnect((Bus.EOS) stateChangeLogger);
+		pipeline.getBus().disconnect((Bus.ERROR) stateChangeLogger);
+		pipeline.getBus().disconnect((Bus.WARNING) stateChangeLogger);
+		pipeline.getBus().disconnect((Bus.INFO) stateChangeLogger);
+		pipeline.getBus().disconnect((Bus.STATE_CHANGED) stateChangeLogger);
 	}
 
 	private void installAudioAnalyzer() {
 		AppSink appsink = (AppSink) pipeline.getElementByName("appsink");
 
 		appsink.set("emit-signals", true);
-		appsink.connect((AppSink.NEW_SAMPLE) appSink -> {
+		new_sample = appSink -> {
 			long[] samples = AppSinkSupport.extractSampleValues(appSink.pullSample());
 			audioAnalyser.appendSamples(samples);
 
 			return FlowReturn.OK;
-		});
+		};
+		appsink.connect(new_sample);
+	}
+
+	private void uninstallAudioAnalyzer() {
+		AppSink appsink = (AppSink) pipeline.getElementByName("appsink");
+		appsink.disconnect(new_sample);
 	}
 
 	public AudioAnalyser getAudioAnalyser() {
@@ -138,6 +152,8 @@ public class RtpTestClient {
 	public RtpTestClient stop() {
 		GstInvoker.invokeAndWait(() -> {
 			pipeline.stop();
+			uninstallAudioAnalyzer();
+			uninstallStateChangeLogger();
 			pipeline = null;
 		});
 
@@ -155,27 +171,42 @@ public class RtpTestClient {
 		return panelId;
 	}
 
-	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.ERROR {
+	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.INFO, Bus.WARNING, Bus.ERROR {
 		private static final Logger log = LoggerFactory.getLogger(PipelineStateChangeLogger.class);
+		private final String identifier;
+
+		public PipelineStateChangeLogger(String identifier) {
+			this.identifier = identifier;
+		}
 
 		@Override
 		public void endOfStream(GstObject source) {
-			log.error("EOS received");
+			log.error("{}: EOS received", identifier);
 			throw new RuntimeException("EOS received");
 		}
 
 		@Override
 		public void stateChanged(GstObject source, State old, State current, State pending) {
 			if (source instanceof Pipeline) {
-				log.info("State changed from {} to {} pending {}", old, current, pending);
+				log.info("{}: State changed from {} to {} pending {}", identifier, old, current, pending);
 			} else {
-				log.trace("State changed from {} to {} pending {}", old, current, pending);
+				log.trace("{}: State changed from {} to {} pending {}", identifier, old, current, pending);
 			}
 		}
 
 		@Override
 		public void errorMessage(GstObject source, int code, String message) {
 			throw new PipelineException(message);
+		}
+
+		@Override
+		public void infoMessage(GstObject source, int code, String message) {
+			log.info("{}: {}", identifier, message);
+		}
+
+		@Override
+		public void warningMessage(GstObject source, int code, String message) {
+			log.warn("{}: {}", identifier, message);
 		}
 	}
 }

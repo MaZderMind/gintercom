@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 
@@ -18,6 +20,7 @@ import de.mazdermind.gintercom.matrix.portpool.PortSet;
 
 @TestComponent
 public class RtpTestClientRegisterer {
+	private static final Logger log = LoggerFactory.getLogger(RtpTestClientRegisterer.class);
 	private static final InetAddress LOOPBACK = InetAddress.getLoopbackAddress();
 
 	@Autowired
@@ -62,6 +65,9 @@ public class RtpTestClientRegisterer {
 
 	public void stopAndDeregisterAllTestClients() {
 		ArrayList<RtpTestClient> clients = new ArrayList<>(registeredTestClients);
-		clients.forEach(this::stopAndDeregisterTestClient);
+		clients.forEach(testClient -> {
+			log.info("Stopping & Deregistering {}", testClient.getPanelId());
+			stopAndDeregisterTestClient(testClient);
+		});
 	}
 }
