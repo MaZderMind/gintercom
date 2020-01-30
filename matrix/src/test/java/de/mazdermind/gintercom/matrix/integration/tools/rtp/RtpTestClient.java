@@ -67,6 +67,8 @@ public class RtpTestClient {
 			throw new IllegalStateException("Cannot be started twice");
 		}
 
+		log.info("{}: Starting RtpTestClient for PortSet {}", panelId, portSet);
+
 		GstInvoker.invokeAndWait(() -> {
 			String pipelineSpec = StringSubstitutor.replace("" +
 					"audiotestsrc name=test_src freq=440 volume=0.0 is-live=true ! " +
