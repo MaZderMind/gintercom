@@ -65,7 +65,7 @@ public class PanelTransmitPath {
 		udpsink.set("port", txPort);
 		payload.linkFiltered(udpsink, StaticCaps.RTP);
 
-		bin.syncStateWithParent();
+		expectTrue(bin.syncStateWithParent());
 	}
 
 	public void deconfigure() {
