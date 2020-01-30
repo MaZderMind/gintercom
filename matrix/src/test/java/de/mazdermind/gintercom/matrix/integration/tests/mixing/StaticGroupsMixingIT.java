@@ -128,9 +128,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 	 * Panel 2 txGroups = Group 1
 	 * Panel 2 rxGroups = Group 2
 	 * assert that the panels hear each other but not them self
-	 * <p>
-	 * FIXME there is a Problem within GStreamer when two spectrum elements are used in one pipeline which affects this test
-	 * https://gitlab.freedesktop.org/gstreamer/gst-plugins-good/issues/682
 	 */
 	@Test
 	public void panelTransmittingIntoAGroupItIsNotReceivingFromDoesNotHearItsOwnAudio() {
@@ -228,9 +225,6 @@ public class StaticGroupsMixingIT extends IntegrationTestBase {
 	 * Panel 3 txGroups = Group 2
 	 * Panel 4 txGroups = Group 2
 	 * assert that Panel 2 hears Panel 1 and Panel 4 hears Panel 3 but nothing else
-	 * <p>
-	 * FIXME there is a Problem within GStreamer when two spectrum elements are used in one pipeline which affects this test
-	 * https://gitlab.freedesktop.org/gstreamer/gst-plugins-good/issues/682
 	 */
 	@Test
 	public void panelsCanCommunicateInParallel() {
