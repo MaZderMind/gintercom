@@ -50,6 +50,7 @@ public class PanelTransmitPath {
 		silenceSrc.set("wave", WAVE_SILENCE);
 
 		mixer = factory.createAndAddElement("audiomixer");
+		mixer.set("start-time-selection", 1);
 		mixer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer() * 1_000_000);
 		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);
 

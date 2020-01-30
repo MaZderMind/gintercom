@@ -79,7 +79,7 @@ public class RtpTestClient {
 					"" +
 					"udpsrc port=${client_port} name=udp ! " +
 					"  ${rtpcaps} ! " +
-					"  rtpjitterbuffer latency=50 drop-on-latency=true ! " +
+					"  rtpjitterbuffer latency=50 ! " +
 					"  identity sync=true ! " +
 					"  rtpL16depay ! " +
 					"  ${rawcaps_be} ! " +
