@@ -152,12 +152,14 @@ public class RtpTestClient {
 	}
 
 	public RtpTestClient stop() {
-		GstInvoker.invokeAndWait(() -> {
-			pipeline.stop();
-			uninstallAudioAnalyzer();
-			uninstallStateChangeLogger();
-			pipeline = null;
-		});
+		if (pipeline != null) {
+			GstInvoker.invokeAndWait(() -> {
+				pipeline.stop();
+				uninstallAudioAnalyzer();
+				uninstallStateChangeLogger();
+				pipeline = null;
+			});
+		}
 
 		return this;
 	}
