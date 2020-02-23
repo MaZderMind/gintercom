@@ -51,7 +51,7 @@ public class PanelTransmitPath {
 
 		mixer = factory.createAndAddElement("audiomixer");
 		mixer.set("start-time-selection", 1);
-		mixer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer() * 1_000_000);
+		mixer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer() * 1_000_000 + 1_00_000);
 		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);
 
 		Element audioconvert = factory.createAndAddElement("audioconvert");
