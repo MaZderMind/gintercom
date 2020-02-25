@@ -1,0 +1,4 @@
+audiotestsrc wave=silence is-live=true !
+	audio/x-raw,format=S16LE,channels=1,rate=48000,layout=interleaved !
+	audiomixer name=grp$_in !
+	tee allow-not-linked=true name=grp$_out
