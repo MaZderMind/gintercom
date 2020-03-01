@@ -14,6 +14,7 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.GstBuilder;
 
@@ -35,7 +36,7 @@ public class Panel {
 	private final Map<Group, Pad> txPads = new HashMap<>();
 	private final Map<Group, Pad> rxPads = new HashMap<>();
 
-	Panel(Pipeline pipeline, String name, String panelHost, Integer matrixToPanelPort, Integer panelToMatrixPort) {
+	Panel(Pipeline pipeline, String name, String panelHost, PortSet portSet) {
 		log.info("Creating Panel {}", name);
 		this.name = name;
 		this.pipeline = pipeline;
@@ -46,7 +47,7 @@ public class Panel {
 		// @formatter:off
 		rxBin = GstBuilder.buildBin(String.format("panel-%s-rx", name))
 				.addElement("udpsrc")
-					.withProperty("port", panelToMatrixPort)
+					.withProperty("port", portSet.getPanelToMatrix())
 				.withCaps(StaticCaps.RTP)
 				.linkElement("rtpjitterbuffer")
 					.withProperty("latency", 100)
@@ -73,7 +74,7 @@ public class Panel {
 				.linkElement("rtpL16pay")
 				.linkElement("udpsink")
 					.withProperty("host", panelHost)
-					.withProperty("port", matrixToPanelPort)
+					.withProperty("port", portSet.getMatrixToPanel())
 
 				.build();
 		// @formatter:on
