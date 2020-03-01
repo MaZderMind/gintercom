@@ -1,7 +1,0 @@
-udpsrc port=5000$ !
-  application/x-rtp,clock-rate=48000,media=audio,encoding-name=L16 !
-	rtpjitterbuffer latency=100 drop-on-latency=true !
-	rtpL16depay !
-	audioconvert !
-	audio/x-raw,format=S16LE,channels=1,rate=48000,layout=interleaved !
-	tee allow-not-linked=true name=rx$
