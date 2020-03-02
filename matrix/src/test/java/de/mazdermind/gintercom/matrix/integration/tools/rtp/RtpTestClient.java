@@ -1,36 +1,42 @@
 package de.mazdermind.gintercom.matrix.integration.tools.rtp;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.commons.text.StringSubstitutor;
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Element;
+import org.freedesktop.gstreamer.FlowReturn;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.GstObject;
 import org.freedesktop.gstreamer.Pipeline;
 import org.freedesktop.gstreamer.State;
+import org.freedesktop.gstreamer.elements.AppSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 
+import de.mazdermind.gintercom.matrix.integration.tools.audioanalyzer.AudioAnalyser;
+import de.mazdermind.gintercom.matrix.integration.tools.peakdetector.AppSinkSupport;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.GstInvoker;
 import de.mazdermind.gintercom.shared.pipeline.support.PipelineException;
 
 public class RtpTestClient {
+	private static final Logger log = LoggerFactory.getLogger(RtpTestClient.class);
+
 	private final PortSet portSet;
+	private final String panelId;
+	private final AudioAnalyser audioAnalyser;
+
 	private Pipeline pipeline;
+	private AppSink.NEW_SAMPLE new_sample;
+	private PipelineStateChangeLogger stateChangeLogger;
 
-	private NoDataDetector noDataDetector;
-	private PeakDetectorBin peakDetector;
-	private PeakDetectorBin.ElementMessageHandler messageHandler;
-
-	public RtpTestClient(PortSet portSet) {
+	public RtpTestClient(PortSet portSet, String panelId) {
 		this.portSet = portSet;
+		this.panelId = panelId;
+		this.audioAnalyser = new AudioAnalyser(48000, panelId);
 	}
 
 	public RtpTestClient enableSine(double freq) {
@@ -39,7 +45,7 @@ public class RtpTestClient {
 		GstInvoker.invokeAndWait(() -> {
 			Element testSrc = pipeline.getElementByName("test_src");
 			testSrc.set("freq", freq);
-			testSrc.set("volume", 0.8);
+			testSrc.set("volume", 0.2);
 		});
 
 		return this;
@@ -61,23 +67,27 @@ public class RtpTestClient {
 			throw new IllegalStateException("Cannot be started twice");
 		}
 
+		log.info("{}: Starting RtpTestClient for PortSet {}", panelId, portSet);
+
 		GstInvoker.invokeAndWait(() -> {
 			String pipelineSpec = StringSubstitutor.replace("" +
-					"audiotestsrc name=test_src freq=440 volume=0.0 is-live=true !\n" +
-					"	${rawcaps} !\n" +
-					"	audioconvert !\n" +
-					"	${rawcaps_be} !\n" +
-					"	rtpL16pay !\n" +
-					"	${rtpcaps} !\n" +
-					"	udpsink host=${matrix_host} port=${matrix_port}\n" +
-					"\n" +
-					"udpsrc port=${client_port} name=udp !\n" +
-					"	${rtpcaps} !\n" +
-					"	rtpjitterbuffer latency=50 drop-on-latency=true !\n" +
-					"	identity sync=true !\n" +
-					"	rtpL16depay !\n" +
-					"	${rawcaps_be} !\n" +
-					"	audioconvert name=convert",
+					"audiotestsrc name=test_src freq=440 volume=0.0 is-live=true ! " +
+					"  ${rawcaps} ! " +
+					"  audioconvert ! " +
+					"  ${rawcaps_be} ! " +
+					"  rtpL16pay ! " +
+					"  ${rtpcaps} ! " +
+					"  udpsink host=${matrix_host} port=${matrix_port} " +
+					"" +
+					"udpsrc port=${client_port} name=udp ! " +
+					"  ${rtpcaps} ! " +
+					"  rtpjitterbuffer latency=50 ! " +
+					"  identity sync=true ! " +
+					"  rtpL16depay ! " +
+					"  ${rawcaps_be} ! " +
+					"  audioconvert ! " +
+					"  ${rawcaps} ! " +
+					"  appsink name=appsink sync=false",
 				ImmutableMap.<String, Object>builder()
 					.put("rtpcaps", StaticCaps.RTP)
 					.put("rawcaps", StaticCaps.AUDIO)
@@ -90,11 +100,10 @@ public class RtpTestClient {
 
 			pipeline = (Pipeline) Gst.parseLaunch(pipelineSpec);
 
-			installNoDataDetector();
-			installPeakDetector();
 			installStateChangeLogger();
+			installAudioAnalyzer();
 
-			pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, "rtp-test-client");
+			pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("rtp-test-client-%s", panelId));
 			pipeline.play();
 		});
 
@@ -102,43 +111,55 @@ public class RtpTestClient {
 	}
 
 	private void installStateChangeLogger() {
-		PipelineStateChangeLogger stateChangeLogger = new PipelineStateChangeLogger();
+		stateChangeLogger = new PipelineStateChangeLogger(panelId);
 		pipeline.getBus().connect((Bus.EOS) stateChangeLogger);
 		pipeline.getBus().connect((Bus.ERROR) stateChangeLogger);
+		pipeline.getBus().connect((Bus.WARNING) stateChangeLogger);
+		pipeline.getBus().connect((Bus.INFO) stateChangeLogger);
 		pipeline.getBus().connect((Bus.STATE_CHANGED) stateChangeLogger);
 	}
 
-	private void installPeakDetector() {
-		peakDetector = new PeakDetectorBin();
-		pipeline.add(peakDetector);
-		messageHandler = new PeakDetectorBin.ElementMessageHandler(peakDetector);
-		pipeline.getBus().connect(messageHandler);
-		pipeline.getElementByName("convert").link(peakDetector);
+	private void uninstallStateChangeLogger() {
+		pipeline.getBus().disconnect((Bus.EOS) stateChangeLogger);
+		pipeline.getBus().disconnect((Bus.ERROR) stateChangeLogger);
+		pipeline.getBus().disconnect((Bus.WARNING) stateChangeLogger);
+		pipeline.getBus().disconnect((Bus.INFO) stateChangeLogger);
+		pipeline.getBus().disconnect((Bus.STATE_CHANGED) stateChangeLogger);
 	}
 
-	private void uninstallPeakDetector() {
-		pipeline.getBus().disconnect(messageHandler);
-		messageHandler = null;
+	private void installAudioAnalyzer() {
+		AppSink appsink = (AppSink) pipeline.getElementByName("appsink");
+
+		appsink.set("emit-signals", true);
+		new_sample = appSink -> {
+			long[] samples = AppSinkSupport.extractSampleValues(appSink.pullSample());
+			audioAnalyser.appendSamples(samples);
+
+			return FlowReturn.OK;
+		};
+		appsink.connect(new_sample);
 	}
 
-	private void installNoDataDetector() {
-		noDataDetector = new NoDataDetector();
-		pipeline.getElementByName("udp").getSrcPads().get(0)
-			.addDataProbe(noDataDetector);
+	private void uninstallAudioAnalyzer() {
+		AppSink appsink = (AppSink) pipeline.getElementByName("appsink");
+		appsink.disconnect(new_sample);
 	}
 
-	private void uninstallNoDataDetector() {
-		pipeline.getElementByName("udp").getSrcPads().get(0).removeDataProbe(noDataDetector);
-		noDataDetector = null;
+	public AudioAnalyser getAudioAnalyser() {
+		ensureStarted();
+
+		return audioAnalyser;
 	}
 
 	public RtpTestClient stop() {
-		GstInvoker.invokeAndWait(() -> {
-			pipeline.stop();
-			uninstallPeakDetector();
-			uninstallNoDataDetector();
-			pipeline = null;
-		});
+		if (pipeline != null) {
+			GstInvoker.invokeAndWait(() -> {
+				pipeline.stop();
+				uninstallAudioAnalyzer();
+				uninstallStateChangeLogger();
+				pipeline = null;
+			});
+		}
 
 		return this;
 	}
@@ -149,56 +170,47 @@ public class RtpTestClient {
 		}
 	}
 
-	/**
-	 * Waits up to {@link PeakDetectorBin#DEFAULT_TIMEOUT} for Peaks in the Frequency Spectrum at the expected positions.
-	 * Throws an AssertionError when the expected set of Peaks was not found before reaching the Timeout.
-	 */
-	public RtpTestClient awaitPeaks(List<Integer> peaks) {
-		ensureStarted();
 
-		peakDetector.awaitPeaks(peaks);
-		return this;
+	public String getPanelId() {
+		return panelId;
 	}
 
-	/**
-	 * Waits up to {@link PeakDetectorBin#DEFAULT_TIMEOUT} for Silence.
-	 * Throws an AssertionError when no Silence was not found before reaching the Timeout.
-	 */
-	public RtpTestClient awaitSilence() {
-		return awaitPeaks(Collections.emptyList());
-	}
-
-	/**
-	 * Waits up to {@link NoDataDetector#DEFAULT_TIMEOUT} for a period of {@link NoDataDetector#DEFAULT_PERIOD} length, where no data
-	 * arrives.
-	 * Throws an AssertionError when no period without data of the required length was found before reaching the timeout.
-	 */
-	public RtpTestClient awaitNoMoreData() {
-		noDataDetector.awaitNoMoreData();
-		return this;
-	}
-
-	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.ERROR {
+	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.INFO, Bus.WARNING, Bus.ERROR {
 		private static final Logger log = LoggerFactory.getLogger(PipelineStateChangeLogger.class);
+		private final String identifier;
+
+		public PipelineStateChangeLogger(String identifier) {
+			this.identifier = identifier;
+		}
 
 		@Override
 		public void endOfStream(GstObject source) {
-			log.error("EOS received");
+			log.error("{}: EOS received", identifier);
 			throw new RuntimeException("EOS received");
 		}
 
 		@Override
 		public void stateChanged(GstObject source, State old, State current, State pending) {
 			if (source instanceof Pipeline) {
-				log.info("State changed from {} to {} pending {}", old, current, pending);
+				log.info("{}: State changed from {} to {} pending {}", identifier, old, current, pending);
 			} else {
-				log.trace("State changed from {} to {} pending {}", old, current, pending);
+				log.trace("{}: State changed from {} to {} pending {}", identifier, old, current, pending);
 			}
 		}
 
 		@Override
 		public void errorMessage(GstObject source, int code, String message) {
 			throw new PipelineException(message);
+		}
+
+		@Override
+		public void infoMessage(GstObject source, int code, String message) {
+			log.info("{}: {}", identifier, message);
+		}
+
+		@Override
+		public void warningMessage(GstObject source, int code, String message) {
+			log.warn("{}: {}", identifier, message);
 		}
 	}
 }

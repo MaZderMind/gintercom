@@ -50,7 +50,8 @@ public class PanelTransmitPath {
 		silenceSrc.set("wave", WAVE_SILENCE);
 
 		mixer = factory.createAndAddElement("audiomixer");
-		mixer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer() * 1_000_000);
+		mixer.set("start-time-selection", 1);
+		mixer.set("latency", config.getMatrixConfig().getRtp().getJitterbuffer() * 1_000_000 + 1_00_000);
 		silenceSrc.linkFiltered(mixer, StaticCaps.AUDIO);
 
 		Element audioconvert = factory.createAndAddElement("audioconvert");
@@ -64,7 +65,7 @@ public class PanelTransmitPath {
 		udpsink.set("port", txPort);
 		payload.linkFiltered(udpsink, StaticCaps.RTP);
 
-		bin.syncStateWithParent();
+		expectTrue(bin.syncStateWithParent());
 	}
 
 	public void deconfigure() {

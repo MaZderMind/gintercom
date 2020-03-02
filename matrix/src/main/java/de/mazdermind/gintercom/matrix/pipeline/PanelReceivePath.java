@@ -62,7 +62,7 @@ public class PanelReceivePath {
 		tee.set("allow-not-linked", true);
 		audioconvert.linkFiltered(tee, StaticCaps.AUDIO);
 
-		bin.syncStateWithParent();
+		expectTrue(bin.syncStateWithParent());
 	}
 
 	public void deconfigure() {
