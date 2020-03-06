@@ -35,6 +35,8 @@ public class Panel {
 	private final Map<Group, Pad> txPads = new HashMap<>();
 	private final Map<Group, Pad> rxPads = new HashMap<>();
 
+	private boolean removed = false;
+
 	Panel(Pipeline pipeline, String name, String panelHost, int panelToMatrixPort, int matrixToPanelPort) {
 		log.info("Creating Panel {}", name);
 		this.name = name;
@@ -130,6 +132,10 @@ public class Panel {
 	}
 
 	public void remove() {
+		if (removed) {
+			log.info("Already Removed");
+			return;
+		}
 		log.info("Removing Panel {}", name);
 
 		log.info("Releasing Tx-Pads");
@@ -157,6 +163,7 @@ public class Panel {
 		debugPipeline(String.format("after-remove-panel-%s", name), pipeline);
 
 		log.info("Removed Panel {}", name);
+		removed = true;
 	}
 
 	public void startTransmittingTo(Group group) {

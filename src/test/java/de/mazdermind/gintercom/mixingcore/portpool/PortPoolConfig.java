@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.integration.portpool;
+package de.mazdermind.gintercom.mixingcore.portpool;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

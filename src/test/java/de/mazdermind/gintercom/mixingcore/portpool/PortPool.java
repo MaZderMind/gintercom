@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.integration.portpool;
+package de.mazdermind.gintercom.mixingcore.portpool;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

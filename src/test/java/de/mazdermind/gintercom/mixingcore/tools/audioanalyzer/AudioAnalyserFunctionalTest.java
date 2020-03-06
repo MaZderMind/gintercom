@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.integration.tools.audioanalyzer;
+package de.mazdermind.gintercom.mixingcore.tools.audioanalyzer;
 
 import java.time.Duration;
 
@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-import de.mazdermind.gintercom.mixingcore.integration.tools.peakdetector.AppSinkSupport;
+import de.mazdermind.gintercom.mixingcore.tools.peakdetector.AppSinkSupport;
 
 public class AudioAnalyserFunctionalTest {
 	public static Duration SHORT_TIMEOUT = Duration.ofMillis(500);

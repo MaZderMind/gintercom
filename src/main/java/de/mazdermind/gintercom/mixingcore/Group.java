@@ -28,6 +28,8 @@ public class Group {
 	private final Element tee;
 	private final Element mixer;
 
+	private boolean removed = false;
+
 	Group(Pipeline pipeline, String name) {
 		log.info("Creating Group {}", name);
 
@@ -65,12 +67,18 @@ public class Group {
 	}
 
 	public void remove() {
+		if (removed) {
+			log.info("Already Removed");
+			return;
+		}
+
 		log.info("Removing Group {}", name);
 		expectSuccess(bin.stop());
 		expectSuccess(pipeline.remove(bin));
 
 		debugPipeline(String.format("after-remove-group-%s", name), pipeline);
 		log.info("Removed Group {}", name);
+		removed = true;
 	}
 
 	Pad requestSrcPad() {

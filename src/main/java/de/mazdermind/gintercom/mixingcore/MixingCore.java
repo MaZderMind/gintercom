@@ -10,7 +10,7 @@ public class MixingCore {
 
 	private final Pipeline pipeline;
 
-	MixingCore() {
+	public MixingCore() {
 		pipeline = new Pipeline("matrix");
 		pipeline.play();
 

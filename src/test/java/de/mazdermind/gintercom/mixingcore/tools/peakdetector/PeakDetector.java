@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.integration.tools.peakdetector;
+package de.mazdermind.gintercom.mixingcore.tools.peakdetector;
 
 import java.util.ArrayList;
 import java.util.List;

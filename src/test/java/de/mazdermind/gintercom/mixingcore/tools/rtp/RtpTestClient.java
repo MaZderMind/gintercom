@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.integration.tools.rtp;
+package de.mazdermind.gintercom.mixingcore.tools.rtp;
 
 import org.apache.commons.text.StringSubstitutor;
 import org.freedesktop.gstreamer.Bus;
@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 
-import de.mazdermind.gintercom.mixingcore.integration.tools.audioanalyzer.AudioAnalyser;
-import de.mazdermind.gintercom.mixingcore.integration.tools.peakdetector.AppSinkSupport;
-import de.mazdermind.gintercom.mixingcore.integration.portpool.PortSet;
 import de.mazdermind.gintercom.mixingcore.StaticCaps;
+import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
 import de.mazdermind.gintercom.mixingcore.support.GstDebugger;
 import de.mazdermind.gintercom.mixingcore.support.PipelineException;
+import de.mazdermind.gintercom.mixingcore.tools.audioanalyzer.AudioAnalyser;
+import de.mazdermind.gintercom.mixingcore.tools.peakdetector.AppSinkSupport;
 
 public class RtpTestClient {
 	private static final Logger log = LoggerFactory.getLogger(RtpTestClient.class);
@@ -29,7 +29,7 @@ public class RtpTestClient {
 	private final AudioAnalyser audioAnalyser;
 
 	private Pipeline pipeline;
-	private AppSink.NEW_SAMPLE new_sample;
+	private AppSink.NEW_SAMPLE newSampleCallback;
 	private PipelineStateChangeLogger stateChangeLogger;
 
 	public RtpTestClient(PortSet portSet, String panelId) {
@@ -124,18 +124,18 @@ public class RtpTestClient {
 		AppSink appsink = (AppSink) pipeline.getElementByName("appsink");
 
 		appsink.set("emit-signals", true);
-		new_sample = appSink -> {
+		newSampleCallback = appSink -> {
 			long[] samples = AppSinkSupport.extractSampleValues(appSink.pullSample());
 			audioAnalyser.appendSamples(samples);
 
 			return FlowReturn.OK;
 		};
-		appsink.connect(new_sample);
+		appsink.connect(newSampleCallback);
 	}
 
 	private void uninstallAudioAnalyzer() {
 		AppSink appsink = (AppSink) pipeline.getElementByName("appsink");
-		appsink.disconnect(new_sample);
+		appsink.disconnect(newSampleCallback);
 	}
 
 	public AudioAnalyser getAudioAnalyser() {
@@ -144,15 +144,13 @@ public class RtpTestClient {
 		return audioAnalyser;
 	}
 
-	public RtpTestClient stop() {
+	public void stop() {
 		if (pipeline != null) {
 			pipeline.stop();
 			uninstallAudioAnalyzer();
 			uninstallStateChangeLogger();
 			pipeline = null;
 		}
-
-		return this;
 	}
 
 	private void ensureStarted() {
