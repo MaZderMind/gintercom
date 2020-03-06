@@ -9,8 +9,8 @@ public class PortSetPoolFactory {
 	public static PortSetPool getInstance() {
 		if (instance == null) {
 			instance = new PortSetPool(
-					new PortPoolConfig().setStart(40000).setLimit(1000),
-					new PortPoolConfig().setStart(50000).setLimit(1000)
+					new PortPoolConfig().setStart(10000).setLimit(9999),
+					new PortPoolConfig().setStart(20000).setLimit(9999)
 			);
 		}
 
