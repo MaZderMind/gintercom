@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.GstBuilder;
+import de.mazdermind.gintercom.shared.pipeline.support.VoidFuture;
 
 public class Panel {
 	private static final Logger log = LoggerFactory.getLogger(Panel.class);
@@ -106,8 +107,13 @@ public class Panel {
 
 	private void releaseSrcPad(Pad pad) {
 		Pad teePad = ((GhostPad) pad).getTarget();
-		rxBin.removePad(pad);
-		tee.releaseRequestPad(teePad);
+		VoidFuture future = new VoidFuture();
+		teePad.block(() -> {
+			rxBin.removePad(pad);
+			tee.releaseRequestPad(teePad);
+			future.complete();
+		});
+		future.await();
 	}
 
 	private Pad requestSinkPad() {
@@ -120,8 +126,13 @@ public class Panel {
 
 	private void releaseSinkPad(Pad pad) {
 		Pad mixerPad = ((GhostPad) pad).getTarget();
-		txBin.removePad(pad);
-		mixer.releaseRequestPad(mixerPad);
+		VoidFuture future = new VoidFuture();
+		mixerPad.block(() -> {
+			mixer.releaseRequestPad(mixerPad);
+			txBin.removePad(pad);
+			future.complete();
+		});
+		future.await();
 	}
 
 	public void remove() {
@@ -137,8 +148,9 @@ public class Panel {
 
 		log.info("Releasing Rx-Pads");
 		rxPads.forEach((group, pad) -> {
-			releaseSinkPad(pad.getPeer());
+			Pad peer = pad.getPeer();
 			group.releaseSrcPad(pad);
+			releaseSinkPad(peer);
 		});
 		rxPads.clear();
 		debugPipeline(String.format("after-releasing-rx-panel-%s", name), pipeline);

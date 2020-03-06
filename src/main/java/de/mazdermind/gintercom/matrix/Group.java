@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.GstBuilder;
+import de.mazdermind.gintercom.shared.pipeline.support.VoidFuture;
 
 public class Group {
 	private static final Logger log = LoggerFactory.getLogger(Group.class);
@@ -83,8 +84,13 @@ public class Group {
 
 	void releaseSrcPad(Pad pad) {
 		Pad teePad = ((GhostPad) pad).getTarget();
-		bin.removePad(pad);
-		tee.releaseRequestPad(teePad);
+		VoidFuture future = new VoidFuture();
+		teePad.block(() -> {
+			tee.releaseRequestPad(teePad);
+			bin.removePad(pad);
+			future.complete();
+		});
+		future.await();
 	}
 
 	Pad requestSinkPad() {
@@ -97,7 +103,12 @@ public class Group {
 
 	void releaseSinkPad(Pad pad) {
 		Pad mixerPad = ((GhostPad) pad).getTarget();
-		bin.removePad(pad);
-		mixer.releaseRequestPad(mixerPad);
+		VoidFuture future = new VoidFuture();
+		mixerPad.block(() -> {
+			mixer.releaseRequestPad(mixerPad);
+			bin.removePad(pad);
+			future.complete();
+		});
+		future.await();
 	}
 }
