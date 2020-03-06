@@ -1,7 +1,6 @@
 package de.mazdermind.gintercom.matrix.integration.tools.rtp;
 
 import org.apache.commons.text.StringSubstitutor;
-import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.FlowReturn;
@@ -19,6 +18,7 @@ import de.mazdermind.gintercom.matrix.integration.tools.audioanalyzer.AudioAnaly
 import de.mazdermind.gintercom.matrix.integration.tools.peakdetector.AppSinkSupport;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
+import de.mazdermind.gintercom.shared.pipeline.support.Debugger;
 import de.mazdermind.gintercom.shared.pipeline.support.PipelineException;
 
 public class RtpTestClient {
@@ -97,7 +97,7 @@ public class RtpTestClient {
 		installStateChangeLogger();
 		installAudioAnalyzer();
 
-		pipeline.debugToDotFileWithTS(Bin.DebugGraphDetails.SHOW_ALL, String.format("rtp-test-client-%s", panelId));
+		Debugger.debugPipeline(String.format("rtp-test-client-%s", panelId), pipeline);
 		pipeline.play();
 
 		return this;
