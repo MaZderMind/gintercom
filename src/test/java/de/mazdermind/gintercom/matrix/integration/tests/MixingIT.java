@@ -3,8 +3,6 @@ package de.mazdermind.gintercom.matrix.integration.tests;
 import org.freedesktop.gstreamer.Gst;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -18,7 +16,6 @@ import de.mazdermind.gintercom.matrix.portpool.PortSetPool;
 import de.mazdermind.gintercom.matrix.portpool.PortSetPoolFactory;
 
 public class MixingIT {
-	private static final Logger log = LoggerFactory.getLogger(MixingIT.class);
 	private Matrix matrix;
 	private PortSetPool portSetPool;
 

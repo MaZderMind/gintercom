@@ -93,10 +93,6 @@ public class Panel {
 		log.info("Created Panel {}", name);
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	private Pad requestSrcPad() {
 		Pad teePad = tee.getRequestPad("src_%u");
 		GhostPad ghostPad = new GhostPad(null, teePad);
