@@ -24,8 +24,8 @@ public class MixingCoreIT {
 
 	/**
 	 * 1 Group, 1 Panel
-	 * Panel 1 txGroups = Group 1
-	 * Panel 1 rxGroups = Group 1
+	 * Panel 1 transmits to Group 1
+	 * Panel 1 receives from Group 1
 	 * assert that Panel 1 hears itself
 	 */
 	@Test
@@ -42,8 +42,8 @@ public class MixingCoreIT {
 
 	/**
 	 * 1 Group, 2 Panels
-	 * Panel 1 txGroups = Group 1
-	 * Panel 2 rxGroups = Group 1
+	 * Panel 1 transmits to Group 1
+	 * Panel 2 receives from Group 1
 	 * assert that Panel 2 hears Panel 1
 	 */
 	@Test
@@ -57,13 +57,14 @@ public class MixingCoreIT {
 
 		panel1.getClient().enableSine(2000.);
 		panel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2000.));
+		panel1.getClient().getAudioAnalyser().awaitSilence();
 	}
 
 	/**
 	 * 1 Group, 3 Panels
-	 * Panel 1 txGroups = Group 1
-	 * Panel 2 rxGroups = Group 1
-	 * Panel 3 rxGroups = Group 1
+	 * Panel 1 transmits to Group 1
+	 * Panel 2 receives from Group 1
+	 * Panel 3 receives from Group 1
 	 * assert that Panel 2 hears Panel 1
 	 * Panel 3 joins
 	 * assert that Panel 3 also hears Panel 1
@@ -96,10 +97,10 @@ public class MixingCoreIT {
 
 	/**
 	 * 2 Groups, 2 Panels
-	 * Panel 1 rxGroups = Group 1
-	 * Panel 1 txGroups = Group 2
-	 * Panel 2 txGroups = Group 1
-	 * Panel 2 rxGroups = Group 2
+	 * Panel 1 receives from Group 1
+	 * Panel 1 transmits to Group 2
+	 * Panel 2 transmits to Group 1
+	 * Panel 2 receives from Group 2
 	 * assert that the panels hear each other but not them self
 	 */
 	@Test
@@ -125,9 +126,9 @@ public class MixingCoreIT {
 
 	/**
 	 * 2 Groups, 3 Panel
-	 * Panel 1 txGroups = Group 1, Group 2
-	 * Panel 2 rxGroups = Group 1
-	 * Panel 3 rxGroups = Group 2
+	 * Panel 1 transmits to Group 1, Group 2
+	 * Panel 2 receives from Group 1
+	 * Panel 3 receives from Group 2
 	 * assert that Panel 2 and Panel 3 both hear Panel 1
 	 */
 	@Test
@@ -153,9 +154,9 @@ public class MixingCoreIT {
 
 	/**
 	 * 2 Groups, 3 Panel
-	 * Panel 1 rxGroups = Group 1, Group 2
-	 * Panel 2 txGroups = Group 1
-	 * Panel 3 txGroups = Group 2
+	 * Panel 1 receives from Group 1, Group 2
+	 * Panel 2 transmits to Group 1
+	 * Panel 3 transmits to Group 2
 	 * assert that Panel 1 hears both Panel 2 and Panel 3
 	 */
 	@Test
@@ -181,10 +182,10 @@ public class MixingCoreIT {
 
 	/**
 	 * 2 Groups, 4 Panels
-	 * Panel 1 txGroups = Group 1
-	 * Panel 2 rxGroups = Group 1
-	 * Panel 3 txGroups = Group 2
-	 * Panel 4 txGroups = Group 2
+	 * Panel 1 transmits to Group 1
+	 * Panel 2 receives from Group 1
+	 * Panel 3 transmits to Group 2
+	 * Panel 4 transmits to Group 2
 	 * assert that Panel 2 hears Panel 1 and Panel 4 hears Panel 3 but nothing else
 	 */
 	@Test
