@@ -26,10 +26,9 @@ public class MixingCoreTestManager {
 	private MixingCoreTestManager() {
 		Gst.init();
 
-		portSetPool = new PortSetPool(
-				new PortPoolConfig().setStart(10000).setLimit(9999),
-				new PortPoolConfig().setStart(20000).setLimit(9999)
-		);
+		PortPoolConfig matrixToPanel = new PortPoolConfig().setStart(10000).setLimit(9999);
+		PortPoolConfig panelToMatrix = new PortPoolConfig().setStart(20000).setLimit(9999);
+		portSetPool = new PortSetPool(matrixToPanel, panelToMatrix);
 		mixingCore = new MixingCore();
 
 		panels = new ArrayList<>();
