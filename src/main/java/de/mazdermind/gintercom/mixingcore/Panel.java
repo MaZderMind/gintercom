@@ -179,7 +179,14 @@ public class Panel {
 	}
 
 	public void stopTransmittingTo(Group group) {
+		log.info("Unlinking Panel {} from Group {} for transmission", name, group.getName());
 
+		Pad pad = txPads.remove(group);
+		releaseSrcPad(pad.getPeer());
+		group.releaseSinkPad(pad);
+
+		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
+		log.info("Unlinked Panel {} from Group {} for transmission", name, group.getName());
 	}
 
 	public void startReceivingFrom(Group group) {
@@ -187,14 +194,22 @@ public class Panel {
 
 		Pad sinkPad = requestSinkPad();
 		Pad srcPad = group.requestSrcPad();
-		rxPads.put(group, srcPad);
 		srcPad.link(sinkPad);
+		rxPads.put(group, srcPad);
 
 		debugPipeline(String.format("after-link-group-%s-to-panel-%s", group.getName(), name), pipeline);
 		log.info("Linked Panel {} to Group {} for receiving", name, group.getName());
 	}
 
 	public void stopReceivingFrom(Group group) {
+		log.info("Unlinking Panel {} from Group {} for transmission", name, group.getName());
 
+		Pad pad = rxPads.remove(group);
+		Pad peer = pad.getPeer();
+		group.releaseSrcPad(pad);
+		releaseSinkPad(peer);
+
+		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
+		log.info("Unlinked Panel {} from Group {} for transmission", name, group.getName());
 	}
 }
