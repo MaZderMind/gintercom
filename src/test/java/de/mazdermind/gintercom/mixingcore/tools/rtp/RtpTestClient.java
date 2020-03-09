@@ -165,7 +165,6 @@ public class RtpTestClient {
 	}
 
 	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.INFO, Bus.WARNING, Bus.ERROR {
-		private static final Logger log = LoggerFactory.getLogger(PipelineStateChangeLogger.class);
 		private final String identifier;
 
 		public PipelineStateChangeLogger(String identifier) {
