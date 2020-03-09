@@ -45,7 +45,9 @@ public class MixingCoreTestManager {
 
 	public void cleanup() {
 		panels.forEach(PanelAndClient::stopAndRemove);
+		panels.clear();
 		groups.forEach(Group::remove);
+		groups.clear();
 	}
 
 	public Group addGroup(String name) {

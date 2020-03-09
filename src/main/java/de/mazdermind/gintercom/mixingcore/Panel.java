@@ -133,7 +133,7 @@ public class Panel {
 
 	public void remove() {
 		if (removed) {
-			log.info("Already Removed");
+			log.info("Panel {} already removed", name);
 			return;
 		}
 		log.info("Removing Panel {}", name);
