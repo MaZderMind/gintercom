@@ -41,7 +41,7 @@ public class Group {
 
 		// @formatter:off
 		bin = GstBuilder.buildBin(String.format("group-%s", name))
-				.addElement("audiotestsrc")
+				.addElement("audiotestsrc", String.format("group-%s-silencesrc", name))
 					.withProperty("wave", WAVE_SILENCE)
 					.withProperty("is-live", true)
 				.withCaps(StaticCaps.AUDIO)

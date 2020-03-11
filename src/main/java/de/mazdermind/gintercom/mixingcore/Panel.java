@@ -47,10 +47,10 @@ public class Panel {
 
 		// @formatter:off
 		rxBin = GstBuilder.buildBin(String.format("panel-%s-rx", name))
-				.addElement("udpsrc")
+				.addElement("udpsrc", String.format("panel-%s-udpsrc", name))
 					.withProperty("port", panelToMatrixPort)
 				.withCaps(StaticCaps.RTP)
-				.linkElement("rtpjitterbuffer")
+				.linkElement("rtpjitterbuffer", String.format("panel-%s-jitterbuffer", name))
 					.withProperty("latency", 100)
 					.withProperty("drop-on-latency", true)
 				.linkElement("rtpL16depay")
@@ -64,7 +64,7 @@ public class Panel {
 
 		// @formatter:off
 		txBin = GstBuilder.buildBin(String.format("panel-%s-tx", name))
-				.addElement("audiotestsrc")
+				.addElement("audiotestsrc", String.format("panel-%s-silencesrc", name))
 					.withProperty("wave", WAVE_SILENCE)
 					.withProperty("is-live", true)
 				.withCaps(StaticCaps.AUDIO)
