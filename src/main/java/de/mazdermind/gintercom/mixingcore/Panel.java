@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
-import de.mazdermind.gintercom.mixingcore.support.VoidFuture;
+import de.mazdermind.gintercom.mixingcore.support.Wait;
 
 public class Panel {
 	private static final Logger log = LoggerFactory.getLogger(Panel.class);
@@ -103,7 +103,7 @@ public class Panel {
 
 	private void releaseSrcPad(Pad pad) {
 		Pad teePad = ((GhostPad) pad).getTarget();
-		VoidFuture future = new VoidFuture();
+		Wait future = new Wait();
 		teePad.block(() -> {
 			rxBin.removePad(pad);
 			tee.releaseRequestPad(teePad);
@@ -122,7 +122,7 @@ public class Panel {
 
 	private void releaseSinkPad(Pad pad) {
 		Pad mixerPad = ((GhostPad) pad).getTarget();
-		VoidFuture future = new VoidFuture();
+		Wait future = new Wait();
 		mixerPad.block(() -> {
 			mixer.releaseRequestPad(mixerPad);
 			txBin.removePad(pad);

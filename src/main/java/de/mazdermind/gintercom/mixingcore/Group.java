@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
-import de.mazdermind.gintercom.mixingcore.support.VoidFuture;
+import de.mazdermind.gintercom.mixingcore.support.Wait;
 
 public class Group {
 	private static final Logger log = LoggerFactory.getLogger(Group.class);
@@ -91,7 +91,7 @@ public class Group {
 
 	void releaseSrcPad(Pad pad) {
 		Pad teePad = ((GhostPad) pad).getTarget();
-		VoidFuture future = new VoidFuture();
+		Wait future = new Wait();
 		teePad.block(() -> {
 			tee.releaseRequestPad(teePad);
 			bin.removePad(pad);
@@ -110,7 +110,7 @@ public class Group {
 
 	void releaseSinkPad(Pad pad) {
 		Pad mixerPad = ((GhostPad) pad).getTarget();
-		VoidFuture future = new VoidFuture();
+		Wait future = new Wait();
 		mixerPad.block(() -> {
 			mixer.releaseRequestPad(mixerPad);
 			bin.removePad(pad);
