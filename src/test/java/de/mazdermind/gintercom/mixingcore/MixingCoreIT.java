@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.mixingcore;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -208,5 +209,94 @@ public class MixingCoreIT {
 
 		panel3.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(400.));
 		panel4.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+	}
+
+	/**
+	 * 1 Group, 3 Panels
+	 * Panel 1 transmits to Group
+	 * Panel 3 receives from Group
+	 * assert that Panel 3 hears Panel 1
+	 * Panel 2 starts transmitting to Group
+	 * assert that Panel 3 hears Panel 1 and 2
+	 * Panel 2 stops transmitting to Group
+	 * assert that Panel 3 hears Panel 1
+	 * Panel 2 starts transmitting to Group
+	 * assert that Panel 3 hears Panel 1 and 2
+	 */
+	@Test
+	public void panelStartAndStopTransmittingToAGroup() {
+		Group group1 = testManager.addGroup("1");
+
+		PanelAndClient panel1 = testManager.addPanel("1");
+		PanelAndClient panel2 = testManager.addPanel("2");
+		PanelAndClient rxPanel = testManager.addPanel("3");
+
+		rxPanel.getPanel().startReceivingFrom(group1);
+
+		panel1.getClient().enableSine(1000.);
+		panel2.getClient().enableSine(3000.);
+
+		rxPanel.getClient().getAudioAnalyser().awaitSilence();
+
+		panel1.getPanel().startTransmittingTo(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
+
+		panel2.getPanel().startTransmittingTo(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000., 3000.));
+
+		panel1.getPanel().stopTransmittingTo(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(3000.));
+
+		panel2.getPanel().stopTransmittingTo(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitSilence();
+
+		panel1.getPanel().startTransmittingTo(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
+
+		panel2.getPanel().startTransmittingTo(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000., 3000.));
+	}
+
+	@Test
+	public void panelStartAndStopReceivingAGroup() {
+		Group group1 = testManager.addGroup("1");
+		Group group2 = testManager.addGroup("2");
+
+		PanelAndClient panel1 = testManager.addPanel("1");
+		PanelAndClient panel2 = testManager.addPanel("2");
+		PanelAndClient rxPanel = testManager.addPanel("3");
+
+		panel1.getPanel().startTransmittingTo(group1);
+		panel1.getClient().enableSine(300.);
+
+		panel2.getPanel().startTransmittingTo(group2);
+		panel2.getClient().enableSine(600.);
+
+		rxPanel.getClient().getAudioAnalyser().awaitSilence();
+
+		rxPanel.getPanel().startReceivingFrom(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300.));
+
+		rxPanel.getPanel().startReceivingFrom(group2);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300., 600.));
+
+		rxPanel.getPanel().stopReceivingFrom(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+
+		rxPanel.getPanel().stopReceivingFrom(group2);
+		rxPanel.getClient().getAudioAnalyser().awaitSilence();
+
+		rxPanel.getPanel().startReceivingFrom(group1);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300.));
+
+		rxPanel.getPanel().startReceivingFrom(group2);
+		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300., 600.));
+
+	}
+
+	@Test
+	@Ignore("Not yet implemented") // TODO
+	public void groupCanBeRemovedWhilePanelsAreConnected() {
+
 	}
 }
