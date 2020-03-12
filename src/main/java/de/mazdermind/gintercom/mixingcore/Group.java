@@ -84,7 +84,6 @@ public class Group {
 	Pad requestSrcPad() {
 		Pad teePad = tee.getRequestPad("src_%u");
 		GhostPad ghostPad = new GhostPad(null, teePad);
-		ghostPad.setActive(true);
 		bin.addPad(ghostPad);
 		return ghostPad;
 	}
@@ -103,7 +102,6 @@ public class Group {
 	Pad requestSinkPad() {
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
 		GhostPad ghostPad = new GhostPad(null, mixerPad);
-		ghostPad.setActive(true);
 		bin.addPad(ghostPad);
 		return ghostPad;
 	}

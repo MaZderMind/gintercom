@@ -96,7 +96,6 @@ public class Panel {
 	private Pad requestSrcPad() {
 		Pad teePad = tee.getRequestPad("src_%u");
 		GhostPad ghostPad = new GhostPad(null, teePad);
-		ghostPad.setActive(true);
 		rxBin.addPad(ghostPad);
 		return ghostPad;
 	}
@@ -115,7 +114,6 @@ public class Panel {
 	private Pad requestSinkPad() {
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
 		GhostPad ghostPad = new GhostPad(null, mixerPad);
-		ghostPad.setActive(true);
 		txBin.addPad(ghostPad);
 		return ghostPad;
 	}
@@ -171,8 +169,11 @@ public class Panel {
 
 		Pad srcPad = requestSrcPad();
 		Pad sinkPad = group.requestSinkPad();
-		txPads.put(group, sinkPad);
+
 		srcPad.link(sinkPad);
+		sinkPad.setActive(true);
+		srcPad.setActive(true);
+		txPads.put(group, sinkPad);
 
 		debugPipeline(String.format("after-link-panel-%s-to-group-%s", name, group.getName()), pipeline);
 		log.info("Linked Panel {} to Group {} for transmission", name, group.getName());
@@ -194,7 +195,10 @@ public class Panel {
 
 		Pad sinkPad = requestSinkPad();
 		Pad srcPad = group.requestSrcPad();
+
 		srcPad.link(sinkPad);
+		sinkPad.setActive(true);
+		srcPad.setActive(true);
 		rxPads.put(group, srcPad);
 
 		debugPipeline(String.format("after-link-group-%s-to-panel-%s", group.getName(), name), pipeline);
