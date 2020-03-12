@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.mixingcore.support;
 
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class Wait {
 
@@ -17,7 +18,9 @@ public class Wait {
 
 	public void await() {
 		try {
-			sem.tryAcquire(1, TimeUnit.MINUTES);
+			if (!sem.tryAcquire(1, TimeUnit.MINUTES)) {
+				throw new RuntimeException(new TimeoutException("Waiting timed out"));
+			}
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
