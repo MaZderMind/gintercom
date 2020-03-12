@@ -1,10 +1,11 @@
 package de.mazdermind.gintercom.mixingcore.tools.rtp;
 
-import org.apache.commons.text.StringSubstitutor;
+import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectAsyncOrSuccess;
+
+import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.FlowReturn;
-import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.GstObject;
 import org.freedesktop.gstreamer.Pipeline;
 import org.freedesktop.gstreamer.State;
@@ -12,10 +13,9 @@ import org.freedesktop.gstreamer.elements.AppSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.ImmutableMap;
-
 import de.mazdermind.gintercom.mixingcore.StaticCaps;
 import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
 import de.mazdermind.gintercom.mixingcore.support.GstDebugger;
 import de.mazdermind.gintercom.mixingcore.support.PipelineException;
 import de.mazdermind.gintercom.mixingcore.tools.audioanalyzer.AudioAnalyser;
@@ -28,9 +28,12 @@ public class RtpTestClient {
 	private final String panelId;
 	private final AudioAnalyser audioAnalyser;
 
-	private Pipeline pipeline;
 	private AppSink.NEW_SAMPLE newSampleCallback;
 	private PipelineStateChangeLogger stateChangeLogger;
+
+	private Pipeline pipeline;
+	private Bin txBin;
+	private Bin rxBin;
 
 	public RtpTestClient(PortSet portSet, String panelId) {
 		this.portSet = portSet;
@@ -41,7 +44,7 @@ public class RtpTestClient {
 	public RtpTestClient enableSine(double freq) {
 		ensureStarted();
 
-		Element testSrc = pipeline.getElementByName("test_src");
+		Element testSrc = txBin.getElementByName("test_src");
 		testSrc.set("freq", freq);
 		testSrc.set("volume", 0.2);
 
@@ -51,7 +54,7 @@ public class RtpTestClient {
 	public RtpTestClient disableSine() {
 		ensureStarted();
 
-		Element testSrc = pipeline.getElementByName("test_src");
+		Element testSrc = txBin.getElementByName("test_src");
 		testSrc.set("volume", 0.0);
 
 		return this;
@@ -63,42 +66,50 @@ public class RtpTestClient {
 		}
 
 		log.info("{}: Starting RtpTestClient for PortSet {}", panelId, portSet);
+		pipeline = new Pipeline("RtpTestClient");
 
-		String pipelineSpec = StringSubstitutor.replace("" +
-						"audiotestsrc name=test_src freq=440 volume=0.0 is-live=true ! " +
-						"  ${rawcaps} ! " +
-						"  audioconvert ! " +
-						"  ${rawcaps_be} ! " +
-						"  rtpL16pay ! " +
-						"  ${rtpcaps} ! " +
-						"  udpsink host=${matrix_host} port=${matrix_port} " +
-						"" +
-						"udpsrc port=${client_port} name=udp ! " +
-						"  ${rtpcaps} ! " +
-						"  rtpjitterbuffer latency=50 ! " +
-						"  identity sync=true ! " +
-						"  rtpL16depay ! " +
-						"  ${rawcaps_be} ! " +
-						"  audioconvert ! " +
-						"  ${rawcaps} ! " +
-						"  appsink name=appsink sync=false",
-				ImmutableMap.<String, Object>builder()
-						.put("rtpcaps", StaticCaps.RTP)
-						.put("rawcaps", StaticCaps.AUDIO)
-						.put("rawcaps_be", StaticCaps.AUDIO_BE)
-						.put("matrix_host", "127.0.0.1")
-						.put("matrix_port", portSet.getPanelToMatrix())
-						.put("client_port", portSet.getMatrixToPanel())
-						.build()
-		);
+		// @formatter:off
+		txBin = GstBuilder.buildBin("tx")
+				.addElement("audiotestsrc", "test_src")
+					.withProperty("is-live", true)
+					.withProperty("volume", 0.0)
+				.withCaps(StaticCaps.AUDIO)
+				.linkElement("audioconvert")
+				.withCaps(StaticCaps.AUDIO_BE)
+				.linkElement("rtpL16pay")
+				.withCaps(StaticCaps.RTP)
+				.linkElement("udpsink")
+					.withProperty("host", "127.0.0.1")
+					.withProperty("port", portSet.getPanelToMatrix())
+					//.withProperty("sync", false)
+					.withProperty("async", false)
+				.build();
+		// @formatter:on
 
-		pipeline = (Pipeline) Gst.parseLaunch(pipelineSpec);
+		// @formatter:off
+		rxBin = GstBuilder.buildBin("rx")
+				.addElement("udpsrc")
+					.withProperty("port", portSet.getMatrixToPanel())
+				.withCaps(StaticCaps.RTP)
+				.linkElement("rtpjitterbuffer")
+					.withProperty("latency", 100)
+				.linkElement("rtpL16depay")
+				.withCaps(StaticCaps.AUDIO_BE)
+				.linkElement("audioconvert")
+				.withCaps(StaticCaps.AUDIO)
+				.linkElement("appsink", "appsink")
+					.withProperty("sync", false)
+				.build();
+		// @formatter:on
+
+		pipeline.add(rxBin);
+		pipeline.add(txBin);
 
 		installStateChangeLogger();
 		installAudioAnalyzer();
 
+		expectAsyncOrSuccess(pipeline.play());
 		GstDebugger.debugPipeline(String.format("rtp-test-client-%s", panelId), pipeline);
-		pipeline.play();
 
 		return this;
 	}
@@ -121,7 +132,7 @@ public class RtpTestClient {
 	}
 
 	private void installAudioAnalyzer() {
-		AppSink appsink = (AppSink) pipeline.getElementByName("appsink");
+		AppSink appsink = (AppSink) rxBin.getElementByName("appsink");
 
 		appsink.set("emit-signals", true);
 		newSampleCallback = appSink -> {
@@ -134,7 +145,7 @@ public class RtpTestClient {
 	}
 
 	private void uninstallAudioAnalyzer() {
-		AppSink appsink = (AppSink) pipeline.getElementByName("appsink");
+		AppSink appsink = (AppSink) rxBin.getElementByName("appsink");
 		appsink.disconnect(newSampleCallback);
 	}
 
@@ -157,11 +168,6 @@ public class RtpTestClient {
 		if (pipeline == null) {
 			this.start();
 		}
-	}
-
-
-	public String getPanelId() {
-		return panelId;
 	}
 
 	private static class PipelineStateChangeLogger implements Bus.EOS, Bus.STATE_CHANGED, Bus.INFO, Bus.WARNING, Bus.ERROR {
