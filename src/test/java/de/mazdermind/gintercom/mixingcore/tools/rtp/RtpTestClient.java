@@ -24,6 +24,9 @@ import de.mazdermind.gintercom.mixingcore.tools.peakdetector.AppSinkSupport;
 public class RtpTestClient {
 	private static final Logger log = LoggerFactory.getLogger(RtpTestClient.class);
 
+	private static final String TESTSRC_NAME = "client-testsrc";
+	private static final String APPSINK_NAME = "client-appsink";
+
 	private final PortSet portSet;
 	private final String panelId;
 	private final AudioAnalyser audioAnalyser;
@@ -44,7 +47,7 @@ public class RtpTestClient {
 	public RtpTestClient enableSine(double freq) {
 		ensureStarted();
 
-		Element testSrc = txBin.getElementByName("test_src");
+		Element testSrc = txBin.getElementByName(TESTSRC_NAME);
 		testSrc.set("freq", freq);
 		testSrc.set("volume", 0.2);
 
@@ -54,7 +57,7 @@ public class RtpTestClient {
 	public RtpTestClient disableSine() {
 		ensureStarted();
 
-		Element testSrc = txBin.getElementByName("test_src");
+		Element testSrc = txBin.getElementByName(TESTSRC_NAME);
 		testSrc.set("volume", 0.0);
 
 		return this;
@@ -70,7 +73,7 @@ public class RtpTestClient {
 
 		// @formatter:off
 		txBin = GstBuilder.buildBin("tx")
-				.addElement("audiotestsrc", "test_src")
+				.addElement("audiotestsrc", TESTSRC_NAME)
 					.withProperty("is-live", true)
 					.withProperty("volume", 0.0)
 				.withCaps(StaticCaps.AUDIO)
@@ -78,7 +81,7 @@ public class RtpTestClient {
 				.withCaps(StaticCaps.AUDIO_BE)
 				.linkElement("rtpL16pay")
 				.withCaps(StaticCaps.RTP)
-				.linkElement("udpsink")
+				.linkElement("udpsink", "client-udpsink")
 					.withProperty("host", "127.0.0.1")
 					.withProperty("port", portSet.getPanelToMatrix())
 					//.withProperty("sync", false)
@@ -88,7 +91,7 @@ public class RtpTestClient {
 
 		// @formatter:off
 		rxBin = GstBuilder.buildBin("rx")
-				.addElement("udpsrc")
+				.addElement("udpsrc", "client-udpsrc")
 					.withProperty("port", portSet.getMatrixToPanel())
 				.withCaps(StaticCaps.RTP)
 				.linkElement("rtpjitterbuffer")
@@ -97,7 +100,7 @@ public class RtpTestClient {
 				.withCaps(StaticCaps.AUDIO_BE)
 				.linkElement("audioconvert")
 				.withCaps(StaticCaps.AUDIO)
-				.linkElement("appsink", "appsink")
+				.linkElement("appsink", APPSINK_NAME)
 					.withProperty("sync", false)
 				.build();
 		// @formatter:on
@@ -132,7 +135,7 @@ public class RtpTestClient {
 	}
 
 	private void installAudioAnalyzer() {
-		AppSink appsink = (AppSink) rxBin.getElementByName("appsink");
+		AppSink appsink = (AppSink) rxBin.getElementByName(APPSINK_NAME);
 
 		appsink.set("emit-signals", true);
 		newSampleCallback = appSink -> {
@@ -145,7 +148,7 @@ public class RtpTestClient {
 	}
 
 	private void uninstallAudioAnalyzer() {
-		AppSink appsink = (AppSink) rxBin.getElementByName("appsink");
+		AppSink appsink = (AppSink) rxBin.getElementByName(APPSINK_NAME);
 		appsink.disconnect(newSampleCallback);
 	}
 
