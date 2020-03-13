@@ -5,6 +5,8 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mazdermind.gintercom.mixingcore.support.PipelineException;
+
 public class MixingCore {
 	private static final Logger log = LoggerFactory.getLogger(MixingCore.class);
 
@@ -14,9 +16,13 @@ public class MixingCore {
 		pipeline = new Pipeline("matrix");
 		pipeline.play();
 
-		pipeline.getBus().connect((Bus.ERROR) (source, code, message) -> log.error(String.format("%s: %s", source.getName(), message)));
 		pipeline.getBus().connect((Bus.WARNING) (source, code, message) -> log.warn(String.format("%s: %s", source.getName(), message)));
-		pipeline.getBus().connect((Bus.EOS) source -> log.error(String.format("%s: EOS", source.getName())));
+		pipeline.getBus().connect((Bus.ERROR) (source, code, message) -> {
+			throw new PipelineException(String.format("%s: %s", source.getName(), message));
+		});
+		pipeline.getBus().connect((Bus.EOS) source -> {
+			throw new PipelineException(String.format("%s: EOS", source.getName()));
+		});
 	}
 
 	public Group addGroup(String name) {
