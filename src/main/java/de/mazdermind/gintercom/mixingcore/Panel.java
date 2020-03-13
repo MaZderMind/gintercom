@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
-import de.mazdermind.gintercom.mixingcore.support.Wait;
 
 public class Panel {
 	private static final Logger log = LoggerFactory.getLogger(Panel.class);
@@ -93,40 +92,43 @@ public class Panel {
 		log.info("Created Panel {}", name);
 	}
 
-	private Pad requestSrcPad() {
+	private Pad requestSrcPadAndLink(Pad sinkPad) {
 		Pad teePad = tee.getRequestPad("src_%u");
-		GhostPad ghostPad = new GhostPad(null, teePad);
-		rxBin.addPad(ghostPad);
-		return ghostPad;
+		return teePad.blockAndWait(() -> {
+			GhostPad ghostPad = new GhostPad(teePad.getName() + "_ghost", teePad);
+			rxBin.addPad(ghostPad);
+			ghostPad.link(sinkPad);
+			return ghostPad;
+		});
 	}
 
 	private void releaseSrcPad(Pad pad) {
 		Pad teePad = ((GhostPad) pad).getTarget();
-		Wait future = new Wait();
-		teePad.block(() -> {
+		log.info("blocking for releaseSrcPad {}", pad);
+		teePad.blockAndWait(() -> {
+			log.info("blocked for releaseSrcPad {}", pad);
 			rxBin.removePad(pad);
 			tee.releaseRequestPad(teePad);
-			future.complete();
 		});
-		future.await();
+		log.info("after blocking for releaseSrcPad {}", pad);
 	}
 
 	private Pad requestSinkPad() {
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
-		GhostPad ghostPad = new GhostPad(null, mixerPad);
+		GhostPad ghostPad = new GhostPad(mixerPad.getName() + "_ghost", mixerPad);
 		txBin.addPad(ghostPad);
 		return ghostPad;
 	}
 
 	private void releaseSinkPad(Pad pad) {
 		Pad mixerPad = ((GhostPad) pad).getTarget();
-		Wait future = new Wait();
-		mixerPad.block(() -> {
+		log.info("blocking for releaseSinkPad {}", pad);
+		mixerPad.blockAndWait(() -> {
+			log.info("blocked for releaseSinkPad {}", pad);
 			mixer.releaseRequestPad(mixerPad);
 			txBin.removePad(pad);
-			future.complete();
 		});
-		future.await();
+		log.info("after blocking for releaseSinkPad {}", pad);
 	}
 
 	public void remove() {
@@ -167,12 +169,8 @@ public class Panel {
 	public void startTransmittingTo(Group group) {
 		log.info("Linking Panel {} to Group {} for transmission", name, group.getName());
 
-		Pad srcPad = requestSrcPad();
 		Pad sinkPad = group.requestSinkPad();
-
-		srcPad.link(sinkPad);
-		sinkPad.setActive(true);
-		srcPad.setActive(true);
+		requestSrcPadAndLink(sinkPad);
 		txPads.put(group, sinkPad);
 
 		debugPipeline(String.format("after-link-panel-%s-to-group-%s", name, group.getName()), pipeline);
@@ -194,11 +192,7 @@ public class Panel {
 		log.info("Linking Panel {} to Group {} for receiving", name, group.getName());
 
 		Pad sinkPad = requestSinkPad();
-		Pad srcPad = group.requestSrcPad();
-
-		srcPad.link(sinkPad);
-		sinkPad.setActive(true);
-		srcPad.setActive(true);
+		Pad srcPad = group.requestSrcPadAndLink(sinkPad);
 		rxPads.put(group, srcPad);
 
 		debugPipeline(String.format("after-link-group-%s-to-panel-%s", group.getName(), name), pipeline);

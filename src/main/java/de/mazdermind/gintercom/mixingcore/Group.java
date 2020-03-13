@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
-import de.mazdermind.gintercom.mixingcore.support.Wait;
 
 public class Group {
 	private static final Logger log = LoggerFactory.getLogger(Group.class);
@@ -81,39 +80,42 @@ public class Group {
 		removed = true;
 	}
 
-	Pad requestSrcPad() {
+	Pad requestSrcPadAndLink(Pad sinkPad) {
 		Pad teePad = tee.getRequestPad("src_%u");
-		GhostPad ghostPad = new GhostPad(null, teePad);
-		bin.addPad(ghostPad);
-		return ghostPad;
+		return teePad.blockAndWait(() -> {
+			GhostPad ghostPad = new GhostPad(teePad.getName() + "_ghost", teePad);
+			bin.addPad(ghostPad);
+			ghostPad.link(sinkPad);
+			return ghostPad;
+		});
 	}
 
 	void releaseSrcPad(Pad pad) {
 		Pad teePad = ((GhostPad) pad).getTarget();
-		Wait future = new Wait();
-		teePad.block(() -> {
+		log.info("blocking for releaseSrcPad {}", pad);
+		teePad.blockAndWait(() -> {
+			log.info("blocked for releaseSrcPad {}", pad);
 			tee.releaseRequestPad(teePad);
 			bin.removePad(pad);
-			future.complete();
 		});
-		future.await();
+		log.info("after blocking for releaseSrcPad {}", pad);
 	}
 
 	Pad requestSinkPad() {
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
-		GhostPad ghostPad = new GhostPad(null, mixerPad);
+		GhostPad ghostPad = new GhostPad(mixerPad.getName() + "_ghost", mixerPad);
 		bin.addPad(ghostPad);
 		return ghostPad;
 	}
 
 	void releaseSinkPad(Pad pad) {
 		Pad mixerPad = ((GhostPad) pad).getTarget();
-		Wait future = new Wait();
-		mixerPad.block(() -> {
+		log.info("blocking for releaseSinkPad {}", pad);
+		mixerPad.blockAndWait(() -> {
+			log.info("blocked for releaseSinkPad {}", pad);
 			mixer.releaseRequestPad(mixerPad);
 			bin.removePad(pad);
-			future.complete();
 		});
-		future.await();
+		log.info("after blocking for releaseSinkPad {}", pad);
 	}
 }
