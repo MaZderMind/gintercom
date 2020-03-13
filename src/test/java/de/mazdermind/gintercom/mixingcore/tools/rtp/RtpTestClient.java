@@ -17,7 +17,7 @@ import de.mazdermind.gintercom.mixingcore.StaticCaps;
 import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
 import de.mazdermind.gintercom.mixingcore.support.GstDebugger;
-import de.mazdermind.gintercom.mixingcore.support.PipelineException;
+import de.mazdermind.gintercom.mixingcore.support.GstException;
 import de.mazdermind.gintercom.mixingcore.tools.audioanalyzer.AudioAnalyser;
 import de.mazdermind.gintercom.mixingcore.tools.peakdetector.AppSinkSupport;
 
@@ -197,7 +197,7 @@ public class RtpTestClient {
 
 		@Override
 		public void errorMessage(GstObject source, int code, String message) {
-			throw new PipelineException(message);
+			throw new GstException(message);
 		}
 
 		@Override

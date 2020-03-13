@@ -5,7 +5,7 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mazdermind.gintercom.mixingcore.support.PipelineException;
+import de.mazdermind.gintercom.mixingcore.support.GstException;
 
 public class MixingCore {
 	private static final Logger log = LoggerFactory.getLogger(MixingCore.class);
@@ -18,10 +18,10 @@ public class MixingCore {
 
 		pipeline.getBus().connect((Bus.WARNING) (source, code, message) -> log.warn(String.format("%s: %s", source.getName(), message)));
 		pipeline.getBus().connect((Bus.ERROR) (source, code, message) -> {
-			throw new PipelineException(String.format("%s: %s", source.getName(), message));
+			throw new GstException(String.format("%s: %s", source.getName(), message));
 		});
 		pipeline.getBus().connect((Bus.EOS) source -> {
-			throw new PipelineException(String.format("%s: EOS", source.getName()));
+			throw new GstException(String.format("%s: EOS", source.getName()));
 		});
 	}
 
