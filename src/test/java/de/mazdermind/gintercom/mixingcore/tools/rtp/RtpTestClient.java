@@ -2,6 +2,11 @@ package de.mazdermind.gintercom.mixingcore.tools.rtp;
 
 import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectAsyncOrSuccess;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Element;
@@ -111,8 +116,24 @@ public class RtpTestClient {
 		installStateChangeLogger();
 		installAudioAnalyzer();
 
+		CompletableFuture<Void> future = new CompletableFuture<>();
+		pipeline.getBus().connect((source, old, current, pending) -> {
+			if (source == pipeline && current == State.PLAYING) {
+				log.error("{}: pipeline fully started", panelId);
+				future.complete(null);
+			}
+		});
+
+		log.info("{}: starting pipeline", panelId);
 		expectAsyncOrSuccess(pipeline.play());
 		GstDebugger.debugPipeline(String.format("rtp-test-client-%s", panelId), pipeline);
+		try {
+			log.info("{}: waiting for pipeline to start", panelId);
+			future.get(1, TimeUnit.MINUTES);
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			throw new RuntimeException(e);
+		}
+		log.info("{}: successfully started pipeline", panelId);
 
 		return this;
 	}
