@@ -1,13 +1,9 @@
 package de.mazdermind.gintercom.mixingcore.portpool;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.google.common.base.Objects;
-
 public class PortPoolConfig {
 	private Integer start;
-
 	private Integer limit;
+	private Boolean resetting;
 
 	public Integer getStart() {
 		return start;
@@ -27,25 +23,12 @@ public class PortPoolConfig {
 		return this;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(start, limit);
+	public Boolean getResetting() {
+		return resetting;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PortPoolConfig that = (PortPoolConfig) o;
-		return Objects.equal(start, that.start) &&
-				Objects.equal(limit, that.limit);
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this)
-				.append("start", start)
-				.append("limit", limit)
-				.toString();
+	public PortPoolConfig setResetting(Boolean resetting) {
+		this.resetting = resetting;
+		return this;
 	}
 }
