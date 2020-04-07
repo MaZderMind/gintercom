@@ -119,7 +119,7 @@ public class RtpTestClient {
 		CompletableFuture<Void> future = new CompletableFuture<>();
 		pipeline.getBus().connect((source, old, current, pending) -> {
 			if (source == pipeline && current == State.PLAYING) {
-				log.error("{}: pipeline fully started", panelId);
+				log.info("{}: pipeline fully started", panelId);
 				future.complete(null);
 			}
 		});
@@ -131,6 +131,7 @@ public class RtpTestClient {
 			log.info("{}: waiting for pipeline to start", panelId);
 			future.get(1, TimeUnit.MINUTES);
 		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			log.error("{} could not start pipeline: {}", panelId, e);
 			throw new RuntimeException(e);
 		}
 		log.info("{}: successfully started pipeline", panelId);
