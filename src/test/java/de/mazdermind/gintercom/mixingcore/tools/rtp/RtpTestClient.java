@@ -13,6 +13,7 @@ import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.FlowReturn;
 import org.freedesktop.gstreamer.GstObject;
 import org.freedesktop.gstreamer.Pipeline;
+import org.freedesktop.gstreamer.Sample;
 import org.freedesktop.gstreamer.State;
 import org.freedesktop.gstreamer.elements.AppSink;
 import org.slf4j.Logger;
@@ -161,7 +162,12 @@ public class RtpTestClient {
 
 		appsink.set("emit-signals", true);
 		newSampleCallback = appSink -> {
-			long[] samples = AppSinkSupport.extractSampleValues(appSink.pullSample());
+			Sample sample = appSink.pullSample();
+			if (sample == null) {
+				log.warn("newSsample called without a sample being available");
+				return FlowReturn.OK;
+			}
+			long[] samples = AppSinkSupport.extractSampleValues(sample);
 			audioAnalyser.appendSamples(samples);
 
 			return FlowReturn.OK;
