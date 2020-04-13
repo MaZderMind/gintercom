@@ -7,10 +7,10 @@ import org.freedesktop.gstreamer.Pipeline;
 
 public class GstDebugger {
 	private static final EnumSet<Bin.DebugGraphDetails> DETAILS = EnumSet.of(
-			Bin.DebugGraphDetails.SHOW_STATES,
-			Bin.DebugGraphDetails.SHOW_NON_DEFAULT_PARAMS,
-			Bin.DebugGraphDetails.SHOW_MEDIA_TYPE,
-			Bin.DebugGraphDetails.SHOW_CAPS_DETAILS);
+		Bin.DebugGraphDetails.SHOW_STATES,
+		Bin.DebugGraphDetails.SHOW_NON_DEFAULT_PARAMS,
+		Bin.DebugGraphDetails.SHOW_MEDIA_TYPE,
+		Bin.DebugGraphDetails.SHOW_CAPS_DETAILS);
 
 	private static int index = 0;
 
