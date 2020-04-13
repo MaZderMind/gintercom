@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
+import de.mazdermind.gintercom.mixingcore.support.GstPadBlock;
 
 public class Panel {
 	private static final Logger log = LoggerFactory.getLogger(Panel.class);
@@ -94,7 +95,7 @@ public class Panel {
 
 	private Pad requestSrcPadAndLink(Pad sinkPad) {
 		Pad teePad = tee.getRequestPad("src_%u");
-		return teePad.blockAndWait(() -> {
+		return GstPadBlock.blockAndWait(teePad, () -> {
 			GhostPad ghostPad = new GhostPad(teePad.getName() + "_ghost", teePad);
 			rxBin.addPad(ghostPad);
 			ghostPad.link(sinkPad);
@@ -105,7 +106,7 @@ public class Panel {
 	private void releaseSrcPad(Pad pad) {
 		Pad teePad = ((GhostPad) pad).getTarget();
 		log.info("blocking for releaseSrcPad {}", pad);
-		teePad.blockAndWait(() -> {
+		GstPadBlock.blockAndWait(teePad, () -> {
 			log.info("blocked for releaseSrcPad {}", pad);
 			rxBin.removePad(pad);
 			tee.releaseRequestPad(teePad);
@@ -123,7 +124,7 @@ public class Panel {
 	private void releaseSinkPad(Pad pad) {
 		Pad mixerPad = ((GhostPad) pad).getTarget();
 		log.info("blocking for releaseSinkPad {}", pad);
-		mixerPad.blockAndWait(() -> {
+		GstPadBlock.blockAndWait(mixerPad, () -> {
 			log.info("blocked for releaseSinkPad {}", pad);
 			mixer.releaseRequestPad(mixerPad);
 			txBin.removePad(pad);
