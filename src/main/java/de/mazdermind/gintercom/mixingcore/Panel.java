@@ -201,7 +201,7 @@ public class Panel {
 	}
 
 	public void stopReceivingFrom(Group group) {
-		log.info("Unlinking Panel {} from Group {} for transmission", name, group.getName());
+		log.info("Unlinking Panel {} from Group {} for receiving", name, group.getName());
 
 		Pad pad = rxPads.remove(group);
 		Pad peer = pad.getPeer();
