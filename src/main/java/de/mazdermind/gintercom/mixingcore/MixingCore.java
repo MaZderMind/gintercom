@@ -16,12 +16,19 @@ public class MixingCore {
 		pipeline = new Pipeline("matrix");
 		pipeline.play();
 
-		pipeline.getBus().connect((Bus.WARNING) (source, code, message) -> log.warn(String.format("%s: %s", source.getName(), message)));
+		pipeline.getBus().connect((Bus.WARNING) (source, code, message) -> {
+			String msg = String.format("%s: %s", source.getName(), message);
+			log.warn(msg);
+		});
 		pipeline.getBus().connect((Bus.ERROR) (source, code, message) -> {
-			throw new GstException(String.format("%s: %s", source.getName(), message));
+			String msg = String.format("%s: %s", source.getName(), message);
+			log.error(msg);
+			throw new GstException(msg);
 		});
 		pipeline.getBus().connect((Bus.EOS) source -> {
-			throw new GstException(String.format("%s: EOS", source.getName()));
+			String msg = String.format("%s: EOS", source.getName());
+			log.error(msg);
+			throw new GstException(msg);
 		});
 	}
 
