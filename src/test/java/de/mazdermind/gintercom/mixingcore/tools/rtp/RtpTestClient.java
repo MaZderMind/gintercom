@@ -90,8 +90,8 @@ public class RtpTestClient {
 				.linkElement("udpsink", "client-udpsink")
 					.withProperty("host", "127.0.0.1")
 					.withProperty("port", portSet.getPanelToMatrix())
-					//.withProperty("sync", false)
 					.withProperty("async", false)
+					.withProperty("sync", false)
 				.build();
 		// @formatter:on
 

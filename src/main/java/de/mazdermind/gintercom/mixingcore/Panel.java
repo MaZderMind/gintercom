@@ -76,6 +76,8 @@ public class Panel {
 				.linkElement("udpsink")
 					.withProperty("host", panelHost)
 					.withProperty("port", matrixToPanelPort)
+					.withProperty("async", false)
+					.withProperty("sync", false)
 
 				.build();
 		// @formatter:on
