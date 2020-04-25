@@ -20,9 +20,6 @@ import de.mazdermind.gintercom.mixingcore.support.GstPadBlock;
 public class Group {
 	private static final Logger log = LoggerFactory.getLogger(Group.class);
 
-	private static final int WAVE_SILENCE = 4;
-	private static final int START_TIME_FIRST = 1;
-
 	private final String name;
 
 	private final Pipeline pipeline;
@@ -48,11 +45,11 @@ public class Group {
 		// @formatter:off
 		bin = GstBuilder.buildBin(String.format("group-%s", name))
 				.addElement("audiotestsrc", String.format("group-%s-silencesrc", name))
-					.withProperty("wave", WAVE_SILENCE)
+					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
 				.withCaps(StaticCaps.AUDIO)
 				.linkElement("audiomixer", mixerName)
-					.withProperty("start-time-selection", START_TIME_FIRST) // fixes burst
+					.withProperty("start-time-selection", "first")
 				.linkElement("tee", teeName)
 					.withProperty("allow-not-linked", true)
 				.build();

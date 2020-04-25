@@ -35,7 +35,11 @@ public class GstBuilder<T extends Bin> {
 	}
 
 	public GstBuilder<T> withProperty(String name, Object value) {
-		lastAddedElement.set(name, value);
+		if (value instanceof String) {
+			lastAddedElement.setAsString(name, (String) value);
+		} else {
+			lastAddedElement.set(name, value);
+		}
 		return this;
 	}
 

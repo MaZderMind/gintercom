@@ -65,11 +65,11 @@ public class Panel {
 		// @formatter:off
 		txBin = GstBuilder.buildBin(String.format("panel-%s-tx", name))
 				.addElement("audiotestsrc", String.format("panel-%s-silencesrc", name))
-					.withProperty("wave", WAVE_SILENCE)
+					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
 				.withCaps(StaticCaps.AUDIO)
 				.linkElement("audiomixer", mixerName)
-					.withProperty("start-time-selection", START_TIME_FIRST) // fixes burst
+					.withProperty("start-time-selection", "first")
 				.linkElement("audioconvert")
 				.withCaps(StaticCaps.AUDIO_BE)
 				.linkElement("rtpL16pay")
