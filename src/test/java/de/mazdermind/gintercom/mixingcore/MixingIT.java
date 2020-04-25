@@ -1,27 +1,13 @@
 package de.mazdermind.gintercom.mixingcore;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-import de.mazdermind.gintercom.mixingcore.tools.MixingCoreTestManager;
+import de.mazdermind.gintercom.mixingcore.tools.IntegrationTestBase;
 import de.mazdermind.gintercom.mixingcore.tools.PanelAndClient;
 
-public class MixingCoreIT {
-	private MixingCoreTestManager testManager;
-
-	@Before
-	public void before() {
-		testManager = MixingCoreTestManager.getInstance();
-	}
-
-	@After
-	public void after() {
-		testManager.cleanup();
-	}
-
+public class MixingIT extends IntegrationTestBase {
 	/**
 	 * 1 Group, 1 Panel
 	 * Panel 1 transmits to Group 1

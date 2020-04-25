@@ -13,13 +13,11 @@ import de.mazdermind.gintercom.mixingcore.portpool.PortSetPool;
 import de.mazdermind.gintercom.mixingcore.tools.rtp.RtpTestClient;
 
 public class MixingCoreTestManager {
-	private static final String LOCALHOST = "127.0.0.1";
+	public static final String MATRIX_HOST = "127.0.0.1";
 
 	private static MixingCoreTestManager instance;
-
 	private final PortSetPool portSetPool;
 	private final MixingCore mixingCore;
-
 	private final ArrayList<PanelAndClient> panels;
 	private final ArrayList<Group> groups;
 
@@ -43,6 +41,14 @@ public class MixingCoreTestManager {
 		return instance;
 	}
 
+	public PortSetPool getPortSetPool() {
+		return portSetPool;
+	}
+
+	public MixingCore getMixingCore() {
+		return mixingCore;
+	}
+
 	public void cleanup() {
 		panels.forEach(PanelAndClient::stopAndRemove);
 		panels.clear();
@@ -59,9 +65,9 @@ public class MixingCoreTestManager {
 
 	public PanelAndClient addPanel(String name) {
 		PortSet ports = portSetPool.getNextPortSet();
-		Panel panel = mixingCore.addPanel(name, LOCALHOST, ports.getPanelToMatrix(), ports.getMatrixToPanel());
+		Panel panel = mixingCore.addPanel(name, MATRIX_HOST, ports.getPanelToMatrix(), ports.getMatrixToPanel());
 		RtpTestClient client = new RtpTestClient(ports, name);
-		PanelAndClient panelAndClient = new PanelAndClient(panel, client);
+		PanelAndClient panelAndClient = new PanelAndClient(panel, client, ports);
 		panels.add(panelAndClient);
 
 		return panelAndClient;
