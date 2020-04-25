@@ -15,6 +15,6 @@ public class GstDebugger {
 	private static int index = 0;
 
 	public static void debugPipeline(String filename, Pipeline pipeline) {
-		pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, (index++) + "-" + filename);
+		pipeline.debugToDotFile(Bin.DebugGraphDetails.SHOW_ALL, String.format("%03d-%s", index++, filename));
 	}
 }

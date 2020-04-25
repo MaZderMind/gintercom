@@ -136,10 +136,11 @@ public class Panel {
 
 	public void remove() {
 		if (removed) {
-			log.info("Panel {} already removed", name);
+			log.warn("Panel {} already removed", name);
 			return;
 		}
 		log.info("Removing Panel {}", name);
+		debugPipeline(String.format("before-remove-panel-%s", name), pipeline);
 
 		log.info("Releasing Tx-Pads");
 		txPads.forEach((group, pad) -> {

@@ -68,11 +68,13 @@ public class Group {
 
 	public void remove() {
 		if (removed) {
-			log.info("Already Removed");
+			log.warn("Group {} already removed", name);
 			return;
 		}
 
 		log.info("Removing Group {}", name);
+		debugPipeline(String.format("before-remove-group-%s", name), pipeline);
+
 		expectSuccess(bin.stop());
 		expectSuccess(pipeline.remove(bin));
 
