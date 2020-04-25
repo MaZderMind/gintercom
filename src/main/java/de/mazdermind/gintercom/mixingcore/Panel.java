@@ -95,7 +95,7 @@ public class Panel {
 		log.info("Created Panel {}", name);
 	}
 
-	private Pad requestSrcPadAndLink(Pad sinkPad) {
+	private GhostPad requestSrcPadAndLink(Pad sinkPad) {
 		Pad teePad = tee.getRequestPad("src_%u");
 		return GstPadBlock.blockAndWait(teePad, () -> {
 			GhostPad ghostPad = new GhostPad(teePad.getName() + "_ghost", teePad);
@@ -105,8 +105,8 @@ public class Panel {
 		});
 	}
 
-	private void releaseSrcPad(Pad pad) {
-		Pad teePad = ((GhostPad) pad).getTarget();
+	private void releaseSrcPad(GhostPad pad) {
+		Pad teePad = pad.getTarget();
 		log.info("blocking for releaseSrcPad {}", pad);
 		GstPadBlock.blockAndWait(teePad, () -> {
 			log.info("blocked for releaseSrcPad {}", pad);
@@ -116,15 +116,15 @@ public class Panel {
 		log.info("after blocking for releaseSrcPad {}", pad);
 	}
 
-	private Pad requestSinkPad() {
+	private GhostPad requestSinkPad() {
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
 		GhostPad ghostPad = new GhostPad(mixerPad.getName() + "_ghost", mixerPad);
 		txBin.addPad(ghostPad);
 		return ghostPad;
 	}
 
-	private void releaseSinkPad(Pad pad) {
-		Pad mixerPad = ((GhostPad) pad).getTarget();
+	private void releaseSinkPad(GhostPad pad) {
+		Pad mixerPad = pad.getTarget();
 		log.info("blocking for releaseSinkPad {}", pad);
 		GstPadBlock.blockAndWait(mixerPad, () -> {
 			log.info("blocked for releaseSinkPad {}", pad);
@@ -144,8 +144,8 @@ public class Panel {
 
 		log.info("Releasing Tx-Pads");
 		txPads.forEach((group, pad) -> {
-			releaseSrcPad(pad.getPeer());
-			group.releaseSinkPad(pad);
+			releaseSrcPad((GhostPad) pad.getPeer());
+			group.releaseSinkPad((GhostPad) pad);
 		});
 		txPads.clear();
 		debugPipeline(String.format("after-releasing-tx-panel-%s", name), pipeline);
@@ -153,8 +153,8 @@ public class Panel {
 		log.info("Releasing Rx-Pads");
 		rxPads.forEach((group, pad) -> {
 			Pad peer = pad.getPeer();
-			group.releaseSrcPad(pad);
-			releaseSinkPad(peer);
+			group.releaseSrcPad((GhostPad) pad);
+			releaseSinkPad((GhostPad) peer);
 		});
 		rxPads.clear();
 		debugPipeline(String.format("after-releasing-rx-panel-%s", name), pipeline);
@@ -185,8 +185,8 @@ public class Panel {
 		log.info("Unlinking Panel {} from Group {} for transmission", name, group.getName());
 
 		Pad pad = txPads.remove(group);
-		releaseSrcPad(pad.getPeer());
-		group.releaseSinkPad(pad);
+		releaseSrcPad((GhostPad) pad.getPeer());
+		group.releaseSinkPad((GhostPad) pad);
 
 		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
 		log.info("Unlinked Panel {} from Group {} for transmission", name, group.getName());
@@ -195,7 +195,7 @@ public class Panel {
 	public void startReceivingFrom(Group group) {
 		log.info("Linking Panel {} to Group {} for receiving", name, group.getName());
 
-		Pad sinkPad = requestSinkPad();
+		GhostPad sinkPad = requestSinkPad();
 		Pad srcPad = group.requestSrcPadAndLink(sinkPad);
 		rxPads.put(group, srcPad);
 
@@ -208,8 +208,8 @@ public class Panel {
 
 		Pad pad = rxPads.remove(group);
 		Pad peer = pad.getPeer();
-		group.releaseSrcPad(pad);
-		releaseSinkPad(peer);
+		group.releaseSrcPad((GhostPad) pad);
+		releaseSinkPad((GhostPad) peer);
 
 		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
 		log.info("Unlinked Panel {} from Group {} for transmission", name, group.getName());

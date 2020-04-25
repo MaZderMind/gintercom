@@ -83,7 +83,7 @@ public class Group {
 		removed = true;
 	}
 
-	Pad requestSrcPadAndLink(Pad sinkPad) {
+	Pad requestSrcPadAndLink(GhostPad sinkPad) {
 		Pad teePad = tee.getRequestPad("src_%u");
 		return GstPadBlock.blockAndWait(teePad, () -> {
 			GhostPad ghostPad = new GhostPad(teePad.getName() + "_ghost", teePad);
@@ -93,8 +93,8 @@ public class Group {
 		});
 	}
 
-	void releaseSrcPad(Pad pad) {
-		Pad teePad = ((GhostPad) pad).getTarget();
+	void releaseSrcPad(GhostPad pad) {
+		Pad teePad = pad.getTarget();
 		log.info("blocking for releaseSrcPad {}", pad);
 		GstPadBlock.blockAndWait(teePad, () -> {
 			log.info("blocked for releaseSrcPad {}", pad);
@@ -104,14 +104,14 @@ public class Group {
 		log.info("after blocking for releaseSrcPad {}", pad);
 	}
 
-	Pad requestSinkPad() {
+	GhostPad requestSinkPad() {
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
 		GhostPad ghostPad = new GhostPad(mixerPad.getName() + "_ghost", mixerPad);
 		bin.addPad(ghostPad);
 		return ghostPad;
 	}
 
-	void releaseSinkPad(Pad pad) {
+	void releaseSinkPad(GhostPad pad) {
 		Pad mixerPad = ((GhostPad) pad).getTarget();
 		log.info("blocking for releaseSinkPad {}", pad);
 		GstPadBlock.blockAndWait(mixerPad, () -> {
