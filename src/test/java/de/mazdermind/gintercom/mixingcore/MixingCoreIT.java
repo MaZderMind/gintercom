@@ -2,7 +2,6 @@ package de.mazdermind.gintercom.mixingcore;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
@@ -295,8 +294,27 @@ public class MixingCoreIT {
 	}
 
 	@Test
-	@Ignore("Not yet implemented") // TODO
 	public void groupCanBeRemovedWhilePanelsAreConnected() {
+		Group group1 = testManager.addGroup("1");
+		Group group2 = testManager.addGroup("2");
 
+		PanelAndClient txPanel = testManager.addPanel("tx");
+		PanelAndClient rxPanel1 = testManager.addPanel("rx1");
+		PanelAndClient rxPanel2 = testManager.addPanel("rx2");
+
+		txPanel.getPanel().startTransmittingTo(group1);
+		txPanel.getPanel().startTransmittingTo(group2);
+
+		rxPanel1.getPanel().startReceivingFrom(group1);
+		rxPanel2.getPanel().startReceivingFrom(group2);
+
+		txPanel.getClient().enableSine(600.);
+		rxPanel1.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+		rxPanel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+
+		group1.remove();
+
+		rxPanel1.getClient().getAudioAnalyser().awaitSilence();
+		rxPanel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
 	}
 }

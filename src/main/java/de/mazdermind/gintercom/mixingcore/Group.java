@@ -3,6 +3,9 @@ package de.mazdermind.gintercom.mixingcore;
 import static de.mazdermind.gintercom.mixingcore.support.GstDebugger.debugPipeline;
 import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectSuccess;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.GhostPad;
@@ -27,6 +30,9 @@ public class Group {
 
 	private final Element tee;
 	private final Element mixer;
+
+	private final Set<Panel> inPanels = new HashSet<>();
+	private final Set<Panel> outPanels = new HashSet<>();
 
 	private boolean removed = false;
 
@@ -75,6 +81,16 @@ public class Group {
 		log.info("Removing Group {}", name);
 		debugPipeline(String.format("before-remove-group-%s", name), pipeline);
 
+		log.info("Asking In-Panels to stop Transmitting");
+		inPanels.forEach(panel -> panel.stopTransmittingTo(this));
+		inPanels.clear();
+		debugPipeline(String.format("after-stop-transmitting-%s", name), pipeline);
+
+		log.info("Asking Out-Panels to stop Receiving");
+		outPanels.forEach(panel -> panel.stopReceivingFrom(this));
+		outPanels.clear();
+		debugPipeline(String.format("after-stop-receiving-%s", name), pipeline);
+
 		expectSuccess(bin.stop());
 		expectSuccess(pipeline.remove(bin));
 
@@ -83,7 +99,9 @@ public class Group {
 		removed = true;
 	}
 
-	Pad requestSrcPadAndLink(GhostPad sinkPad) {
+	Pad requestSrcPadAndLinkFor(GhostPad sinkPad, Panel panel) {
+		outPanels.add(panel);
+
 		Pad teePad = tee.getRequestPad("src_%u");
 		return GstPadBlock.blockAndWait(teePad, () -> {
 			GhostPad ghostPad = new GhostPad(teePad.getName() + "_ghost", teePad);
@@ -93,7 +111,9 @@ public class Group {
 		});
 	}
 
-	void releaseSrcPad(GhostPad pad) {
+	void releaseSrcPadFor(GhostPad pad, Panel panel) {
+		outPanels.remove(panel);
+
 		Pad teePad = pad.getTarget();
 		log.info("blocking for releaseSrcPad {}", pad);
 		GstPadBlock.blockAndWait(teePad, () -> {
@@ -104,15 +124,19 @@ public class Group {
 		log.info("after blocking for releaseSrcPad {}", pad);
 	}
 
-	GhostPad requestSinkPad() {
+	GhostPad requestSinkPadFor(Panel panel) {
+		inPanels.add(panel);
+
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
 		GhostPad ghostPad = new GhostPad(mixerPad.getName() + "_ghost", mixerPad);
 		bin.addPad(ghostPad);
 		return ghostPad;
 	}
 
-	void releaseSinkPad(GhostPad pad) {
-		Pad mixerPad = ((GhostPad) pad).getTarget();
+	void releaseSinkPadFor(GhostPad pad, Panel panel) {
+		inPanels.remove(panel);
+
+		Pad mixerPad = pad.getTarget();
 		log.info("blocking for releaseSinkPad {}", pad);
 		GstPadBlock.blockAndWait(mixerPad, () -> {
 			log.info("blocked for releaseSinkPad {}", pad);

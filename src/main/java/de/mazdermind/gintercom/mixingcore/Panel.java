@@ -145,7 +145,7 @@ public class Panel {
 		log.info("Releasing Tx-Pads");
 		txPads.forEach((group, pad) -> {
 			releaseSrcPad((GhostPad) pad.getPeer());
-			group.releaseSinkPad((GhostPad) pad);
+			group.releaseSinkPadFor((GhostPad) pad, this);
 		});
 		txPads.clear();
 		debugPipeline(String.format("after-releasing-tx-panel-%s", name), pipeline);
@@ -153,7 +153,7 @@ public class Panel {
 		log.info("Releasing Rx-Pads");
 		rxPads.forEach((group, pad) -> {
 			Pad peer = pad.getPeer();
-			group.releaseSrcPad((GhostPad) pad);
+			group.releaseSrcPadFor((GhostPad) pad, this);
 			releaseSinkPad((GhostPad) peer);
 		});
 		rxPads.clear();
@@ -173,7 +173,7 @@ public class Panel {
 	public void startTransmittingTo(Group group) {
 		log.info("Linking Panel {} to Group {} for transmission", name, group.getName());
 
-		Pad sinkPad = group.requestSinkPad();
+		Pad sinkPad = group.requestSinkPadFor(this);
 		requestSrcPadAndLink(sinkPad);
 		txPads.put(group, sinkPad);
 
@@ -186,7 +186,7 @@ public class Panel {
 
 		Pad pad = txPads.remove(group);
 		releaseSrcPad((GhostPad) pad.getPeer());
-		group.releaseSinkPad((GhostPad) pad);
+		group.releaseSinkPadFor((GhostPad) pad, this);
 
 		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
 		log.info("Unlinked Panel {} from Group {} for transmission", name, group.getName());
@@ -196,7 +196,7 @@ public class Panel {
 		log.info("Linking Panel {} to Group {} for receiving", name, group.getName());
 
 		GhostPad sinkPad = requestSinkPad();
-		Pad srcPad = group.requestSrcPadAndLink(sinkPad);
+		Pad srcPad = group.requestSrcPadAndLinkFor(sinkPad, this);
 		rxPads.put(group, srcPad);
 
 		debugPipeline(String.format("after-link-group-%s-to-panel-%s", group.getName(), name), pipeline);
@@ -208,7 +208,7 @@ public class Panel {
 
 		Pad pad = rxPads.remove(group);
 		Pad peer = pad.getPeer();
-		group.releaseSrcPad((GhostPad) pad);
+		group.releaseSrcPadFor((GhostPad) pad, this);
 		releaseSinkPad((GhostPad) peer);
 
 		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
