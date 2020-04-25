@@ -14,14 +14,12 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mazdermind.gintercom.mixingcore.exception.InvalidOperationException;
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
 import de.mazdermind.gintercom.mixingcore.support.GstPadBlock;
 
 public class Panel {
 	private static final Logger log = LoggerFactory.getLogger(Panel.class);
-
-	private static final int WAVE_SILENCE = 4;
-	private static final int START_TIME_FIRST = 1;
 
 	private final String name;
 
@@ -34,8 +32,6 @@ public class Panel {
 
 	private final Map<Group, Pad> txPads = new HashMap<>();
 	private final Map<Group, Pad> rxPads = new HashMap<>();
-
-	private boolean removed = false;
 
 	Panel(Pipeline pipeline, String name, String panelHost, int panelToMatrixPort, int matrixToPanelPort) {
 		log.info("Creating Panel {}", name);
@@ -95,6 +91,10 @@ public class Panel {
 		log.info("Created Panel {}", name);
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	private GhostPad requestSrcPadAndLink(Pad sinkPad) {
 		Pad teePad = tee.getRequestPad("src_%u");
 		return GstPadBlock.blockAndWait(teePad, () -> {
@@ -134,11 +134,7 @@ public class Panel {
 		log.info("after blocking for releaseSinkPad {}", pad);
 	}
 
-	public void remove() {
-		if (removed) {
-			log.warn("Panel {} already removed", name);
-			return;
-		}
+	void remove() {
 		log.info("Removing Panel {}", name);
 		debugPipeline(String.format("before-remove-panel-%s", name), pipeline);
 
@@ -167,7 +163,6 @@ public class Panel {
 		debugPipeline(String.format("after-remove-panel-%s", name), pipeline);
 
 		log.info("Removed Panel {}", name);
-		removed = true;
 	}
 
 	public void startTransmittingTo(Group group) {
@@ -185,6 +180,11 @@ public class Panel {
 		log.info("Unlinking Panel {} from Group {} for transmission", name, group.getName());
 
 		Pad pad = txPads.remove(group);
+		if (pad == null) {
+			throw new InvalidOperationException(String.format(
+				"Panel %s not linked to Group %s for transmission", name, group.getName()));
+		}
+
 		releaseSrcPad((GhostPad) pad.getPeer());
 		group.releaseSinkPadFor((GhostPad) pad, this);
 
@@ -207,11 +207,16 @@ public class Panel {
 		log.info("Unlinking Panel {} from Group {} for receiving", name, group.getName());
 
 		Pad pad = rxPads.remove(group);
+		if (pad == null) {
+			throw new InvalidOperationException(String.format(
+				"Panel %s not linked from Group %s for receiving", name, group.getName()));
+		}
+
 		Pad peer = pad.getPeer();
 		group.releaseSrcPadFor((GhostPad) pad, this);
 		releaseSinkPad((GhostPad) peer);
 
 		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
-		log.info("Unlinked Panel {} from Group {} for transmission", name, group.getName());
+		log.info("Unlinked Panel {} from Group {} for receiving", name, group.getName());
 	}
 }

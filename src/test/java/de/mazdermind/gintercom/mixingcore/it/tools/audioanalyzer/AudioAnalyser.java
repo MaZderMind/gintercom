@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.tools.audioanalyzer;
+package de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mazdermind.gintercom.mixingcore.tools.peakdetector.PeakDetector;
-import de.mazdermind.gintercom.mixingcore.tools.peakdetector.PeakSet;
+import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.PeakDetector;
+import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.PeakSet;
 
 public class AudioAnalyser {
 	public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);

@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.tools.audioanalyzer;
+package de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer;
 
 class AudioAnalyserException extends RuntimeException {
 	public AudioAnalyserException(String message) {

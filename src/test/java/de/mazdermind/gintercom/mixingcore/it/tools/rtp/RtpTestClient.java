@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.tools.rtp;
+package de.mazdermind.gintercom.mixingcore.it.tools.rtp;
 
 import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectSuccess;
 
@@ -15,12 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.mixingcore.StaticCaps;
-import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
 import de.mazdermind.gintercom.mixingcore.support.GstDebugger;
+import de.mazdermind.gintercom.mixingcore.support.GstErrorCheck;
 import de.mazdermind.gintercom.mixingcore.support.GstException;
-import de.mazdermind.gintercom.mixingcore.tools.audioanalyzer.AudioAnalyser;
-import de.mazdermind.gintercom.mixingcore.tools.peakdetector.AppSinkSupport;
+import de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer.AudioAnalyser;
+import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.AppSinkSupport;
 
 public class RtpTestClient {
 	private static final Logger log = LoggerFactory.getLogger(RtpTestClient.class);
@@ -114,7 +115,7 @@ public class RtpTestClient {
 		installAudioAnalyzer();
 
 		log.info("{}: starting pipeline", panelId);
-		expectSuccess(pipeline.play());
+		GstErrorCheck.expectSuccess(pipeline.play());
 		GstDebugger.debugPipeline(String.format("rtp-test-client-%s", panelId), pipeline);
 		log.info("{}: successfully started pipeline", panelId);
 

@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.portpool;
+package de.mazdermind.gintercom.mixingcore.it.portpool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

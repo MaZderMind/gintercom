@@ -1,11 +1,12 @@
-package de.mazdermind.gintercom.mixingcore;
+package de.mazdermind.gintercom.mixingcore.it;
 
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-import de.mazdermind.gintercom.mixingcore.tools.IntegrationTestBase;
-import de.mazdermind.gintercom.mixingcore.tools.PanelAndClient;
+import de.mazdermind.gintercom.mixingcore.Group;
+import de.mazdermind.gintercom.mixingcore.it.tools.IntegrationTestBase;
+import de.mazdermind.gintercom.mixingcore.it.tools.PanelAndClient;
 
 public class MixingIT extends IntegrationTestBase {
 	/**
@@ -298,7 +299,7 @@ public class MixingIT extends IntegrationTestBase {
 		rxPanel1.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
 		rxPanel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
 
-		group1.remove();
+		testManager.getMixingCore().removeGroup(group1);
 
 		rxPanel1.getClient().getAudioAnalyser().awaitSilence();
 		rxPanel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));

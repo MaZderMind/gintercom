@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.tools.peakdetector;
+package de.mazdermind.gintercom.mixingcore.it.tools.peakdetector;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

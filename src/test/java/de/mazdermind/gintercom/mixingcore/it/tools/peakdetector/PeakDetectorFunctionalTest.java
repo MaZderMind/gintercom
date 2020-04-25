@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.tools.peakdetector;
+package de.mazdermind.gintercom.mixingcore.it.tools.peakdetector;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.portpool;
+package de.mazdermind.gintercom.mixingcore.it.portpool;
 
 public class PortPoolConfig {
 	private Integer start;

@@ -1,13 +1,15 @@
-package de.mazdermind.gintercom.mixingcore;
+package de.mazdermind.gintercom.mixingcore.it;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
-import de.mazdermind.gintercom.mixingcore.tools.IntegrationTestBase;
-import de.mazdermind.gintercom.mixingcore.tools.MixingCoreTestManager;
-import de.mazdermind.gintercom.mixingcore.tools.rtp.RtpTestClient;
+import de.mazdermind.gintercom.mixingcore.MixingCore;
+import de.mazdermind.gintercom.mixingcore.Panel;
+import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.it.tools.IntegrationTestBase;
+import de.mazdermind.gintercom.mixingcore.it.tools.MixingCoreTestManager;
+import de.mazdermind.gintercom.mixingcore.it.tools.rtp.RtpTestClient;
 
 public class DataTransmissionIT extends IntegrationTestBase {
 	private static final String PANEL_ID = "data";
@@ -15,10 +17,12 @@ public class DataTransmissionIT extends IntegrationTestBase {
 	private RtpTestClient client;
 	private PortSet ports;
 	private Panel panel;
+	private MixingCore mixingCore;
 
 	@Before
 	public void setupPanel() {
 		ports = testManager.getPortSetPool().getNextPortSet();
+		mixingCore = testManager.getMixingCore();
 		client = new RtpTestClient(ports, PANEL_ID);
 	}
 
@@ -29,7 +33,7 @@ public class DataTransmissionIT extends IntegrationTestBase {
 		}
 
 		if (panel != null) {
-			panel.remove();
+			mixingCore.removePanel(panel);
 		}
 	}
 
@@ -60,7 +64,7 @@ public class DataTransmissionIT extends IntegrationTestBase {
 
 		client.getAudioAnalyser().awaitData();
 
-		panel.remove();
+		mixingCore.removePanel(panel);
 		panel = null;
 
 		client.getAudioAnalyser().awaitNoData();
@@ -76,7 +80,7 @@ public class DataTransmissionIT extends IntegrationTestBase {
 
 		client.getAudioAnalyser().awaitData();
 
-		panel.remove();
+		mixingCore.removePanel(panel);
 		panel = null;
 
 		client.getAudioAnalyser().awaitNoData();

@@ -1,9 +1,7 @@
-package de.mazdermind.gintercom.mixingcore.tools;
+package de.mazdermind.gintercom.mixingcore.it.tools;
 
 import org.junit.After;
 import org.junit.Before;
-
-import de.mazdermind.gintercom.mixingcore.tools.MixingCoreTestManager;
 
 public abstract class IntegrationTestBase {
 	protected MixingCoreTestManager testManager;

@@ -31,8 +31,6 @@ public class Group {
 	private final Set<Panel> inPanels = new HashSet<>();
 	private final Set<Panel> outPanels = new HashSet<>();
 
-	private boolean removed = false;
-
 	Group(Pipeline pipeline, String name) {
 		log.info("Creating Group {}", name);
 
@@ -69,12 +67,7 @@ public class Group {
 		return name;
 	}
 
-	public void remove() {
-		if (removed) {
-			log.warn("Group {} already removed", name);
-			return;
-		}
-
+	void remove() {
 		log.info("Removing Group {}", name);
 		debugPipeline(String.format("before-remove-group-%s", name), pipeline);
 
@@ -93,7 +86,6 @@ public class Group {
 
 		debugPipeline(String.format("after-remove-group-%s", name), pipeline);
 		log.info("Removed Group {}", name);
-		removed = true;
 	}
 
 	Pad requestSrcPadAndLinkFor(GhostPad sinkPad, Panel panel) {

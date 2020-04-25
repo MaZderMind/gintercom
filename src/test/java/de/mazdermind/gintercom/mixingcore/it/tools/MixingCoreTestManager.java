@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.tools;
+package de.mazdermind.gintercom.mixingcore.it.tools;
 
 import java.util.ArrayList;
 
@@ -7,10 +7,10 @@ import org.freedesktop.gstreamer.Gst;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import de.mazdermind.gintercom.mixingcore.Panel;
-import de.mazdermind.gintercom.mixingcore.portpool.PortPoolConfig;
-import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
-import de.mazdermind.gintercom.mixingcore.portpool.PortSetPool;
-import de.mazdermind.gintercom.mixingcore.tools.rtp.RtpTestClient;
+import de.mazdermind.gintercom.mixingcore.it.portpool.PortPoolConfig;
+import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.it.portpool.PortSetPool;
+import de.mazdermind.gintercom.mixingcore.it.tools.rtp.RtpTestClient;
 
 public class MixingCoreTestManager {
 	public static final String MATRIX_HOST = "127.0.0.1";
@@ -52,7 +52,11 @@ public class MixingCoreTestManager {
 	public void cleanup() {
 		panels.forEach(PanelAndClient::stopAndRemove);
 		panels.clear();
-		groups.forEach(Group::remove);
+		groups.forEach(group -> {
+			if (mixingCore.hasGroup(group)) {
+				mixingCore.removeGroup(group);
+			}
+		});
 		groups.clear();
 	}
 
@@ -67,7 +71,7 @@ public class MixingCoreTestManager {
 		PortSet ports = portSetPool.getNextPortSet();
 		Panel panel = mixingCore.addPanel(name, MATRIX_HOST, ports.getPanelToMatrix(), ports.getMatrixToPanel());
 		RtpTestClient client = new RtpTestClient(ports, name);
-		PanelAndClient panelAndClient = new PanelAndClient(panel, client, ports);
+		PanelAndClient panelAndClient = new PanelAndClient(mixingCore, panel, client, ports);
 		panels.add(panelAndClient);
 
 		return panelAndClient;
