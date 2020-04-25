@@ -18,14 +18,16 @@ import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.AppSinkSupport;
 public class AudioAnalyserFunctionalTest {
 	public static Duration SHORT_TIMEOUT = Duration.ofMillis(500);
 
+	static {
+		Gst.init();
+	}
+
 	private AudioAnalyser audioAnalyser;
 	private Pipeline pipeline;
 	private Element src;
 
 	@Before
 	public void init() {
-		Gst.init();
-
 		audioAnalyser = new AudioAnalyser(48000, null);
 		pipeline = (Pipeline) Gst.parseLaunch("" +
 			"audiotestsrc is-live=true wave=sine name=src volume=0.2 ! " +
