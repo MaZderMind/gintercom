@@ -1,7 +1,5 @@
 package de.mazdermind.gintercom.mixingcore.it.tools.rtp;
 
-import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectSuccess;
-
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Element;
@@ -14,14 +12,15 @@ import org.freedesktop.gstreamer.elements.AppSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mazdermind.gintercom.mixingcore.Constants;
 import de.mazdermind.gintercom.mixingcore.StaticCaps;
 import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer.AudioAnalyser;
+import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.AppSinkSupport;
 import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
 import de.mazdermind.gintercom.mixingcore.support.GstDebugger;
 import de.mazdermind.gintercom.mixingcore.support.GstErrorCheck;
 import de.mazdermind.gintercom.mixingcore.support.GstException;
-import de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer.AudioAnalyser;
-import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.AppSinkSupport;
 
 public class RtpTestClient {
 	private static final Logger log = LoggerFactory.getLogger(RtpTestClient.class);
@@ -78,10 +77,12 @@ public class RtpTestClient {
 				.addElement("audiotestsrc", TESTSRC_NAME)
 					.withProperty("is-live", true)
 					.withProperty("volume", 0.0)
+					.withProperty("samplesperbuffer", Constants.SAMPLES_PER_BUFFER)
 				.withCaps(StaticCaps.AUDIO)
 				.linkElement("audioconvert")
 				.withCaps(StaticCaps.AUDIO_BE)
 				.linkElement("rtpL16pay")
+					.withProperty("mtu", Constants.MTU)
 				.withCaps(StaticCaps.RTP)
 				.linkElement("udpsink", "client-udpsink")
 					.withProperty("host", "127.0.0.1")
@@ -97,7 +98,7 @@ public class RtpTestClient {
 					.withProperty("port", portSet.getMatrixToPanel())
 				.withCaps(StaticCaps.RTP)
 				.linkElement("rtpjitterbuffer")
-					.withProperty("latency", 100)
+					.withProperty("latency", Constants.LATENCY_MS)
 				.linkElement("rtpL16depay")
 				.withCaps(StaticCaps.AUDIO_BE)
 				.linkElement("audioconvert")

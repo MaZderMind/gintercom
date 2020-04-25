@@ -48,6 +48,7 @@ public class Group {
 				.withCaps(StaticCaps.AUDIO)
 				.linkElement("audiomixer", mixerName)
 					.withProperty("start-time-selection", "first")
+					.withProperty("output-buffer-duration", Constants.BUFFER_DURATION_NS)
 				.linkElement("tee", teeName)
 					.withProperty("allow-not-linked", true)
 				.build();
