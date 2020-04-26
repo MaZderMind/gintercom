@@ -16,29 +16,14 @@
 	<description>GIntercom Shared Code</description>
 
 	<dependencies>
+		<!-- spring boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.freedesktop.gstreamer</groupId>
-			<artifactId>gst1-java-core</artifactId>
-			<version>1.1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.9.8</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -48,43 +33,58 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-messaging</artifactId>
 		</dependency>
+
+		<!-- gstreamer -->
+		<dependency>
+			<groupId>org.freedesktop.gstreamer</groupId>
+			<artifactId>gst1-java-core</artifactId>
+		</dependency>
+
+		<!-- json de/serializer -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- bean validation -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+
+		<!-- util libraries -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
-			<version>4.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>27.1-jre</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+
+		<!-- test-dependencies -->
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>6.0.16.Final</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.el</artifactId>
-			<version>3.0.0</version>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- test-dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>de.mazdermind.gintercom</groupId>
 			<artifactId>testutils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>

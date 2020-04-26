@@ -16,7 +16,7 @@
 	<description>GIntercom Management and Provisioning System</description>
 
 	<dependencies>
-		<!-- build depencencies -->
+		<!-- spring boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -25,30 +25,17 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mustache</artifactId>
 		</dependency>
+
+		<!-- gstreamer -->
 		<dependency>
 			<groupId>org.freedesktop.gstreamer</groupId>
 			<artifactId>gst1-java-core</artifactId>
-			<version>1.1.0</version>
 		</dependency>
+
+		<!-- json de/serializer -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.9.8</version>
-		</dependency>
-		<dependency>
-			<groupId>com.moandjiezana.toml</groupId>
-			<artifactId>toml4j</artifactId>
-			<version>0.7.2</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-cli</groupId>
-			<artifactId>commons-cli</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
@@ -58,20 +45,34 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 		</dependency>
+
+		<!-- toml parser -->
+		<dependency>
+			<groupId>com.moandjiezana.toml</groupId>
+			<artifactId>toml4j</artifactId>
+		</dependency>
+
+		<!-- util libraries -->
+		<dependency>
+			<groupId>commons-cli</groupId>
+			<artifactId>commons-cli</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
-			<version>3.6.1</version>
 		</dependency>
 
 		<!-- shared project parts -->
 		<dependency>
 			<groupId>de.mazdermind.gintercom</groupId>
 			<artifactId>shared</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-		<!-- dev-dependencies -->
+		<!-- devtools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -87,26 +88,22 @@
 		<dependency>
 			<groupId>com.spotify</groupId>
 			<artifactId>hamcrest-future</artifactId>
-			<version>1.1.4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.mazdermind.gintercom</groupId>
 			<artifactId>testutils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 			<scope>test</scope>
 			<type>test-jar</type>
 		</dependency>
 		<dependency>
 			<groupId>com.oblac</groupId>
 			<artifactId>nomen-est-omen</artifactId>
-			<version>1.2.3</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
-			<version>1.6</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
