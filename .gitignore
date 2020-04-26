@@ -28,3 +28,6 @@
 
 ### VS Code ###
 /.vscode/
+
+### Crash Dumps ###
+/hs_*.log
