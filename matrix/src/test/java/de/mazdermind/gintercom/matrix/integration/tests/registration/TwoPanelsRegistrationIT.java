@@ -10,13 +10,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
-import de.mazdermind.gintercom.matrix.integration.IntegrationWithoutGstreamerPipelineTestBase;
+import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
 import de.mazdermind.gintercom.matrix.integration.TestConfig;
 import de.mazdermind.gintercom.matrix.integration.tools.controlserver.ControlServerTestClient;
 import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
 import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
 
-public class TwoPanelsRegistrationIT extends IntegrationWithoutGstreamerPipelineTestBase {
+public class TwoPanelsRegistrationIT extends IntegrationTestBase {
 	@Autowired
 	private ControlServerTestClient client1;
 

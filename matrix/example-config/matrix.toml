@@ -9,7 +9,7 @@ start=20000
 limit=9999
 
 [ports.matrixToPanel]
-start=40000
+start=10000
 limit=9999
 
 [rtp]

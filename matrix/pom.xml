@@ -71,6 +71,10 @@
 			<groupId>de.mazdermind.gintercom</groupId>
 			<artifactId>shared</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>de.mazdermind.gintercom</groupId>
+			<artifactId>mixing-core</artifactId>
+		</dependency>
 
 		<!-- devtools -->
 		<dependency>
