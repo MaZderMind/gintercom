@@ -8,7 +8,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>de.mazdermind.gintercom</groupId>
-	<artifactId>parent</artifactId>
+	<artifactId>gintercom</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>parent</name>
 	<packaging>pom</packaging>
