@@ -3,6 +3,7 @@ package de.mazdermind.gintercom.mixingcore;
 import static de.mazdermind.gintercom.mixingcore.support.GstDebugger.debugPipeline;
 import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectSuccess;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class Panel {
 	private final Map<Group, Pad> txPads = new HashMap<>();
 	private final Map<Group, Pad> rxPads = new HashMap<>();
 
-	Panel(Pipeline pipeline, String name, String panelHost, int panelToMatrixPort, int matrixToPanelPort) {
+	Panel(Pipeline pipeline, String name, InetAddress panelHost, int panelToMatrixPort, int matrixToPanelPort) {
 		log.info("Creating Panel {}", name);
 		this.name = name;
 		this.pipeline = pipeline;
@@ -73,7 +74,7 @@ public class Panel {
 				.linkElement("rtpL16pay")
 					.withProperty("mtu", Constants.MTU)
 				.linkElement("udpsink")
-					.withProperty("host", panelHost)
+					.withProperty("host", panelHost.getHostAddress())
 					.withProperty("port", matrixToPanelPort)
 					.withProperty("async", false)
 					.withProperty("sync", false)

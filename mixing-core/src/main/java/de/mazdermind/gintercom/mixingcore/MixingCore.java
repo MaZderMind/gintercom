@@ -1,5 +1,6 @@
 package de.mazdermind.gintercom.mixingcore;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class MixingCore {
 		return group;
 	}
 
-	public Panel addPanel(String name, String panelHost, int panelToMatrixPort, int matrixToPanelPort) {
+	public Panel addPanel(String name, InetAddress panelHost, int panelToMatrixPort, int matrixToPanelPort) {
 		if (panels.containsKey(name)) {
 			throw new InvalidOperationException(String.format("Panel %s already registered", name));
 		}

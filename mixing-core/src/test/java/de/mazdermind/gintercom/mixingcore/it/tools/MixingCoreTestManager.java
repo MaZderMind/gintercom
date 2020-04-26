@@ -1,8 +1,8 @@
 package de.mazdermind.gintercom.mixingcore.it.tools;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-
-import org.freedesktop.gstreamer.Gst;
 
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
@@ -13,9 +13,17 @@ import de.mazdermind.gintercom.mixingcore.it.portpool.PortSetPool;
 import de.mazdermind.gintercom.mixingcore.it.tools.rtp.RtpTestClient;
 
 public class MixingCoreTestManager {
-	public static final String MATRIX_HOST = "127.0.0.1";
-
+	public static InetAddress MATRIX_HOST;
 	private static MixingCoreTestManager instance;
+
+	static {
+		try {
+			MATRIX_HOST = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private final PortSetPool portSetPool;
 	private final MixingCore mixingCore;
 	private final ArrayList<PanelAndClient> panels;
