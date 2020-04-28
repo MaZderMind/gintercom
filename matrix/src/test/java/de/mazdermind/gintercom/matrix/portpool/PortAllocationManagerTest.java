@@ -1,8 +1,6 @@
 package de.mazdermind.gintercom.matrix.portpool;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,19 +38,19 @@ public class PortAllocationManagerTest {
 	@Test
 	public void allocatesPorts() {
 		PortSet portSet = portAllocationManager.allocatePortSet(HOST_ID_1);
-		assertThat(portSet.getMatrixToPanel(), is(2000));
-		assertThat(portSet.getPanelToMatrix(), is(3000));
+		assertThat(portSet.getMatrixToPanel()).isEqualTo(2000);
+		assertThat(portSet.getPanelToMatrix()).isEqualTo(3000);
 	}
 
 	@Test
 	public void allocatesNewPortsForNewHostId() {
 		PortSet portSet1 = portAllocationManager.allocatePortSet(HOST_ID_1);
-		assertThat(portSet1.getMatrixToPanel(), is(2000));
-		assertThat(portSet1.getPanelToMatrix(), is(3000));
+		assertThat(portSet1.getMatrixToPanel()).isEqualTo(2000);
+		assertThat(portSet1.getPanelToMatrix()).isEqualTo(3000);
 
 		PortSet portSet2 = portAllocationManager.allocatePortSet(HOST_ID_2);
-		assertThat(portSet2.getMatrixToPanel(), is(2001));
-		assertThat(portSet2.getPanelToMatrix(), is(3001));
+		assertThat(portSet2.getMatrixToPanel()).isEqualTo(2001);
+		assertThat(portSet2.getPanelToMatrix()).isEqualTo(3001);
 	}
 
 	@Test
@@ -63,7 +61,7 @@ public class PortAllocationManagerTest {
 		PortSet portSet1B = portAllocationManager.allocatePortSet(HOST_ID_1);
 		PortSet portSet2B = portAllocationManager.allocatePortSet(HOST_ID_2);
 
-		assertThat(portSet1, equalTo(portSet1B));
-		assertThat(portSet2, equalTo(portSet2B));
+		assertThat(portSet1).isEqualTo(portSet1B);
+		assertThat(portSet2).isEqualTo(portSet2B);
 	}
 }

@@ -1,10 +1,6 @@
 package de.mazdermind.gintercom.debugclient.configuration;
 
-import static com.spotify.hamcrest.optional.OptionalMatchers.emptyOptional;
-import static com.spotify.hamcrest.optional.OptionalMatchers.optionalWithValue;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,11 +37,11 @@ public class CliArgumentsTest {
 	public void parsesEmptyConfig() throws ParseException {
 		cliArguments.parseArgs();
 
-		assertThat(cliArguments.hasManualMatrixAddress(), is(false));
-		assertThat(cliArguments.getMatrixPort(), emptyOptional());
-		assertThat(cliArguments.getMatrixHost(), emptyOptional());
-		assertThat(cliArguments.getButtons(), emptyOptional());
-		assertThat(cliArguments.getHostId(), emptyOptional());
+		assertThat(cliArguments.hasManualMatrixAddress()).isFalse();
+		assertThat(cliArguments.getMatrixPort()).isEmpty();
+		assertThat(cliArguments.getMatrixHost()).isEmpty();
+		assertThat(cliArguments.getButtons()).isEmpty();
+		assertThat(cliArguments.getHostId()).isEmpty();
 	}
 
 	@Test
@@ -53,9 +49,9 @@ public class CliArgumentsTest {
 		sourceArgs = ImmutableList.of("--host", "10.219.42.32", "--port", "9999");
 		cliArguments.parseArgs();
 
-		assertThat(cliArguments.hasManualMatrixAddress(), is(true));
-		assertThat(cliArguments.getMatrixHost(), optionalWithValue(equalTo(InetAddress.getByName("10.219.42.32"))));
-		assertThat(cliArguments.getMatrixPort(), optionalWithValue(equalTo(9999)));
+		assertThat(cliArguments.hasManualMatrixAddress()).isTrue();
+		assertThat(cliArguments.getMatrixHost()).hasValue(InetAddress.getByName("10.219.42.32"));
+		assertThat(cliArguments.getMatrixPort()).hasValue(9999);
 	}
 
 	@Test
@@ -79,7 +75,7 @@ public class CliArgumentsTest {
 		sourceArgs = ImmutableList.of("--host-id", "FOO:BAR");
 		cliArguments.parseArgs();
 
-		assertThat(cliArguments.getHostId(), optionalWithValue(equalTo("FOO:BAR")));
+		assertThat(cliArguments.getHostId()).hasValue("FOO:BAR");
 	}
 
 	@Test
@@ -87,10 +83,8 @@ public class CliArgumentsTest {
 		sourceArgs = ImmutableList.of("--buttons", " 1,2,,3 , X1 ,X2,,Reply ");
 		cliArguments.parseArgs();
 
-		assertThat(cliArguments.getButtons(), optionalWithValue(equalTo(ImmutableList.of(
+		assertThat(cliArguments.getButtons()).hasValue(ImmutableList.of(
 			"1", "2", "3", "X1", "X2", "Reply"
-		))));
-
+		));
 	}
-
 }

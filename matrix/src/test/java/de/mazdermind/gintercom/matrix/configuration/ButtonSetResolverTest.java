@@ -1,7 +1,6 @@
 package de.mazdermind.gintercom.matrix.configuration;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 
@@ -45,7 +44,7 @@ public class ButtonSetResolverTest {
 	@Test
 	public void handlesEmptyButtonList() {
 		Map<String, ButtonConfig> buttons = buttonSetResolver.resolveButtons(new PanelConfig());
-		assertThat(buttons.size(), is(0));
+		assertThat(buttons).hasSize(0);
 	}
 
 	@Test
@@ -54,18 +53,18 @@ public class ButtonSetResolverTest {
 			.setButtons(ImmutableMap.of(
 				"1", new ButtonConfig().setDisplay("Special Button"))
 			));
-		assertThat(buttons.size(), is(1));
-		assertThat(buttons.get("1").getDisplay(), is("Special Button"));
+		assertThat(buttons).hasSize(1);
+		assertThat(buttons.get("1").getDisplay()).isEqualTo("Special Button");
 	}
 
 	@Test
 	public void buttonsetOnlyButtonsAreApplied() {
 		Map<String, ButtonConfig> buttons = buttonSetResolver.resolveButtons(new PanelConfig()
 			.setButtonsets(ImmutableList.of("avCrews")));
-		assertThat(buttons.size(), is(3));
-		assertThat(buttons.get("1").getDisplay(), is("A/V Broadcast"));
-		assertThat(buttons.get("2").getDisplay(), is("Audio"));
-		assertThat(buttons.get("3").getDisplay(), is("Video"));
+		assertThat(buttons).hasSize(3);
+		assertThat(buttons.get("1").getDisplay()).isEqualTo("A/V Broadcast");
+		assertThat(buttons.get("2").getDisplay()).isEqualTo("Audio");
+		assertThat(buttons.get("3").getDisplay()).isEqualTo("Video");
 	}
 
 	@Test
@@ -75,10 +74,10 @@ public class ButtonSetResolverTest {
 			.setButtons(ImmutableMap.of(
 				"1", new ButtonConfig().setDisplay("Special Button"))
 			));
-		assertThat(buttons.size(), is(3));
-		assertThat(buttons.get("1").getDisplay(), is("Special Button"));
-		assertThat(buttons.get("2").getDisplay(), is("Audio"));
-		assertThat(buttons.get("3").getDisplay(), is("Video"));
+		assertThat(buttons).hasSize(3);
+		assertThat(buttons.get("1").getDisplay()).isEqualTo("Special Button");
+		assertThat(buttons.get("2").getDisplay()).isEqualTo("Audio");
+		assertThat(buttons.get("3").getDisplay()).isEqualTo("Video");
 	}
 
 	@Test
@@ -88,10 +87,10 @@ public class ButtonSetResolverTest {
 			.setButtons(ImmutableMap.of(
 				"1", new ButtonConfig().setDisplay("Special Button"))
 			));
-		assertThat(buttons.size(), is(4));
-		assertThat(buttons.get("1").getDisplay(), is("Special Button"));
-		assertThat(buttons.get("2").getDisplay(), is("Audio"));
-		assertThat(buttons.get("3").getDisplay(), is("Backstage"));
-		assertThat(buttons.get("4").getDisplay(), is("Secu"));
+		assertThat(buttons).hasSize(4);
+		assertThat(buttons.get("1").getDisplay()).isEqualTo("Special Button");
+		assertThat(buttons.get("2").getDisplay()).isEqualTo("Audio");
+		assertThat(buttons.get("3").getDisplay()).isEqualTo("Backstage");
+		assertThat(buttons.get("4").getDisplay()).isEqualTo("Secu");
 	}
 }

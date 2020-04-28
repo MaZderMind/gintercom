@@ -1,8 +1,7 @@
 package de.mazdermind.gintercom.matrix.integration.tests.registration;
 
 import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelRegistrationMessageBuilder.randomPanelRegistrationMessageForPanelConfig;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.After;
 import org.junit.Before;
@@ -59,8 +58,8 @@ public class TwoPanelsRegistrationIT extends IntegrationTestBase {
 		ProvisionMessage provisionMessage1 = client1.awaitMessage("/user/provision", ProvisionMessage.class);
 		ProvisionMessage provisionMessage2 = client2.awaitMessage("/user/provision", ProvisionMessage.class);
 
-		assertThat(provisionMessage1.getProvisioningInformation().getDisplay(), is(panelConfig1.getDisplay()));
-		assertThat(provisionMessage2.getProvisioningInformation().getDisplay(), is(panelConfig2.getDisplay()));
+		assertThat(provisionMessage1.getProvisioningInformation().getDisplay()).isEqualTo(panelConfig1.getDisplay());
+		assertThat(provisionMessage2.getProvisioningInformation().getDisplay()).isEqualTo(panelConfig2.getDisplay());
 
 		client1.disconnect();
 		client2.disconnect();

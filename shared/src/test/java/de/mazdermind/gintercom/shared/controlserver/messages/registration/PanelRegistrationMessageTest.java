@@ -1,10 +1,8 @@
 package de.mazdermind.gintercom.shared.controlserver.messages.registration;
 
-import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
+import static de.mazdermind.gintercom.testutils.assertations.IsValidCondition.VALID;
 import static java.util.Collections.emptyList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -38,10 +36,10 @@ public class PanelRegistrationMessageTest {
 	@Test
 	public void serializesCorrectly() {
 		JsonMap json = JsonMapUtils.convertToJson(panelRegistrationMessage);
-		assertThat(json.get("hostId"), is(HOST_ID));
-		assertThat(json.get("clientModel"), is(CLIENT_MODEL));
-		assertThat(json.get("protocolVersion"), is(PROTOCOL_VERSION));
-		assertThat(json.getObject("capabilities").get("buttons"), is(BUTTONS));
+		assertThat(json.get("hostId")).isEqualTo(HOST_ID);
+		assertThat(json.get("clientModel")).isEqualTo(CLIENT_MODEL);
+		assertThat(json.get("protocolVersion")).isEqualTo(PROTOCOL_VERSION);
+		assertThat(json.getObject("capabilities").get("buttons")).isEqualTo(BUTTONS);
 	}
 
 	@Test
@@ -49,45 +47,45 @@ public class PanelRegistrationMessageTest {
 		JsonMap json = JsonMapUtils.convertToJson(this.panelRegistrationMessage);
 		PanelRegistrationMessage panelRegistrationMessage = JsonMapUtils.convertJsonTo(PanelRegistrationMessage.class, json);
 
-		assertThat(panelRegistrationMessage.getHostId(), is(HOST_ID));
-		assertThat(panelRegistrationMessage.getClientModel(), is(CLIENT_MODEL));
-		assertThat(panelRegistrationMessage.getProtocolVersion(), is(PROTOCOL_VERSION));
-		assertThat(panelRegistrationMessage.getCapabilities().getButtons(), is(BUTTONS));
+		assertThat(panelRegistrationMessage.getHostId()).isEqualTo(HOST_ID);
+		assertThat(panelRegistrationMessage.getClientModel()).isEqualTo(CLIENT_MODEL);
+		assertThat(panelRegistrationMessage.getProtocolVersion()).isEqualTo(PROTOCOL_VERSION);
+		assertThat(panelRegistrationMessage.getCapabilities().getButtons()).isEqualTo(BUTTONS);
 	}
 
 	@Test
 	public void messageValidates() {
-		assertThat(panelRegistrationMessage, validates());
+		assertThat(panelRegistrationMessage).is(VALID);
 	}
 
 	@Test
 	public void failsValidationWithoutHostId() {
 		panelRegistrationMessage.setHostId(null);
-		assertThat(panelRegistrationMessage, not(validates()));
+		assertThat(panelRegistrationMessage).isNot(VALID);
 	}
 
 	@Test
 	public void failsValidationWithoutProtocolVersion() {
 		panelRegistrationMessage.setProtocolVersion(null);
-		assertThat(panelRegistrationMessage, not(validates()));
+		assertThat(panelRegistrationMessage).isNot(VALID);
 
 	}
 
 	@Test
 	public void failsValidationWithoutClientModel() {
 		panelRegistrationMessage.setClientModel(null);
-		assertThat(panelRegistrationMessage, not(validates()));
+		assertThat(panelRegistrationMessage).isNot(VALID);
 	}
 
 	@Test
 	public void failsValidationWithoutCapabilities() {
 		panelRegistrationMessage.setCapabilities(null);
-		assertThat(panelRegistrationMessage, not(validates()));
+		assertThat(panelRegistrationMessage).isNot(VALID);
 	}
 
 	@Test
 	public void failsValidationWithoutButtons() {
 		panelRegistrationMessage.getCapabilities().setButtons(emptyList());
-		assertThat(panelRegistrationMessage, not(validates()));
+		assertThat(panelRegistrationMessage).isNot(VALID);
 	}
 }

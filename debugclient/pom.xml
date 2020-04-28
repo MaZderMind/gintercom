@@ -89,11 +89,6 @@
 			<artifactId>system-rules</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.spotify</groupId>
-			<artifactId>hamcrest-optional</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>

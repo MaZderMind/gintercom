@@ -1,9 +1,7 @@
 package de.mazdermind.gintercom.matrix.integration.tests.registration;
 
 import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelRegistrationMessageBuilder.randomPanelRegistrationMessage;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,7 +38,7 @@ public class UnknownPanelRegistrationIT extends IntegrationTestBase {
 		client.connect();
 		client.send("/registration", panelRegistrationMessage);
 
-		assertThat(client.awaitMessages(), is(empty()));
+		assertThat(client.awaitMessages()).isEmpty();
 
 		client.disconnect();
 	}

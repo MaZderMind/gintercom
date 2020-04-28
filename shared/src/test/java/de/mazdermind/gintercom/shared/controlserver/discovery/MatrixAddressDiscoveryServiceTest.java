@@ -1,9 +1,7 @@
 package de.mazdermind.gintercom.shared.controlserver.discovery;
 
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.net.InetAddress;
@@ -37,10 +35,10 @@ public class MatrixAddressDiscoveryServiceTest {
 		MatrixAddressDiscoveryService discoveryService = new MatrixAddressDiscoveryService(
 			ImmutableList.of(impl1, impl2), Optional.empty());
 
-		assertThat(discoveryService.getNextImplementation(), is(impl1));
-		assertThat(discoveryService.getNextImplementation(), is(impl2));
-		assertThat(discoveryService.getNextImplementation(), is(impl1));
-		assertThat(discoveryService.getNextImplementation(), is(impl2));
+		assertThat(discoveryService.getNextImplementation()).isSameAs(impl1);
+		assertThat(discoveryService.getNextImplementation()).isSameAs(impl2);
+		assertThat(discoveryService.getNextImplementation()).isSameAs(impl1);
+		assertThat(discoveryService.getNextImplementation()).isSameAs(impl2);
 	}
 
 	@Test
@@ -48,9 +46,9 @@ public class MatrixAddressDiscoveryServiceTest {
 		MatrixAddressDiscoveryService discoveryService = new MatrixAddressDiscoveryService(
 			ImmutableList.of(impl1), Optional.empty());
 
-		assertThat(discoveryService.getNextImplementation(), is(impl1));
-		assertThat(discoveryService.getNextImplementation(), is(impl1));
-		assertThat(discoveryService.getNextImplementation(), is(impl1));
+		assertThat(discoveryService.getNextImplementation()).isSameAs(impl1);
+		assertThat(discoveryService.getNextImplementation()).isSameAs(impl1);
+		assertThat(discoveryService.getNextImplementation()).isSameAs(impl1);
 	}
 
 	@Test(expected = AssertionError.class)
@@ -59,20 +57,19 @@ public class MatrixAddressDiscoveryServiceTest {
 	}
 
 	@Test
-	@SuppressWarnings("OptionalGetWithoutIsPresent")
 	public void onlyUsesManualConfigurationIfAvailable() {
 		MatrixAddressDiscoveryService discoveryService = new MatrixAddressDiscoveryService(
 			ImmutableList.of(impl1, impl2), Optional.of(manualConfig));
 
-		assertThat(discoveryService.getNextImplementation(), instanceOf(ManualMatrixAddressConfigurationDiscoveryService.class));
-		assertThat(discoveryService.getNextImplementation(), instanceOf(ManualMatrixAddressConfigurationDiscoveryService.class));
-		assertThat(discoveryService.getNextImplementation(), instanceOf(ManualMatrixAddressConfigurationDiscoveryService.class));
+		assertThat(discoveryService.getNextImplementation()).isInstanceOf(ManualMatrixAddressConfigurationDiscoveryService.class);
+		assertThat(discoveryService.getNextImplementation()).isInstanceOf(ManualMatrixAddressConfigurationDiscoveryService.class);
+		assertThat(discoveryService.getNextImplementation()).isInstanceOf(ManualMatrixAddressConfigurationDiscoveryService.class);
 
 		MatrixAddressDiscoveryServiceImplementation nextImplementation = discoveryService.getNextImplementation();
 
 		Optional<MatrixAddressDiscoveryServiceResult> discoveryResult = nextImplementation.tryDiscovery();
-		assertThat(discoveryResult.isPresent(), is(true));
-		assertThat(discoveryResult.get().getAddress(), is(manualConfig.getAddress()));
-		assertThat(discoveryResult.get().getPort(), is(manualConfig.getPort()));
+		assertThat(discoveryResult.isPresent()).isTrue();
+		assertThat(discoveryResult.get().getAddress()).isEqualTo(manualConfig.getAddress());
+		assertThat(discoveryResult.get().getPort()).isEqualTo(manualConfig.getPort());
 	}
 }

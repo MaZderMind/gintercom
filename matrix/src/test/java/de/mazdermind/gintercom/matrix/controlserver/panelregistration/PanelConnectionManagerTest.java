@@ -1,10 +1,6 @@
 package de.mazdermind.gintercom.matrix.controlserver.panelregistration;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -34,9 +30,9 @@ public class PanelConnectionManagerTest {
 
 	@Test
 	public void returnsExpectedValuesWhenUnregistered() {
-		assertThat(panelConnectionManager.getHostIdForSessionId(SESSION_ID), nullValue());
-		assertThat(panelConnectionManager.getSessionIdForHostId(HOST_ID), nullValue());
-		assertThat(panelConnectionManager.isHostIdAlreadyRegistered(HOST_ID), is(false));
+		assertThat(panelConnectionManager.getHostIdForSessionId(SESSION_ID)).isNull();
+		assertThat(panelConnectionManager.getSessionIdForHostId(HOST_ID)).isNull();
+		assertThat(panelConnectionManager.isHostIdAlreadyRegistered(HOST_ID)).isFalse();
 	}
 
 	@Test
@@ -44,13 +40,13 @@ public class PanelConnectionManagerTest {
 		panelConnectionManager.registerPanelConnection(SESSION_ID, connectionInformation);
 
 		PanelConnectionInformation hostIdForSessionId = panelConnectionManager.getHostIdForSessionId(SESSION_ID);
-		assertThat(hostIdForSessionId, notNullValue());
-		assertThat(hostIdForSessionId.getHostId(), is(HOST_ID));
-		assertThat(hostIdForSessionId.getRemoteIp().getHostAddress(), equalTo(HOST_ADDRESS));
-		assertThat(hostIdForSessionId.getConnectionTime(), equalTo(CONNECTION_TIME));
+		assertThat(hostIdForSessionId).isNotNull();
+		assertThat(hostIdForSessionId.getHostId()).isEqualTo(HOST_ID);
+		assertThat(hostIdForSessionId.getRemoteIp().getHostAddress()).isEqualTo(HOST_ADDRESS);
+		assertThat(hostIdForSessionId.getConnectionTime()).isEqualTo(CONNECTION_TIME);
 
-		assertThat(panelConnectionManager.getSessionIdForHostId(HOST_ID), is(SESSION_ID));
-		assertThat(panelConnectionManager.isHostIdAlreadyRegistered(HOST_ID), is(true));
+		assertThat(panelConnectionManager.getSessionIdForHostId(HOST_ID)).isEqualTo(SESSION_ID);
+		assertThat(panelConnectionManager.isHostIdAlreadyRegistered(HOST_ID)).isTrue();
 	}
 
 	@Test
@@ -58,9 +54,9 @@ public class PanelConnectionManagerTest {
 		panelConnectionManager.registerPanelConnection(SESSION_ID, connectionInformation);
 		panelConnectionManager.deregisterPanelConnection(SESSION_ID);
 
-		assertThat(panelConnectionManager.getHostIdForSessionId(SESSION_ID), nullValue());
-		assertThat(panelConnectionManager.getSessionIdForHostId(HOST_ID), nullValue());
-		assertThat(panelConnectionManager.isHostIdAlreadyRegistered(HOST_ID), is(false));
+		assertThat(panelConnectionManager.getHostIdForSessionId(SESSION_ID)).isNull();
+		assertThat(panelConnectionManager.getSessionIdForHostId(HOST_ID)).isNull();
+		assertThat(panelConnectionManager.isHostIdAlreadyRegistered(HOST_ID)).isFalse();
 	}
 
 	@Test(expected = IllegalArgumentException.class)

@@ -1,7 +1,6 @@
 package de.mazdermind.gintercom.matrix.integration.tools.controlserver;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -168,7 +167,7 @@ public class ControlServerTestClient {
 
 	/**
 	 * Wait 1 Second for Messages and return the received Messages.
-	 * If you expect a specific message, better use {@link #awaitMessage(String, Duration)} or
+	 * If you expect a specific message, better use {@link #awaitMessage(String, Class, Duration)} or
 	 * {@link #awaitMessage(String, Class, Duration)}, because the will return as soon as such a message
 	 * has been received.
 	 * <p>
@@ -183,7 +182,7 @@ public class ControlServerTestClient {
 
 	/**
 	 * Wait {@param duration} for Messages and return the received Messages.
-	 * If you expect a specific message, better use {@link #awaitMessage(String, Duration)} or
+	 * If you expect a specific message, better use {@link #awaitMessage(String, Class, Duration)} or
 	 * {@link #awaitMessage(String, Class, Duration)}, because the will return as soon as such a message
 	 * has been received.
 	 * <p>
@@ -228,13 +227,13 @@ public class ControlServerTestClient {
 
 	private void assertNoOtherMessages() {
 		if (sessionHandler != null) {
-			assertThat(sessionHandler.getMessages(), empty());
+			assertThat(sessionHandler.getMessages()).isEmpty();
 		}
 	}
 
 	private void assertNoErrors() {
 		if (sessionHandler != null) {
-			assertThat(sessionHandler.getErrors(), empty());
+			assertThat(sessionHandler.getErrors()).isEmpty();
 		}
 	}
 }

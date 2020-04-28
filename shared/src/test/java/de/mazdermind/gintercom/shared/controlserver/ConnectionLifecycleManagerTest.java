@@ -1,7 +1,6 @@
 package de.mazdermind.gintercom.shared.controlserver;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -86,7 +85,7 @@ public class ConnectionLifecycleManagerTest {
 
 	@Test
 	public void initialLifecycleIsStarting() {
-		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.STARTING));
+		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.STARTING);
 	}
 
 	@Test
@@ -102,7 +101,7 @@ public class ConnectionLifecycleManagerTest {
 	@Test
 	public void lifecycleIsDiscovertyAfterStartup() {
 		connectionLifecycleManager.initiateDiscovery();
-		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.DISCOVERY));
+		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.DISCOVERY);
 	}
 
 	@Test
@@ -117,7 +116,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.discoveryTryNext();
 		ArgumentCaptor<AddressDiscoveryEvent> captor = ArgumentCaptor.forClass(AddressDiscoveryEvent.class);
 		verify(connectionLifecycleEventMulticaster, times(1)).dispatch(captor.capture());
-		assertThat(captor.getValue().getImplementationName(), is("Test-Discovery-Method"));
+		assertThat(captor.getValue().getImplementationName()).isEqualTo("Test-Discovery-Method");
 	}
 
 	@Test
@@ -154,7 +153,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
 
-		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.DISCOVERY));
+		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.DISCOVERY);
 	}
 
 	@Test
@@ -163,7 +162,7 @@ public class ConnectionLifecycleManagerTest {
 
 		when(controlServerClient.connect(successfulDiscovery.getAddress(), successfulDiscovery.getPort()))
 			.then((Answer<Optional<StompSession>>) invocation -> {
-				assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.CONNECTING));
+				assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.CONNECTING);
 				return Optional.empty();
 			});
 
@@ -180,8 +179,8 @@ public class ConnectionLifecycleManagerTest {
 
 		ArgumentCaptor<ConnectingEvent> captor = ArgumentCaptor.forClass(ConnectingEvent.class);
 		verify(connectionLifecycleEventMulticaster, times(1)).dispatch(captor.capture());
-		assertThat(captor.getValue().getAddress(), is(successfulDiscovery.getAddress()));
-		assertThat(captor.getValue().getPort(), is(successfulDiscovery.getPort()));
+		assertThat(captor.getValue().getAddress()).isEqualTo(successfulDiscovery.getAddress());
+		assertThat(captor.getValue().getPort()).isEqualTo(successfulDiscovery.getPort());
 	}
 
 	@Test
@@ -194,10 +193,10 @@ public class ConnectionLifecycleManagerTest {
 		ArgumentCaptor<PanelRegistrationMessage> captor = ArgumentCaptor.forClass(PanelRegistrationMessage.class);
 		verify(stompSession).send(eq("/registration"), captor.capture());
 		PanelRegistrationMessage panelRegistrationMessage = captor.getValue();
-		assertThat(panelRegistrationMessage.getHostId(), is(TestClientConfiguration.HOST_ID));
-		assertThat(panelRegistrationMessage.getClientModel(), is(TestClientConfiguration.CLIENT_MODEL));
-		assertThat(panelRegistrationMessage.getProtocolVersion(), is(TestClientConfiguration.PROTOCOL_VERSION));
-		assertThat(panelRegistrationMessage.getCapabilities().getButtons(), is(TestClientConfiguration.BUTTONS));
+		assertThat(panelRegistrationMessage.getHostId()).isEqualTo(TestClientConfiguration.HOST_ID);
+		assertThat(panelRegistrationMessage.getClientModel()).isEqualTo(TestClientConfiguration.CLIENT_MODEL);
+		assertThat(panelRegistrationMessage.getProtocolVersion()).isEqualTo(TestClientConfiguration.PROTOCOL_VERSION);
+		assertThat(panelRegistrationMessage.getCapabilities().getButtons()).isEqualTo(TestClientConfiguration.BUTTONS);
 	}
 
 	@Test
@@ -209,7 +208,7 @@ public class ConnectionLifecycleManagerTest {
 
 		ArgumentCaptor<AwaitingProvisioningEvent> captor = ArgumentCaptor.forClass(AwaitingProvisioningEvent.class);
 		verify(connectionLifecycleEventMulticaster).dispatch(captor.capture());
-		assertThat(captor.getValue().getHostId(), is(TestClientConfiguration.HOST_ID));
+		assertThat(captor.getValue().getHostId()).isEqualTo(TestClientConfiguration.HOST_ID);
 	}
 
 	@Test
@@ -219,7 +218,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
 
-		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.PROVISIONING));
+		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.PROVISIONING);
 	}
 
 	@Test
@@ -230,7 +229,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.discoveryTryNext();
 		connectionLifecycleManager.handleTransportErrorEvent(mock(ControlServerSessionTransportErrorEvent.class));
 
-		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.DISCOVERY));
+		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.DISCOVERY);
 		verify(taskScheduler, times(2)).schedule(any(), any(Trigger.class));
 		verify(controlServerClient, times(1)).disconnect();
 	}
@@ -243,7 +242,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.discoveryTryNext();
 		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisioningInformation.class));
 
-		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.OPERATIONAL));
+		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.OPERATIONAL);
 	}
 
 	@Test
@@ -266,7 +265,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisioningInformation.class));
 		connectionLifecycleManager.handleTransportErrorEvent(mock(ControlServerSessionTransportErrorEvent.class));
 
-		assertThat(connectionLifecycleManager.getLifecycle(), is(ConnectionLifecycle.DISCOVERY));
+		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.DISCOVERY);
 		verify(taskScheduler, times(2)).schedule(any(), any(Trigger.class));
 		verify(controlServerClient, times(1)).disconnect();
 	}

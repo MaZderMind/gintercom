@@ -1,10 +1,8 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
-import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
 import static de.mazdermind.gintercom.testutils.JsonMapUtils.convertJsonTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.not;
+import static de.mazdermind.gintercom.testutils.assertations.IsValidCondition.VALID;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 
@@ -25,20 +23,20 @@ public class GroupConfigTest {
 	@Test
 	public void deserializesCorrectly() {
 		GroupConfig groupConfig = convertJsonTo(GroupConfig.class, testJson);
-		assertThat(groupConfig.getDisplay(), is("A/V Tech"));
+		assertThat(groupConfig.getDisplay()).isEqualTo("A/V Tech");
 	}
 
 	@Test
 	public void validationSucceedsWithMinimalValidConfig() {
 		GroupConfig groupConfig = convertJsonTo(GroupConfig.class, testJson);
-		assertThat(groupConfig, validates());
+		assertThat(groupConfig).is(VALID);
 	}
 
 	@Test
 	public void validationFailsWithoutDisplay() {
 		testJson.remove("display");
 		GroupConfig groupConfig = convertJsonTo(GroupConfig.class, testJson);
-		assertThat(groupConfig, not(validates()));
+		assertThat(groupConfig).isNot(VALID);
 	}
 
 }

@@ -1,7 +1,6 @@
 package de.mazdermind.gintercom.matrix.portpool;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +15,9 @@ public class PortPoolTest {
 
 	@Test
 	public void allocatesSequentialPorts() {
-		assertThat(portPool.getNextPort(), is(5000));
-		assertThat(portPool.getNextPort(), is(5001));
-		assertThat(portPool.getNextPort(), is(5002));
+		assertThat(portPool.getNextPort()).isEqualTo(5000);
+		assertThat(portPool.getNextPort()).isEqualTo(5001);
+		assertThat(portPool.getNextPort()).isEqualTo(5002);
 	}
 
 	@Test(expected = PortPool.PoolExhaustedException.class)

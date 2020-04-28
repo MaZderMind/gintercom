@@ -1,16 +1,8 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
 import static de.mazdermind.gintercom.testutils.JsonMapUtils.convertJsonTo;
-import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static de.mazdermind.gintercom.testutils.assertations.IsValidCondition.VALID;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -40,50 +32,50 @@ public class PanelConfigTest {
 	@Test
 	public void deserializesCorrectly() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig.getDisplay(), is("A/V Tech Romm A"));
-		assertThat(panelConfig.getHostId(), is("DEAD-BEEF"));
-		assertThat(panelConfig.getRxGroups(), containsInAnyOrder("room-a", "av-tech"));
-		assertThat(panelConfig.getTxGroups(), contains("av-tech"));
-		assertThat(panelConfig.getButtonsets(), contains("av-tech"));
+		assertThat(panelConfig.getDisplay()).isEqualTo("A/V Tech Romm A");
+		assertThat(panelConfig.getHostId()).isEqualTo("DEAD-BEEF");
+		assertThat(panelConfig.getRxGroups()).containsOnly("room-a", "av-tech");
+		assertThat(panelConfig.getTxGroups()).containsOnly("av-tech");
+		assertThat(panelConfig.getButtonsets()).containsOnly("av-tech");
 
-		assertThat(panelConfig.getButtons(), hasKey("6"));
+		assertThat(panelConfig.getButtons()).containsKey("6");
 		ButtonConfig buttonConfig = panelConfig.getButtons().get("6");
-		assertThat(buttonConfig.getDisplay(), is("Room A Broadcast"));
-		assertThat(buttonConfig.getAction(), is(ButtonAction.PTT));
-		assertThat(buttonConfig.getTargetType(), is(ButtonTargetType.GROUP));
-		assertThat(buttonConfig.getTarget(), is("room-a"));
+		assertThat(buttonConfig.getDisplay()).isEqualTo("Room A Broadcast");
+		assertThat(buttonConfig.getAction()).isEqualTo(ButtonAction.PTT);
+		assertThat(buttonConfig.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
+		assertThat(buttonConfig.getTarget()).isEqualTo("room-a");
 	}
 
 	@Test
 	public void deserializesMinimalConfigCorrectly() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonMinimal);
-		assertThat(panelConfig.getDisplay(), is("A/V Tech Romm A"));
-		assertThat(panelConfig.getHostId(), nullValue());
-		assertThat(panelConfig.getRxGroups(), empty());
-		assertThat(panelConfig.getTxGroups(), empty());
-		assertThat(panelConfig.getButtonsets(), empty());
+		assertThat(panelConfig.getDisplay()).isEqualTo("A/V Tech Romm A");
+		assertThat(panelConfig.getHostId()).isNull();
+		assertThat(panelConfig.getRxGroups()).isEmpty();
+		assertThat(panelConfig.getTxGroups()).isEmpty();
+		assertThat(panelConfig.getButtonsets()).isEmpty();
 
-		assertThat(panelConfig.getButtons(), notNullValue());
-		assertThat(panelConfig.getButtons().size(), is(0));
+		assertThat(panelConfig.getButtons()).isNotNull();
+		assertThat(panelConfig.getButtons().size()).isEqualTo(0);
 	}
 
 	@Test
 	public void configValidates() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig, validates());
+		assertThat(panelConfig).is(VALID);
 	}
 
 	@Test
 	public void minimalConfigValidates() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonMinimal);
-		assertThat(panelConfig, validates());
+		assertThat(panelConfig).is(VALID);
 	}
 
 	@Test
 	public void validationFailsWithoutDisplay() {
 		testJsonFull.remove("display");
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig, not(validates()));
+		assertThat(panelConfig).isNot(VALID);
 	}
 
 	@Test
@@ -91,7 +83,7 @@ public class PanelConfigTest {
 		buttonJson.remove("display");
 
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig, not(validates()));
+		assertThat(panelConfig).isNot(VALID);
 	}
 
 	@Test
@@ -99,7 +91,7 @@ public class PanelConfigTest {
 		buttonJson.remove("action");
 
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig, not(validates()));
+		assertThat(panelConfig).isNot(VALID);
 	}
 
 	@Test
@@ -107,7 +99,7 @@ public class PanelConfigTest {
 		buttonJson.remove("targetType");
 
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig, not(validates()));
+		assertThat(panelConfig).isNot(VALID);
 	}
 
 	@Test
@@ -115,6 +107,6 @@ public class PanelConfigTest {
 		buttonJson.remove("target");
 
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig, not(validates()));
+		assertThat(panelConfig).isNot(VALID);
 	}
 }

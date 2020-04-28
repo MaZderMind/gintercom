@@ -1,10 +1,7 @@
 package de.mazdermind.gintercom.matrix.integration.tests.registration;
 
 import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelRegistrationMessageBuilder.randomPanelRegistrationMessageForPanelConfig;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.After;
 import org.junit.Before;
@@ -52,7 +49,7 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 		client1.connect();
 		client1.send("/registration", panelRegistrationMessage);
 
-		assertThat(client1.awaitMessages(), is(empty()));
+		assertThat(client1.awaitMessages()).isEmpty();
 
 		client1.disconnect();
 	}
@@ -64,7 +61,7 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 		client1.send("/registration", panelRegistrationMessage);
 
 		ProvisionMessage provisionMessage = client1.awaitMessage("/user/provision", ProvisionMessage.class);
-		assertThat(provisionMessage.getProvisioningInformation().getDisplay(), is(panelConfig.getDisplay()));
+		assertThat(provisionMessage.getProvisioningInformation().getDisplay()).isEqualTo(panelConfig.getDisplay());
 
 		client1.disconnect();
 	}
@@ -74,19 +71,19 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 		client1.connect();
 		client1.send("/registration", panelRegistrationMessage);
 		ProvisionMessage provisionMessage1 = client1.awaitMessage("/user/provision", ProvisionMessage.class);
-		assertThat(provisionMessage1.getProvisioningInformation().getDisplay(), is(panelConfig.getDisplay()));
+		assertThat(provisionMessage1.getProvisioningInformation().getDisplay()).isEqualTo(panelConfig.getDisplay());
 		client1.disconnect();
 
 		client2.connect();
 		client2.send("/registration", panelRegistrationMessage);
 		ProvisionMessage provisionMessage2 = client2.awaitMessage("/user/provision", ProvisionMessage.class);
-		assertThat(provisionMessage2.getProvisioningInformation().getDisplay(), is(panelConfig.getDisplay()));
+		assertThat(provisionMessage2.getProvisioningInformation().getDisplay()).isEqualTo(panelConfig.getDisplay());
 
-		assertThat(provisionMessage2.getProvisioningInformation().getPanelToMatrixPort(),
-			is(provisionMessage1.getProvisioningInformation().getPanelToMatrixPort()));
+		assertThat(provisionMessage2.getProvisioningInformation().getPanelToMatrixPort())
+			.isEqualTo(provisionMessage1.getProvisioningInformation().getPanelToMatrixPort());
 
-		assertThat(provisionMessage2.getProvisioningInformation().getPanelToMatrixPort(),
-			is(provisionMessage1.getProvisioningInformation().getPanelToMatrixPort()));
+		assertThat(provisionMessage2.getProvisioningInformation().getPanelToMatrixPort())
+			.isEqualTo(provisionMessage1.getProvisioningInformation().getPanelToMatrixPort());
 
 		client2.disconnect();
 	}
@@ -96,14 +93,14 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 		client1.connect();
 		client1.send("/registration", panelRegistrationMessage);
 		ProvisionMessage provisionMessage = client1.awaitMessage("/user/provision", ProvisionMessage.class);
-		assertThat(provisionMessage.getProvisioningInformation().getDisplay(), is(panelConfig.getDisplay()));
+		assertThat(provisionMessage.getProvisioningInformation().getDisplay()).isEqualTo(panelConfig.getDisplay());
 
 		client2.connect();
 		client2.send("/registration", panelRegistrationMessage);
 		AlreadyRegisteredMessage alreadyRegisteredMessage = client2
 			.awaitMessage("/user/provision/already-registered", AlreadyRegisteredMessage.class);
-		assertThat(alreadyRegisteredMessage.getRemoteIp(), notNullValue());
-		assertThat(alreadyRegisteredMessage.getConnectionTime(), notNullValue());
+		assertThat(alreadyRegisteredMessage.getRemoteIp()).isNotNull();
+		assertThat(alreadyRegisteredMessage.getConnectionTime()).isNotNull();
 		client2.disconnect();
 
 		client1.disconnect();

@@ -1,11 +1,8 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
 import static de.mazdermind.gintercom.testutils.JsonMapUtils.convertJsonTo;
-import static de.mazdermind.gintercom.testutils.matchers.ValidatesMatcher.validates;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
+import static de.mazdermind.gintercom.testutils.assertations.IsValidCondition.VALID;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,26 +28,26 @@ public class ButtonSetConfigTest {
 	@Test
 	public void deserializesCorrectly() {
 		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
-		assertThat(buttonSetConfig.getButtons(), notNullValue());
-		assertThat(buttonSetConfig.getButtons().size(), is(2));
+		assertThat(buttonSetConfig.getButtons()).isNotNull();
+		assertThat(buttonSetConfig.getButtons()).hasSize(2);
 
 		ButtonConfig buttonConfig1 = buttonSetConfig.getButtons().get("1");
-		assertThat(buttonConfig1.getDisplay(), is("A/V Tech Broadcast"));
-		assertThat(buttonConfig1.getAction(), is(ButtonAction.PTT));
-		assertThat(buttonConfig1.getTargetType(), is(ButtonTargetType.GROUP));
-		assertThat(buttonConfig1.getTarget(), is("av-tech"));
+		assertThat(buttonConfig1.getDisplay()).isEqualTo("A/V Tech Broadcast");
+		assertThat(buttonConfig1.getAction()).isEqualTo(ButtonAction.PTT);
+		assertThat(buttonConfig1.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
+		assertThat(buttonConfig1.getTarget()).isEqualTo("av-tech");
 
 		ButtonConfig buttonConfig2 = buttonSetConfig.getButtons().get("2");
-		assertThat(buttonConfig2.getDisplay(), is("Room A Broadcast"));
-		assertThat(buttonConfig2.getAction(), is(ButtonAction.PTT));
-		assertThat(buttonConfig2.getTargetType(), is(ButtonTargetType.GROUP));
-		assertThat(buttonConfig2.getTarget(), is("room-a"));
+		assertThat(buttonConfig2.getDisplay()).isEqualTo("Room A Broadcast");
+		assertThat(buttonConfig2.getAction()).isEqualTo(ButtonAction.PTT);
+		assertThat(buttonConfig2.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
+		assertThat(buttonConfig2.getTarget()).isEqualTo("room-a");
 	}
 
 	@Test
 	public void validationSucceeds() {
 		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
-		assertThat(buttonSetConfig, validates());
+		assertThat(buttonSetConfig).is(VALID);
 	}
 
 	@Test
@@ -58,7 +55,7 @@ public class ButtonSetConfigTest {
 		testJson.remove("buttons");
 
 		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
-		assertThat(buttonSetConfig, not(validates()));
+		assertThat(buttonSetConfig).isNot(VALID);
 	}
 
 	@Test
@@ -66,7 +63,7 @@ public class ButtonSetConfigTest {
 		buttonJson.remove("display");
 
 		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
-		assertThat(buttonSetConfig, not(validates()));
+		assertThat(buttonSetConfig).isNot(VALID);
 	}
 
 	@Test
@@ -74,7 +71,7 @@ public class ButtonSetConfigTest {
 		buttonJson.remove("action");
 
 		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
-		assertThat(buttonSetConfig, not(validates()));
+		assertThat(buttonSetConfig).isNot(VALID);
 	}
 
 	@Test
@@ -82,7 +79,7 @@ public class ButtonSetConfigTest {
 		buttonJson.remove("targetType");
 
 		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
-		assertThat(buttonSetConfig, not(validates()));
+		assertThat(buttonSetConfig).isNot(VALID);
 	}
 
 	@Test
@@ -90,6 +87,6 @@ public class ButtonSetConfigTest {
 		buttonJson.remove("target");
 
 		ButtonSetConfig buttonSetConfig = convertJsonTo(ButtonSetConfig.class, testJson);
-		assertThat(buttonSetConfig, not(validates()));
+		assertThat(buttonSetConfig).isNot(VALID);
 	}
 }
