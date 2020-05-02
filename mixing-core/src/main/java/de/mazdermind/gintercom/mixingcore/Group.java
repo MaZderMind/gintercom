@@ -1,7 +1,7 @@
 package de.mazdermind.gintercom.mixingcore;
 
-import static de.mazdermind.gintercom.mixingcore.support.GstDebugger.debugPipeline;
-import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectSuccess;
+import static de.mazdermind.gintercom.gstreamersupport.GstDebugger.debugPipeline;
+import static de.mazdermind.gintercom.gstreamersupport.GstErrorCheck.expectSuccess;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,8 +14,8 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
-import de.mazdermind.gintercom.mixingcore.support.GstPadBlock;
+import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
+import de.mazdermind.gintercom.gstreamersupport.GstPadBlock;
 
 public class Group {
 	private static final Logger log = LoggerFactory.getLogger(Group.class);

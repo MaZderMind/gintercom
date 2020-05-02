@@ -17,16 +17,16 @@ import org.springframework.stereotype.Component;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.math.IntMath;
 
-import de.mazdermind.gintercom.shared.controlserver.ClientConfiguration;
-import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
-import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
+import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
+import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import de.mazdermind.gintercom.clientsupport.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
 public class GroupButtonGridManager implements ProvisioningInformationAware {
 	private final static int COLS = 2;
 	private static final Logger log = LoggerFactory.getLogger(GroupButtonGridManager.class);
 	private final ClientConfiguration clientConfiguration;
-	private List<JButton> buttonList = new ArrayList<>();
+	private final List<JButton> buttonList = new ArrayList<>();
 
 
 	public GroupButtonGridManager(

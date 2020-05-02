@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.common.base.Objects;
 
-import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
+import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 
 public class ButtonSetConfig {
 	@NotNull

@@ -67,7 +67,15 @@
 		<!-- shared project parts -->
 		<dependency>
 			<groupId>de.mazdermind.gintercom</groupId>
-			<artifactId>shared</artifactId>
+			<artifactId>gstreamer-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.mazdermind.gintercom</groupId>
+			<artifactId>client-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.mazdermind.gintercom</groupId>
+			<artifactId>client-api</artifactId>
 		</dependency>
 
 

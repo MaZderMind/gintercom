@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.shared.controlserver.events.ConnectionLifecycleEvent;
-import de.mazdermind.gintercom.shared.controlserver.events.support.ConnectionLifecycleEventAware;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectionLifecycleEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.support.ConnectionLifecycleEventAware;
 
 @Component
 public class ConnectionLifecycleModalManager implements ConnectionLifecycleEventAware {

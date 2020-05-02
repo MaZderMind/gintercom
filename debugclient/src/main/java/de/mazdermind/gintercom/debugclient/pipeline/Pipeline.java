@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component;
 import com.google.common.collect.ImmutableMap;
 
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
-import de.mazdermind.gintercom.shared.controlserver.ConnectionLifecycleManager;
-import de.mazdermind.gintercom.shared.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
-import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
-import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
+import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycleManager;
+import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
+import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import de.mazdermind.gintercom.clientsupport.controlserver.provisioning.ProvisioningInformationAware;
 import de.mazdermind.gintercom.shared.pipeline.StaticCaps;
 import de.mazdermind.gintercom.shared.pipeline.support.GstInvoker;
 import de.mazdermind.gintercom.shared.pipeline.support.PipelineStateChangeListener;

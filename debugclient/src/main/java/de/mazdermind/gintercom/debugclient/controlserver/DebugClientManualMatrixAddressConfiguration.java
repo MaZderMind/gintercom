@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
-import de.mazdermind.gintercom.shared.controlserver.discovery.manualconfig.ManualMatrixAddressConfiguration;
-import de.mazdermind.gintercom.shared.controlserver.discovery.manualconfig.SimpleManualMatrixAddressConfiguration;
+import de.mazdermind.gintercom.clientsupport.controlserver.discovery.manualconfig.ManualMatrixAddressConfiguration;
+import de.mazdermind.gintercom.clientsupport.controlserver.discovery.manualconfig.SimpleManualMatrixAddressConfiguration;
 
 @Configuration
 public class DebugClientManualMatrixAddressConfiguration {

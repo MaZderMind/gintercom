@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableSet;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import de.mazdermind.gintercom.mixingcore.Panel;
-import de.mazdermind.gintercom.mixingcore.exception.InvalidOperationException;
+import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationException;
 import de.mazdermind.gintercom.mixingcore.it.tools.IntegrationTestBase;
 import de.mazdermind.gintercom.mixingcore.it.tools.PanelAndClient;
 
@@ -32,11 +32,11 @@ public class InvalidApiUsageIT extends IntegrationTestBase {
 
 	@Test
 	public void toleratesInvalidOrderOfOperation() {
-		assertThrows(InvalidOperationException.class, () -> panel.stopTransmittingTo(group));
-		assertThrows(InvalidOperationException.class, () -> panel.stopTransmittingTo(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> panel.stopTransmittingTo(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> panel.stopTransmittingTo(group));
 
-		assertThrows(InvalidOperationException.class, () -> panel.stopReceivingFrom(group));
-		assertThrows(InvalidOperationException.class, () -> panel.stopReceivingFrom(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> panel.stopReceivingFrom(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> panel.stopReceivingFrom(group));
 
 		ensurePipelineIsStillFunctional();
 	}
@@ -44,18 +44,18 @@ public class InvalidApiUsageIT extends IntegrationTestBase {
 	@Test
 	public void toleratesMultipleRemoval() {
 		mixingCore.removePanel(panel);
-		assertThrows(InvalidOperationException.class, () -> mixingCore.removePanel(panel));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> mixingCore.removePanel(panel));
 
 		mixingCore.removeGroup(group);
-		assertThrows(InvalidOperationException.class, () -> mixingCore.removeGroup(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> mixingCore.removeGroup(group));
 
 		ensurePipelineIsStillFunctional();
 	}
 
 	@Test
 	public void toleratesDuplicateNames() {
-		assertThrows(InvalidOperationException.class, () -> testManager.addPanel("p"));
-		assertThrows(InvalidOperationException.class, () -> testManager.addGroup("g"));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> testManager.addPanel("p"));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> testManager.addGroup("g"));
 
 		ensurePipelineIsStillFunctional();
 	}

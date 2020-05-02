@@ -1,7 +1,7 @@
 package de.mazdermind.gintercom.mixingcore;
 
-import static de.mazdermind.gintercom.mixingcore.support.GstDebugger.debugPipeline;
-import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectSuccess;
+import static de.mazdermind.gintercom.gstreamersupport.GstDebugger.debugPipeline;
+import static de.mazdermind.gintercom.gstreamersupport.GstErrorCheck.expectSuccess;
 
 import java.net.InetAddress;
 import java.util.HashMap;
@@ -15,9 +15,9 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mazdermind.gintercom.mixingcore.exception.InvalidOperationException;
-import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
-import de.mazdermind.gintercom.mixingcore.support.GstPadBlock;
+import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationException;
+import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
+import de.mazdermind.gintercom.gstreamersupport.GstPadBlock;
 
 public class Panel {
 	private static final Logger log = LoggerFactory.getLogger(Panel.class);
@@ -185,7 +185,7 @@ public class Panel {
 
 		Pad pad = txPads.remove(group);
 		if (pad == null) {
-			throw new InvalidOperationException(String.format(
+			throw new InvalidMixingCoreOperationException(String.format(
 				"Panel %s not linked to Group %s for transmission", name, group.getName()));
 		}
 
@@ -212,7 +212,7 @@ public class Panel {
 
 		Pad pad = rxPads.remove(group);
 		if (pad == null) {
-			throw new InvalidOperationException(String.format(
+			throw new InvalidMixingCoreOperationException(String.format(
 				"Panel %s not linked from Group %s for receiving", name, group.getName()));
 		}
 

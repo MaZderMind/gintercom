@@ -22,10 +22,10 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
-import de.mazdermind.gintercom.shared.controlserver.messages.provision.AlreadyRegisteredMessage;
-import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
-import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
-import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
+import de.mazdermind.gintercom.clientapi.messages.provision.AlreadyRegisteredMessage;
+import de.mazdermind.gintercom.clientapi.messages.provision.ProvisionMessage;
+import de.mazdermind.gintercom.clientapi.messages.registration.PanelRegistrationMessage;
+import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
 
 @Controller
 public class PanelRegistrationController {

@@ -12,7 +12,7 @@
 
 	<artifactId>mixing-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>mixing-core</name>
+	<name>Mixing-Core</name>
 	<description>GIntercom RTP &amp; Audio-Mixing-Core</description>
 
 	<dependencies>
@@ -20,6 +20,12 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
+		</dependency>
+
+		<!-- shared project parts -->
+		<dependency>
+			<groupId>de.mazdermind.gintercom</groupId>
+			<artifactId>gstreamer-support</artifactId>
 		</dependency>
 
 		<!-- gstreamer -->
