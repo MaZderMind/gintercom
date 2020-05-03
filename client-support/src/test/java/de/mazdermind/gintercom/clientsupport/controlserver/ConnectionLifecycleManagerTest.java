@@ -13,6 +13,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
@@ -28,11 +29,10 @@ import de.mazdermind.gintercom.clientsupport.controlserver.events.AddressDiscove
 import de.mazdermind.gintercom.clientsupport.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.OperationalEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.support.ConnectionLifecycleEventMulticaster;
 
 public class ConnectionLifecycleManagerTest {
 
-	private ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster;
+	private ApplicationEventPublisher eventPublisher;
 	private MatrixAddressDiscoveryService matrixAddressDiscoveryService;
 	private ControlServerClient controlServerClient;
 	private ConnectionLifecycleManager connectionLifecycleManager;
@@ -65,12 +65,12 @@ public class ConnectionLifecycleManagerTest {
 		Mockito.when(controlServerClient.connect(ArgumentMatchers.any(InetAddress.class), ArgumentMatchers.anyInt())).thenReturn(Optional
 			.empty());
 
-		connectionLifecycleEventMulticaster = Mockito.mock(ConnectionLifecycleEventMulticaster.class);
+		eventPublisher = Mockito.mock(ApplicationEventPublisher.class);
 
 		stompSession = Mockito.mock(StompSession.class);
 
 		connectionLifecycleManager = new ConnectionLifecycleManager(
-			connectionLifecycleEventMulticaster,
+			eventPublisher,
 			matrixAddressDiscoveryService,
 			controlServerClient,
 			taskScheduler, new TestClientConfiguration()
@@ -109,7 +109,7 @@ public class ConnectionLifecycleManagerTest {
 	public void notifiesAboutDiscoveryAttempt() {
 		connectionLifecycleManager.discoveryTryNext();
 		ArgumentCaptor<AddressDiscoveryEvent> captor = ArgumentCaptor.forClass(AddressDiscoveryEvent.class);
-		Mockito.verify(connectionLifecycleEventMulticaster, Mockito.times(1)).dispatch(captor.capture());
+		Mockito.verify(eventPublisher, Mockito.times(1)).publishEvent(captor.capture());
 		assertThat(captor.getValue().getImplementationName()).isEqualTo("Test-Discovery-Method");
 	}
 
@@ -172,7 +172,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.discoveryTryNext();
 
 		ArgumentCaptor<ConnectingEvent> captor = ArgumentCaptor.forClass(ConnectingEvent.class);
-		Mockito.verify(connectionLifecycleEventMulticaster, Mockito.times(1)).dispatch(captor.capture());
+		Mockito.verify(eventPublisher, Mockito.times(1)).publishEvent(captor.capture());
 		assertThat(captor.getValue().getAddress()).isEqualTo(successfulDiscovery.getAddress());
 		assertThat(captor.getValue().getPort()).isEqualTo(successfulDiscovery.getPort());
 	}
@@ -201,7 +201,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.discoveryTryNext();
 
 		ArgumentCaptor<AwaitingProvisioningEvent> captor = ArgumentCaptor.forClass(AwaitingProvisioningEvent.class);
-		Mockito.verify(connectionLifecycleEventMulticaster).dispatch(captor.capture());
+		Mockito.verify(eventPublisher).publishEvent(captor.capture());
 		assertThat(captor.getValue().getHostId()).isEqualTo(TestClientConfiguration.HOST_ID);
 	}
 
@@ -247,7 +247,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.discoveryTryNext();
 		connectionLifecycleManager.handleProvisioningInformation(Mockito.mock(ProvisioningInformation.class));
 
-		Mockito.verify(connectionLifecycleEventMulticaster, Mockito.times(1)).dispatch(ArgumentMatchers.any(OperationalEvent.class));
+		Mockito.verify(eventPublisher, Mockito.times(1)).publishEvent(ArgumentMatchers.any(OperationalEvent.class));
 	}
 
 	@Test

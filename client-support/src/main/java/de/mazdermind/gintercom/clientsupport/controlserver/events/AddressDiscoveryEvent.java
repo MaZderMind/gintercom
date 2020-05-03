@@ -6,7 +6,7 @@ import com.google.common.base.Objects;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycle;
 
-public class AddressDiscoveryEvent implements ConnectionLifecycleEvent {
+public class AddressDiscoveryEvent extends ConnectionLifecycleEvent {
 	private final String implementationId;
 	private final String implementationName;
 

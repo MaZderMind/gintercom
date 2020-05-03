@@ -6,7 +6,7 @@ import com.google.common.base.Objects;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycle;
 
-public class AwaitingProvisioningEvent implements ConnectionLifecycleEvent {
+public class AwaitingProvisioningEvent extends ConnectionLifecycleEvent {
 	private final String hostId;
 
 	public AwaitingProvisioningEvent(String hostId) {

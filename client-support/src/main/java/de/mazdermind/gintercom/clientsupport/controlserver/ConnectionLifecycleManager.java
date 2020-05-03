@@ -4,12 +4,13 @@ import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.PeriodicTrigger;
@@ -30,7 +31,6 @@ import de.mazdermind.gintercom.clientsupport.controlserver.events.AddressDiscove
 import de.mazdermind.gintercom.clientsupport.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.OperationalEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.support.ConnectionLifecycleEventMulticaster;
 import de.mazdermind.gintercom.clientsupport.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
@@ -39,7 +39,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 
 	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
 
-	private final ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster;
+	private final ApplicationEventPublisher eventPublisher;
 	private final MatrixAddressDiscoveryService addressDiscoveryService;
 	private final ControlServerClient controlServerClient;
 	private final ClientConfiguration clientConfiguration;
@@ -50,13 +50,13 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	private MatrixAddressDiscoveryServiceResult discoveredMatrix = null;
 
 	public ConnectionLifecycleManager(
-		@Autowired ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster,
+		@Autowired ApplicationEventPublisher eventPublisher,
 		@Autowired MatrixAddressDiscoveryService addressDiscoveryService,
 		@Autowired ControlServerClient controlServerClient,
 		@Qualifier("gintercomTaskScheduler") @Autowired TaskScheduler scheduler,
 		@Autowired ClientConfiguration clientConfiguration
 	) {
-		this.connectionLifecycleEventMulticaster = connectionLifecycleEventMulticaster;
+		this.eventPublisher = eventPublisher;
 		this.addressDiscoveryService = addressDiscoveryService;
 		this.controlServerClient = controlServerClient;
 		this.clientConfiguration = clientConfiguration;
@@ -67,7 +67,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 		return lifecycle;
 	}
 
-	@PostConstruct
+	@EventListener(ContextRefreshedEvent.class)
 	public void initiateDiscovery() {
 		lifecycle = ConnectionLifecycle.DISCOVERY;
 
@@ -85,7 +85,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	void discoveryTryNext() {
 		MatrixAddressDiscoveryServiceImplementation discoveryImplementation = addressDiscoveryService.getNextImplementation();
 		log.info("Trying {}", discoveryImplementation.getClass().getSimpleName());
-		connectionLifecycleEventMulticaster.dispatch(new AddressDiscoveryEvent(
+		eventPublisher.publishEvent(new AddressDiscoveryEvent(
 			discoveryImplementation.getClass().getSimpleName(),
 			discoveryImplementation.getDisplayName()
 		));
@@ -103,7 +103,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	private void tryConnect(MatrixAddressDiscoveryServiceResult discoveredMatrix) {
 		log.info("Trying to Connect to {}", discoveredMatrix);
 		lifecycle = ConnectionLifecycle.CONNECTING;
-		connectionLifecycleEventMulticaster.dispatch(new ConnectingEvent(discoveredMatrix.getAddress(), discoveredMatrix.getPort()));
+		eventPublisher.publishEvent(new ConnectingEvent(discoveredMatrix.getAddress(), discoveredMatrix.getPort()));
 
 		Optional<StompSession> stompSession = controlServerClient.connect(
 			discoveredMatrix.getAddress(),
@@ -126,7 +126,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	private void initiateProvisioning(StompSession stompSession) {
 		log.info("sending PanelRegistrationMessage");
 		lifecycle = ConnectionLifecycle.PROVISIONING;
-		connectionLifecycleEventMulticaster.dispatch(new AwaitingProvisioningEvent(clientConfiguration.getHostId()));
+		eventPublisher.publishEvent(new AwaitingProvisioningEvent(clientConfiguration.getHostId()));
 
 		stompSession.send("/registration", PanelRegistrationMessage.fromClientConfiguration(clientConfiguration));
 	}
@@ -148,7 +148,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
 		log.info("Provisioning received, Client is now Operational");
 		lifecycle = ConnectionLifecycle.OPERATIONAL;
-		connectionLifecycleEventMulticaster.dispatch(new OperationalEvent());
+		eventPublisher.publishEvent(new OperationalEvent());
 	}
 
 	public Optional<MatrixAddressDiscoveryServiceResult> getDiscoveredMatrix() {

@@ -8,7 +8,7 @@ import com.google.common.base.Objects;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycle;
 
-public class ConnectingEvent implements ConnectionLifecycleEvent {
+public class ConnectingEvent extends ConnectionLifecycleEvent {
 
 	private final InetAddress address;
 	private final int port;

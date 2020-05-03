@@ -8,13 +8,13 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectionLifecycleEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.support.ConnectionLifecycleEventAware;
 
 @Component
-public class ConnectionLifecycleModalManager implements ConnectionLifecycleEventAware {
+public class ConnectionLifecycleModalManager {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(400, 100);
 	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleModalManager.class);
 	private JDialog dialog;
@@ -80,7 +80,7 @@ public class ConnectionLifecycleModalManager implements ConnectionLifecycleEvent
 		return dialog;
 	}
 
-	@Override
+	@EventListener
 	public void handleGenericConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
 		operational = lifecycleEvent.getLifecycle().isOperational();
 		log.info("ConnectionLifecycleEvent: {}, Operational?: {}",

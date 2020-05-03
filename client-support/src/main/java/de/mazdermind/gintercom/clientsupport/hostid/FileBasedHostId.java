@@ -10,11 +10,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import javax.annotation.PostConstruct;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +23,7 @@ public class FileBasedHostId {
 	private static final Logger log = LoggerFactory.getLogger(FileBasedHostId.class);
 	private String hostId;
 
-	@PostConstruct
+	@EventListener(ContextRefreshedEvent.class)
 	public void readOrCreateHostId() throws IOException {
 		Path hostIdFilePath = Paths.get(System.getProperty("user.home"), ".gintercom-host-id");
 		log.info("Using Host-ID File {}", hostIdFilePath);
