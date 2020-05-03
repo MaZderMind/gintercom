@@ -42,7 +42,7 @@ public class FileBasedHostId {
 		BufferedWriter outStream = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(hostIdFilePath)));
 		outStream.write(newHostId);
 		outStream.close();
-		log.info("New ID saved to", hostIdFilePath);
+		log.info("New ID saved to {}", hostIdFilePath);
 	}
 
 	private void readHostId(Path hostIdFilePath) throws IOException {
