@@ -1,0 +1,13 @@
+package de.mazdermind.gintercom.clientsupport.controlserver.events;
+
+import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycle;
+
+public interface ConnectionLifecycleEvent {
+	String getDisplayText();
+
+	default String getDetailsText() {
+		return "";
+	}
+
+	ConnectionLifecycle getLifecycle();
+}

@@ -12,9 +12,9 @@ import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
 import de.mazdermind.gintercom.matrix.integration.TestConfig;
 import de.mazdermind.gintercom.matrix.integration.tools.controlserver.ControlServerTestClient;
-import de.mazdermind.gintercom.shared.controlserver.messages.provision.AlreadyRegisteredMessage;
-import de.mazdermind.gintercom.shared.controlserver.messages.provision.ProvisionMessage;
-import de.mazdermind.gintercom.shared.controlserver.messages.registration.PanelRegistrationMessage;
+import de.mazdermind.gintercom.clientapi.messages.provision.AlreadyRegisteredMessage;
+import de.mazdermind.gintercom.clientapi.messages.provision.ProvisionMessage;
+import de.mazdermind.gintercom.clientapi.messages.registration.PanelRegistrationMessage;
 
 public class PanelRegistrationIT extends IntegrationTestBase {
 

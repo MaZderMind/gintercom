@@ -12,7 +12,7 @@
 
 	<artifactId>matrix</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>matrix</name>
+	<name>Matrix</name>
 	<description>GIntercom Management and Provisioning System</description>
 
 	<dependencies>
@@ -24,6 +24,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mustache</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 
 		<!-- gstreamer -->
@@ -69,11 +73,17 @@
 		<!-- shared project parts -->
 		<dependency>
 			<groupId>de.mazdermind.gintercom</groupId>
-			<artifactId>shared</artifactId>
+			<artifactId>mixing-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>de.mazdermind.gintercom</groupId>
-			<artifactId>mixing-core</artifactId>
+			<artifactId>client-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.mazdermind.gintercom</groupId>
+			<artifactId>test-support</artifactId>
+			<scope>test</scope>
+			<type>test-jar</type>
 		</dependency>
 
 		<!-- devtools -->
@@ -88,12 +98,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.mazdermind.gintercom</groupId>
-			<artifactId>testutils</artifactId>
-			<scope>test</scope>
-			<type>test-jar</type>
 		</dependency>
 		<dependency>
 			<groupId>com.oblac</groupId>

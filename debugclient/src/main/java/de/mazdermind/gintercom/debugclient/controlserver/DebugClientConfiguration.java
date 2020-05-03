@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
-import de.mazdermind.gintercom.shared.controlserver.ClientConfiguration;
-import de.mazdermind.gintercom.shared.hostid.FileBasedHostId;
+import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
+import de.mazdermind.gintercom.clientsupport.hostid.FileBasedHostId;
 
 @Configuration
 public class DebugClientConfiguration implements ClientConfiguration {

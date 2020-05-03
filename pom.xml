@@ -14,17 +14,20 @@
 	<artifactId>gintercom</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>gintercom</name>
+	<name>GIntercom (Parent)</name>
 	<packaging>pom</packaging>
 
 	<description>GIntercom Parent Pom</description>
 
 	<modules>
-		<module>shared</module>
 		<module>matrix</module>
 		<module>debugclient</module>
-		<module>testutils</module>
 		<module>mixing-core</module>
+
+		<module>test-support</module>
+		<module>client-api</module>
+		<module>client-support</module>
+		<module>gstreamer-support</module>
 	</modules>
 
 	<dependencyManagement>
@@ -32,17 +35,27 @@
 			<!-- shared project parts -->
 			<dependency>
 				<groupId>de.mazdermind.gintercom</groupId>
-				<artifactId>shared</artifactId>
-				<version>0.0.1-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>de.mazdermind.gintercom</groupId>
 				<artifactId>mixing-core</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>de.mazdermind.gintercom</groupId>
-				<artifactId>testutils</artifactId>
+				<artifactId>client-api</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>de.mazdermind.gintercom</groupId>
+				<artifactId>client-support</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>de.mazdermind.gintercom</groupId>
+				<artifactId>gstreamer-support</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>de.mazdermind.gintercom</groupId>
+				<artifactId>test-support</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 				<type>test-jar</type>
 			</dependency>
@@ -161,6 +174,12 @@
 				<groupId>com.github.stefanbirkner</groupId>
 				<artifactId>system-rules</artifactId>
 				<version>1.16.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>3.3.3</version>
+				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import de.mazdermind.gintercom.matrix.configuration.model.ButtonSetConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
-import de.mazdermind.gintercom.shared.configuration.ButtonConfig;
+import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 
 @Component
 public class ButtonSetResolver {

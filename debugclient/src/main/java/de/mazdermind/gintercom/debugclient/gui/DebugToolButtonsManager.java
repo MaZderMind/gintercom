@@ -12,15 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.debugclient.gui.components.ToggleButton;
-import de.mazdermind.gintercom.debugclient.pipeline.Pipeline;
+import de.mazdermind.gintercom.debugclient.pipeline.DebugClientPipeline;
 
 @Component
 public class DebugToolButtonsManager {
 	private static final Logger log = LoggerFactory.getLogger(DebugToolButtonsManager.class);
-	private final Pipeline pipeline;
+	private final DebugClientPipeline pipeline;
 
 	public DebugToolButtonsManager(
-		@Autowired Pipeline pipeline
+		@Autowired DebugClientPipeline pipeline
 	) {
 		super();
 		this.pipeline = pipeline;

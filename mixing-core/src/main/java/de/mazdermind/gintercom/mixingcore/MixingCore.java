@@ -13,8 +13,8 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mazdermind.gintercom.mixingcore.exception.InvalidOperationException;
-import de.mazdermind.gintercom.mixingcore.support.GstException;
+import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationException;
+import de.mazdermind.gintercom.mixingcore.exception.MixingCoreException;
 
 public class MixingCore {
 	private static final Logger log = LoggerFactory.getLogger(MixingCore.class);
@@ -39,19 +39,19 @@ public class MixingCore {
 		pipeline.getBus().connect((Bus.ERROR) (source, code, message) -> {
 			String msg = String.format("%s: %s", source.getName(), message);
 			log.error(msg);
-			throw new GstException(msg);
+			throw new MixingCoreException(msg);
 		});
 		pipeline.getBus().connect((Bus.EOS) source -> {
 			String msg = String.format("%s: EOS", source.getName());
 			log.error(msg);
-			throw new GstException(msg);
+			throw new MixingCoreException(msg);
 		});
 	}
 
 
 	public Group addGroup(String name) {
 		if (groups.containsKey(name)) {
-			throw new InvalidOperationException(String.format("Group %s already registered", name));
+			throw new InvalidMixingCoreOperationException(String.format("Group %s already registered", name));
 		}
 
 		Group group = new Group(pipeline, name);
@@ -61,7 +61,7 @@ public class MixingCore {
 
 	public Panel addPanel(String name, InetAddress panelHost, int panelToMatrixPort, int matrixToPanelPort) {
 		if (panels.containsKey(name)) {
-			throw new InvalidOperationException(String.format("Panel %s already registered", name));
+			throw new InvalidMixingCoreOperationException(String.format("Panel %s already registered", name));
 		}
 
 		Panel panel = new Panel(pipeline, name, panelHost, panelToMatrixPort, matrixToPanelPort);
@@ -95,7 +95,7 @@ public class MixingCore {
 
 	public void removeGroup(@Nonnull Group group) {
 		if (groups.remove(group.getName()) == null) {
-			throw new InvalidOperationException(String.format("Group %s not registered", group.getName()));
+			throw new InvalidMixingCoreOperationException(String.format("Group %s not registered", group.getName()));
 		}
 
 		group.remove();
@@ -103,7 +103,7 @@ public class MixingCore {
 
 	public void removePanel(@Nonnull Panel panel) {
 		if (panels.remove(panel.getName()) == null) {
-			throw new InvalidOperationException(String.format("Panel %s not registered", panel.getName()));
+			throw new InvalidMixingCoreOperationException(String.format("Panel %s not registered", panel.getName()));
 		}
 
 		panel.remove();

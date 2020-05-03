@@ -1,7 +1,7 @@
 /dist/
 /target/
 */target/
-/matrix/*.dot
+*.dot
 
 ### STS ###
 .apt_generated

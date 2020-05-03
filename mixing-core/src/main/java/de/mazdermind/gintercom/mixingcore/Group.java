@@ -1,7 +1,7 @@
 package de.mazdermind.gintercom.mixingcore;
 
-import static de.mazdermind.gintercom.mixingcore.support.GstDebugger.debugPipeline;
-import static de.mazdermind.gintercom.mixingcore.support.GstErrorCheck.expectSuccess;
+import static de.mazdermind.gintercom.gstreamersupport.GstDebugger.debugPipeline;
+import static de.mazdermind.gintercom.gstreamersupport.GstErrorCheck.expectSuccess;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,8 +14,10 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mazdermind.gintercom.mixingcore.support.GstBuilder;
-import de.mazdermind.gintercom.mixingcore.support.GstPadBlock;
+import de.mazdermind.gintercom.gstreamersupport.GstConstants;
+import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
+import de.mazdermind.gintercom.gstreamersupport.GstPadBlock;
+import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
 
 public class Group {
 	private static final Logger log = LoggerFactory.getLogger(Group.class);
@@ -45,10 +47,10 @@ public class Group {
 				.addElement("audiotestsrc", String.format("group-%s-silencesrc", name))
 					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
-				.withCaps(StaticCaps.AUDIO)
+				.withCaps(GstStaticCaps.AUDIO)
 				.linkElement("audiomixer", mixerName)
 					.withProperty("start-time-selection", "first")
-					.withProperty("output-buffer-duration", Constants.BUFFER_DURATION_NS)
+					.withProperty("output-buffer-duration", GstConstants.BUFFER_DURATION_NS)
 				.linkElement("tee", teeName)
 					.withProperty("allow-not-linked", true)
 				.build();

@@ -1,6 +1,6 @@
 package de.mazdermind.gintercom.matrix.controlserver.panelregistration;
 
-import static de.mazdermind.gintercom.shared.utils.ObjectListClassNameUtil.classNamesList;
+import static de.mazdermind.gintercom.matrix.utils.ObjectListClassNameUtil.classNamesList;
 
 import java.util.List;
 
@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.shared.controlserver.connection.ControlServerSessionTransportErrorMulticaster;
-
 @Component
 public class PanelRegistrationAwareMulticaster {
-	private static final Logger log = LoggerFactory.getLogger(ControlServerSessionTransportErrorMulticaster.class);
+	private static final Logger log = LoggerFactory.getLogger(PanelRegistrationAwareMulticaster.class);
 	private final List<PanelRegistrationAware> panelRegistrationAwares;
 
 	public PanelRegistrationAwareMulticaster(

@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformation;
-import de.mazdermind.gintercom.shared.controlserver.provisioning.ProvisioningInformationAware;
+import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import de.mazdermind.gintercom.clientsupport.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
 public class MainWindowManager implements ProvisioningInformationAware {
