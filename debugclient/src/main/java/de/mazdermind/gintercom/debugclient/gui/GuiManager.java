@@ -2,13 +2,14 @@ package de.mazdermind.gintercom.debugclient.gui;
 
 import java.awt.*;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,7 +28,7 @@ public class GuiManager {
 		this.mainWindowManager = mainWindowManager;
 	}
 
-	@PostConstruct
+	@EventListener(ContextRefreshedEvent.class)
 	public void show() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
 		log.info("Configuring UI-Framework");
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

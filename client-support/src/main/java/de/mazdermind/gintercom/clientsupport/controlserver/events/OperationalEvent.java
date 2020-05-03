@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycle;
 
-public class OperationalEvent implements ConnectionLifecycleEvent {
+public class OperationalEvent extends ConnectionLifecycleEvent {
 	@Override
 	public String getDisplayText() {
 		return "Operational";

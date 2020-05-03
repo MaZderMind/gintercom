@@ -5,15 +5,15 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycleManager;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
-import de.mazdermind.gintercom.clientsupport.controlserver.provisioning.ProvisioningInformationAware;
 
 @Service
-public class PipelineManager implements ProvisioningInformationAware {
+public class PipelineManager {
 	private static final Logger log = LoggerFactory.getLogger(PipelineManager.class);
 
 	private final ClientPipeline clientPipeline;
@@ -28,7 +28,7 @@ public class PipelineManager implements ProvisioningInformationAware {
 		log.info("Using ClientPipeline-Implementation {}", clientPipeline.getClass().getName());
 	}
 
-	@Override
+	@EventListener
 	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
 		Optional<MatrixAddressDiscoveryServiceResult> discoveredMatrix = connectionLifecycleManager.getDiscoveredMatrix();
 		if (!discoveredMatrix.isPresent()) {

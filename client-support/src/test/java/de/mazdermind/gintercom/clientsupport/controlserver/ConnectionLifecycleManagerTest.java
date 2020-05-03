@@ -1,6 +1,11 @@
 package de.mazdermind.gintercom.clientsupport.controlserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -13,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
@@ -28,11 +34,11 @@ import de.mazdermind.gintercom.clientsupport.controlserver.events.AddressDiscove
 import de.mazdermind.gintercom.clientsupport.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.OperationalEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.support.ConnectionLifecycleEventMulticaster;
+import de.mazdermind.gintercom.testutils.captors.FilteringArgumentCaptor;
 
 public class ConnectionLifecycleManagerTest {
 
-	private ConnectionLifecycleEventMulticaster connectionLifecycleEventMulticaster;
+	private ApplicationEventPublisher eventPublisher;
 	private MatrixAddressDiscoveryService matrixAddressDiscoveryService;
 	private ControlServerClient controlServerClient;
 	private ConnectionLifecycleManager connectionLifecycleManager;
@@ -44,33 +50,33 @@ public class ConnectionLifecycleManagerTest {
 
 	@Before
 	public void prepare() throws UnknownHostException {
-		taskScheduler = Mockito.mock(TaskScheduler.class);
-		scheduledDiscovery = Mockito.mock(ScheduledFuture.class);
+		taskScheduler = mock(TaskScheduler.class);
+		scheduledDiscovery = mock(ScheduledFuture.class);
 		//noinspection unchecked
-		Mockito.when(taskScheduler.schedule(ArgumentMatchers.any(), ArgumentMatchers.any(Trigger.class))).thenReturn(scheduledDiscovery);
+		Mockito.when(taskScheduler.schedule(any(), any(Trigger.class))).thenReturn(scheduledDiscovery);
 
-		matrixAddressDiscoveryServiceImplementation = Mockito.mock(MatrixAddressDiscoveryServiceImplementation.class);
+		matrixAddressDiscoveryServiceImplementation = mock(MatrixAddressDiscoveryServiceImplementation.class);
 		Mockito.when(matrixAddressDiscoveryServiceImplementation.getDisplayName()).thenReturn("Test-Discovery-Method");
 		Mockito.when(matrixAddressDiscoveryServiceImplementation.tryDiscovery()).thenReturn(Optional.empty());
 
-		matrixAddressDiscoveryService = Mockito.mock(MatrixAddressDiscoveryService.class);
+		matrixAddressDiscoveryService = mock(MatrixAddressDiscoveryService.class);
 		Mockito.when(matrixAddressDiscoveryService.getNextImplementation())
 			.thenReturn(matrixAddressDiscoveryServiceImplementation);
 
-		successfulDiscovery = Mockito.mock(MatrixAddressDiscoveryServiceResult.class);
+		successfulDiscovery = mock(MatrixAddressDiscoveryServiceResult.class);
 		Mockito.when(successfulDiscovery.getAddress()).thenReturn(InetAddress.getByName("10.56.23.42"));
 		Mockito.when(successfulDiscovery.getPort()).thenReturn(2342);
 
-		controlServerClient = Mockito.mock(ControlServerClient.class);
-		Mockito.when(controlServerClient.connect(ArgumentMatchers.any(InetAddress.class), ArgumentMatchers.anyInt())).thenReturn(Optional
+		controlServerClient = mock(ControlServerClient.class);
+		Mockito.when(controlServerClient.connect(any(InetAddress.class), ArgumentMatchers.anyInt())).thenReturn(Optional
 			.empty());
 
-		connectionLifecycleEventMulticaster = Mockito.mock(ConnectionLifecycleEventMulticaster.class);
+		eventPublisher = mock(ApplicationEventPublisher.class);
 
-		stompSession = Mockito.mock(StompSession.class);
+		stompSession = mock(StompSession.class);
 
 		connectionLifecycleManager = new ConnectionLifecycleManager(
-			connectionLifecycleEventMulticaster,
+			eventPublisher,
 			matrixAddressDiscoveryService,
 			controlServerClient,
 			taskScheduler, new TestClientConfiguration()
@@ -85,11 +91,11 @@ public class ConnectionLifecycleManagerTest {
 	@Test
 	public void triesDiscoveryAfterStartup() {
 		connectionLifecycleManager.initiateDiscovery();
-		Mockito.verify(taskScheduler, Mockito.times(1)).schedule(ArgumentMatchers.any(), ArgumentMatchers.any(Trigger.class));
+		verify(taskScheduler, times(1)).schedule(any(), any(Trigger.class));
 
 		connectionLifecycleManager.discoveryTryNext();
-		Mockito.verify(matrixAddressDiscoveryService, Mockito.times(1)).getNextImplementation();
-		Mockito.verify(matrixAddressDiscoveryServiceImplementation, Mockito.times(1)).tryDiscovery();
+		verify(matrixAddressDiscoveryService, times(1)).getNextImplementation();
+		verify(matrixAddressDiscoveryServiceImplementation, times(1)).tryDiscovery();
 	}
 
 	@Test
@@ -102,14 +108,14 @@ public class ConnectionLifecycleManagerTest {
 	public void retriesDiscoveryAfterFailedDiscovery() {
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		Mockito.verify(scheduledDiscovery, Mockito.never()).cancel(ArgumentMatchers.anyBoolean());
+		verify(scheduledDiscovery, Mockito.never()).cancel(ArgumentMatchers.anyBoolean());
 	}
 
 	@Test
 	public void notifiesAboutDiscoveryAttempt() {
 		connectionLifecycleManager.discoveryTryNext();
 		ArgumentCaptor<AddressDiscoveryEvent> captor = ArgumentCaptor.forClass(AddressDiscoveryEvent.class);
-		Mockito.verify(connectionLifecycleEventMulticaster, Mockito.times(1)).dispatch(captor.capture());
+		verify(eventPublisher, times(1)).publishEvent(captor.capture());
 		assertThat(captor.getValue().getImplementationName()).isEqualTo("Test-Discovery-Method");
 	}
 
@@ -119,7 +125,7 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		Mockito.verify(controlServerClient, Mockito.times(1)).connect(successfulDiscovery.getAddress(), successfulDiscovery.getPort());
+		verify(controlServerClient, times(1)).connect(successfulDiscovery.getAddress(), successfulDiscovery.getPort());
 	}
 
 	@Test
@@ -128,7 +134,7 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		Mockito.verify(scheduledDiscovery, Mockito.times(1)).cancel(ArgumentMatchers.anyBoolean());
+		verify(scheduledDiscovery, times(1)).cancel(ArgumentMatchers.anyBoolean());
 	}
 
 	@Test
@@ -137,7 +143,7 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		Mockito.verify(taskScheduler, Mockito.times(2)).schedule(ArgumentMatchers.any(), ArgumentMatchers.any(Trigger.class));
+		verify(taskScheduler, times(2)).schedule(any(), any(Trigger.class));
 	}
 
 	@Test
@@ -171,8 +177,8 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
 
-		ArgumentCaptor<ConnectingEvent> captor = ArgumentCaptor.forClass(ConnectingEvent.class);
-		Mockito.verify(connectionLifecycleEventMulticaster, Mockito.times(1)).dispatch(captor.capture());
+		FilteringArgumentCaptor<ConnectingEvent> captor = FilteringArgumentCaptor.forClass(ConnectingEvent.class);
+		verify(eventPublisher, atLeast(1)).publishEvent(captor.capture());
 		assertThat(captor.getValue().getAddress()).isEqualTo(successfulDiscovery.getAddress());
 		assertThat(captor.getValue().getPort()).isEqualTo(successfulDiscovery.getPort());
 	}
@@ -185,7 +191,7 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.discoveryTryNext();
 
 		ArgumentCaptor<PanelRegistrationMessage> captor = ArgumentCaptor.forClass(PanelRegistrationMessage.class);
-		Mockito.verify(stompSession).send(ArgumentMatchers.eq("/registration"), captor.capture());
+		verify(stompSession).send(ArgumentMatchers.eq("/registration"), captor.capture());
 		PanelRegistrationMessage panelRegistrationMessage = captor.getValue();
 		assertThat(panelRegistrationMessage.getHostId()).isEqualTo(TestClientConfiguration.HOST_ID);
 		assertThat(panelRegistrationMessage.getClientModel()).isEqualTo(TestClientConfiguration.CLIENT_MODEL);
@@ -200,8 +206,8 @@ public class ConnectionLifecycleManagerTest {
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
 
-		ArgumentCaptor<AwaitingProvisioningEvent> captor = ArgumentCaptor.forClass(AwaitingProvisioningEvent.class);
-		Mockito.verify(connectionLifecycleEventMulticaster).dispatch(captor.capture());
+		FilteringArgumentCaptor<AwaitingProvisioningEvent> captor = FilteringArgumentCaptor.forClass(AwaitingProvisioningEvent.class);
+		verify(eventPublisher, atLeast(1)).publishEvent(captor.capture());
 		assertThat(captor.getValue().getHostId()).isEqualTo(TestClientConfiguration.HOST_ID);
 	}
 
@@ -221,11 +227,11 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		connectionLifecycleManager.handleTransportErrorEvent(Mockito.mock(ControlServerSessionTransportErrorEvent.class));
+		connectionLifecycleManager.handleTransportErrorEvent(mock(ControlServerSessionTransportErrorEvent.class));
 
 		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.DISCOVERY);
-		Mockito.verify(taskScheduler, Mockito.times(2)).schedule(ArgumentMatchers.any(), ArgumentMatchers.any(Trigger.class));
-		Mockito.verify(controlServerClient, Mockito.times(1)).disconnect();
+		verify(taskScheduler, times(2)).schedule(any(Runnable.class), any(Trigger.class));
+		verify(controlServerClient, times(1)).disconnect();
 	}
 
 	@Test
@@ -234,7 +240,7 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		connectionLifecycleManager.handleProvisioningInformation(Mockito.mock(ProvisioningInformation.class));
+		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisioningInformation.class));
 
 		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.OPERATIONAL);
 	}
@@ -245,9 +251,9 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		connectionLifecycleManager.handleProvisioningInformation(Mockito.mock(ProvisioningInformation.class));
+		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisioningInformation.class));
 
-		Mockito.verify(connectionLifecycleEventMulticaster, Mockito.times(1)).dispatch(ArgumentMatchers.any(OperationalEvent.class));
+		verify(eventPublisher, times(1)).publishEvent(any(OperationalEvent.class));
 	}
 
 	@Test
@@ -256,12 +262,12 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		connectionLifecycleManager.handleProvisioningInformation(Mockito.mock(ProvisioningInformation.class));
-		connectionLifecycleManager.handleTransportErrorEvent(Mockito.mock(ControlServerSessionTransportErrorEvent.class));
+		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisioningInformation.class));
+		connectionLifecycleManager.handleTransportErrorEvent(mock(ControlServerSessionTransportErrorEvent.class));
 
 		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.DISCOVERY);
-		Mockito.verify(taskScheduler, Mockito.times(2)).schedule(ArgumentMatchers.any(), ArgumentMatchers.any(Trigger.class));
-		Mockito.verify(controlServerClient, Mockito.times(1)).disconnect();
+		verify(taskScheduler, times(2)).schedule(any(), any(Trigger.class));
+		verify(controlServerClient, times(1)).disconnect();
 	}
 
 	private void setupSuccessfulDiscovery() {

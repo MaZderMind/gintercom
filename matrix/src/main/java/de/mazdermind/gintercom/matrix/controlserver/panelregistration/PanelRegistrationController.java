@@ -11,21 +11,22 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import de.mazdermind.gintercom.clientapi.messages.provision.AlreadyRegisteredMessage;
+import de.mazdermind.gintercom.clientapi.messages.provision.ProvisionMessage;
+import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import de.mazdermind.gintercom.clientapi.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.matrix.configuration.ButtonSetResolver;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
-import de.mazdermind.gintercom.clientapi.messages.provision.AlreadyRegisteredMessage;
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisionMessage;
-import de.mazdermind.gintercom.clientapi.messages.registration.PanelRegistrationMessage;
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
 
 @Controller
 public class PanelRegistrationController {
@@ -33,7 +34,7 @@ public class PanelRegistrationController {
 
 	private final Config config;
 	private final PortAllocationManager portAllocationManager;
-	private final PanelRegistrationAwareMulticaster panelRegistrationAwareMulticaster;
+	private final ApplicationEventPublisher eventPublisher;
 	private final ButtonSetResolver buttonSetResolver;
 	private final PanelConnectionManager panelConnectionManager;
 	private final SimpReponder simpReponder;
@@ -41,14 +42,14 @@ public class PanelRegistrationController {
 	public PanelRegistrationController(
 		@Autowired Config config,
 		@Autowired PortAllocationManager portAllocationManager,
-		@Autowired PanelRegistrationAwareMulticaster panelRegistrationAwareMulticaster,
+		@Autowired ApplicationEventPublisher eventPublisher,
 		@Autowired ButtonSetResolver buttonSetResolver,
 		@Autowired PanelConnectionManager panelConnectionManager,
 		@Autowired SimpReponder simpReponder
 	) {
 		this.portAllocationManager = portAllocationManager;
 		this.config = config;
-		this.panelRegistrationAwareMulticaster = panelRegistrationAwareMulticaster;
+		this.eventPublisher = eventPublisher;
 		this.buttonSetResolver = buttonSetResolver;
 		this.panelConnectionManager = panelConnectionManager;
 		this.simpReponder = simpReponder;
@@ -102,7 +103,7 @@ public class PanelRegistrationController {
 			.setRemoteIp(hostAddress)
 			.setSessionId(sessionId));
 
-		panelRegistrationAwareMulticaster.dispatchPanelRegistration(new PanelRegistrationEvent(
+		eventPublisher.publishEvent(new PanelRegistrationEvent(
 			panelId, panelConfig, portSet, hostAddress
 		));
 
@@ -136,7 +137,7 @@ public class PanelRegistrationController {
 			PanelConfig panelConfig = config.getPanels().get(panelId);
 			log.info("Session of Panel {} ({}) closed", panelId, panelConfig.getDisplay());
 
-			panelRegistrationAwareMulticaster.dispatchPanelDeRegistration(new PanelDeRegistrationEvent(
+			eventPublisher.publishEvent(new PanelDeRegistrationEvent(
 				panelId
 			));
 		}
