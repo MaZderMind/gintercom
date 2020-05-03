@@ -4,11 +4,13 @@ import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Caps;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.ElementFactory;
+import org.freedesktop.gstreamer.GhostPad;
+import org.freedesktop.gstreamer.Pad;
 import org.freedesktop.gstreamer.Pipeline;
 
 public class GstBuilder<T extends Bin> {
 	private final T container;
-	private Element lastAddedElement;
+	private Element currentElement;
 	private Caps lastCaps;
 
 	private GstBuilder(T container) {
@@ -28,17 +30,21 @@ public class GstBuilder<T extends Bin> {
 	}
 
 	public GstBuilder<T> addElement(String element, String name) {
-		lastAddedElement = ElementFactory.make(element, name);
-		container.add(lastAddedElement);
+		return addElement(ElementFactory.make(element, name));
+	}
+
+	public GstBuilder<T> addElement(Element element) {
+		currentElement = element;
+		container.add(currentElement);
 		lastCaps = null;
 		return this;
 	}
 
 	public GstBuilder<T> withProperty(String name, Object value) {
 		if (value instanceof String) {
-			lastAddedElement.setAsString(name, (String) value);
+			currentElement.setAsString(name, (String) value);
 		} else {
-			lastAddedElement.set(name, value);
+			currentElement.set(name, value);
 		}
 		return this;
 	}
@@ -48,27 +54,53 @@ public class GstBuilder<T extends Bin> {
 		return this;
 	}
 
-	public GstBuilder<T> linkElement(String element) {
-		return linkElement(element, null);
+	public GstBuilder<T> linkElement(String nextElement) {
+		return linkElement(nextElement, null);
 	}
 
-	public GstBuilder<T> linkElement(String element, String name) {
-		Element nextElement = ElementFactory.make(element, name);
-		container.add(nextElement);
+	public GstBuilder<T> linkElement(String nextElement, String name) {
+		return linkElement(ElementFactory.make(nextElement, name));
+	}
 
+	public GstBuilder<T> linkElement(Element nextElement) {
+		container.add(nextElement);
+		linkWithCaps(currentElement, nextElement);
+
+		currentElement = nextElement;
+		return this;
+	}
+
+	public GstBuilder<T> linkExistingElement(String nextElementName) {
+		Element nextElement = container.getElementByName(nextElementName);
+		linkWithCaps(currentElement, nextElement);
+
+		return this;
+	}
+
+	public GstBuilder<T> existingElement(String existingElementName) {
+		currentElement = container.getElementByName(existingElementName);
+		return this;
+	}
+
+	private void linkWithCaps(Element from, Element to) {
 		if (lastCaps == null) {
-			lastAddedElement.link(nextElement);
+			from.link(to);
 		} else {
-			lastAddedElement.linkFiltered(nextElement, lastCaps);
+			currentElement.linkFiltered(to, lastCaps);
 			lastCaps = null;
 		}
+	}
 
-		lastAddedElement = nextElement;
+	public GstBuilder<T> withGhostPad(String elementName, String padName) {
+		Element element = container.getElementByName(elementName);
+		Pad pad = element.getStaticPad(padName);
+		GhostPad ghostPad = new GhostPad(null, pad);
+		container.addPad(ghostPad);
 		return this;
 	}
 
 	public T build() {
-		lastAddedElement = null;
+		currentElement = null;
 		lastCaps = null;
 		return container;
 	}
