@@ -2,13 +2,9 @@ package de.mazdermind.gintercom.matrix.portpool;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.mazdermind.gintercom.matrix.configuration.model.PortPoolConfig;
 
 public class PortPool {
-	private static final Logger log = LoggerFactory.getLogger(PortPool.class);
 	private final AtomicInteger nextPort;
 	private final int start;
 	private final int limit;

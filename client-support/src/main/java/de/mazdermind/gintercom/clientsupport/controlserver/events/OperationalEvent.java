@@ -1,9 +1,13 @@
 package de.mazdermind.gintercom.clientsupport.controlserver.events;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycle;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
+@Data
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
 public class OperationalEvent extends ConnectionLifecycleEvent {
 	@Override
 	public String getDisplayText() {
@@ -13,11 +17,5 @@ public class OperationalEvent extends ConnectionLifecycleEvent {
 	@Override
 	public ConnectionLifecycle getLifecycle() {
 		return ConnectionLifecycle.OPERATIONAL;
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.toString();
 	}
 }

@@ -10,15 +10,13 @@ import javax.annotation.Nonnull;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationException;
 import de.mazdermind.gintercom.mixingcore.exception.MixingCoreException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MixingCore {
-	private static final Logger log = LoggerFactory.getLogger(MixingCore.class);
-
 	static {
 		Gst.init();
 	}

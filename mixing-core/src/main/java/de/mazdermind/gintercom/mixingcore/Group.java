@@ -11,17 +11,15 @@ import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.GhostPad;
 import org.freedesktop.gstreamer.Pad;
 import org.freedesktop.gstreamer.Pipeline;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
+import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstPadBlock;
 import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Group {
-	private static final Logger log = LoggerFactory.getLogger(Group.class);
-
 	private final String name;
 
 	private final Pipeline pipeline;

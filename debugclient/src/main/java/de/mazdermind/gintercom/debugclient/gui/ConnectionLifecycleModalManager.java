@@ -6,17 +6,16 @@ import java.awt.event.ComponentEvent;
 
 import javax.swing.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectionLifecycleEvent;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class ConnectionLifecycleModalManager {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(400, 100);
-	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleModalManager.class);
 	private JDialog dialog;
 	private JLabel label;
 	private JLabel detailsLabel;

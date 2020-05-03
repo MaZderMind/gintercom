@@ -10,21 +10,19 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.freedesktop.gstreamer.Sample;
 import org.freedesktop.gstreamer.State;
 import org.freedesktop.gstreamer.elements.AppSink;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
+import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstDebugger;
 import de.mazdermind.gintercom.gstreamersupport.GstErrorCheck;
-import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
 import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
 import de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer.AudioAnalyser;
 import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.AppSinkSupport;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class RtpTestClient {
-	private static final Logger log = LoggerFactory.getLogger(RtpTestClient.class);
-
 	private static final String TESTSRC_NAME = "client-testsrc";
 	private static final String APPSINK_NAME = "client-appsink";
 

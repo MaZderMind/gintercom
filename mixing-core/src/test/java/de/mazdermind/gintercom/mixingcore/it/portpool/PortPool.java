@@ -2,11 +2,10 @@ package de.mazdermind.gintercom.mixingcore.it.portpool;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class PortPool {
-	private static final Logger log = LoggerFactory.getLogger(PortPool.class);
 	private final AtomicInteger nextPort;
 	private final Boolean resetting;
 	private final int start;

@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
@@ -27,11 +25,11 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 public class PanelRegistrationController {
-	private static final Logger log = LoggerFactory.getLogger(PanelRegistrationController.class);
-
 	private final Config config;
 	private final PortAllocationManager portAllocationManager;
 	private final ApplicationEventPublisher eventPublisher;

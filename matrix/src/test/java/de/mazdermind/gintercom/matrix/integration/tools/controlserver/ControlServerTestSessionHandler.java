@@ -12,21 +12,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class ControlServerTestSessionHandler extends StompSessionHandlerAdapter {
-	private static final Logger log = LoggerFactory.getLogger(ControlServerTestSessionHandler.class);
+	private final List<Throwable> errors = new ArrayList<>();
+	private final List<StompMessage> messages = new ArrayList<>();
 
-	private List<Throwable> errors = new ArrayList<>();
-	private List<StompMessage> messages = new ArrayList<>();
-
-	private AtomicReference<FutureMessage> futureMessage = new AtomicReference<>();
+	private final AtomicReference<FutureMessage> futureMessage = new AtomicReference<>();
 
 	@Override
 	@NonNull

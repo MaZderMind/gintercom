@@ -16,12 +16,12 @@ import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
 import org.apache.commons.math3.transform.TransformType;
 import org.apache.commons.math3.util.ArithmeticUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class PeakDetector {
 	public static final int DEFAULT_FFT_BANDS = 512;
-	private static final Logger log = LoggerFactory.getLogger(PeakDetector.class);
 
 	private final int fftSize;
 	private final double binWidth;

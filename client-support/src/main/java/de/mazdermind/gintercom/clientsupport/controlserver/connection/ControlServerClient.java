@@ -10,8 +10,6 @@ import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PreDestroy;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -20,11 +18,13 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class ControlServerClient {
 	private static final int CONNECTION_TIMEOUT_SECONDS = 5;
 
-	private static final Logger log = LoggerFactory.getLogger(ControlServerClient.class);
 	private final ControlServerSessionHandler sessionHandler;
 	private WebSocketStompClient stompClient;
 	private StompSession stompSession;

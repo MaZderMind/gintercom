@@ -6,17 +6,16 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.debugclient.gui.components.ToggleButton;
 import de.mazdermind.gintercom.debugclient.pipeline.DebugClientPipeline;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class DebugToolButtonsManager {
-	private static final Logger log = LoggerFactory.getLogger(DebugToolButtonsManager.class);
 	private final DebugClientPipeline pipeline;
 
 	public DebugToolButtonsManager(

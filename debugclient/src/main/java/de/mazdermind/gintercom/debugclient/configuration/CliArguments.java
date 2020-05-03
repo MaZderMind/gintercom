@@ -14,17 +14,17 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Splitter;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CliArguments {
-	private static final Logger log = LoggerFactory.getLogger(CliArguments.class);
 	private final ApplicationArguments arguments;
 	private CommandLine commandLine;
 
