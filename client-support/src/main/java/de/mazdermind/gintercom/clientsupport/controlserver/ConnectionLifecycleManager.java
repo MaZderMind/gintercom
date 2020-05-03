@@ -30,10 +30,9 @@ import de.mazdermind.gintercom.clientsupport.controlserver.events.AddressDiscove
 import de.mazdermind.gintercom.clientsupport.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.OperationalEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
-public class ConnectionLifecycleManager implements ProvisioningInformationAware {
+public class ConnectionLifecycleManager {
 	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 3;
 
 	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
@@ -143,7 +142,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware 
 		}
 	}
 
-	@Override
+	@EventListener
 	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
 		log.info("Provisioning received, Client is now Operational");
 		lifecycle = ConnectionLifecycle.OPERATIONAL;
