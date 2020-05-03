@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
 import de.mazdermind.gintercom.gstreamersupport.GstDebugger;
 import de.mazdermind.gintercom.gstreamersupport.GstErrorCheck;
-import de.mazdermind.gintercom.mixingcore.Constants;
-import de.mazdermind.gintercom.mixingcore.StaticCaps;
+import de.mazdermind.gintercom.gstreamersupport.GstConstants;
+import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
 import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
 import de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer.AudioAnalyser;
 import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.AppSinkSupport;
@@ -77,13 +77,13 @@ public class RtpTestClient {
 				.addElement("audiotestsrc", TESTSRC_NAME)
 					.withProperty("is-live", true)
 					.withProperty("volume", 0.0)
-					.withProperty("samplesperbuffer", Constants.SAMPLES_PER_BUFFER)
-				.withCaps(StaticCaps.AUDIO)
+					.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
+				.withCaps(GstStaticCaps.AUDIO)
 				.linkElement("audioconvert")
-				.withCaps(StaticCaps.AUDIO_BE)
+				.withCaps(GstStaticCaps.AUDIO_BE)
 				.linkElement("rtpL16pay")
-					.withProperty("mtu", Constants.MTU)
-				.withCaps(StaticCaps.RTP)
+					.withProperty("mtu", GstConstants.MTU)
+				.withCaps(GstStaticCaps.RTP)
 				.linkElement("udpsink", "client-udpsink")
 					.withProperty("host", "127.0.0.1")
 					.withProperty("port", portSet.getPanelToMatrix())
@@ -96,13 +96,13 @@ public class RtpTestClient {
 		rxBin = GstBuilder.buildBin("rx")
 				.addElement("udpsrc", "client-udpsrc")
 					.withProperty("port", portSet.getMatrixToPanel())
-				.withCaps(StaticCaps.RTP)
+				.withCaps(GstStaticCaps.RTP)
 				.linkElement("rtpjitterbuffer")
-					.withProperty("latency", Constants.LATENCY_MS)
+					.withProperty("latency", GstConstants.LATENCY_MS)
 				.linkElement("rtpL16depay")
-				.withCaps(StaticCaps.AUDIO_BE)
+				.withCaps(GstStaticCaps.AUDIO_BE)
 				.linkElement("audioconvert")
-				.withCaps(StaticCaps.AUDIO)
+				.withCaps(GstStaticCaps.AUDIO)
 				.linkElement("appsink", APPSINK_NAME)
 					.withProperty("async", false)
 					.withProperty("sync", false)

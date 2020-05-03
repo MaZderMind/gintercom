@@ -15,6 +15,8 @@ import org.freedesktop.gstreamer.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mazdermind.gintercom.gstreamersupport.GstConstants;
+import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
 import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationException;
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
 import de.mazdermind.gintercom.gstreamersupport.GstPadBlock;
@@ -46,13 +48,13 @@ public class Panel {
 		rxBin = GstBuilder.buildBin(String.format("panel-%s-rx", name))
 				.addElement("udpsrc", String.format("panel-%s-udpsrc", name))
 					.withProperty("port", panelToMatrixPort)
-				.withCaps(StaticCaps.RTP)
+				.withCaps(GstStaticCaps.RTP)
 				.linkElement("rtpjitterbuffer", String.format("panel-%s-jitterbuffer", name))
-					.withProperty("latency", Constants.LATENCY_MS)
+					.withProperty("latency", GstConstants.LATENCY_MS)
 					.withProperty("drop-on-latency", true)
 				.linkElement("rtpL16depay")
 				.linkElement("audioconvert")
-				.withCaps(StaticCaps.AUDIO)
+				.withCaps(GstStaticCaps.AUDIO)
 				.linkElement("tee", teeName)
 					.withProperty("allow-not-linked", true)
 
@@ -64,15 +66,15 @@ public class Panel {
 				.addElement("audiotestsrc", String.format("panel-%s-silencesrc", name))
 					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
-					.withProperty("samplesperbuffer", Constants.SAMPLES_PER_BUFFER)
-				.withCaps(StaticCaps.AUDIO)
+					.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
+				.withCaps(GstStaticCaps.AUDIO)
 				.linkElement("audiomixer", mixerName)
 					.withProperty("start-time-selection", "first")
-					.withProperty("output-buffer-duration", Constants.BUFFER_DURATION_NS)
+					.withProperty("output-buffer-duration", GstConstants.BUFFER_DURATION_NS)
 				.linkElement("audioconvert")
-				.withCaps(StaticCaps.AUDIO_BE)
+				.withCaps(GstStaticCaps.AUDIO_BE)
 				.linkElement("rtpL16pay")
-					.withProperty("mtu", Constants.MTU)
+					.withProperty("mtu", GstConstants.MTU)
 				.linkElement("udpsink")
 					.withProperty("host", panelHost.getHostAddress())
 					.withProperty("port", matrixToPanelPort)

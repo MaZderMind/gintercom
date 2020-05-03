@@ -1,6 +1,6 @@
-package de.mazdermind.gintercom.mixingcore;
+package de.mazdermind.gintercom.gstreamersupport;
 
-public class Constants {
+public class GstConstants {
 	public static final int HEADER_SIZE = 54;
 	public static final int BYTES_PER_SAMPLE = 2;
 	public static final int SAMPLE_RATE = 48000;
