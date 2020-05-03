@@ -17,7 +17,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-public class PeakDetectorFunctionalTest {
+public class PeakDetectorFunctionalIT {
 	private static final int ITERATIONS = 5;
 	private static final Duration TIMEOUT = Duration.ofMillis(500);
 
