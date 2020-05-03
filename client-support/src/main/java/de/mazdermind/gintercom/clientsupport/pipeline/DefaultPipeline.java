@@ -43,8 +43,10 @@ public class DefaultPipeline implements ClientPipeline {
 
 	@PreDestroy
 	public void stop() {
-		log.info("stopping pipeline");
-		pipeline.stop();
+		if (pipeline != null) {
+			log.info("stopping pipeline");
+			pipeline.stop();
+		}
 	}
 
 	@Override
