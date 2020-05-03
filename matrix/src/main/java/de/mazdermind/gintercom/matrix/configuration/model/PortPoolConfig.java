@@ -3,10 +3,11 @@ package de.mazdermind.gintercom.matrix.configuration.model;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-import com.google.common.base.Objects;
-
+@Data
+@Accessors(chain = true)
 public class PortPoolConfig {
 	@Valid
 	@NotNull
@@ -15,44 +16,4 @@ public class PortPoolConfig {
 	@Valid
 	@NotNull
 	private Integer limit;
-
-	public Integer getStart() {
-		return start;
-	}
-
-	public Integer getLimit() {
-		return limit;
-	}
-
-	public PortPoolConfig setStart(Integer start) {
-		this.start = start;
-		return this;
-	}
-
-	public PortPoolConfig setLimit(Integer limit) {
-		this.limit = limit;
-		return this;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(start, limit);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		PortPoolConfig that = (PortPoolConfig) o;
-		return Objects.equal(start, that.start) &&
-			Objects.equal(limit, that.limit);
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("start", start)
-			.append("limit", limit)
-			.toString();
-	}
 }

@@ -6,15 +6,16 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Objects;
-
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+@Data
+@Accessors(chain = true)
 public class Config {
 	private static final Logger log = LoggerFactory.getLogger(Config.class);
 
@@ -29,45 +30,6 @@ public class Config {
 
 	@Valid
 	private Map<String, ButtonSetConfig> buttonsets;
-
-	public Config() {
-	}
-
-	public MatrixConfig getMatrixConfig() {
-		return matrixConfig;
-	}
-
-	public Config setMatrixConfig(MatrixConfig matrixConfig) {
-		this.matrixConfig = matrixConfig;
-		return this;
-	}
-
-	public Map<String, PanelConfig> getPanels() {
-		return panels;
-	}
-
-	public Config setPanels(Map<String, PanelConfig> panels) {
-		this.panels = panels;
-		return this;
-	}
-
-	public Map<String, GroupConfig> getGroups() {
-		return groups;
-	}
-
-	public Config setGroups(Map<String, GroupConfig> groups) {
-		this.groups = groups;
-		return this;
-	}
-
-	public Map<String, ButtonSetConfig> getButtonsets() {
-		return buttonsets;
-	}
-
-	public Config setButtonsets(Map<String, ButtonSetConfig> buttonsets) {
-		this.buttonsets = buttonsets;
-		return this;
-	}
 
 	public void validateReferences() {
 		log.debug("Validating Panel -> Group references");
@@ -136,31 +98,5 @@ public class Config {
 			.filter(entry -> hostId.equals(entry.getValue().getHostId()))
 			.findFirst()
 			.map(Map.Entry::getKey);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(matrixConfig, panels, groups, buttonsets);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Config config = (Config) o;
-		return Objects.equal(matrixConfig, config.matrixConfig) &&
-			Objects.equal(panels, config.panels) &&
-			Objects.equal(groups, config.groups) &&
-			Objects.equal(buttonsets, config.buttonsets);
-	}
-
-	@Override
-	public String toString() {
-		return new ToStringBuilder(this)
-			.append("matrixConfig", matrixConfig)
-			.append("panels", panels)
-			.append("groups", groups)
-			.append("buttonsets", buttonsets)
-			.toString();
 	}
 }
