@@ -3,17 +3,17 @@ package de.mazdermind.gintercom.matrix.mixingcore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelDeRegistrationEvent;
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegistrationAware;
 import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegistrationEvent;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import de.mazdermind.gintercom.mixingcore.Panel;
 
 @Component
-public class MixingCoreController implements PanelRegistrationAware {
+public class MixingCoreController {
 	private static final Logger log = LoggerFactory.getLogger(MixingCoreController.class);
 	private final MixingCore mixingCore;
 
@@ -23,7 +23,7 @@ public class MixingCoreController implements PanelRegistrationAware {
 		this.mixingCore = mixingCore;
 	}
 
-	@Override
+	@EventListener
 	public void handlePanelRegistration(PanelRegistrationEvent panelRegistrationEvent) {
 		log.info("Registering Panel {}", panelRegistrationEvent.getPanelId());
 		Panel panel = mixingCore.addPanel(
@@ -45,7 +45,7 @@ public class MixingCoreController implements PanelRegistrationAware {
 		});
 	}
 
-	@Override
+	@EventListener
 	public void handlePanelDeRegistration(PanelDeRegistrationEvent panelDeRegistrationEvent) {
 		log.info("DeRegistering Panel {}", panelDeRegistrationEvent.getPanelId());
 		Panel panel = mixingCore.getPanelByName(panelDeRegistrationEvent.getPanelId());
