@@ -5,8 +5,6 @@ import static de.mazdermind.gintercom.clientsupport.utils.ObjectListClassNameUti
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
@@ -17,10 +15,11 @@ import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.messagehandler.MatrixMessageHandler;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class ControlServerSessionHandler implements StompSessionHandler {
-	private static final Logger log = LoggerFactory.getLogger(ControlServerSessionHandler.class);
 	private final List<MatrixMessageHandler> messageHandlers;
 	private final ApplicationEventPublisher eventPublisher;
 

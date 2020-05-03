@@ -9,8 +9,6 @@ import org.freedesktop.gstreamer.ElementFactory;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.GstException;
 import org.freedesktop.gstreamer.Pipeline;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
@@ -20,6 +18,7 @@ import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstDebugger;
 import de.mazdermind.gintercom.gstreamersupport.GstErrorCheck;
 import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Default RTP/Audio-Pipeline for Intercom-Clients, auto-detects Audio-Subsystem of the OS and
@@ -29,10 +28,9 @@ import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
  * Analyser or Filter in the In- or Output-Path, you can extend this Class and annotate it with
  * <code>@Component @Primary</code>
  */
+@Slf4j
 @Component
 public class DefaultPipeline implements ClientPipeline {
-	private static final Logger log = LoggerFactory.getLogger(DefaultPipeline.class);
-
 	static {
 		Gst.init();
 	}

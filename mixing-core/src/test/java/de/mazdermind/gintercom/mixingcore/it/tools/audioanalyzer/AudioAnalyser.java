@@ -7,18 +7,15 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.PeakDetector;
 import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.PeakSet;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AudioAnalyser {
 	public static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
 	public static final Duration DEFAULT_PERIOD = Duration.ofMillis(250);
 	public static final Duration POLL_TIMEOUT = Duration.ofMillis(500);
-
-	private static final Logger log = LoggerFactory.getLogger(AudioAnalyser.class);
 
 	private final PeakDetector peakDetector;
 	private final String identifier;

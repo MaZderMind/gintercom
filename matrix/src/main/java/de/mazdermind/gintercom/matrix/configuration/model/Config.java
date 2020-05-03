@@ -6,19 +6,16 @@ import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Data
 @Accessors(chain = true)
 public class Config {
-	private static final Logger log = LoggerFactory.getLogger(Config.class);
-
 	@Valid
 	private MatrixConfig matrixConfig;
 

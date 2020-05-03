@@ -9,8 +9,6 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -20,11 +18,12 @@ import com.google.common.math.IntMath;
 
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class GroupButtonGridManager  {
 	private final static int COLS = 2;
-	private static final Logger log = LoggerFactory.getLogger(GroupButtonGridManager.class);
 	private final ClientConfiguration clientConfiguration;
 	private final List<JButton> buttonList = new ArrayList<>();
 

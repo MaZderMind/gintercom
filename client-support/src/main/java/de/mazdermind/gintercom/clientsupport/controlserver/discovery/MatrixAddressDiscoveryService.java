@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.collections4.IteratorUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +14,11 @@ import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.impl.ManualMatrixAddressConfigurationDiscoveryService;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.manualconfig.ManualMatrixAddressConfiguration;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class MatrixAddressDiscoveryService {
-	private static final Logger log = LoggerFactory.getLogger(MatrixAddressDiscoveryService.class);
-
 	private final Iterator<MatrixAddressDiscoveryServiceImplementation> implementationsIterator;
 
 	public MatrixAddressDiscoveryService(

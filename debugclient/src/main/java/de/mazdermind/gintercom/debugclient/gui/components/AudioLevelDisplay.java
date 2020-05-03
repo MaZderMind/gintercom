@@ -7,15 +7,13 @@ import java.util.stream.Collectors;
 
 import javax.swing.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.annotations.VisibleForTesting;
 
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AudioLevelDisplay extends JPanel {
-	private static final Logger log = LoggerFactory.getLogger(AudioLevelDisplay.class);
 	private static final int SPACING = 1;
 	private final AtomicReference<AudioLevelEvent> lastAudioLevelEvent = new AtomicReference<>();
 

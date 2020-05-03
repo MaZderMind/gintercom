@@ -1,8 +1,6 @@
 package de.mazdermind.gintercom.debugclient.pipeline;
 
 import org.freedesktop.gstreamer.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -13,7 +11,9 @@ import de.mazdermind.gintercom.clientsupport.pipeline.DefaultPipeline;
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
 import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @Primary
 public class DebugClientPipeline extends DefaultPipeline {
@@ -21,7 +21,6 @@ public class DebugClientPipeline extends DefaultPipeline {
 	private static final int MIX_PAD_MICROPHONE = 0;
 	private static final int MIX_PAD_TONE = 1;
 
-	private static final Logger log = LoggerFactory.getLogger(DebugClientPipeline.class);
 	private final AudioLevelMessageListener levelMessageListener;
 
 	public DebugClientPipeline(

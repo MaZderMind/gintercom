@@ -2,8 +2,6 @@ package de.mazdermind.gintercom.clientsupport.controlserver.messagehandler;
 
 import java.lang.reflect.Type;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
@@ -11,10 +9,11 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisionMessage;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class ProvisionMessageHandler implements MatrixMessageHandler {
-	private static final Logger log = LoggerFactory.getLogger(ProvisionMessageHandler.class);
 	private final ApplicationEventPublisher eventPublisher;
 
 	public ProvisionMessageHandler(

@@ -11,8 +11,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -25,6 +23,9 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @TestComponent
 @Scope("prototype")
 public class ControlServerTestClient {
@@ -35,7 +36,6 @@ public class ControlServerTestClient {
 		"/user/provision",
 		"/user/provision/already-registered"
 	);
-	private static final Logger log = LoggerFactory.getLogger(ControlServerTestClient.class);
 
 	private StompSession stompSession;
 	private WebSocketStompClient stompClient;

@@ -1,18 +1,17 @@
 package de.mazdermind.gintercom.debugclient.controlserver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.manualconfig.ManualMatrixAddressConfiguration;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.manualconfig.SimpleManualMatrixAddressConfiguration;
+import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 public class DebugClientManualMatrixAddressConfiguration {
-	private static final Logger log = LoggerFactory.getLogger(DebugClientManualMatrixAddressConfiguration.class);
 	private final CliArguments cliArguments;
 
 	public DebugClientManualMatrixAddressConfiguration(

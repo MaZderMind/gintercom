@@ -4,19 +4,18 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceImplementation;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @Order(3)
 public class MatrixAddressMdnsDiscoveryService implements MatrixAddressDiscoveryServiceImplementation {
 	private static final String MDNS_DOMAIN = "matrix.gintercom.local";
-	private static final Logger log = LoggerFactory.getLogger(MatrixAddressMdnsDiscoveryService.class);
 
 	@Override
 	public Optional<MatrixAddressDiscoveryServiceResult> tryDiscovery() {

@@ -2,8 +2,6 @@ package de.mazdermind.gintercom.clientsupport.pipeline;
 
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -11,11 +9,11 @@ import org.springframework.stereotype.Service;
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycleManager;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class PipelineManager {
-	private static final Logger log = LoggerFactory.getLogger(PipelineManager.class);
-
 	private final ClientPipeline clientPipeline;
 	private final ConnectionLifecycleManager connectionLifecycleManager;
 

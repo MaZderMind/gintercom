@@ -5,19 +5,18 @@ import java.awt.*;
 import javax.annotation.PreDestroy;
 import javax.swing.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class GuiManager {
-	private static final Logger log = LoggerFactory.getLogger(GuiManager.class);
-
 	private final ConnectionLifecycleModalManager connectionLifecycleModalManager;
-	private MainWindowManager mainWindowManager;
+	private final MainWindowManager mainWindowManager;
 	private JFrame mainWindow;
 
 	public GuiManager(

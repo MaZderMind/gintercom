@@ -4,17 +4,16 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.debugclient.gui.components.AudioLevelDisplay;
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class AudioLevelDisplayManager {
-	private static final Logger log = LoggerFactory.getLogger(AudioLevelDisplayManager.class);
 	private AudioLevelDisplay audioLevelDisplay;
 
 	/**

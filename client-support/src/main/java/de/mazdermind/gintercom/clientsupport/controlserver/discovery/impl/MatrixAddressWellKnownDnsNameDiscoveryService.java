@@ -4,19 +4,18 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceImplementation;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @Order(1)
 public class MatrixAddressWellKnownDnsNameDiscoveryService implements MatrixAddressDiscoveryServiceImplementation {
 	private static final String WELL_KNOWN_DOMAIN = "matrix.gintercom.lan";
-	private static final Logger log = LoggerFactory.getLogger(MatrixAddressWellKnownDnsNameDiscoveryService.class);
 
 	@Override
 	public Optional<MatrixAddressDiscoveryServiceResult> tryDiscovery() {

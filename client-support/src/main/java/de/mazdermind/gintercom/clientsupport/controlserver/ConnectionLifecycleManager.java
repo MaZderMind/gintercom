@@ -4,8 +4,6 @@ import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
@@ -30,12 +28,12 @@ import de.mazdermind.gintercom.clientsupport.controlserver.events.AddressDiscove
 import de.mazdermind.gintercom.clientsupport.controlserver.events.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectingEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.OperationalEvent;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class ConnectionLifecycleManager {
 	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 3;
-
-	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
 
 	private final ApplicationEventPublisher eventPublisher;
 	private final MatrixAddressDiscoveryService addressDiscoveryService;
