@@ -22,7 +22,6 @@ import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
 import de.mazdermind.gintercom.clientapi.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.clientsupport.controlserver.connection.ControlServerClient;
-import de.mazdermind.gintercom.clientsupport.controlserver.connection.ControlServerSessionTransportErrorAware;
 import de.mazdermind.gintercom.clientsupport.controlserver.connection.ControlServerSessionTransportErrorEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryService;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceImplementation;
@@ -34,7 +33,7 @@ import de.mazdermind.gintercom.clientsupport.controlserver.events.OperationalEve
 import de.mazdermind.gintercom.clientsupport.controlserver.provisioning.ProvisioningInformationAware;
 
 @Component
-public class ConnectionLifecycleManager implements ProvisioningInformationAware, ControlServerSessionTransportErrorAware {
+public class ConnectionLifecycleManager implements ProvisioningInformationAware {
 	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 3;
 
 	private static final Logger log = LoggerFactory.getLogger(ConnectionLifecycleManager.class);
@@ -131,7 +130,7 @@ public class ConnectionLifecycleManager implements ProvisioningInformationAware,
 		stompSession.send("/registration", PanelRegistrationMessage.fromClientConfiguration(clientConfiguration));
 	}
 
-	@Override
+	@EventListener
 	public void handleTransportErrorEvent(ControlServerSessionTransportErrorEvent transportErrorEvent) {
 		if (lifecycle == ConnectionLifecycle.PROVISIONING || lifecycle == ConnectionLifecycle.OPERATIONAL) {
 			log.info("ControlServer-Connection failed: {}", transportErrorEvent.getMessage());

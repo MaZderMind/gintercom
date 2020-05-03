@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -21,15 +22,15 @@ import de.mazdermind.gintercom.clientsupport.controlserver.messagehandler.Matrix
 public class ControlServerSessionHandler implements StompSessionHandler {
 	private static final Logger log = LoggerFactory.getLogger(ControlServerSessionHandler.class);
 	private final List<MatrixMessageHandler> messageHandlers;
-	private final ControlServerSessionTransportErrorMulticaster transportErrorMulticaster;
+	private final ApplicationEventPublisher eventPublisher;
 
 	public ControlServerSessionHandler(
 		@Autowired List<MatrixMessageHandler> messageHandlers,
-		@Autowired ControlServerSessionTransportErrorMulticaster transportErrorMulticaster
+		@Autowired ApplicationEventPublisher eventPublisher
 	) {
 		log.info("Created");
 		this.messageHandlers = messageHandlers;
-		this.transportErrorMulticaster = transportErrorMulticaster;
+		this.eventPublisher = eventPublisher;
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class ControlServerSessionHandler implements StompSessionHandler {
 	@Override
 	public void handleTransportError(@NonNull StompSession stompSession, @NonNull Throwable throwable) {
 		log.info("TransportError: {}", throwable.getMessage());
-		transportErrorMulticaster.dispatch(new ControlServerSessionTransportErrorEvent(throwable.getMessage()));
+		eventPublisher.publishEvent(new ControlServerSessionTransportErrorEvent(throwable.getMessage()));
 	}
 
 	@Override
