@@ -3,8 +3,9 @@ package de.mazdermind.gintercom.clientsupport.controlserver.connection;
 import static de.mazdermind.gintercom.clientsupport.utils.ObjectListClassNameUtil.classNamesList;
 
 import java.lang.reflect.Type;
-import java.util.List;
+import java.util.Collection;
 
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
@@ -20,20 +21,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class ControlServerSessionHandler implements StompSessionHandler {
-	private final List<MatrixMessageHandler> messageHandlers;
 	private final ApplicationEventPublisher eventPublisher;
+	private final ListableBeanFactory beanFactory;
 
 	public ControlServerSessionHandler(
-		@Autowired List<MatrixMessageHandler> messageHandlers,
-		@Autowired ApplicationEventPublisher eventPublisher
+		@Autowired ApplicationEventPublisher eventPublisher,
+		@Autowired ListableBeanFactory beanFactory
 	) {
+		this.beanFactory = beanFactory;
 		log.info("Created");
-		this.messageHandlers = messageHandlers;
 		this.eventPublisher = eventPublisher;
 	}
 
 	@Override
 	public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {
+		Collection<MatrixMessageHandler> messageHandlers = beanFactory.getBeansOfType(MatrixMessageHandler.class).values();
 		log.info("Connected. Subscribing {} MessageHandlers: {}", messageHandlers.size(), classNamesList(messageHandlers));
 
 		messageHandlers.forEach(messageHandler ->

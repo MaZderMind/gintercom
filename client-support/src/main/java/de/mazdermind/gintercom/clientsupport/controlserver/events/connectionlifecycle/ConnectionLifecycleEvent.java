@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.clientsupport.controlserver.events;
+package de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycle;
 

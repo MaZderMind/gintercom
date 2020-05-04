@@ -17,17 +17,17 @@ import org.springframework.stereotype.Component;
 import com.google.common.annotations.VisibleForTesting;
 
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
 import de.mazdermind.gintercom.clientapi.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.clientsupport.controlserver.connection.ControlServerClient;
 import de.mazdermind.gintercom.clientsupport.controlserver.connection.ControlServerSessionTransportErrorEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryService;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceImplementation;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.AddressDiscoveryEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.AwaitingProvisioningEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectingEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.OperationalEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.AddressDiscoveryEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.AwaitingProvisioningEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.ConnectingEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.OperationalEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.ProvisionEvent;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -141,7 +141,7 @@ public class ConnectionLifecycleManager {
 	}
 
 	@EventListener
-	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
+	public void handleProvisioningInformation(ProvisionEvent provisionEvent) {
 		log.info("Provisioning received, Client is now Operational");
 		lifecycle = ConnectionLifecycle.OPERATIONAL;
 		eventPublisher.publishEvent(new OperationalEvent());

@@ -9,7 +9,7 @@ import javax.swing.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectionLifecycleEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.ConnectionLifecycleEvent;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

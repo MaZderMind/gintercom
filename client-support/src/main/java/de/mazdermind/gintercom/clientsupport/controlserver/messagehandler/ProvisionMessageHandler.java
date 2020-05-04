@@ -1,6 +1,7 @@
 package de.mazdermind.gintercom.clientsupport.controlserver.messagehandler;
 
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -9,17 +10,23 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisionMessage;
+import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycleManager;
+import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.ProvisionEvent;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 public class ProvisionMessageHandler implements MatrixMessageHandler {
 	private final ApplicationEventPublisher eventPublisher;
+	private final ConnectionLifecycleManager connectionLifecycleManager;
 
 	public ProvisionMessageHandler(
-		@Autowired ApplicationEventPublisher eventPublisher
+		@Autowired ApplicationEventPublisher eventPublisher,
+		@Autowired ConnectionLifecycleManager connectionLifecycleManager
 	) {
 		this.eventPublisher = eventPublisher;
+		this.connectionLifecycleManager = connectionLifecycleManager;
 	}
 
 	@Override
@@ -33,7 +40,16 @@ public class ProvisionMessageHandler implements MatrixMessageHandler {
 		ProvisionMessage provisionMessage = (ProvisionMessage) o;
 		log.info("Received ProvisionMessage with Display-Name {}", provisionMessage.getProvisioningInformation().getDisplay());
 
-		eventPublisher.publishEvent(provisionMessage.getProvisioningInformation());
+		Optional<MatrixAddressDiscoveryServiceResult> discoveredMatrix = connectionLifecycleManager.getDiscoveredMatrix();
+		if (!discoveredMatrix.isPresent()) {
+			log.error("Not Connected to Matrix anymore");
+			return;
+		}
+
+		eventPublisher.publishEvent(new ProvisionEvent(
+			provisionMessage.getProvisioningInformation(),
+			discoveredMatrix.get()
+		));
 	}
 
 	@Override

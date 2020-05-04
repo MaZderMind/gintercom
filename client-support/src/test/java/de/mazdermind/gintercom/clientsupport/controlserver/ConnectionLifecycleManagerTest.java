@@ -23,17 +23,17 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.Trigger;
 
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
 import de.mazdermind.gintercom.clientapi.messages.registration.PanelRegistrationMessage;
 import de.mazdermind.gintercom.clientsupport.controlserver.connection.ControlServerClient;
 import de.mazdermind.gintercom.clientsupport.controlserver.connection.ControlServerSessionTransportErrorEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryService;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceImplementation;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.AddressDiscoveryEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.AwaitingProvisioningEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectingEvent;
-import de.mazdermind.gintercom.clientsupport.controlserver.events.OperationalEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.AddressDiscoveryEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.AwaitingProvisioningEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.ConnectingEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.OperationalEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.ProvisionEvent;
 import de.mazdermind.gintercom.testutils.captors.FilteringArgumentCaptor;
 
 public class ConnectionLifecycleManagerTest {
@@ -240,7 +240,7 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisioningInformation.class));
+		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisionEvent.class));
 
 		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.OPERATIONAL);
 	}
@@ -251,7 +251,7 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisioningInformation.class));
+		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisionEvent.class));
 
 		verify(eventPublisher, times(1)).publishEvent(any(OperationalEvent.class));
 	}
@@ -262,7 +262,7 @@ public class ConnectionLifecycleManagerTest {
 
 		connectionLifecycleManager.initiateDiscovery();
 		connectionLifecycleManager.discoveryTryNext();
-		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisioningInformation.class));
+		connectionLifecycleManager.handleProvisioningInformation(mock(ProvisionEvent.class));
 		connectionLifecycleManager.handleTransportErrorEvent(mock(ControlServerSessionTransportErrorEvent.class));
 
 		assertThat(connectionLifecycleManager.getLifecycle()).isEqualTo(ConnectionLifecycle.DISCOVERY);
