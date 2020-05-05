@@ -34,6 +34,7 @@ public class ConnectionLifecycleModalManager {
 		JDialog dialog = new JDialog(owner, Dialog.ModalityType.DOCUMENT_MODAL);
 		dialog.setTitle("Not Connected to Matrix");
 		dialog.setSize(INITIAL_DIMENSION);
+		dialog.setResizable(false);
 		dialog.setLocationRelativeTo(owner);
 		dialog.setModal(true);
 
