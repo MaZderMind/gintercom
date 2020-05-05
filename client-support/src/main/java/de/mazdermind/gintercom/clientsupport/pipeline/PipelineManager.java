@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.DeProvisionEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.ProvisionEvent;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,8 +21,13 @@ public class PipelineManager {
 	}
 
 	@EventListener
-	public void handleProvisioningInformation(ProvisionEvent provisionEvent) {
+	public void provisionPipeline(ProvisionEvent provisionEvent) {
 		clientPipeline.configurePipeline(provisionEvent.getMatrixAddress(), provisionEvent.getProvisioningInformation());
 		clientPipeline.startPipeline();
+	}
+
+	@EventListener
+	public void deProvisionPipeline(DeProvisionEvent deProvisionEvent) {
+		clientPipeline.stopPipeline();
 	}
 }

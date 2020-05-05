@@ -26,7 +26,9 @@ import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddre
 import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.AddressDiscoveryEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.AwaitingProvisioningEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.ConnectingEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.DisconnectedEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.OperationalEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.DeProvisionEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.ProvisionEvent;
 import lombok.extern.slf4j.Slf4j;
 
@@ -133,6 +135,12 @@ public class ConnectionLifecycleManager {
 			log.info("ControlServer-Connection failed: {}", transportErrorEvent.getMessage());
 			this.discoveredMatrix = null;
 			controlServerClient.disconnect();
+
+			if (lifecycle == ConnectionLifecycle.OPERATIONAL) {
+				eventPublisher.publishEvent(new DeProvisionEvent()); // TODO Test + ensure noMoreInteractions
+			}
+
+			eventPublisher.publishEvent(new DisconnectedEvent()); // TODO Test + ensure noMoreInteractions
 
 			log.info("Restarting Discovery-Scheduler");
 			lifecycle = ConnectionLifecycle.DISCOVERY;
