@@ -7,6 +7,7 @@ import javax.swing.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.DisconnectedEvent;
 import de.mazdermind.gintercom.debugclient.gui.components.AudioLevelDisplay;
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -35,5 +36,10 @@ public class AudioLevelDisplayManager {
 	public void audioLevelEventHandler(AudioLevelEvent audioLevelEvent) {
 		log.trace("Received Audio-Level Event");
 		audioLevelDisplay.updateLevel(audioLevelEvent);
+	}
+
+	@EventListener
+	public void clearOnDisconnect(DisconnectedEvent disconnectedEvent) {
+		audioLevelDisplay.clear();
 	}
 }
