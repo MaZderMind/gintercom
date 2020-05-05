@@ -7,4 +7,6 @@ public interface ClientPipeline {
 	void configurePipeline(MatrixAddressDiscoveryServiceResult matrixAddress, ProvisioningInformation provisioningInformation);
 
 	void startPipeline();
+
+	void stopPipeline();
 }

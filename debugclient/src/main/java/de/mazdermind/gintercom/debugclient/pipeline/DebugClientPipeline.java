@@ -22,6 +22,9 @@ public class DebugClientPipeline extends DefaultPipeline {
 	private static final int MIX_PAD_TONE = 1;
 
 	private final AudioLevelMessageListener levelMessageListener;
+	private boolean toneEnabled = false;
+	private boolean microphoneEnabled = false;
+	private boolean speakerEnabled = false;
 
 	public DebugClientPipeline(
 		@Autowired AudioLevelMessageListener audioLevelMessageListener
@@ -34,9 +37,9 @@ public class DebugClientPipeline extends DefaultPipeline {
 		super.configurePipeline(matrixAddress, provisioningInformation);
 		getPipeline().getBus().connect(levelMessageListener);
 
-		configureTone(false);
-		configureMicrophone(false);
-		configureSpeaker(false);
+		configureTone(toneEnabled);
+		configureMicrophone(microphoneEnabled);
+		configureSpeaker(speakerEnabled);
 	}
 
 	@Override
@@ -77,16 +80,19 @@ public class DebugClientPipeline extends DefaultPipeline {
 
 	public void configureTone(boolean status) {
 		log.info("{} Tone", status ? "Enabling" : "Disabling");
+		toneEnabled = status;
 		getPipeline().getElementByName("mix").getSinkPads().get(MIX_PAD_TONE).set("volume", status ? 1.0 : 0.0);
 	}
 
 	public void configureMicrophone(boolean status) {
 		log.info("{} Microphone", status ? "Enabling" : "Disabling");
+		microphoneEnabled = status;
 		getPipeline().getElementByName("mix").getSinkPads().get(MIX_PAD_MICROPHONE).set("volume", status ? 1.0 : 0.0);
 	}
 
 	public void configureSpeaker(boolean status) {
 		log.info("{} Speaker", status ? "Enabling" : "Disabling");
+		speakerEnabled = status;
 		getPipeline().getElementByName("speaker_volume").set("volume", status ? 1.0 : 0.0);
 	}
 }

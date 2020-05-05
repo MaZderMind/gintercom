@@ -88,6 +88,15 @@ public class AudioLevelDisplay extends JPanel {
 		});
 	}
 
+	public void clear() {
+		log.trace("Clearing Audio-Level Display");
+		lastAudioLevelEvent.set(null);
+		EventQueue.invokeLater(() -> {
+			log.trace("Scheduled repaint");
+			repaint();
+		});
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);

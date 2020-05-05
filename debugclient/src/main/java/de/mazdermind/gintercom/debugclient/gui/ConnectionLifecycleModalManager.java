@@ -9,7 +9,7 @@ import javax.swing.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientsupport.controlserver.events.ConnectionLifecycleEvent;
+import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.ConnectionLifecycleEvent;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,6 +34,7 @@ public class ConnectionLifecycleModalManager {
 		JDialog dialog = new JDialog(owner, Dialog.ModalityType.DOCUMENT_MODAL);
 		dialog.setTitle("Not Connected to Matrix");
 		dialog.setSize(INITIAL_DIMENSION);
+		dialog.setResizable(false);
 		dialog.setLocationRelativeTo(owner);
 		dialog.setModal(true);
 
@@ -82,18 +83,25 @@ public class ConnectionLifecycleModalManager {
 	@EventListener
 	public void handleGenericConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
 		operational = lifecycleEvent.getLifecycle().isOperational();
-		log.info("ConnectionLifecycleEvent: {}, Operational?: {}",
-			lifecycleEvent.getClass().getSimpleName(),
-			lifecycleEvent.getLifecycle().isOperational());
+
+		log.info("ConnectionLifecycleEvent: {}, Operational={}",
+			lifecycleEvent.getClass().getSimpleName(), operational);
 
 		EventQueue.invokeLater(() -> {
 			initialDisplayText = lifecycleEvent.getDisplayText();
 			initialDetailsText = lifecycleEvent.getDetailsText();
-			initiallyOperational = lifecycleEvent.getLifecycle().isOperational();
+			initiallyOperational = operational;
+
 			if (label != null && dialog != null) {
 				label.setText(lifecycleEvent.getDisplayText());
 				detailsLabel.setText(lifecycleEvent.getDetailsText());
-				dialog.setVisible(!lifecycleEvent.getLifecycle().isOperational());
+
+				boolean shouldBeVisible = !operational;
+				// Invoking setVisible, even when the window is already visible,
+				// will give it he System-Wide Focus, which is quite annoying
+				if (dialog.isVisible() != shouldBeVisible) {
+					dialog.setVisible(shouldBeVisible);
+				}
 			}
 		});
 	}

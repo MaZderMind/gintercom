@@ -39,14 +39,6 @@ public class DefaultPipeline implements ClientPipeline {
 	private Bin txBin;
 	private Bin rxBin;
 
-	@PreDestroy
-	public void stop() {
-		if (pipeline != null) {
-			log.info("stopping pipeline");
-			pipeline.stop();
-		}
-	}
-
 	@Override
 	public void configurePipeline(MatrixAddressDiscoveryServiceResult matrixAddress, ProvisioningInformation provisioningInformation) {
 		log.info("Starting RTP/Audio Pipeline");
@@ -109,6 +101,18 @@ public class DefaultPipeline implements ClientPipeline {
 		GstErrorCheck.expectSuccess(pipeline.play());
 		GstDebugger.debugPipeline("client-pipeline", pipeline);
 		log.info("Successfully started pipeline");
+	}
+
+	@Override
+	@PreDestroy
+	public void stopPipeline() {
+		if (pipeline != null) {
+			log.info("Stopping pipeline");
+			pipeline.stop();
+			pipeline = null;
+			txBin = null;
+			rxBin = null;
+		}
 	}
 
 	protected Pipeline getPipeline() {
