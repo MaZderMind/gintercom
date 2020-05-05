@@ -49,25 +49,21 @@ public class Config {
 		});
 
 		log.debug("Validating Panel -> ButtonSet references");
-		panels.forEach((panelId, panel) -> {
-			panel.getButtonsets().forEach(buttonset -> {
-				if (!buttonsets.containsKey(buttonset)) {
-					throw new ValidationException(String.format(
-						"ButtonSet %s referenced from Panel %s does not exist",
-						buttonset, panelId));
-				}
-			});
-		});
+		panels.forEach((panelId, panel) -> panel.getButtonsets().forEach(buttonset -> {
+			if (!buttonsets.containsKey(buttonset)) {
+				throw new ValidationException(String.format(
+					"ButtonSet %s referenced from Panel %s does not exist",
+					buttonset, panelId));
+			}
+		}));
 
 		log.debug("Validating Panel-Button-Target references");
-		panels.forEach((panelId, panel) -> {
-			validateButtonReferences(panel.getButtons(), String.format("Panel %s", panelId));
-		});
+		panels.forEach((panelId, panel) ->
+			validateButtonReferences(panel.getButtons(), String.format("Panel %s", panelId)));
 
 		log.debug("Validating ButtonSet-Button-Target references");
-		buttonsets.forEach((buttonSetId, buttonSet) -> {
-			validateButtonReferences(buttonSet.getButtons(), String.format("ButtonSet %s", buttonSet));
-		});
+		buttonsets.forEach((buttonSetId, buttonSet) ->
+			validateButtonReferences(buttonSet.getButtons(), String.format("ButtonSet %s", buttonSet)));
 	}
 
 	private void validateButtonReferences(Map<String, ButtonConfig> buttons, String container) {

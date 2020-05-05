@@ -9,9 +9,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moandjiezana.toml.Toml;
 
 public class JsonMapUtils {
-	private static ObjectMapper objectMapper;
+	private static final ObjectMapper objectMapper;
 
-	private static Toml toml;
+	private static final Toml toml;
 
 	static {
 		objectMapper = new ObjectMapper();

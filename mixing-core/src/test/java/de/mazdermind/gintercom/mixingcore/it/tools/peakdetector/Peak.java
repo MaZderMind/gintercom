@@ -4,8 +4,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class Peak {
-	private double lower;
-	private double upper;
+	private final double lower;
+	private final double upper;
 
 	Peak(int binIndex, double binWidth) {
 		this((binIndex - 1) * binWidth, (binIndex + 1) * binWidth);

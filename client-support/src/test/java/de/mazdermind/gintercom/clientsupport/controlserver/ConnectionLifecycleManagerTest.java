@@ -47,6 +47,7 @@ public class ConnectionLifecycleManagerTest {
 	private ConnectionLifecycleManager connectionLifecycleManager;
 	private TaskScheduler taskScheduler;
 	private MatrixAddressDiscoveryServiceImplementation matrixAddressDiscoveryServiceImplementation;
+	@SuppressWarnings("rawtypes")
 	private ScheduledFuture scheduledDiscovery;
 	private MatrixAddressDiscoveryServiceResult successfulDiscovery;
 	private StompSession stompSession;
@@ -55,6 +56,7 @@ public class ConnectionLifecycleManagerTest {
 	public void prepare() throws UnknownHostException {
 		taskScheduler = mock(TaskScheduler.class);
 		scheduledDiscovery = mock(ScheduledFuture.class);
+
 		//noinspection unchecked
 		Mockito.when(taskScheduler.schedule(any(), any(Trigger.class))).thenReturn(scheduledDiscovery);
 

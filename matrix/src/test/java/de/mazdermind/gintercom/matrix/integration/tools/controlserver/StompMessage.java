@@ -1,8 +1,8 @@
 package de.mazdermind.gintercom.matrix.integration.tools.controlserver;
 
 public class StompMessage {
-	private String destination;
-	private Object payload;
+	private final String destination;
+	private final Object payload;
 
 	public StompMessage(String destination, Object payload) {
 		this.destination = destination;
