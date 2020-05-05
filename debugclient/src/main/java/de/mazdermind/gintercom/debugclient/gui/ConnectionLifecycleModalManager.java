@@ -29,7 +29,7 @@ public class ConnectionLifecycleModalManager {
 		log.info("Constructed");
 	}
 
-	public JDialog create(JFrame owner) {
+	public void create(JFrame owner) {
 		log.info("Creating");
 		JDialog dialog = new JDialog(owner, Dialog.ModalityType.DOCUMENT_MODAL);
 		dialog.setTitle("Not Connected to Matrix");
@@ -77,7 +77,6 @@ public class ConnectionLifecycleModalManager {
 
 		assert this.dialog == null : "only one ConnectionLifecycleModal is supported";
 		this.dialog = dialog;
-		return dialog;
 	}
 
 	@EventListener

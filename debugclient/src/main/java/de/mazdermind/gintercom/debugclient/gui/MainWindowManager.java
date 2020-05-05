@@ -58,8 +58,6 @@ public class MainWindowManager {
 
 	@EventListener
 	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
-		EventQueue.invokeLater(() -> {
-			mainWindow.setTitle(provisioningInformation.getDisplay());
-		});
+		EventQueue.invokeLater(() -> mainWindow.setTitle(provisioningInformation.getDisplay()));
 	}
 }

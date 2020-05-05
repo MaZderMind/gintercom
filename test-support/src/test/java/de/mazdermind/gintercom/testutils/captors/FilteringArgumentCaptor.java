@@ -17,7 +17,7 @@ public class FilteringArgumentCaptor<T> {
 	}
 
 	public static <T> FilteringArgumentCaptor<T> forClass(Class<T> clazz) {
-		return new FilteringArgumentCaptor<T>(
+		return new FilteringArgumentCaptor<>(
 			clazz,
 			ArgumentCaptor.forClass(clazz)
 		);

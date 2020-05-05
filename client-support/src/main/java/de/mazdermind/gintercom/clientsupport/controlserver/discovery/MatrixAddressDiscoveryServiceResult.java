@@ -5,9 +5,9 @@ import java.net.InetAddress;
 public class MatrixAddressDiscoveryServiceResult {
 	private static final int WELL_KNOWN_PORT = 8080; // TODO 2380
 
-	private InetAddress address;
+	private final InetAddress address;
 
-	private int port;
+	private final int port;
 
 	public MatrixAddressDiscoveryServiceResult(InetAddress address, int port) {
 		this.address = address;

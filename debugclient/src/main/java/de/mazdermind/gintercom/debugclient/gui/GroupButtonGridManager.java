@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class GroupButtonGridManager  {
+public class GroupButtonGridManager {
 	private final static int COLS = 2;
 	private final ClientConfiguration clientConfiguration;
 	private final List<JButton> buttonList = new ArrayList<>();
@@ -71,11 +71,9 @@ public class GroupButtonGridManager  {
 
 	@EventListener
 	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
-		EventQueue.invokeLater(() -> {
-			provisioningInformation.getButtons().forEach((buttonName, buttonConfig) -> {
-				int buttonIndex = Integer.parseInt(buttonName) - 1;
-				buttonList.get(buttonIndex).setText(buttonConfig.getDisplay());
-			});
-		});
+		EventQueue.invokeLater(() -> provisioningInformation.getButtons().forEach((buttonName, buttonConfig) -> {
+			int buttonIndex = Integer.parseInt(buttonName) - 1;
+			buttonList.get(buttonIndex).setText(buttonConfig.getDisplay());
+		}));
 	}
 }

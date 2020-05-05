@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
@@ -15,8 +16,8 @@ public class IpAddressHandshakeInterceptor implements HandshakeInterceptor {
 	@Override
 	public boolean beforeHandshake(
 		ServerHttpRequest request,
-		ServerHttpResponse response,
-		WebSocketHandler webSocketHandler,
+		@NonNull ServerHttpResponse response,
+		@NonNull WebSocketHandler webSocketHandler,
 		Map<String, Object> attributes
 	) {
 		// Bind IP attribute to WebSocket session
@@ -27,9 +28,9 @@ public class IpAddressHandshakeInterceptor implements HandshakeInterceptor {
 
 	@Override
 	public void afterHandshake(
-		ServerHttpRequest request,
-		ServerHttpResponse response,
-		WebSocketHandler webSocketHandler,
+		@NonNull ServerHttpRequest request,
+		@NonNull ServerHttpResponse response,
+		@NonNull WebSocketHandler webSocketHandler,
 		Exception e
 	) {
 	}

@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableSet;
 import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.AppSinkSupport;
 
 public class AudioAnalyserFunctionalIT {
-	public static Duration SHORT_TIMEOUT = Duration.ofMillis(500);
+	public static final Duration SHORT_TIMEOUT = Duration.ofMillis(500);
 
 	static {
 		Gst.init();

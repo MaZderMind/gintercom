@@ -13,7 +13,7 @@ import de.mazdermind.gintercom.mixingcore.it.portpool.PortSetPool;
 import de.mazdermind.gintercom.mixingcore.it.tools.rtp.RtpTestClient;
 
 public class MixingCoreTestManager {
-	public static InetAddress MATRIX_HOST;
+	public static final InetAddress MATRIX_HOST;
 	private static MixingCoreTestManager instance;
 
 	static {

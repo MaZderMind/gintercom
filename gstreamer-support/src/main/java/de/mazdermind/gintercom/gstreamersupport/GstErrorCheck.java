@@ -6,7 +6,7 @@ import org.freedesktop.gstreamer.StateChangeReturn;
 public class GstErrorCheck {
 	public static void expectSuccess(boolean returnValue) {
 		if (!returnValue) {
-			throw new GstException(String.format("Expected a return-value of true, was %s", returnValue));
+			throw new GstException("Expected a return-value of true, was false");
 		}
 	}
 

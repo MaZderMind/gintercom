@@ -35,11 +35,11 @@ public class ControlServerClient {
 	}
 
 	public Optional<StompSession> connect(InetAddress address, int port) {
-		URI websocketUri = null;
+		URI websocketUri;
 		try {
 			websocketUri = new URI("ws", null, address.getHostAddress(), port, "/ws", null, null);
 		} catch (URISyntaxException e) {
-			throw new RuntimeException(e); // TODO decide what to do
+			throw new RuntimeException(e);
 		}
 
 		log.info("Connecting to Websocket-Server at {}", websocketUri);

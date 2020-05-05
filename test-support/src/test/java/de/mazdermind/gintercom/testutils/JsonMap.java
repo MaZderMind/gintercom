@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+@SuppressWarnings("NullableProblems")
 public class JsonMap implements Map<String, Object> {
 	private final Map<String, Object> m;
 
@@ -145,6 +146,7 @@ public class JsonMap implements Map<String, Object> {
 	}
 
 	@Override
+	@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 	public boolean equals(Object o) {
 		return m.equals(o);
 	}

@@ -29,7 +29,7 @@ public class ControlServerTestSessionHandler extends StompSessionHandlerAdapter 
 
 	@Override
 	@NonNull
-	public Type getPayloadType(StompHeaders headers) {
+	public Type getPayloadType(@NonNull StompHeaders headers) {
 		return Map.class;
 	}
 
@@ -50,13 +50,14 @@ public class ControlServerTestSessionHandler extends StompSessionHandlerAdapter 
 	}
 
 	@Override
-	public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
+	public void handleException(@NonNull StompSession session, StompCommand command, @NonNull StompHeaders headers,
+								@NonNull byte[] payload, Throwable exception) {
 		log.warn("Handling Exception: {}", exception.getMessage());
 		errors.add(exception);
 	}
 
 	@Override
-	public void handleTransportError(StompSession session, Throwable exception) {
+	public void handleTransportError(@NonNull StompSession session, Throwable exception) {
 		log.warn("Handling Transport-Error: {}", exception.getMessage());
 		errors.add(exception);
 	}
