@@ -83,18 +83,25 @@ public class ConnectionLifecycleModalManager {
 	@EventListener
 	public void handleGenericConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
 		operational = lifecycleEvent.getLifecycle().isOperational();
-		log.info("ConnectionLifecycleEvent: {}, Operational?: {}",
-			lifecycleEvent.getClass().getSimpleName(),
-			lifecycleEvent.getLifecycle().isOperational());
+
+		log.info("ConnectionLifecycleEvent: {}, Operational={}",
+			lifecycleEvent.getClass().getSimpleName(), operational);
 
 		EventQueue.invokeLater(() -> {
 			initialDisplayText = lifecycleEvent.getDisplayText();
 			initialDetailsText = lifecycleEvent.getDetailsText();
-			initiallyOperational = lifecycleEvent.getLifecycle().isOperational();
+			initiallyOperational = operational;
+
 			if (label != null && dialog != null) {
 				label.setText(lifecycleEvent.getDisplayText());
 				detailsLabel.setText(lifecycleEvent.getDetailsText());
-				dialog.setVisible(!lifecycleEvent.getLifecycle().isOperational());
+
+				boolean shouldBeVisible = !operational;
+				// Invoking setVisible, even when the window is already visible,
+				// will give it he System-Wide Focus, which is quite annoying
+				if (dialog.isVisible() != shouldBeVisible) {
+					dialog.setVisible(shouldBeVisible);
+				}
 			}
 		});
 	}
