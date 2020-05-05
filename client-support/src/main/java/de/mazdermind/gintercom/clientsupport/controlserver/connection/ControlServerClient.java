@@ -4,9 +4,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import javax.annotation.PreDestroy;
 
@@ -55,17 +53,8 @@ public class ControlServerClient {
 			stompSession = listenableFuture.get(CONNECTION_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 			log.info("Connected to Websocket-Server at {}", websocketUri);
 			return Optional.of(stompSession);
-		} catch (InterruptedException e) {
-			log.info("Connection Interrupted");
-			stompClient.stop();
-			return Optional.empty();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-			log.info("Connection Failed");
-			stompClient.stop();
-			return Optional.empty();
-		} catch (TimeoutException e) {
-			log.info("Connection Timed Out");
+		} catch (Exception e) {
+			log.info("Connection Failed with {}", e.getMessage());
 			stompClient.stop();
 			return Optional.empty();
 		}

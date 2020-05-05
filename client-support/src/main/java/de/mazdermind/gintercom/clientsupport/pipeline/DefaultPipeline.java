@@ -1,5 +1,7 @@
 package de.mazdermind.gintercom.clientsupport.pipeline;
 
+import static de.mazdermind.gintercom.gstreamersupport.GstErrorCheck.expectSuccess;
+
 import javax.annotation.PreDestroy;
 
 import org.freedesktop.gstreamer.Bin;
@@ -7,7 +9,6 @@ import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.ElementFactory;
 import org.freedesktop.gstreamer.Gst;
-import org.freedesktop.gstreamer.GstException;
 import org.freedesktop.gstreamer.Pipeline;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,6 @@ import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddre
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
 import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstDebugger;
-import de.mazdermind.gintercom.gstreamersupport.GstErrorCheck;
 import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,19 +86,19 @@ public class DefaultPipeline implements ClientPipeline {
 		pipeline.getBus().connect((Bus.ERROR) (source, code, message) -> {
 			String msg = String.format("%s: %s", source.getName(), message);
 			log.error(msg);
-			throw new GstException(msg);
+			restartPipeline();
 		});
 		pipeline.getBus().connect((Bus.EOS) source -> {
 			String msg = String.format("%s: EOS", source.getName());
 			log.error(msg);
-			throw new GstException(msg);
+			restartPipeline();
 		});
 	}
 
 	@Override
 	public void startPipeline() {
 		log.info("Starting pipeline");
-		GstErrorCheck.expectSuccess(pipeline.play());
+		expectSuccess(pipeline.play());
 		GstDebugger.debugPipeline("client-pipeline", pipeline);
 		log.info("Successfully started pipeline");
 	}
@@ -109,10 +109,18 @@ public class DefaultPipeline implements ClientPipeline {
 		if (pipeline != null) {
 			log.info("Stopping pipeline");
 			pipeline.stop();
+
 			pipeline = null;
 			txBin = null;
 			rxBin = null;
 		}
+	}
+
+	private void restartPipeline() {
+		log.warn("Caught an Uncorrectable Error in the Pipeline; Restarting");
+
+		expectSuccess(pipeline.stop());
+		expectSuccess(pipeline.play());
 	}
 
 	protected Pipeline getPipeline() {
@@ -128,13 +136,13 @@ public class DefaultPipeline implements ClientPipeline {
 	}
 
 	protected Element buildSourceElement() {
-		Element src = ElementFactory.make("pulsesrc", "src");
+		Element src = ElementFactory.make("pulsesrc", "pulsesrc");
 		src.set("client-name", "GIntercom Client (Source)");
 		return src;
 	}
 
 	protected Element buildSinkElement() {
-		Element sink = ElementFactory.make("pulsesink", "sink");
+		Element sink = ElementFactory.make("pulsesink", "pulsesink");
 		sink.set("client-name", "GIntercom Client (Sink)");
 		sink.set("async", false);
 		sink.set("sync", false);

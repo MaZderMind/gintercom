@@ -13,18 +13,18 @@ import lombok.extern.slf4j.Slf4j;
 public class EventLogger {
 	@EventListener
 	public void logConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
-		log.info("ConnectionLifecycleEvent: {}, Lifecycle-Phase: {}",
+		log.debug("ConnectionLifecycleEvent: {}, Lifecycle-Phase: {}",
 			lifecycleEvent.getClass().getSimpleName(),
 			lifecycleEvent.getLifecycle());
 	}
 
 	@EventListener
 	public void logProvisioningInformation(ProvisionEvent provisionEvent) {
-		log.info("ProvisionEvent: {}", provisionEvent);
+		log.debug("ProvisionEvent: {}", provisionEvent);
 	}
 
 	@EventListener
 	public void logDeProvisioning(DeProvisionEvent deProvisionEvent) {
-		log.info("DeProvisionEvent: {}", deProvisionEvent);
+		log.debug("DeProvisionEvent: {}", deProvisionEvent);
 	}
 }
