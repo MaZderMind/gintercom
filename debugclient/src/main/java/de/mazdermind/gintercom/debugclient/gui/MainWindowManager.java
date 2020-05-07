@@ -7,33 +7,22 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class MainWindowManager {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(640, 480);
 	private final GroupButtonGridManager groupButtonGridManager;
 	private final AudioLevelDisplayManager audioLevelDisplayManager;
 	private final DebugToolButtonsManager debugToolButtonsManager;
 	private JFrame mainWindow;
-
-
-	public MainWindowManager(
-		@Autowired GroupButtonGridManager groupButtonGridManager,
-		@Autowired AudioLevelDisplayManager audioLevelDisplayManager,
-		@Autowired DebugToolButtonsManager debugToolButtonsManager
-	) {
-		super();
-		this.groupButtonGridManager = groupButtonGridManager;
-		this.audioLevelDisplayManager = audioLevelDisplayManager;
-		this.debugToolButtonsManager = debugToolButtonsManager;
-	}
 
 	/**
 	 * Muss be called from AWT Thread

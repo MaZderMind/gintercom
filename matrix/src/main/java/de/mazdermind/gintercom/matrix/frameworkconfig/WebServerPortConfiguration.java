@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.configuration.framework;
+package de.mazdermind.gintercom.matrix.frameworkconfig;
 
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;

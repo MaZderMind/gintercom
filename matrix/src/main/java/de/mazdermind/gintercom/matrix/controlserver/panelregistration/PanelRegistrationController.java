@@ -1,14 +1,13 @@
 package de.mazdermind.gintercom.matrix.controlserver.panelregistration;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static de.mazdermind.gintercom.matrix.configuration.framework.IpAddressHandshakeInterceptor.IP_ADDRESS_ATTRIBUTE;
+import static de.mazdermind.gintercom.matrix.frameworkconfig.IpAddressHandshakeInterceptor.IP_ADDRESS_ATTRIBUTE;
 
 import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -25,10 +24,12 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class PanelRegistrationController {
 	private final Config config;
 	private final PortAllocationManager portAllocationManager;
@@ -36,22 +37,6 @@ public class PanelRegistrationController {
 	private final ButtonSetResolver buttonSetResolver;
 	private final PanelConnectionManager panelConnectionManager;
 	private final SimpReponder simpReponder;
-
-	public PanelRegistrationController(
-		@Autowired Config config,
-		@Autowired PortAllocationManager portAllocationManager,
-		@Autowired ApplicationEventPublisher eventPublisher,
-		@Autowired ButtonSetResolver buttonSetResolver,
-		@Autowired PanelConnectionManager panelConnectionManager,
-		@Autowired SimpReponder simpReponder
-	) {
-		this.portAllocationManager = portAllocationManager;
-		this.config = config;
-		this.eventPublisher = eventPublisher;
-		this.buttonSetResolver = buttonSetResolver;
-		this.panelConnectionManager = panelConnectionManager;
-		this.simpReponder = simpReponder;
-	}
 
 	@SuppressWarnings("unused")
 	@MessageMapping("/registration")

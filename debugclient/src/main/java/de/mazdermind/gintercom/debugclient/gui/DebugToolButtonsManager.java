@@ -6,24 +6,18 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.debugclient.gui.components.ToggleButton;
 import de.mazdermind.gintercom.debugclient.pipeline.DebugClientPipeline;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class DebugToolButtonsManager {
 	private final DebugClientPipeline pipeline;
-
-	public DebugToolButtonsManager(
-		@Autowired DebugClientPipeline pipeline
-	) {
-		super();
-		this.pipeline = pipeline;
-	}
 
 	/**
 	 * Muss be called from AWT Thread

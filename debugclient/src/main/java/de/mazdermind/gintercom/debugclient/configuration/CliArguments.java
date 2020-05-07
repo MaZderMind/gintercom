@@ -14,25 +14,20 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Splitter;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CliArguments {
 	private final ApplicationArguments arguments;
 	private CommandLine commandLine;
-
-	public CliArguments(
-		@Autowired ApplicationArguments arguments
-	) {
-		this.arguments = arguments;
-	}
 
 	@PostConstruct
 	public void parseArgs() throws ParseException {

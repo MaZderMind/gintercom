@@ -5,27 +5,20 @@ import java.awt.*;
 import javax.annotation.PreDestroy;
 import javax.swing.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class GuiManager {
 	private final ConnectionLifecycleModalManager connectionLifecycleModalManager;
 	private final MainWindowManager mainWindowManager;
 	private JFrame mainWindow;
-
-	public GuiManager(
-		@Autowired ConnectionLifecycleModalManager connectionLifecycleModalManager,
-		@Autowired MainWindowManager mainWindowManager
-	) {
-		this.connectionLifecycleModalManager = connectionLifecycleModalManager;
-		this.mainWindowManager = mainWindowManager;
-	}
 
 	@EventListener(ContextRefreshedEvent.class)
 	public void show() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {

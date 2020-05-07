@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.PreDestroy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.stereotype.Component;
@@ -16,23 +15,18 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ControlServerClient {
 	private static final int CONNECTION_TIMEOUT_SECONDS = 5;
 
 	private final ControlServerSessionHandler sessionHandler;
 	private WebSocketStompClient stompClient;
 	private StompSession stompSession;
-
-	public ControlServerClient(
-		@Autowired ControlServerSessionHandler sessionHandler
-	) {
-		this.sessionHandler = sessionHandler;
-		log.info("Created");
-	}
 
 	public Optional<StompSession> connect(InetAddress address, int port) {
 		URI websocketUri;
