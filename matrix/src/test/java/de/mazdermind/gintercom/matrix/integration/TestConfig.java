@@ -3,8 +3,6 @@ package de.mazdermind.gintercom.matrix.integration;
 import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomGroupConfigBuilder.randomGroupConfig;
 import static de.mazdermind.gintercom.matrix.integration.tools.builder.RandomPanelConfigBuilder.randomPanelConfig;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 
 import org.springframework.boot.test.context.TestComponent;
@@ -31,23 +29,20 @@ public class TestConfig extends Config {
 	}
 
 	public void reset() {
-		try {
-			setMatrixConfig(new MatrixConfig()
-				.setDisplay("")
-				.setPorts(new PortsConfig()
-					.setMatrixToPanel(new PortPoolConfig()
-						.setStart(40000)
-						.setLimit(1000))
-					.setPanelToMatrix(new PortPoolConfig()
-						.setStart(50000)
-						.setLimit(1000)))
-				.setRtp(new RtpConfig()
-					.setJitterbuffer(100L))
-				.setWebui(new ServerConfig()
-					.setBind(InetAddress.getLocalHost())));
-		} catch (UnknownHostException e) {
-			throw new RuntimeException(e);
-		}
+		setMatrixConfig(new MatrixConfig()
+			.setDisplay("")
+			.setPorts(new PortsConfig()
+				.setMatrixToPanel(new PortPoolConfig()
+					.setStart(40000)
+					.setLimit(1000))
+				.setPanelToMatrix(new PortPoolConfig()
+					.setStart(50000)
+					.setLimit(1000)))
+			.setRtp(new RtpConfig()
+				.setJitterbuffer(100L))
+			.setWebui(new ServerConfig()
+				.setBind(null)
+				.setPort(0)));
 
 		setButtonsets(new HashMap<>());
 		setGroups(new HashMap<>());

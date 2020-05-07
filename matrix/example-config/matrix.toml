@@ -1,8 +1,8 @@
-display="C3VOC Intercom"
+display="GIntercom Example-Config"
 
 [webui]
 bind="0.0.0.0"
-port=2380
+port=8080
 
 [ports.panelToMatrix]
 start=20000
