@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.configuration.framework;
+package de.mazdermind.gintercom.matrix.frameworkconfig;
 
 import java.util.Map;
 

@@ -1,6 +1,5 @@
 package de.mazdermind.gintercom.matrix.mixingcore;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -9,18 +8,14 @@ import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelRegis
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import de.mazdermind.gintercom.mixingcore.Panel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class MixingCoreController {
 	private final MixingCore mixingCore;
-
-	public MixingCoreController(
-		@Autowired MixingCore mixingCore
-	) {
-		this.mixingCore = mixingCore;
-	}
 
 	@EventListener
 	public void handlePanelRegistration(PanelRegistrationEvent panelRegistrationEvent) {

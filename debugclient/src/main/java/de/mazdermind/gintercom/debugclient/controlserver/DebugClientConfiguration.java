@@ -2,27 +2,20 @@ package de.mazdermind.gintercom.debugclient.controlserver;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import com.google.common.collect.ImmutableList;
 
-import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
 import de.mazdermind.gintercom.clientsupport.hostid.FileBasedHostId;
+import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
+@RequiredArgsConstructor
 public class DebugClientConfiguration implements ClientConfiguration {
 	private final FileBasedHostId fileBasedHostId;
 	private final CliArguments cliArguments;
-
-	public DebugClientConfiguration(
-		@Autowired FileBasedHostId fileBasedHostId,
-		@Autowired CliArguments cliArguments
-	) {
-		this.fileBasedHostId = fileBasedHostId;
-		this.cliArguments = cliArguments;
-	}
 
 	@Override
 	public String getHostId() {

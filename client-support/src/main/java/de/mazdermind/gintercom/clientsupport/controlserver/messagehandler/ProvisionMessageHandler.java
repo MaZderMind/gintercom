@@ -3,7 +3,6 @@ package de.mazdermind.gintercom.clientsupport.controlserver.messagehandler;
 import java.lang.reflect.Type;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -13,21 +12,15 @@ import de.mazdermind.gintercom.clientapi.messages.provision.ProvisionMessage;
 import de.mazdermind.gintercom.clientsupport.controlserver.ConnectionLifecycleManager;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.ProvisionEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ProvisionMessageHandler implements MatrixMessageHandler {
 	private final ApplicationEventPublisher eventPublisher;
 	private final ConnectionLifecycleManager connectionLifecycleManager;
-
-	public ProvisionMessageHandler(
-		@Autowired ApplicationEventPublisher eventPublisher,
-		@Autowired ConnectionLifecycleManager connectionLifecycleManager
-	) {
-		this.eventPublisher = eventPublisher;
-		this.connectionLifecycleManager = connectionLifecycleManager;
-	}
 
 	@Override
 	@NonNull

@@ -7,24 +7,19 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CliArgumentsParser {
 	private final ApplicationArguments arguments;
-
-	public CliArgumentsParser(
-		@Autowired ApplicationArguments arguments
-	) {
-		this.arguments = arguments;
-	}
 
 	@Bean
 	@ConditionalOnMissingBean(CliArguments.class)

@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -16,22 +15,15 @@ import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.messagehandler.MatrixMessageHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ControlServerSessionHandler implements StompSessionHandler {
 	private final ApplicationEventPublisher eventPublisher;
 	private final ListableBeanFactory beanFactory;
-
-	public ControlServerSessionHandler(
-		@Autowired ApplicationEventPublisher eventPublisher,
-		@Autowired ListableBeanFactory beanFactory
-	) {
-		this.beanFactory = beanFactory;
-		log.info("Created");
-		this.eventPublisher = eventPublisher;
-	}
 
 	@Override
 	public void afterConnected(@NonNull StompSession stompSession, @NonNull StompHeaders stompHeaders) {

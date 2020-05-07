@@ -4,8 +4,6 @@ import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -30,36 +28,24 @@ import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlife
 import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.OperationalEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.DeProvisionEvent;
 import de.mazdermind.gintercom.clientsupport.controlserver.events.provision.ProvisionEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ConnectionLifecycleManager {
 	private static final int DISCOVERY_RETRY_INTERVAL_SECONDS = 3;
 
 	private final ApplicationEventPublisher eventPublisher;
 	private final MatrixAddressDiscoveryService addressDiscoveryService;
 	private final ControlServerClient controlServerClient;
-	private final ClientConfiguration clientConfiguration;
 	private final TaskScheduler scheduler;
+	private final ClientConfiguration clientConfiguration;
 
 	private ConnectionLifecycle lifecycle = ConnectionLifecycle.STARTING;
 	private ScheduledFuture<?> discoverySchedule;
 	private MatrixAddressDiscoveryServiceResult discoveredMatrix = null;
-
-	public ConnectionLifecycleManager(
-		@Autowired ApplicationEventPublisher eventPublisher,
-		@Autowired MatrixAddressDiscoveryService addressDiscoveryService,
-		@Autowired ControlServerClient controlServerClient,
-		@Qualifier("gintercomTaskScheduler") @Autowired TaskScheduler scheduler,
-		@Autowired ClientConfiguration clientConfiguration
-	) {
-		this.eventPublisher = eventPublisher;
-		this.addressDiscoveryService = addressDiscoveryService;
-		this.controlServerClient = controlServerClient;
-		this.clientConfiguration = clientConfiguration;
-		this.scheduler = scheduler;
-	}
 
 	public ConnectionLifecycle getLifecycle() {
 		return lifecycle;

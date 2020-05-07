@@ -14,12 +14,10 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
 import org.apache.commons.io.FilenameUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.moandjiezana.toml.Toml;
 
@@ -28,30 +26,18 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.MatrixConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ConfigParser {
 	private final ObjectMapper objectMapper;
 	private final Toml toml;
 
 	private final CliArguments cliArguments;
 	private final Validator validator;
-
-	public ConfigParser(
-		@Autowired CliArguments cliArguments,
-		@Autowired Validator validator
-	) {
-		this.cliArguments = cliArguments;
-		this.validator = validator;
-
-		objectMapper = new ObjectMapper();
-		objectMapper.findAndRegisterModules();
-		objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
-
-		toml = new Toml();
-	}
 
 	@Bean
 	@ConditionalOnMissingBean(Config.class)

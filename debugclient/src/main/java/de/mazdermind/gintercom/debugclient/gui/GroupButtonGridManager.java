@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.swing.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -18,21 +17,17 @@ import com.google.common.math.IntMath;
 
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class GroupButtonGridManager {
 	private final static int COLS = 2;
+
 	private final ClientConfiguration clientConfiguration;
 	private final List<JButton> buttonList = new ArrayList<>();
-
-
-	public GroupButtonGridManager(
-		@Autowired ClientConfiguration clientConfiguration
-	) {
-		this.clientConfiguration = clientConfiguration;
-	}
 
 	@VisibleForTesting
 	static int calcularNumberOfRows(int numButtons, int cols) {

@@ -1,24 +1,19 @@
 package de.mazdermind.gintercom.debugclient.controlserver;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.manualconfig.ManualMatrixAddressConfiguration;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.manualconfig.SimpleManualMatrixAddressConfiguration;
 import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class DebugClientManualMatrixAddressConfiguration {
 	private final CliArguments cliArguments;
-
-	public DebugClientManualMatrixAddressConfiguration(
-		@Autowired CliArguments cliArguments
-	) {
-		this.cliArguments = cliArguments;
-	}
 
 	@Bean
 	public ManualMatrixAddressConfiguration getManualConfiguration() {
