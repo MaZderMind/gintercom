@@ -39,7 +39,7 @@ public class CliArgumentsParser {
 		HelpFormatter formatter = new HelpFormatter();
 
 		try {
-			log.info("Parsing Comand-Line Arguments");
+			log.info("Parsing Command-Line Arguments");
 			CommandLine commandLine = parser.parse(options, arguments.getSourceArgs());
 			return new CliArguments()
 				.setConfigDirectory(commandLine.getOptionValue("config-directory"));
