@@ -106,4 +106,9 @@ public class MixingCore {
 
 		panel.remove();
 	}
+
+	public void destroy() {
+		panels.values().forEach(this::removePanel);
+		groups.values().forEach(this::removeGroup);
+	}
 }

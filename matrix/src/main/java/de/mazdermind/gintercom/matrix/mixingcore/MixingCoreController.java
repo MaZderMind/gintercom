@@ -1,5 +1,7 @@
 package de.mazdermind.gintercom.matrix.mixingcore;
 
+import javax.annotation.PreDestroy;
+
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -44,5 +46,11 @@ public class MixingCoreController {
 		log.info("DeRegistering Panel {}", panelDeRegistrationEvent.getPanelId());
 		Panel panel = mixingCore.getPanelByName(panelDeRegistrationEvent.getPanelId());
 		mixingCore.removePanel(panel);
+	}
+
+	@PreDestroy
+	public void destroyPipeline() {
+		log.info("Destroying MixingCore");
+		mixingCore.destroy();
 	}
 }

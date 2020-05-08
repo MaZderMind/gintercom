@@ -1,5 +1,7 @@
 package de.mazdermind.gintercom.clientsupport.pipeline;
 
+import javax.annotation.PreDestroy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,11 @@ public class PipelineManager {
 
 	@EventListener
 	public void deProvisionPipeline(DeProvisionEvent deProvisionEvent) {
+		clientPipeline.destroyPipeline();
+	}
+
+	@PreDestroy
+	public void destroyPipeline() {
 		clientPipeline.destroyPipeline();
 	}
 }
