@@ -23,7 +23,7 @@ run-matrix:
 	mvn --projects matrix --also-make spring-boot:run -Dspring-boot.run.arguments="--config-directory=./matrix/example-config"
 
 run-debugclient:
-	mvn --projects debugclient --also-make spring-boot:run
+	mvn --projects debugclient --also-make spring-boot:run -Dspring-boot.run.arguments="--host=127.0.0.1,--port=8080,--host-id=0000-0001"
 
 # debug development
 debug-matrix:
