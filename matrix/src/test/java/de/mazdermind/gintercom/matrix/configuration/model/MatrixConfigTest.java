@@ -52,7 +52,7 @@ public class MatrixConfigTest {
 	}
 
 	@Test
-	public void configValidates() {
+	public void validationSucceeds() {
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig).is(VALID);
 	}

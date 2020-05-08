@@ -27,6 +27,12 @@ public class GroupConfigTest {
 	}
 
 	@Test
+	public void validationSucceeds() {
+		GroupConfig groupConfig = convertJsonTo(GroupConfig.class, testJson);
+		assertThat(groupConfig).is(VALID);
+	}
+
+	@Test
 	public void validationSucceedsWithMinimalValidConfig() {
 		GroupConfig groupConfig = convertJsonTo(GroupConfig.class, testJson);
 		assertThat(groupConfig).is(VALID);

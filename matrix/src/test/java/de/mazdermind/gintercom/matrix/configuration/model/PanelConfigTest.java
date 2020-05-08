@@ -60,13 +60,13 @@ public class PanelConfigTest {
 	}
 
 	@Test
-	public void configValidates() {
+	public void validationSucceeds() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
 		assertThat(panelConfig).is(VALID);
 	}
 
 	@Test
-	public void minimalConfigValidates() {
+	public void validationSucceedsWithMinimalValidConfig() {
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonMinimal);
 		assertThat(panelConfig).is(VALID);
 	}
