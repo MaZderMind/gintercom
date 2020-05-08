@@ -2,79 +2,50 @@ package de.mazdermind.gintercom.clientsupport.pipeline;
 
 import static de.mazdermind.gintercom.gstreamersupport.GstErrorCheck.expectSuccess;
 
-import javax.annotation.PreDestroy;
+import java.util.List;
 
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Element;
-import org.freedesktop.gstreamer.ElementFactory;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
-import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
 import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
+import de.mazdermind.gintercom.clientsupport.pipeline.audiosupport.AudioSystem;
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
 import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstDebugger;
 import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Default RTP/Audio-Pipeline for Intercom-Clients, auto-detects Audio-Subsystem of the OS and
- * chooses the default audio sink/source.
- * <p>
- * If your Client needs more control over the audio in- or output, ie. add a Tone-Generator or special
- * Analyser or Filter in the In- or Output-Path, you can extend this Class and annotate it with
- * <code>@Component @Primary</code>
- */
 @Slf4j
-@Component
-public class DefaultPipeline implements ClientPipeline {
+public abstract class StandardClientPipeline implements ClientPipeline {
 	static {
 		Gst.init();
 	}
+
+	private final AudioSystem audioSystem;
 
 	private Pipeline pipeline;
 	private Bin txBin;
 	private Bin rxBin;
 
+	public StandardClientPipeline(List<AudioSystem> audioSystems) {
+		audioSystem = audioSystems.stream()
+			.filter(AudioSystem::available)
+			.findFirst()
+			.orElseThrow(() -> new RuntimeException("No AudioSystem available"));
+		log.info("Using Audio-System {}", audioSystem.getClass().getSimpleName());
+	}
+
 	@Override
 	public void configurePipeline(MatrixAddressDiscoveryServiceResult matrixAddress, ProvisioningInformation provisioningInformation) {
 		log.info("Starting RTP/Audio Pipeline");
-		pipeline = new Pipeline("RtpTestClient");
+		pipeline = new Pipeline("ClientPipeline");
 
-		// @formatter:off
-		txBin = GstBuilder.buildBin("client-tx")
-			.addElement(buildSourceElement())
-			.withCaps(GstStaticCaps.AUDIO)
-			.linkElement("audioconvert")
-			.withCaps(GstStaticCaps.AUDIO_BE)
-			.linkElement("rtpL16pay")
-				.withProperty("mtu", GstConstants.MTU)
-			.withCaps(GstStaticCaps.RTP)
-				.linkElement("udpsink", "client-udpsink")
-					.withProperty("host", matrixAddress.getAddress().getHostAddress())
-					.withProperty("port", provisioningInformation.getPanelToMatrixPort())
-					.withProperty("async", false)
-					.withProperty("sync", false)
-			.build();
-		// @formatter:on
-
-		// @formatter:off
-		rxBin = GstBuilder.buildBin("client-rx")
-			.addElement("udpsrc", "client-udpsrc")
-				.withProperty("port", provisioningInformation.getMatrixToPanelPort())
-			.withCaps(GstStaticCaps.RTP)
-			.linkElement("rtpjitterbuffer")
-				.withProperty("latency", GstConstants.LATENCY_MS)
-			.linkElement("rtpL16depay")
-			.withCaps(GstStaticCaps.AUDIO_BE)
-			.linkElement("audioconvert")
-			.withCaps(GstStaticCaps.AUDIO)
-			.linkElement(buildSinkElement())
-			.build();
-		// @formatter:on
+		txBin = buildTxBin(matrixAddress, provisioningInformation);
+		rxBin = buildRxBin(provisioningInformation);
 
 		pipeline.add(rxBin);
 		pipeline.add(txBin);
@@ -104,8 +75,7 @@ public class DefaultPipeline implements ClientPipeline {
 	}
 
 	@Override
-	@PreDestroy
-	public void stopPipeline() {
+	public void destroyPipeline() {
 		if (pipeline != null) {
 			log.info("Stopping pipeline");
 			pipeline.stop();
@@ -116,7 +86,43 @@ public class DefaultPipeline implements ClientPipeline {
 		}
 	}
 
-	private void restartPipeline() {
+	protected Bin buildTxBin(MatrixAddressDiscoveryServiceResult matrixAddress, ProvisioningInformation provisioningInformation) {
+		// @formatter:off
+		return GstBuilder.buildBin("client-tx")
+			.addElement(buildSourceElement())
+			.withCaps(GstStaticCaps.AUDIO)
+			.linkElement("audioconvert")
+			.withCaps(GstStaticCaps.AUDIO_BE)
+			.linkElement("rtpL16pay")
+				.withProperty("mtu", GstConstants.MTU)
+			.withCaps(GstStaticCaps.RTP)
+				.linkElement("udpsink", "client-udpsink")
+					.withProperty("host", matrixAddress.getAddress().getHostAddress())
+					.withProperty("port", provisioningInformation.getPanelToMatrixPort())
+					.withProperty("async", false)
+					.withProperty("sync", false)
+			.build();
+		// @formatter:on
+	}
+
+	protected Bin buildRxBin(ProvisioningInformation provisioningInformation) {
+		// @formatter:off
+		return GstBuilder.buildBin("client-rx")
+			.addElement("udpsrc", "client-udpsrc")
+				.withProperty("port", provisioningInformation.getMatrixToPanelPort())
+			.withCaps(GstStaticCaps.RTP)
+			.linkElement("rtpjitterbuffer")
+				.withProperty("latency", GstConstants.LATENCY_MS)
+			.linkElement("rtpL16depay")
+			.withCaps(GstStaticCaps.AUDIO_BE)
+			.linkElement("audioconvert")
+			.withCaps(GstStaticCaps.AUDIO)
+			.linkElement(buildSinkElement())
+			.build();
+		// @formatter:on
+	}
+
+	protected void restartPipeline() {
 		log.warn("Caught an Uncorrectable Error in the Pipeline; Restarting");
 
 		expectSuccess(pipeline.stop());
@@ -136,16 +142,10 @@ public class DefaultPipeline implements ClientPipeline {
 	}
 
 	protected Element buildSourceElement() {
-		Element src = ElementFactory.make("pulsesrc", "pulsesrc");
-		src.set("client-name", "GIntercom Client (Source)");
-		return src;
+		return audioSystem.buildSourceElement();
 	}
 
 	protected Element buildSinkElement() {
-		Element sink = ElementFactory.make("pulsesink", "pulsesink");
-		sink.set("client-name", "GIntercom Client (Sink)");
-		sink.set("async", false);
-		sink.set("sync", false);
-		return sink;
+		return audioSystem.buildSinkElement();
 	}
 }

@@ -8,5 +8,5 @@ public interface ClientPipeline {
 
 	void startPipeline();
 
-	void stopPipeline();
+	void destroyPipeline();
 }
