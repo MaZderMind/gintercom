@@ -28,6 +28,6 @@ public class PipelineManager {
 
 	@EventListener
 	public void deProvisionPipeline(DeProvisionEvent deProvisionEvent) {
-		clientPipeline.stopPipeline();
+		clientPipeline.destroyPipeline();
 	}
 }
