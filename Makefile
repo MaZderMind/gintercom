@@ -5,7 +5,7 @@ clean:
 	mvn clean
 
 package:
-	mvn package
+	mvn package -DskipTests=true
 
 dist: clean package
 	rm -rf dist
