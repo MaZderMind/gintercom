@@ -33,7 +33,7 @@ public class CliArguments {
 	public void parseArgs() throws ParseException {
 		Options options = new Options();
 
-		options.addOption(new Option("h", "host", true,
+		options.addOption(new Option("H", "host", true,
 			"Hostname/IP of the Matrix. Needs to be specified together with -p/--port " +
 				"By manually Specifying the Matrix Host/Port, Auto-Discovery will be disabled and only " +
 				"this Host/Port combination will be tried"));
