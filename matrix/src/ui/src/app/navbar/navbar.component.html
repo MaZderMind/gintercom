@@ -10,7 +10,9 @@
       class="nav-link"
       routerLinkActive="active"
       [routerLink]="item.link"
+      [routerLinkActiveOptions]="{exact: item.exact}"
       [ngbTooltip]="tooltip"
+      [disableTooltip]="isMobile"
       placement="right"
       container="body"
     >

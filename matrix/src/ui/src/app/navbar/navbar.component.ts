@@ -11,7 +11,8 @@ export class NavbarComponent {
       title: 'Dashboard',
       description: 'System Status & Statistics',
       icon: 'fas fa-tachometer-alt',
-      link: '/'
+      link: '/',
+      exact: true
     }, {
       title: 'Groups',
       description: 'Intercom Groups',
@@ -29,6 +30,8 @@ export class NavbarComponent {
       link: '/devices'
     }
   ];
+
+  readonly isMobile = ('ontouchstart' in window);
 }
 
 interface NavbarItem {
@@ -36,4 +39,5 @@ interface NavbarItem {
   description: string;
   icon: string;
   link: string;
+  exact?: boolean;
 }
