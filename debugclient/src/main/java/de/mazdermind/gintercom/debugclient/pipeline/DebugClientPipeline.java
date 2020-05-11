@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.debugclient.pipeline;
 
 import java.util.List;
 
+import org.freedesktop.gstreamer.Caps;
 import org.freedesktop.gstreamer.Element;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import de.mazdermind.gintercom.clientsupport.pipeline.StandardClientPipeline;
 import de.mazdermind.gintercom.clientsupport.pipeline.audiosupport.AudioSystem;
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
+import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,6 +54,8 @@ public class DebugClientPipeline extends StandardClientPipeline {
 		// @formatter:off
 		return GstBuilder.buildBin("debug-client-source")
 			.addElement("audiomixer", "mix")
+				.withProperty("start-time-selection", "first")
+				.withProperty("output-buffer-duration", GstConstants.BUFFER_DURATION_NS)
 
 			.addElement(super.buildSourceElement())
 			.withCaps(GstStaticCaps.AUDIO)
@@ -60,7 +64,9 @@ public class DebugClientPipeline extends StandardClientPipeline {
 			.addElement("audiotestsrc", "testsrc")
 				.withProperty("is-live", true)
 				.withProperty("volume", 0.25)
-			.withCaps(GstStaticCaps.AUDIO)
+				.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
+
+			.withCaps(Caps.fromString("audio/x-raw,format=S16LE,rate=48000,channels=1"))
 				.linkExistingElement("mix")
 
 			.withGhostPad("mix", "src")

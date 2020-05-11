@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.mixingcore.it.tools.rtp;
 
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
+import org.freedesktop.gstreamer.Caps;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.FlowReturn;
 import org.freedesktop.gstreamer.GstException;
@@ -76,7 +77,7 @@ public class RtpTestClient {
 					.withProperty("is-live", true)
 					.withProperty("volume", 0.0)
 					.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
-				.withCaps(GstStaticCaps.AUDIO)
+				.withCaps(Caps.fromString("audio/x-raw,format=S16LE,rate=48000,channels=1"))
 				.linkElement("audioconvert")
 				.withCaps(GstStaticCaps.AUDIO_BE)
 				.linkElement("rtpL16pay")
@@ -100,7 +101,7 @@ public class RtpTestClient {
 				.linkElement("rtpL16depay")
 				.withCaps(GstStaticCaps.AUDIO_BE)
 				.linkElement("audioconvert")
-				.withCaps(GstStaticCaps.AUDIO)
+				.withCaps(Caps.fromString("audio/x-raw,format=S16LE,rate=48000,channels=1"))
 				.linkElement("appsink", APPSINK_NAME)
 					.withProperty("async", false)
 					.withProperty("sync", false)

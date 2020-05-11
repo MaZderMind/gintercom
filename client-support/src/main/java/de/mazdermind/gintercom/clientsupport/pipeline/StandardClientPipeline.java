@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
+import org.freedesktop.gstreamer.Caps;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
@@ -90,7 +91,7 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 		// @formatter:off
 		return GstBuilder.buildBin("client-tx")
 			.addElement(buildSourceElement())
-			.withCaps(GstStaticCaps.AUDIO)
+			.withCaps(Caps.fromString("audio/x-raw,format=S16LE,rate=48000,channels=1"))
 			.linkElement("audioconvert")
 			.withCaps(GstStaticCaps.AUDIO_BE)
 			.linkElement("rtpL16pay")
@@ -116,7 +117,7 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 			.linkElement("rtpL16depay")
 			.withCaps(GstStaticCaps.AUDIO_BE)
 			.linkElement("audioconvert")
-			.withCaps(GstStaticCaps.AUDIO)
+			.withCaps(Caps.fromString("audio/x-raw,format=S16LE,rate=48000,channels=1"))
 			.linkElement(buildSinkElement())
 			.build();
 		// @formatter:on
