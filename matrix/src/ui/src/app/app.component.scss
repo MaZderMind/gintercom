@@ -1,0 +1,15 @@
+@import "~src/global-styles/include";
+
+.app {
+  min-height: 100%;
+}
+
+.container-fluid {
+  padding-top: .8rem;
+  margin-bottom: 4rem;
+
+  @include media-breakpoint-up(sm) {
+    margin-bottom: 0;
+    margin-left: 5.5rem;
+  }
+}

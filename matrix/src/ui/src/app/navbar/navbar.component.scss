@@ -1,0 +1,36 @@
+@import "~src/global-styles/include";
+
+.nav {
+  bottom: 0;
+  background: white;
+  box-shadow: $shadow 0 0 5px;
+  width: 100%;
+
+  @include media-breakpoint-up(sm) {
+    min-height: 100%;
+    bottom: 0;
+    width: 5.5rem;
+  }
+
+  .nav-item {
+    margin: .3rem;
+    text-align: center;
+
+    flex: 1 1 auto;
+
+    @include media-breakpoint-up(sm) {
+      flex: none;
+    }
+
+    i {
+      font-size: 1.6rem;
+    }
+
+  }
+
+  .nav-item.version {
+    margin-top: auto;
+    color: $secondary;
+    font-size: .6rem;
+  }
+}
