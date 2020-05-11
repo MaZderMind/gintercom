@@ -27,7 +27,7 @@ send-keys -t 0 'make ui-run' Enter
 
 # right
 send-keys -t 1 "printf '\\033]2;%s\\033\\\\' 'matrix'" Enter
-send-keys -t 1 'make debug-matrix' Enter
+send-keys -t 1 'make run-matrix' Enter
 
 select-pane -t 2
 attach

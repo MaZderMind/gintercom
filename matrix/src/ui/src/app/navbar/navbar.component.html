@@ -1,0 +1,18 @@
+<ul class="nav nav-pills flex-sm-column p-sm-2 position-fixed">
+  <li class="nav-item" *ngFor="let item of items">
+    <a
+      class="nav-link"
+      routerLinkActive="active"
+      [routerLink]="item.link"
+      [ngbTooltip]="item.description"
+      placement="right"
+      container="body"
+    >
+      <i [className]="item.icon"><span class="sr-only">{{ item.title }}</span></i>
+    </a>
+  </li>
+
+  <li class="nav-item version d-none d-sm-block">
+    GIntercom Version v0.1.2
+  </li>
+</ul>
