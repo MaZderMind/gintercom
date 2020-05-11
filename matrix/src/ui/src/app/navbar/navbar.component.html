@@ -1,10 +1,16 @@
 <ul class="nav nav-pills flex-sm-column p-sm-2 position-fixed">
   <li class="nav-item" *ngFor="let item of items">
+    <ng-template #tooltip>
+      <div class="text-left">
+        <strong>{{ item.title }}</strong><br/>
+        {{ item.description }}
+      </div>
+    </ng-template>
     <a
       class="nav-link"
       routerLinkActive="active"
       [routerLink]="item.link"
-      [ngbTooltip]="item.description"
+      [ngbTooltip]="tooltip"
       placement="right"
       container="body"
     >
