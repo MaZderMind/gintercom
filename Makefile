@@ -17,8 +17,9 @@ dist: clean package
 	cd dist && sha256sum *.* >SHA256SUMS
 
 test:
-	cd matrix/src/ui && npm run-script test
-	cd matrix/src/ui && npm run-script lint
+	make ui-lint ui-test test-integration
+
+test-integration:
 	mvn verify
 
 # run

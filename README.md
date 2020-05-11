@@ -44,14 +44,14 @@ On the bottom you'll see the Matrix-Application compiling and then starting to s
 You can Access the Web-UI from your browser at http://localhost:8080/ and start Debug-Clients to test the Intercom-Functionality.
 
 Changes made in the UI-Part under `matrix/src/ui/src` will be picked up by the UI-Build and available straight-away by reloading your
-browser. Changes to the Java-Part will trigger an automatic Restart of the Matrix-Application, when you configure your IDE for
+browser. Changes to the Backend will trigger an automatic Restart of the Matrix-Application, when you configure your IDE for
 automatic re-compilation of changed files. See [Automatic Compilation in IntelliJ](https://jrebel.com/software/jrebel/quickstart/intellij/enable-automatic-compilation-in-intellij-idea/)
 for IntelliJ. The Matrix will completely shutdown and restart, connected Clients will be disconnected and reconnect.
 
-For additional convenience you can install the LiveReload-Extension for [Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei) 
-or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/livereload-web-extension/). SpringBoot starts an 
-[LiveReload](http://livereload.com/api/protocol/)-Server to which the Browser-Extension connects. Whenever the UI or the Java-Part
-changes, the browser will do an automatic reload. 
+For additional convenience you can install the LiveReload-Extension for [Chrome](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
+or [Firefox](https://addons.mozilla.org/en-US/firefox/addon/livereload-web-extension/). SpringBoot starts an
+[LiveReload](http://livereload.com/api/protocol/)-Server to which the Browser-Extension connects. Whenever the UI or the Backend
+changes, the browser will do an automatic reload.
 
 In Dev-Mode the Matrix will write `.dot`-Files as visualisations of the GStreamer Pipeline whenever it changes to `matrix/target/*.dot`. Use
 `xdot` to view them (they can become quite large with multiple Groups and Panels). 
@@ -76,6 +76,13 @@ In Dev-Mode the Debug-Client will write `.dot`-Files as visualisations of the GS
 
 The JVM will start a Debug-Server on Port `5011`. You can connect your IDE to these Ports to set Breakpoints and evaluate Code in the
 Context of the Debug-Client Application.
+
+### Run Test-Suite
+To Test all Components run
+```
+make test
+```
+This will lint & test the UI first, then run all Unit- and Integration-Tests of the Backend.
 
 ### Run Test-Scenario
 (!) Not yet implemented
