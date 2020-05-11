@@ -46,7 +46,9 @@ run-packaged-debugclient:
 	java -jar debugclient/target/debugclient-*.jar
 
 # ui-targets
-ui-install:
+ui-install: matrix/src/ui/node_modules
+
+matrix/src/ui/node_modules: matrix/src/ui/package.json matrix/src/ui/package-lock.json
 	cd matrix/src/ui && npm install
 
 ui-run: ui-install
