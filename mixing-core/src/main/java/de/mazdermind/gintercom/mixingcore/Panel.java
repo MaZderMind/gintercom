@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.freedesktop.gstreamer.Bin;
+import org.freedesktop.gstreamer.Caps;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.GhostPad;
 import org.freedesktop.gstreamer.Pad;
@@ -52,7 +53,7 @@ public class Panel {
 					.withProperty("drop-on-latency", true)
 				.linkElement("rtpL16depay")
 				.linkElement("audioconvert")
-				.withCaps(GstStaticCaps.AUDIO)
+				.withCaps(Caps.fromString("audio/x-raw,format=S16LE,rate=48000,channels=1"))
 				.linkElement("tee", teeName)
 					.withProperty("allow-not-linked", true)
 
@@ -65,7 +66,7 @@ public class Panel {
 					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
 					.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
-				.withCaps(GstStaticCaps.AUDIO)
+				.withCaps(Caps.fromString("audio/x-raw,format=S16LE,rate=48000,channels=1"))
 				.linkElement("audiomixer", mixerName)
 					.withProperty("start-time-selection", "first")
 					.withProperty("output-buffer-duration", GstConstants.BUFFER_DURATION_NS)

@@ -4,6 +4,7 @@ import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.ElementFactory;
 import org.springframework.stereotype.Component;
 
+import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -22,7 +23,7 @@ public class OsxAudioSystem implements AudioSystem {
 	public Element buildSourceElement() {
 		log.info("On OSX the Audio-Device *has* to be set to 48kHz Manually!");
 		Element src = ElementFactory.make(SRC_ELEMENT, SRC_ELEMENT);
-		//src.set("blocksize", GstConstants.BYTES_PER_BUFFER);
+		src.set("blocksize", GstConstants.BUFFER_SIZE);
 		return src;
 	}
 

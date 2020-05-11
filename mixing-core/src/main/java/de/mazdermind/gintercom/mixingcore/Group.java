@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.freedesktop.gstreamer.Bin;
+import org.freedesktop.gstreamer.Caps;
 import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.GhostPad;
 import org.freedesktop.gstreamer.Pad;
@@ -15,7 +16,6 @@ import org.freedesktop.gstreamer.Pipeline;
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
 import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstPadBlock;
-import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -45,7 +45,8 @@ public class Group {
 				.addElement("audiotestsrc", String.format("group-%s-silencesrc", name))
 					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
-				.withCaps(GstStaticCaps.AUDIO)
+					.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
+				.withCaps(Caps.fromString("audio/x-raw,format=S16LE,rate=48000,channels=1"))
 				.linkElement("audiomixer", mixerName)
 					.withProperty("start-time-selection", "first")
 					.withProperty("output-buffer-duration", GstConstants.BUFFER_DURATION_NS)
