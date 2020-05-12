@@ -27,10 +27,14 @@ run-tmux:
 	tmux new-session \; source-file "$$PWD/run-split-tmux"
 
 run-matrix:
-	GST_DEBUG_DUMP_DOT_DIR=./matrix/target/ mvn --projects matrix --also-make spring-boot:run -Dspring-boot.run.arguments="--config-directory=./matrix/example-config" -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(MATRIX_DEBUG_PORT)"
+	GST_DEBUG_DUMP_DOT_DIR=./matrix/target/ mvn --projects matrix --also-make spring-boot:run \
+		-Dspring-boot.run.arguments="--config-directory=./matrix/example-config" \
+		-Dspring-boot.run.jvmArguments="-Xdebug-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(MATRIX_DEBUG_PORT)"
 
 run-debugclient:
-	GST_DEBUG_DUMP_DOT_DIR=./debugclient/ mvn --projects debugclient --also-make spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(CLIENT_DEBUG_PORT)"
+	GST_DEBUG_DUMP_DOT_DIR=./debugclient/ mvn --projects debugclient --also-make spring-boot:run \
+		-Dspring-boot.run.arguments="--host=127.0.0.1,--port=8080,--host-id=0000-0001" \
+		-Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(CLIENT_DEBUG_PORT)"
 
 # run `make package` first, then execute the prod-builds
 run-packaged-matrix:
