@@ -15,8 +15,12 @@ public class OsxAudioSystem implements AudioSystem {
 
 	@Override
 	public boolean available() {
-		return ElementFactory.find(SINK_ELEMENT) != null &&
-			ElementFactory.find(SRC_ELEMENT) != null;
+		try {
+			return ElementFactory.find(SINK_ELEMENT) != null &&
+				ElementFactory.find(SRC_ELEMENT) != null;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override

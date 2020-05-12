@@ -11,8 +11,12 @@ public class PulseAudioSystem implements AudioSystem {
 
 	@Override
 	public boolean available() {
-		return ElementFactory.find(SRC_ELEMENT) != null &&
-			ElementFactory.find(SINK_ELEMENT) != null;
+		try {
+			return ElementFactory.find(SRC_ELEMENT) != null &&
+				ElementFactory.find(SINK_ELEMENT) != null;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
