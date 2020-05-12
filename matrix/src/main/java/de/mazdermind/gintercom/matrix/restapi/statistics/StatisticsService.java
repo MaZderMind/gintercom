@@ -1,5 +1,7 @@
 package de.mazdermind.gintercom.matrix.restapi.statistics;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 
 import de.mazdermind.gintercom.matrix.restapi.devices.DevicesService;
@@ -16,6 +18,8 @@ public class StatisticsService {
 
 	public StatisticsDto collectStatistics() {
 		return new StatisticsDto()
+			.setTimestamp(LocalDateTime.now())
+
 			.setGroupsConfigured(groupsService.getConfiguredGroups().count())
 
 			.setPanelsConfigured(panelsService.getConfiguredPanels().count())
