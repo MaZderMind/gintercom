@@ -1,19 +1,20 @@
 package de.mazdermind.gintercom.matrix.restapi.statistics;
 
-import java.util.List;
-
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
 public class StatisticsDto {
-	private List<String> groupsConfigured;
+	private long groupsConfigured;
 
-	private List<String> panelsConfigured;
-	private List<String> panelsAssigned;
-	private List<String> panelsOnline;
+	private long panelsConfigured;
+	private long panelsAssigned;
+	private long panelsUnassigned;
+	private long panelsOnline;
+	private long panelsOffline;
 
-	private List<String> devicesOnline;
-	private List<String> devicesProvisioned;
+	private long devicesOnline;
+	private long devicesProvisioned;
+	private long devicesUnprovisioned;
 }

@@ -1,60 +1,31 @@
 package de.mazdermind.gintercom.matrix.restapi.statistics;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
 
-import de.mazdermind.gintercom.matrix.configuration.model.Config;
-import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionInformation;
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionManager;
+import de.mazdermind.gintercom.matrix.restapi.devices.DevicesService;
+import de.mazdermind.gintercom.matrix.restapi.groups.GroupsService;
+import de.mazdermind.gintercom.matrix.restapi.panels.PanelsService;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class StatisticsService {
-	private final Config config;
-	private final PanelConnectionManager panelConnectionManager;
+	private final GroupsService groupsService;
+	private final PanelsService panelsService;
+	private final DevicesService devicesService;
 
 	public StatisticsDto collectStatistics() {
 		return new StatisticsDto()
-			.setGroupsConfigured(config.getGroups().keySet().stream()
-				.sorted().collect(Collectors.toList()))
+			.setGroupsConfigured(groupsService.getConfiguredGroups().count())
 
-			.setPanelsAssigned(config.getPanels().entrySet().stream()
-				.filter(entry -> entry.getValue().getHostId() != null)
-				.map(Map.Entry::getKey)
-				.sorted()
-				.collect(Collectors.toList()))
-			.setPanelsConfigured(config.getPanels().keySet().stream()
-				.sorted().collect(Collectors.toList()))
-			.setPanelsOnline(config.getPanels().entrySet().stream()
-				.filter(entry -> isPanelOnline(entry.getValue()))
-				.map(Map.Entry::getKey)
-				.sorted()
-				.collect(Collectors.toList()))
+			.setPanelsConfigured(panelsService.getConfiguredPanels().count())
+			.setPanelsAssigned(panelsService.getAssignedPanels().count())
+			.setPanelsUnassigned(panelsService.getUnassignedPanels().count())
+			.setPanelsOnline(panelsService.getOnlinePanels().count())
+			.setPanelsOffline(panelsService.getOfflinePanels().count())
 
-			.setDevicesOnline(panelConnectionManager.getConnectedPanels().stream()
-				.map(PanelConnectionInformation::getHostId)
-				.sorted()
-				.collect(Collectors.toList()))
-			.setDevicesProvisioned(panelConnectionManager.getConnectedPanels().stream()
-				.filter(PanelConnectionInformation::isAssignedToPanel)
-				.map(PanelConnectionInformation::getHostId)
-				.sorted()
-				.collect(Collectors.toList()));
+			.setDevicesOnline(devicesService.getOnlineDevices().count())
+			.setDevicesProvisioned(devicesService.getProvisionedDevices().count())
+			.setDevicesUnprovisioned(devicesService.getUnprovisionedDevices().count());
 	}
-
-	private boolean isPanelOnline(PanelConfig config) {
-		String hostId = config.getHostId();
-		if (hostId == null) {
-			return false;
-		}
-
-		Optional<PanelConnectionInformation> connectionInformation = panelConnectionManager.getConnectionInformationForHostId(hostId);
-		return connectionInformation.isPresent();
-	}
-
 }
