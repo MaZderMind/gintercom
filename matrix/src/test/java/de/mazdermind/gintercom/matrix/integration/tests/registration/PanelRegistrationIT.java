@@ -8,13 +8,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
-import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
-import de.mazdermind.gintercom.matrix.integration.TestConfig;
-import de.mazdermind.gintercom.matrix.integration.tools.controlserver.ControlServerTestClient;
 import de.mazdermind.gintercom.clientapi.messages.provision.AlreadyRegisteredMessage;
 import de.mazdermind.gintercom.clientapi.messages.provision.ProvisionMessage;
 import de.mazdermind.gintercom.clientapi.messages.registration.PanelRegistrationMessage;
+import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
+import de.mazdermind.gintercom.matrix.integration.TestConfig;
+import de.mazdermind.gintercom.matrix.integration.tools.builder.TestHostIdGenerator;
+import de.mazdermind.gintercom.matrix.integration.tools.controlserver.ControlServerTestClient;
 
 public class PanelRegistrationIT extends IntegrationTestBase {
 
@@ -46,6 +47,8 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 
 	@Test
 	public void panelRegistrationWithUnknownHostId() {
+		panelRegistrationMessage.setHostId(TestHostIdGenerator.generateTestHostId());
+
 		client1.connect();
 		client1.send("/registration", panelRegistrationMessage);
 
@@ -57,7 +60,6 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 	@Test
 	public void panelRegistrationWithKnownHostIdRespondsWithExpectedProvisionMessage() {
 		client1.connect();
-
 		client1.send("/registration", panelRegistrationMessage);
 
 		ProvisionMessage provisionMessage = client1.awaitMessage("/user/provision", ProvisionMessage.class);
@@ -94,6 +96,25 @@ public class PanelRegistrationIT extends IntegrationTestBase {
 		client1.send("/registration", panelRegistrationMessage);
 		ProvisionMessage provisionMessage = client1.awaitMessage("/user/provision", ProvisionMessage.class);
 		assertThat(provisionMessage.getProvisioningInformation().getDisplay()).isEqualTo(panelConfig.getDisplay());
+
+		client2.connect();
+		client2.send("/registration", panelRegistrationMessage);
+		AlreadyRegisteredMessage alreadyRegisteredMessage = client2
+			.awaitMessage("/user/provision/already-registered", AlreadyRegisteredMessage.class);
+		assertThat(alreadyRegisteredMessage.getRemoteIp()).isNotNull();
+		assertThat(alreadyRegisteredMessage.getConnectionTime()).isNotNull();
+		client2.disconnect();
+
+		client1.disconnect();
+	}
+
+	@Test
+	public void panelCanNotReRegisterWhileStillConnectedWithUnknownHostId() {
+		panelRegistrationMessage.setHostId(TestHostIdGenerator.generateTestHostId());
+
+		client1.connect();
+		client1.send("/registration", panelRegistrationMessage);
+		assertThat(client1.awaitMessages()).isEmpty();
 
 		client2.connect();
 		client2.send("/registration", panelRegistrationMessage);

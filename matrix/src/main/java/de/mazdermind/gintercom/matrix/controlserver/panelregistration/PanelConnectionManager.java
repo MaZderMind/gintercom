@@ -1,5 +1,6 @@
 package de.mazdermind.gintercom.matrix.controlserver.panelregistration;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -34,8 +35,8 @@ public class PanelConnectionManager {
 		sessionIdToHostIdMap.put(sessionId, panelConnectionInformation);
 	}
 
-	public PanelConnectionInformation deregisterPanelConnection(String sessionId) {
-		return sessionIdToHostIdMap.remove(sessionId);
+	public Optional<PanelConnectionInformation> deregisterPanelConnection(String sessionId) {
+		return Optional.ofNullable(sessionIdToHostIdMap.remove(sessionId));
 	}
 
 	public Optional<PanelConnectionInformation> getConnectionInformationForHostId(String hostId) {
@@ -44,4 +45,7 @@ public class PanelConnectionManager {
 			.findFirst();
 	}
 
+	public Collection<PanelConnectionInformation> getConnectedPanels() {
+		return sessionIdToHostIdMap.values();
+	}
 }

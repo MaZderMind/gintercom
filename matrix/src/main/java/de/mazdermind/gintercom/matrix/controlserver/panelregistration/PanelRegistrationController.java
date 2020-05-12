@@ -50,9 +50,9 @@ public class PanelRegistrationController {
 		String hostId = message.getHostId();
 		log.info("Host-Id {}: Received PanelRegistration-Message on Session {}", hostId, sessionId);
 
-		Optional<PanelConnectionInformation> maybyPanelAlreadyRegistered = panelConnectionManager.getConnectionInformationForHostId(hostId);
-		if (maybyPanelAlreadyRegistered.isPresent()) {
-			PanelConnectionInformation panelConnectionInformation = maybyPanelAlreadyRegistered.get();
+		Optional<PanelConnectionInformation> maybePanelAlreadyRegistered = panelConnectionManager.getConnectionInformationForHostId(hostId);
+		if (maybePanelAlreadyRegistered.isPresent()) {
+			PanelConnectionInformation panelConnectionInformation = maybePanelAlreadyRegistered.get();
 			log.info("Host-Id {} is already registered at {} since {}, rejecting second registration",
 				hostId, panelConnectionInformation.getRemoteIp(), panelConnectionInformation.getConnectionTime());
 
@@ -60,13 +60,20 @@ public class PanelRegistrationController {
 				.setRemoteIp(panelConnectionInformation.getRemoteIp())
 				.setConnectionTime(panelConnectionInformation.getConnectionTime());
 
-			simpReponder.convertAndRespondeToUser(sessionId,
+			simpReponder.convertAndRespondToUser(sessionId,
 				"/provision/already-registered", alreadyRegisteredMessage);
 
 			return;
 		}
 
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
+		panelConnectionManager.registerPanelConnection(sessionId, new PanelConnectionInformation()
+			.setConnectionTime(LocalDateTime.now())
+			.setHostId(hostId)
+			.setPanelId(maybePanelId)
+			.setRemoteIp(hostAddress)
+			.setSessionId(sessionId));
+
 		if (!maybePanelId.isPresent()) {
 			log.info("Host-Id {}: Currently unknown in Config and needs to be Provisioned in WebUI.", hostId);
 
@@ -80,12 +87,6 @@ public class PanelRegistrationController {
 		log.info("Host-Id {}: is known in Config as Panel {} ({}). Allocated Ports {} for it. Localized it at {}. Mapped Stomp-Session-ID {} to it.",
 			hostId, panelId, panelConfig.getDisplay(), portSet, hostAddress.getHostAddress(), sessionId);
 
-		panelConnectionManager.registerPanelConnection(sessionId, new PanelConnectionInformation()
-			.setConnectionTime(LocalDateTime.now())
-			.setHostId(hostId)
-			.setRemoteIp(hostAddress)
-			.setSessionId(sessionId));
-
 		eventPublisher.publishEvent(new PanelRegistrationEvent(
 			panelId, panelConfig, portSet, hostAddress
 		));
@@ -98,19 +99,19 @@ public class PanelRegistrationController {
 				.setPanelToMatrixPort(portSet.getPanelToMatrix())
 				.setButtons(buttonSetResolver.resolveButtons(panelConfig)));
 
-		simpReponder.convertAndRespondeToUser(sessionId, "/provision", provisionMessage);
+		simpReponder.convertAndRespondToUser(sessionId, "/provision", provisionMessage);
 	}
 
 	@EventListener
 	public void handlePanelDisconnect(SessionDisconnectEvent sessionDisconnectEvent) {
 		String sessionId = sessionDisconnectEvent.getSessionId();
-		PanelConnectionInformation panelConnectionInformation = panelConnectionManager.deregisterPanelConnection(sessionId);
-		if (panelConnectionInformation == null) {
-			log.info("Received Disconnect-Event for Stomp-Session-ID {} which is not Registered", sessionId);
+		Optional<PanelConnectionInformation> panelConnectionInformation = panelConnectionManager.deregisterPanelConnection(sessionId);
+		if (!panelConnectionInformation.isPresent()) {
+			log.info("Received Disconnect-Event for Stomp-Session-ID {} which is not connected", sessionId);
 			return;
 		}
 
-		String hostId = panelConnectionInformation.getHostId();
+		String hostId = panelConnectionInformation.get().getHostId();
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
 
 		if (maybePanelId.isPresent()) {

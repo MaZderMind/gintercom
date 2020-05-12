@@ -15,7 +15,7 @@ public class SimpReponder {
 	private final SimpMessageSendingOperations simpMessageSendingOperations;
 
 	// Resembling org.springframework.messaging.simp.annotation.support.SendToMethodReturnValueHandler
-	public void convertAndRespondeToUser(String user, String destination, Object payload) {
+	public void convertAndRespondToUser(String user, String destination, Object payload) {
 		this.simpMessageSendingOperations.convertAndSendToUser(user, destination, payload, createHeaders(user));
 	}
 

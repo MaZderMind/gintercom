@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -200,7 +201,7 @@ public class ControlServerTestClient {
 			throw new RuntimeException(e);
 		}
 
-		List<StompMessage> messages = sessionHandler.getMessages();
+		List<StompMessage> messages = new ArrayList<>(sessionHandler.getMessages());
 		sessionHandler.getMessages().clear();
 		log.info("Received {} Messages", messages.size());
 		return messages;
