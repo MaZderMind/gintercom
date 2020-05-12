@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {VersionService} from 'src/app/services/version.service';
 
 @Component({
   selector: 'app-navbar',
@@ -32,6 +33,12 @@ export class NavbarComponent {
   ];
 
   readonly isMobile = ('ontouchstart' in window);
+
+  applicationVersion: string;
+
+  constructor(private versionService: VersionService) {
+    this.applicationVersion = versionService.getApplicationVersion();
+  }
 }
 
 interface NavbarItem {
