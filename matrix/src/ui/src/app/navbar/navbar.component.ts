@@ -15,20 +15,20 @@ export class NavbarComponent {
       link: '/',
       exact: true
     }, {
-      title: 'Groups',
-      description: 'Intercom Groups',
-      icon: 'fas fa-user-friends',
-      link: '/groups'
+      title: 'Devices',
+      description: 'Connected Devices',
+      icon: 'fas fa-mobile-alt',
+      link: '/devices'
     }, {
       title: 'Panels',
       description: 'Intercom Panels',
       icon: 'fas fa-user',
       link: '/panels'
     }, {
-      title: 'Devices',
-      description: 'Connected Devices',
-      icon: 'fas fa-mobile-alt',
-      link: '/devices'
+      title: 'Groups',
+      description: 'Intercom Groups',
+      icon: 'fas fa-user-friends',
+      link: '/groups'
     }
   ];
 

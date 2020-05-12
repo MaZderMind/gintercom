@@ -1,0 +1,70 @@
+
+<div class="row" *ngIf="statistics">
+  <div class="col-sm-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4>
+          <a routerLink="/devices">
+            <strong>{{ statistics.devicesOnline }}</strong>
+            {{ statistics.devicesOnline == 1 ? 'Device' : 'Devices' }} online
+          </a>
+        </h4>
+        <h5>
+          <a
+            [routerLink]="['/devices', {filter: 'unprovisioned'}]"
+            class="text-warning"
+            *ngIf="statistics.devicesUnprovisioned > 0"
+          >
+            <strong>{{ statistics.devicesUnprovisioned }}</strong> not provisioned
+          </a>
+          <a
+            routerLink="/devices"
+            class="text-success"
+            *ngIf="statistics.devicesUnprovisioned == 0"
+          >
+            <strong>all</strong> provisioned
+          </a>
+        </h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4><a routerLink="/panels">
+          <strong>{{ statistics.panelsConfigured }}</strong>
+          {{ statistics.panelsConfigured == 1 ? 'Panel' : 'Panels' }} configured
+        </a></h4>
+        <h5>
+          <a
+            [routerLink]="['/panels', {filter: 'unassigned'}]"
+            class="text-warning"
+            *ngIf="statistics.panelsUnassigned > 0"
+          >
+            <strong>{{ statistics.panelsUnassigned }}</strong> not assigned
+          </a>
+          <a
+            routerLink="/panels"
+            class="text-success"
+            *ngIf="statistics.panelsUnassigned == 0"
+          >
+            <strong>all</strong> assigned
+          </a>
+        </h5>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4>
+          <a routerLink="/groups">
+            <strong>{{ statistics.groupsConfigured }}</strong> Groups configured
+          </a>
+        </h4>
+      </div>
+    </div>
+  </div>
+</div>
