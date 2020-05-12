@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/rest/statistics/history")
 @RequiredArgsConstructor
-public class HistoryController {
+public class HistoryWebservice {
 	private final HistoryService historyService;
 
 	@GetMapping

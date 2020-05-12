@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/rest/groups")
 @RequiredArgsConstructor
-public class GroupsController {
+public class GroupsWebservice {
 	private final GroupsService groupsService;
 
 	@GetMapping

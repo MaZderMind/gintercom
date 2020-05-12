@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/rest/panels")
 @RequiredArgsConstructor
-public class PanelsController {
+public class PanelsWebservice {
 	private final PanelsService panelsService;
 
 	@GetMapping

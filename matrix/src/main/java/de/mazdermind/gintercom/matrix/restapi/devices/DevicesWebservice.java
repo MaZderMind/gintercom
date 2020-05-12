@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/rest/devices")
 @RequiredArgsConstructor
-public class DevicesController {
+public class DevicesWebservice {
 	private final DevicesService devicesService;
 
 	@GetMapping
