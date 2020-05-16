@@ -29,7 +29,7 @@ run-tmux:
 run-matrix:
 	GST_DEBUG_DUMP_DOT_DIR=./matrix/target/ mvn --projects matrix --also-make spring-boot:run \
 		-Dspring-boot.run.arguments="--config-directory=./matrix/example-config" \
-		-Dspring-boot.run.jvmArguments="-Xdebug-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(MATRIX_DEBUG_PORT)"
+		-Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(MATRIX_DEBUG_PORT)"
 
 run-debugclient:
 	GST_DEBUG_DUMP_DOT_DIR=./debugclient/ mvn --projects debugclient --also-make spring-boot:run \
