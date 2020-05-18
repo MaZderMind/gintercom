@@ -12,6 +12,9 @@ import {DevicesListComponent} from 'src/app/pages/deviceslist/devices-list.compo
 import {PanelsListComponent} from 'src/app/pages/panelslist/panels-list.component';
 import {StatusComponent} from './pages/dashboard/status/status.component';
 import {HistoryComponent} from './pages/dashboard/history/history.component';
+import {LineChartModule} from '@swimlane/ngx-charts';
+import {FormsModule} from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,10 @@ import {HistoryComponent} from './pages/dashboard/history/history.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    NgbModule
+    BrowserAnimationsModule,
+    NgbModule,
+    LineChartModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

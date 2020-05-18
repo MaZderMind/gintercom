@@ -1,1 +1,26 @@
-<p>history works!</p>
+<div class="d-flex">
+  <h2>Timeline</h2>
+  <select class="form-control ml-auto w-auto" (change)="updateData()" [(ngModel)]="timeWindow">
+    <option
+      *ngFor="let window of timeWindows"
+      [ngValue]="window"
+    >
+      {{ window.name}}
+    </option>
+  </select>
+</div>
+
+<div style="height: 350px" *ngIf="chartData">
+  <ngx-charts-line-chart
+    [legend]="true"
+    [showXAxisLabel]="true"
+    [xAxis]="true"
+    [yAxis]="true"
+    [xAxisLabel]="'Date/Time'"
+    [timeline]="false"
+    [results]="chartData"
+    [scheme]="'vivid'"
+    [animations]="false"
+  >
+  </ngx-charts-line-chart>
+</div>
