@@ -15,6 +15,7 @@ import {HistoryComponent} from './pages/dashboard/history/history.component';
 import {LineChartModule} from '@swimlane/ngx-charts';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {DeviceActionsComponent} from './pages/deviceslist/device-actions/device-actions.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     DevicesListComponent,
     PanelsListComponent,
     StatusComponent,
-    HistoryComponent
+    HistoryComponent,
+    DeviceActionsComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,15 @@
+tr {
+  app-device-actions {
+    visibility: hidden;
+  }
+
+  &:hover {
+    app-device-actions {
+      visibility: visible;
+    }
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}

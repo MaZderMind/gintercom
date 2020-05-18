@@ -1,1 +1,39 @@
-<p>devices works!</p>
+<h2>Connected Devices</h2>
+<table class="table">
+  <tr>
+    <th>Provisioned</th>
+    <th>Host-ID</th>
+    <th>Remote IP</th>
+    <th>Connection Time</th>
+    <th>Assigned Panel</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let device of devices">
+    <td>
+      <span class="badge"
+            [class.bg-warning]="!device.provisioned"
+
+            [class.bg-success]="device.provisioned"
+            [class.text-white]="device.provisioned"
+      >
+        {{ device.provisioned ? 'Yes' : 'No' }}
+      </span>
+    </td>
+    <td class="text-monospace">{{ device.hostId }}</td>
+    <td class="text-monospace">{{ device.remoteIp }}</td>
+    <td>{{ device.connectionTime | date:'medium' }}</td>
+    <td>
+      <a *ngIf="device.provisioned" [routerLink]="['panel', device.panelId]">{{ device.panelId }}</a>
+      <button
+        *ngIf="!device.provisioned"
+        class="btn btn-primary text-white btn-sm"
+        type="button"
+      >
+        Assign Panel
+      </button>
+    </td>
+    <td>
+      <app-device-actions [device]="device"></app-device-actions>
+    </td>
+  </tr>
+</table>
