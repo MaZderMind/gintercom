@@ -21,4 +21,7 @@ export class DevicesListComponent implements OnInit {
     this.devicesService.getOnlineDevices().then(
       devices => this.devices = devices);
   }
+
+  assignPanel() {
+  }
 }

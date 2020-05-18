@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DeviceDto} from 'src/app/services/devices/device-dto';
 
 @Component({
@@ -6,9 +6,17 @@ import {DeviceDto} from 'src/app/services/devices/device-dto';
   templateUrl: './device-actions.component.html',
   styleUrls: ['./device-actions.component.scss']
 })
-export class DeviceActionsComponent implements OnInit {
+export class DeviceActionsComponent {
 
   @Input()
   device: DeviceDto;
 
+  forceDisconnect() {
+  }
+
+  unassignPanel() {
+  }
+
+  assignPanel() {
+  }
 }

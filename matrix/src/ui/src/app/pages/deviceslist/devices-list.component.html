@@ -1,5 +1,5 @@
 <h2>Connected Devices</h2>
-<table class="table">
+<table class="table" *ngIf="devices">
   <thead>
   <tr>
     <th>Provisioned</th>
@@ -29,8 +29,9 @@
       <a *ngIf="device.provisioned" [routerLink]="['panel', device.panelId]">{{ device.panelId }}</a>
       <button
         *ngIf="!device.provisioned"
-        class="btn btn-primary text-white btn-sm"
+        class="btn btn-primary btn-sm"
         type="button"
+        (click)="assignPanel()"
       >
         Assign Panel
       </button>

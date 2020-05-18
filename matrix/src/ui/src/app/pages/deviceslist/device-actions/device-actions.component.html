@@ -3,10 +3,10 @@
     Actions
   </button>
   <div class="dropdown-menu" ngbDropdownMenu>
-    <a *ngIf="device.provisioned" class="dropdown-item" href="#" ngbDropdownItem>Unassign Panel</a>
-    <a *ngIf="!device.provisioned" class="dropdown-item" href="#" ngbDropdownItem>Assign Panel</a>
-    <a class="dropdown-item" href="#" ngbDropdownItem>
+    <button *ngIf="device.provisioned" type="button" class="dropdown-item" (click)="unassignPanel()" ngbDropdownItem>Unassign Panel</button>
+    <button *ngIf="!device.provisioned" type="button" class="dropdown-item" (click)="assignPanel()" ngbDropdownItem>Assign Panel</button>
+    <button class="dropdown-item" type="button" ngbDropdownItem (click)="forceDisconnect()">
       Force Disconnect <i class="fa fa-exclamation-triangle text-danger"></i>
-    </a>
+    </button>
   </div>
 </div>
