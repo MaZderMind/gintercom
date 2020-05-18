@@ -9,6 +9,7 @@ interface TimeWindow {
   id: string;
   name: string;
   dateFormat: string;
+  updateIntervalMinutes: number;
 }
 
 @Component({
@@ -20,30 +21,48 @@ export class HistoryComponent implements OnInit {
   readonly timeWindows: TimeWindow[] = [{
     id: 'minutely',
     name: 'Short-Term (90 Minutes, Minutely)',
-    dateFormat: 'hh:mm'
+    dateFormat: 'hh:mm',
+    updateIntervalMinutes: 1
   }, {
     id: 'quarterHourly',
     name: 'Mid-Term (24 Hours, Quarter Hourly)',
-    dateFormat: 'hh:mm'
+    dateFormat: 'hh:mm',
+    updateIntervalMinutes: 5
   }, {
     id: 'hourly',
     name: 'Long-Term (4 Days, Hourly)',
-    dateFormat: 'EEEEEE hh:mm'
+    dateFormat: 'EEEEEE hh:mm',
+    updateIntervalMinutes: 5
   }]
 
   timeWindow = this.timeWindows[0];
   chartData: LineChartData;
+  updateInterval: ReturnType<typeof setInterval>;
 
   constructor(private historyService: HistoryService) {
   }
 
   ngOnInit() {
     this.updateData();
+    this.scheduleUpdate();
   }
 
-  updateData() {
+  timeWindowChanged() {
+    this.updateData();
+    this.scheduleUpdate();
+  }
+
+  private updateData() {
     this.getDataForSelectedTimeWindow()
       .then(timeline => this.chartData = HistoryComponent.formatChartData(timeline))
+  }
+
+  private scheduleUpdate() {
+    clearInterval(this.updateInterval);
+    this.updateInterval = setInterval(
+      () => this.updateData(),
+      this.timeWindow.updateIntervalMinutes * 60 * 1000
+    )
   }
 
   private getDataForSelectedTimeWindow(): Promise<Array<StatisticsDto>> {

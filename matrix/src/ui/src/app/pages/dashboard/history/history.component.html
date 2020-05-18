@@ -1,6 +1,6 @@
 <div class="d-flex">
   <h2>Timeline</h2>
-  <select class="form-control ml-auto w-auto" (change)="updateData()" [(ngModel)]="timeWindow">
+  <select class="form-control ml-auto w-auto" (change)="timeWindowChanged()" [(ngModel)]="timeWindow">
     <option
       *ngFor="let window of timeWindows"
       [ngValue]="window"
