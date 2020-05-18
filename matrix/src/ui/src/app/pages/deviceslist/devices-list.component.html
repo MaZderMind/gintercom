@@ -1,5 +1,6 @@
 <h2>Connected Devices</h2>
 <table class="table">
+  <thead>
   <tr>
     <th>Provisioned</th>
     <th>Host-ID</th>
@@ -8,6 +9,8 @@
     <th>Assigned Panel</th>
     <th>Actions</th>
   </tr>
+  </thead>
+  <tbody>
   <tr *ngFor="let device of devices">
     <td>
       <span class="badge"
@@ -36,4 +39,5 @@
       <app-device-actions [device]="device"></app-device-actions>
     </td>
   </tr>
+  </tbody>
 </table>
