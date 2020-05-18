@@ -7,10 +7,12 @@ import javax.annotation.Nullable;
 
 import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionInformation;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
+@NoArgsConstructor
 public class DeviceDto {
 	private String hostId;
 	@Nullable

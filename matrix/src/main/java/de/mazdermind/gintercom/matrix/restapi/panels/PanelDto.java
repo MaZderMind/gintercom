@@ -4,10 +4,12 @@ import javax.annotation.Nullable;
 
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
+@NoArgsConstructor
 public class PanelDto {
 	private String id;
 	private String display;
