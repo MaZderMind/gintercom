@@ -18,7 +18,7 @@ public class DevicesService {
 	public Stream<DeviceDto> getOnlineDevices() {
 		return panelConnectionManager.getConnectedPanels().stream()
 			.map(DeviceDto::new)
-			.sorted(Comparator.comparing(DeviceDto::getHostId));
+			.sorted(Comparator.comparing(DeviceDto::getConnectionTime).reversed());
 	}
 
 	public Stream<DeviceDto> getProvisionedDevices() {
