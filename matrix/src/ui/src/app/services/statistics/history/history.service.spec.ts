@@ -1,10 +1,10 @@
 import {TestBed} from '@angular/core/testing';
 
-import {StatisticsService} from './statistics.service';
+import {HistoryService} from './history.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
-describe('StatisticsService', () => {
-  let service: StatisticsService;
+describe('HistoryService', () => {
+  let service: HistoryService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -12,7 +12,7 @@ describe('StatisticsService', () => {
         HttpClientTestingModule
       ]
     });
-    service = TestBed.inject(StatisticsService);
+    service = TestBed.inject(HistoryService);
   });
 
   it('should be created', () => {

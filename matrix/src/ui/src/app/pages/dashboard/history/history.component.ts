@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {HistoryService} from 'src/app/services/statistics/history.service';
+import {HistoryService} from 'src/app/services/statistics/history/history.service';
 import {StatisticsDto} from 'src/app/services/statistics/statistics-dto';
 
 type LineChartDataPoint = { name: string | Date, value: number };
@@ -33,7 +33,7 @@ export class HistoryComponent implements OnInit {
     name: 'Long-Term (4 Days, Hourly)',
     dateFormat: 'EEEEEE hh:mm',
     updateIntervalMinutes: 5
-  }]
+  }];
 
   timeWindow = this.timeWindows[0];
   chartData: LineChartData;
@@ -54,7 +54,7 @@ export class HistoryComponent implements OnInit {
 
   private updateData() {
     this.getDataForSelectedTimeWindow()
-      .then(timeline => this.chartData = HistoryComponent.formatChartData(timeline))
+      .then(timeline => this.chartData = this.formatChartData(timeline));
   }
 
   private scheduleUpdate() {
@@ -62,7 +62,7 @@ export class HistoryComponent implements OnInit {
     this.updateInterval = setInterval(
       () => this.updateData(),
       this.timeWindow.updateIntervalMinutes * 60 * 1000
-    )
+    );
   }
 
   private getDataForSelectedTimeWindow(): Promise<Array<StatisticsDto>> {
@@ -77,28 +77,28 @@ export class HistoryComponent implements OnInit {
         return this.historyService.getHourlyStatistics();
 
       default:
-        return Promise.reject('Unknown Time-Window: ' + this.timeWindow.id)
+        return Promise.reject('Unknown Time-Window: ' + this.timeWindow.id);
     }
   }
 
-  private static formatChartData(timeline: Array<StatisticsDto>): LineChartData {
+  private formatChartData(timeline: Array<StatisticsDto>): LineChartData {
     return [
       {
         name: 'Panels (Configured)',
-        series: HistoryComponent.formatChartSeries(timeline, 'panelsConfigured')
+        series: this.formatChartSeries(timeline, 'panelsConfigured')
       },
       {
         name: 'Panels (Assigned)',
-        series: HistoryComponent.formatChartSeries(timeline, 'panelsAssigned')
+        series: this.formatChartSeries(timeline, 'panelsAssigned')
       },
       {
         name: 'Panels (Online)',
-        series: HistoryComponent.formatChartSeries(timeline, 'panelsOnline')
+        series: this.formatChartSeries(timeline, 'panelsOnline')
       }
-    ]
+    ];
   }
 
-  private static formatChartSeries(timeline: Array<StatisticsDto>, metric: string): Array<LineChartDataPoint> {
+  private formatChartSeries(timeline: Array<StatisticsDto>, metric: string): Array<LineChartDataPoint> {
     return timeline.map(dataPoint => ({
       name: new Date(dataPoint.timestamp),
       value: dataPoint[metric]

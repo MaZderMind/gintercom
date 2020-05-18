@@ -5,7 +5,7 @@ import {Injectable} from '@angular/core';
 })
 export class VersionService {
   getApplicationVersion(): string {
-    let body = document.getElementsByTagName('body')[0];
-    return body.dataset['version'];
+    const body = document.getElementsByTagName('body')[0];
+    return body.dataset.version;
   }
 }
