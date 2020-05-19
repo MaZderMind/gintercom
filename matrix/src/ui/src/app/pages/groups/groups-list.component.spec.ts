@@ -1,14 +1,24 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {GroupsListComponent} from 'src/app/pages/groups/groups-list.component';
+import {instance, mock, when} from 'ts-mockito';
+import {GroupsService} from 'src/app/services/groups/groups.service';
+import {RouterTestingModule} from '@angular/router/testing';
 
-describe('GroupsComponent', () => {
+describe('GroupsListComponent', () => {
   let component: GroupsListComponent;
   let fixture: ComponentFixture<GroupsListComponent>;
+  let groupsService: GroupsService;
 
   beforeEach(async(() => {
+    groupsService = mock(GroupsService);
+    when(groupsService.getConfiguredGroups()).thenResolve([]);
     TestBed.configureTestingModule({
-      declarations: [GroupsListComponent]
+      declarations: [GroupsListComponent],
+      providers: [
+        {provide: GroupsService, useFactory: () => instance(groupsService)},
+      ],
+      imports: [RouterTestingModule],
     })
       .compileComponents();
   }));
