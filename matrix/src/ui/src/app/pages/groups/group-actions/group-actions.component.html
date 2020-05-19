@@ -1,0 +1,11 @@
+<div class="actions dropdown" ngbDropdown>
+  <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" ngbDropdownToggle>
+    Actions
+  </button>
+  <div class="dropdown-menu" ngbDropdownMenu>
+    <a type="button" class="dropdown-item" [routerLink]="['/groups', group.id]" ngbDropdownItem>Edit</a>
+    <button class="dropdown-item" type="button" ngbDropdownItem (click)="deleteGroup()">
+      Delete <i class="fa fa-exclamation-triangle text-danger"></i>
+    </button>
+  </div>
+</div>

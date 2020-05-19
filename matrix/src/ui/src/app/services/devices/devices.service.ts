@@ -6,7 +6,6 @@ import {DeviceDto} from 'src/app/services/devices/device-dto';
   providedIn: 'root'
 })
 export class DevicesService {
-
   constructor(private httpClient: HttpClient) {
   }
 

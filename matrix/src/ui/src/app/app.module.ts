@@ -17,8 +17,9 @@ import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DeviceActionsComponent} from './pages/devices/device-actions/device-actions.component';
 import {DeviceStatusComponent} from './pages/devices/device-status/device-status.component';
-import { PanelStatusComponent } from './pages/panels/panel-status/panel-status.component';
-import { PanelActionsComponent } from './pages/panels/panel-actions/panel-actions.component';
+import {PanelStatusComponent} from './pages/panels/panel-status/panel-status.component';
+import {PanelActionsComponent} from './pages/panels/panel-actions/panel-actions.component';
+import {GroupActionsComponent} from './pages/groups/group-actions/group-actions.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { PanelActionsComponent } from './pages/panels/panel-actions/panel-action
     DeviceActionsComponent,
     DeviceStatusComponent,
     PanelStatusComponent,
-    PanelActionsComponent
+    PanelActionsComponent,
+    GroupActionsComponent
   ],
   imports: [
     BrowserModule,

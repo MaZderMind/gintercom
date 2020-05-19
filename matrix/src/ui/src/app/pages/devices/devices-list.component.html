@@ -19,7 +19,7 @@
     <td class="text-monospace">{{ device.remoteIp }}</td>
     <td>{{ device.connectionTime | date:'medium' }}</td>
     <td>
-      <a *ngIf="device.provisioned" [routerLink]="['panel', device.panelId]">{{ device.panelId }}</a>
+      <a *ngIf="device.provisioned" [routerLink]="['/panels', device.panelId]">{{ device.panelId }}</a>
       <button
         *ngIf="!device.provisioned"
         class="btn btn-primary btn-sm"

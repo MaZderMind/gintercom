@@ -15,11 +15,11 @@
       <app-panel-status [panel]="panel"></app-panel-status>
     </td>
     <td class="text-monospace">
-      <a [routerLink]="['panel', panel.id]">{{ panel.id }}</a>
+      <a [routerLink]="['/panels', panel.id]">{{ panel.id }}</a>
     </td>
     <td>{{ panel.display }}</td>
     <td>
-      <a *ngIf="panel.assigned" [routerLink]="['device', panel.hostId]">{{ panel.hostId }}</a>
+      <a *ngIf="panel.assigned" [routerLink]="['/devices', panel.hostId]">{{ panel.hostId }}</a>
       <button
         *ngIf="!panel.assigned"
         class="btn btn-primary btn-sm"

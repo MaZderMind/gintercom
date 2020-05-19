@@ -6,7 +6,6 @@ import {PanelDto} from 'src/app/services/panels/panel-dto';
   providedIn: 'root'
 })
 export class PanelsService {
-
   constructor(private httpClient: HttpClient) {
   }
 
