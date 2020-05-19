@@ -15,7 +15,7 @@ public class WebuiController {
 		return "redirect:/ui/";
 	}
 
-	@GetMapping("/ui/*")
+	@GetMapping({ "/ui", "/ui/**", })
 	public String renderAngularTemplate(ModelMap modelMap) {
 		modelMap.addAttribute("version", version);
 		return "angular";
