@@ -17,9 +17,12 @@ dist: clean package
 	cd dist && sha256sum *.* >SHA256SUMS
 
 test:
-	make ui-lint ui-test test-integration
+	make test-ui test-backend
 
-test-integration:
+test-ui:
+	make ui-lint ui-test
+
+test-backend:
 	mvn verify
 
 # run

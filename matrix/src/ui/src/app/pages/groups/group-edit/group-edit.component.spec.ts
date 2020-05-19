@@ -1,6 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { GroupEditComponent } from './group-edit.component';
+import {GroupEditComponent} from './group-edit.component';
+import {ActivatedRoute} from '@angular/router';
+import {EMPTY} from 'rxjs';
 
 describe('GroupEditComponent', () => {
   let component: GroupEditComponent;
@@ -8,9 +10,15 @@ describe('GroupEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GroupEditComponent ]
-    })
-    .compileComponents();
+      declarations: [GroupEditComponent],
+      providers: [
+        {
+          provide: ActivatedRoute, useValue: {
+            paramMap: EMPTY,
+          }
+        },
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

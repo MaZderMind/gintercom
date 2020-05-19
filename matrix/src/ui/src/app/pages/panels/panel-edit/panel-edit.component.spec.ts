@@ -1,6 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PanelEditComponent } from './panel-edit.component';
+import {PanelEditComponent} from './panel-edit.component';
+import {ActivatedRoute} from '@angular/router';
+import {EMPTY} from 'rxjs';
 
 describe('PanelEditComponent', () => {
   let component: PanelEditComponent;
@@ -8,9 +10,15 @@ describe('PanelEditComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PanelEditComponent ]
-    })
-    .compileComponents();
+      declarations: [PanelEditComponent],
+      providers: [
+        {
+          provide: ActivatedRoute, useValue: {
+            paramMap: EMPTY,
+          }
+        },
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
