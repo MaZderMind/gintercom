@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {PanelsListComponent} from 'src/app/pages/panelslist/panels-list.component';
+import {PanelsListComponent} from 'src/app/pages/panels/panels-list.component';
 
 describe('PanelsComponent', () => {
   let component: PanelsListComponent;

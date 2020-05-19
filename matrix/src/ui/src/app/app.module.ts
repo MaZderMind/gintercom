@@ -7,15 +7,16 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './navbar/navbar.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
-import {GroupsListComponent} from 'src/app/pages/groupslist/groups-list.component';
-import {DevicesListComponent} from 'src/app/pages/deviceslist/devices-list.component';
-import {PanelsListComponent} from 'src/app/pages/panelslist/panels-list.component';
+import {GroupsListComponent} from 'src/app/pages/groups/groups-list.component';
+import {DevicesListComponent} from 'src/app/pages/devices/devices-list.component';
+import {PanelsListComponent} from 'src/app/pages/panels/panels-list.component';
 import {StatusComponent} from './pages/dashboard/status/status.component';
 import {HistoryComponent} from './pages/dashboard/history/history.component';
 import {LineChartModule} from '@swimlane/ngx-charts';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DeviceActionsComponent} from './pages/deviceslist/device-actions/device-actions.component';
+import {DeviceActionsComponent} from './pages/devices/device-actions/device-actions.component';
+import {DeviceStatusComponent} from './pages/devices/device-status/device-status.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {DeviceActionsComponent} from './pages/deviceslist/device-actions/device-
     PanelsListComponent,
     StatusComponent,
     HistoryComponent,
-    DeviceActionsComponent
+    DeviceActionsComponent,
+    DeviceStatusComponent
   ],
   imports: [
     BrowserModule,

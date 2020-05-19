@@ -13,14 +13,7 @@
   <tbody>
   <tr *ngFor="let device of devices">
     <td>
-      <span class="badge"
-            [class.bg-warning]="!device.provisioned"
-
-            [class.bg-success]="device.provisioned"
-            [class.text-white]="device.provisioned"
-      >
-        {{ device.provisioned ? 'Yes' : 'No' }}
-      </span>
+      <app-device-status [device]="device"></app-device-status>
     </td>
     <td class="text-monospace">{{ device.hostId }}</td>
     <td class="text-monospace">{{ device.remoteIp }}</td>
@@ -39,6 +32,9 @@
     <td>
       <app-device-actions [device]="device"></app-device-actions>
     </td>
+  </tr>
+  <tr *ngIf="devices.length == 0">
+    <td colspan="6" class="text-center font-italic">No Devices Connected</td>
   </tr>
   </tbody>
 </table>

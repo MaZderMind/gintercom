@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {DashboardComponent} from 'src/app/pages/dashboard/dashboard.component';
-import {DevicesListComponent} from 'src/app/pages/deviceslist/devices-list.component';
-import {GroupsListComponent} from 'src/app/pages/groupslist/groups-list.component';
-import {PanelsListComponent} from 'src/app/pages/panelslist/panels-list.component';
+import {DevicesListComponent} from 'src/app/pages/devices/devices-list.component';
+import {GroupsListComponent} from 'src/app/pages/groups/groups-list.component';
+import {PanelsListComponent} from 'src/app/pages/panels/panels-list.component';
 
 const routes: Routes = [
   {
