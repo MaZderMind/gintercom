@@ -15,7 +15,11 @@
     <td>
       <app-device-status [device]="device"></app-device-status>
     </td>
-    <td class="text-monospace">{{ device.hostId }}</td>
+    <td class="text-monospace">
+      <a [routerLink]="['/devices', device.hostId]">
+        {{ device.hostId }}
+      </a>
+    </td>
     <td class="text-monospace">{{ device.remoteIp }}</td>
     <td>{{ device.connectionTime | date:'medium' }}</td>
     <td>

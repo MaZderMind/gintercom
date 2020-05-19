@@ -6,6 +6,7 @@ import {GroupsListComponent} from 'src/app/pages/groups/groups-list.component';
 import {PanelsListComponent} from 'src/app/pages/panels/panels-list.component';
 import {GroupEditComponent} from 'src/app/pages/groups/group-edit/group-edit.component';
 import {PanelEditComponent} from 'src/app/pages/panels/panel-edit/panel-edit.component';
+import {DeviceViewComponent} from 'src/app/pages/devices/device-view/device-view.component';
 
 const routes: Routes = [
   {path: '', pathMatch: 'full', component: DashboardComponent},
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path: 'panels', component: PanelsListComponent},
   {path: 'panels/:id', component: PanelEditComponent},
   {path: 'devices', component: DevicesListComponent},
+  {path: 'devices/:id', component: DeviceViewComponent},
   {path: '**', redirectTo: ''}
 ];
 

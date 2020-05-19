@@ -3,7 +3,7 @@
     Actions
   </button>
   <div class="dropdown-menu" ngbDropdownMenu>
-    <a type="button" class="dropdown-item" [routerLink]="['panel', panel.id]" ngbDropdownItem>Edit</a>
+    <a type="button" class="dropdown-item" [routerLink]="['/panels', panel.id]" ngbDropdownItem>Edit</a>
     <button *ngIf="panel.assigned" type="button" class="dropdown-item" (click)="unassignDevice()" ngbDropdownItem>Unassign Device</button>
     <button *ngIf="!panel.assigned" type="button" class="dropdown-item" (click)="assignDevice()" ngbDropdownItem>Assign Device</button>
     <button class="dropdown-item" type="button" ngbDropdownItem (click)="deletePanel()">

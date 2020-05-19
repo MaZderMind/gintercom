@@ -22,6 +22,7 @@ import {PanelActionsComponent} from './pages/panels/panel-actions/panel-actions.
 import {GroupActionsComponent} from './pages/groups/group-actions/group-actions.component';
 import {GroupEditComponent} from './pages/groups/group-edit/group-edit.component';
 import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component';
+import {DeviceViewComponent} from './pages/devices/device-view/device-view.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component
     PanelActionsComponent,
     GroupActionsComponent,
     GroupEditComponent,
-    PanelEditComponent
+    PanelEditComponent,
+    DeviceViewComponent
   ],
   imports: [
     BrowserModule,
