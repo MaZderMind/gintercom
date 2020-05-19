@@ -1,14 +1,23 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {DevicesListComponent} from 'src/app/pages/devices/devices-list.component';
+import {DevicesService} from 'src/app/services/devices/devices.service';
+import {instance, mock, when} from 'ts-mockito';
 
-describe('DevicesComponent', () => {
+describe('DevicesListComponent', () => {
   let component: DevicesListComponent;
   let fixture: ComponentFixture<DevicesListComponent>;
+  let devicesService: DevicesService;
 
   beforeEach(async(() => {
+    devicesService = mock(DevicesService);
+    when(devicesService.getOnlineDevices()).thenResolve([]);
+
     TestBed.configureTestingModule({
-      declarations: [DevicesListComponent]
+      declarations: [DevicesListComponent],
+      providers: [
+        {provide: DevicesService, useFactory: () => instance(devicesService)},
+      ]
     })
       .compileComponents();
   }));
