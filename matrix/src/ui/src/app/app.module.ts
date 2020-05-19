@@ -20,6 +20,8 @@ import {DeviceStatusComponent} from './pages/devices/device-status/device-status
 import {PanelStatusComponent} from './pages/panels/panel-status/panel-status.component';
 import {PanelActionsComponent} from './pages/panels/panel-actions/panel-actions.component';
 import {GroupActionsComponent} from './pages/groups/group-actions/group-actions.component';
+import {GroupEditComponent} from './pages/groups/group-edit/group-edit.component';
+import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import {GroupActionsComponent} from './pages/groups/group-actions/group-actions.
     DeviceStatusComponent,
     PanelStatusComponent,
     PanelActionsComponent,
-    GroupActionsComponent
+    GroupActionsComponent,
+    GroupEditComponent,
+    PanelEditComponent
   ],
   imports: [
     BrowserModule,
