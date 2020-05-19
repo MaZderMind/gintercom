@@ -1,8 +1,6 @@
 <span class="badge"
       [class.bg-warning]="!device.provisioned"
-
       [class.bg-success]="device.provisioned"
-      [class.text-white]="device.provisioned"
 >
   {{ device.provisioned ? 'Yes' : 'No' }}
 </span>

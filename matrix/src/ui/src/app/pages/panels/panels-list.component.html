@@ -1,3 +1,42 @@
-<h2>Panels</h2>
-<table class="table">
+<h2>Configured Panels</h2>
+<table class="table" *ngIf="panels">
+  <thead>
+  <tr>
+    <th>Status</th>
+    <th>Id</th>
+    <th>Display-Name</th>
+    <th>Host-ID</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let panel of panels">
+    <td>
+      <app-panel-status [panel]="panel"></app-panel-status>
+    </td>
+    <td class="text-monospace">
+      <a [routerLink]="['panel', panel.id]">{{ panel.id }}</a>
+    </td>
+    <td>{{ panel.display }}</td>
+    <td>
+      <a *ngIf="panel.assigned" [routerLink]="['device', panel.hostId]">{{ panel.hostId }}</a>
+      <button
+        *ngIf="!panel.assigned"
+        class="btn btn-primary btn-sm"
+        type="button"
+        (click)="assignDevice()"
+      >
+        Assign Device
+      </button>
+    </td>
+    <td>
+      <app-panel-actions [panel]="panel"></app-panel-actions>
+    </td>
+  </tr>
+  <tr *ngIf="panels.length == 0">
+    <td colspan="6" class="text-center font-italic">No Panels Configured</td>
+  </tr>
+  </tbody>
 </table>
+
+<button type="button" class="btn btn-primary" (click)="addPanel()">Add Panel</button>

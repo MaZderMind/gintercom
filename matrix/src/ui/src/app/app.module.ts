@@ -17,6 +17,8 @@ import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DeviceActionsComponent} from './pages/devices/device-actions/device-actions.component';
 import {DeviceStatusComponent} from './pages/devices/device-status/device-status.component';
+import { PanelStatusComponent } from './pages/panels/panel-status/panel-status.component';
+import { PanelActionsComponent } from './pages/panels/panel-actions/panel-actions.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import {DeviceStatusComponent} from './pages/devices/device-status/device-status
     StatusComponent,
     HistoryComponent,
     DeviceActionsComponent,
-    DeviceStatusComponent
+    DeviceStatusComponent,
+    PanelStatusComponent,
+    PanelActionsComponent
   ],
   imports: [
     BrowserModule,
