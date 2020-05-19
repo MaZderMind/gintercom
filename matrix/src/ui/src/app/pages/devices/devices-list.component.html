@@ -1,4 +1,11 @@
-<h2>Connected Devices</h2>
+<div [ngSwitch]="filter" class="d-flex">
+  <h2 *ngSwitchCase="'unprovisioned'">Unprovisioned Devices</h2>
+  <h2 *ngSwitchCase="'provisioned'">Provisioned Devices</h2>
+  <h2 *ngSwitchDefault>Connected Devices</h2>
+
+  <a class="close" *ngIf="filter" routerLink="/devices" ngbTooltip="Clear Filter">&times;</a>
+</div>
+
 <table class="table" *ngIf="devices">
   <thead>
   <tr>

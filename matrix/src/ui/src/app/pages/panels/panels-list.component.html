@@ -1,4 +1,13 @@
-<h2>Configured Panels</h2>
+<div [ngSwitch]="filter" class="d-flex">
+  <h2 *ngSwitchCase="'unassigned'">Unassigned Panels</h2>
+  <h2 *ngSwitchCase="'assigned'">Assigned Panels</h2>
+  <h2 *ngSwitchCase="'offline'">Online Panels</h2>
+  <h2 *ngSwitchCase="'online'">Offline Panels</h2>
+  <h2 *ngSwitchDefault>Configured Panels</h2>
+
+  <a class="close" *ngIf="filter" routerLink="/panels" ngbTooltip="Clear Filter">&times;</a>
+</div>
+
 <table class="table" *ngIf="panels">
   <thead>
   <tr>

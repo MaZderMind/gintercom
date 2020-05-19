@@ -4,6 +4,8 @@ import {PanelsListComponent} from 'src/app/pages/panels/panels-list.component';
 import {instance, mock, when} from 'ts-mockito';
 import {PanelsService} from 'src/app/services/panels/panels.service';
 import {RouterTestingModule} from '@angular/router/testing';
+import {ActivatedRoute} from '@angular/router';
+import {EMPTY} from 'rxjs';
 
 describe('PanelsListComponent', () => {
   let component: PanelsListComponent;
@@ -17,6 +19,11 @@ describe('PanelsListComponent', () => {
       declarations: [PanelsListComponent],
       providers: [
         {provide: PanelsService, useFactory: () => instance(panelsService)},
+        {
+          provide: ActivatedRoute, useValue: {
+            paramMap: EMPTY,
+          }
+        },
       ],
       imports: [RouterTestingModule],
     })
