@@ -24,6 +24,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
+import de.mazdermind.gintercom.matrix.webui.UiUpdateEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,6 +77,7 @@ public class PanelRegistrationController {
 
 		if (!maybePanelId.isPresent()) {
 			log.info("Host-Id {}: Currently unknown in Config and needs to be Provisioned in WebUI.", hostId);
+			eventPublisher.publishEvent(new UiUpdateEvent());
 
 			return;
 		}
@@ -90,6 +92,7 @@ public class PanelRegistrationController {
 		eventPublisher.publishEvent(new PanelRegistrationEvent(
 			panelId, panelConfig, portSet, hostAddress
 		));
+		eventPublisher.publishEvent(new UiUpdateEvent());
 
 		log.info("Responding with ProvisionMessage");
 		ProvisionMessage provisionMessage = new ProvisionMessage()
@@ -110,6 +113,8 @@ public class PanelRegistrationController {
 			log.info("Received Disconnect-Event for Stomp-Session-ID {} which is not connected", sessionId);
 			return;
 		}
+
+		eventPublisher.publishEvent(new UiUpdateEvent());
 
 		String hostId = panelConnectionInformation.get().getHostId();
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);

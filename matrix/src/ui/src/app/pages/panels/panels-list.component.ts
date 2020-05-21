@@ -1,15 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PanelsService} from 'src/app/services/panels/panels.service';
 import {PanelDto} from 'src/app/services/panels/panel-dto';
 import {ActivatedRoute} from '@angular/router';
 import {Filter, Filters} from 'src/app/utils/filter-util';
+import {UiUpdateService} from 'src/app/services/ui-update.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-panels-list',
   templateUrl: './panels-list.component.html',
   styleUrls: ['./panels-list.component.scss']
 })
-export class PanelsListComponent implements OnInit {
+export class PanelsListComponent implements OnInit, OnDestroy {
   private static readonly filters: Filters<PanelDto> = new Filters(
     'Configured Panels',
     new Filter('online', 'Online Panels', panel => panel.online),
@@ -21,19 +23,26 @@ export class PanelsListComponent implements OnInit {
   panels: Array<PanelDto>;
   filter: Filter<PanelDto>;
   private allPanels: Array<PanelDto>;
+  private uiUpdateSubscription: Subscription;
 
   constructor(
     private panelsService: PanelsService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private uiUpdateService: UiUpdateService
   ) {
   }
 
   ngOnInit(): void {
     this.updateList();
+    this.uiUpdateSubscription = this.uiUpdateService.subscribe(() => this.updateList());
     this.activatedRoute.paramMap.subscribe(paramMap => {
       this.filter = PanelsListComponent.filters.select(paramMap.get('filter'));
       this.panels = this.filter.apply(this.allPanels);
     });
+  }
+
+  ngOnDestroy() {
+    this.uiUpdateSubscription.unsubscribe();
   }
 
   assignDevice() {

@@ -23,6 +23,8 @@ import {GroupActionsComponent} from './pages/groups/group-actions/group-actions.
 import {GroupEditComponent} from './pages/groups/group-edit/group-edit.component';
 import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component';
 import {DeviceViewComponent} from './pages/devices/device-view/device-view.component';
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
+import {STOMP_CONFIG} from 'src/app/app-stomp-config';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,17 @@ import {DeviceViewComponent} from './pages/devices/device-view/device-view.compo
     LineChartModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: InjectableRxStompConfig,
+      useValue: STOMP_CONFIG,
+    },
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+      deps: [InjectableRxStompConfig]
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
