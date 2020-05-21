@@ -1,0 +1,13 @@
+<div class="actions dropdown" ngbDropdown>
+  <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" ngbDropdownToggle>
+    Actions
+  </button>
+  <div class="dropdown-menu" ngbDropdownMenu>
+    <a type="button" class="dropdown-item" [routerLink]="['/panels', panel.id]" ngbDropdownItem>Edit</a>
+    <button *ngIf="panel.assigned" type="button" class="dropdown-item" (click)="unassignDevice()" ngbDropdownItem>Unassign Device</button>
+    <button *ngIf="!panel.assigned" type="button" class="dropdown-item" (click)="assignDevice()" ngbDropdownItem>Assign Device</button>
+    <button class="dropdown-item" type="button" ngbDropdownItem (click)="deletePanel()">
+      Delete <i class="fa fa-exclamation-triangle text-danger"></i>
+    </button>
+  </div>
+</div>

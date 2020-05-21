@@ -3,6 +3,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from 'src/app/navbar/navbar.component';
 import {MockComponent} from 'ng-mocks';
+import {BrowserTestingModule} from '@angular/platform-browser/testing';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -14,7 +15,7 @@ describe('AppComponent', () => {
         AppComponent,
         MockComponent(NavbarComponent),
       ],
-      imports: [RouterTestingModule],
+      imports: [BrowserTestingModule, RouterTestingModule],
     }).compileComponents();
   }));
 

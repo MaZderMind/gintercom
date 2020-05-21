@@ -1,0 +1,26 @@
+<h2>Configured Groups</h2>
+<table class="table" *ngIf="groups">
+  <thead>
+  <tr>
+    <th>Id</th>
+    <th>Display-Name</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let group of groups">
+    <td class="text-monospace">
+      <a [routerLink]="['/groups', group.id]">{{ group.id }}</a>
+    </td>
+    <td>{{ group.display }}</td>
+    <td>
+      <app-group-actions [group]="group"></app-group-actions>
+    </td>
+  </tr>
+  <tr *ngIf="groups.length == 0">
+    <td colspan="3" class="text-center font-italic">No Groups Configured</td>
+  </tr>
+  </tbody>
+</table>
+
+<button type="button" class="btn btn-primary" (click)="addGroup()">Add Group</button>

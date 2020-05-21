@@ -1,0 +1,49 @@
+<div class="d-flex">
+  <h2>{{ filter.title }}</h2>
+
+  <a *ngIf="filter.active" class="close" ngbTooltip="Clear Filter" routerLink="/panels">&times;</a>
+</div>
+
+<table *ngIf="panels" class="table">
+  <thead>
+  <tr>
+    <th>Status</th>
+    <th>Id</th>
+    <th>Display-Name</th>
+    <th>Host-ID</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let panel of panels">
+    <td>
+      <app-panel-status [panel]="panel"></app-panel-status>
+    </td>
+    <td class="text-monospace">
+      <a [routerLink]="['/panels', panel.id]">{{ panel.id }}</a>
+    </td>
+    <td>{{ panel.display }}</td>
+    <td>
+      <a *ngIf="panel.assigned" [routerLink]="['/devices', panel.hostId]">{{ panel.hostId }}</a>
+      <button
+        (click)="assignDevice()"
+        *ngIf="!panel.assigned"
+        class="btn btn-primary btn-sm"
+        type="button"
+      >
+        Assign Device
+      </button>
+    </td>
+    <td>
+      <app-panel-actions [panel]="panel"></app-panel-actions>
+    </td>
+  </tr>
+  <tr *ngIf="panels.length == 0">
+    <td class="text-center font-italic" colspan="6">
+      {{ filter.active ? 'No Panels match the Filter' : 'No Panels Configured' }}
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<button (click)="addPanel()" class="btn btn-primary" type="button">Add Panel</button>

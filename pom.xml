@@ -172,7 +172,11 @@
 				<groupId>org.mockito</groupId>
 				<artifactId>mockito-core</artifactId>
 				<version>3.3.3</version>
-				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.rest-assured</groupId>
+				<artifactId>rest-assured</artifactId>
+				<version>3.3.0</version>
 			</dependency>
 
 			<!-- lombok -->

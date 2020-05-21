@@ -1,0 +1,8 @@
+<span class="badge"
+      [class.bg-success]="panel.online"
+      [class.bg-secondary]="!panel.online"
+>
+  <ng-container *ngIf="panel.online">Online</ng-container>
+  <ng-container *ngIf="!panel.online && panel.assigned">Offline</ng-container>
+  <ng-container *ngIf="!panel.online && !panel.assigned">Unassigned</ng-container>
+</span>

@@ -1,14 +1,30 @@
-import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {HttpClientModule} from '@angular/common/http';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './navbar/navbar.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
-import {GroupsListComponent} from 'src/app/pages/groupslist/groups-list.component';
-import {DevicesListComponent} from 'src/app/pages/deviceslist/devices-list.component';
-import {PanelsListComponent} from 'src/app/pages/panelslist/panels-list.component';
+import {GroupsListComponent} from 'src/app/pages/groups/groups-list.component';
+import {DevicesListComponent} from 'src/app/pages/devices/devices-list.component';
+import {PanelsListComponent} from 'src/app/pages/panels/panels-list.component';
+import {StatusComponent} from './pages/dashboard/status/status.component';
+import {HistoryComponent} from './pages/dashboard/history/history.component';
+import {LineChartModule} from '@swimlane/ngx-charts';
+import {FormsModule} from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {DeviceActionsComponent} from './pages/devices/device-actions/device-actions.component';
+import {DeviceStatusComponent} from './pages/devices/device-status/device-status.component';
+import {PanelStatusComponent} from './pages/panels/panel-status/panel-status.component';
+import {PanelActionsComponent} from './pages/panels/panel-actions/panel-actions.component';
+import {GroupActionsComponent} from './pages/groups/group-actions/group-actions.component';
+import {GroupEditComponent} from './pages/groups/group-edit/group-edit.component';
+import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component';
+import {DeviceViewComponent} from './pages/devices/device-view/device-view.component';
+import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
+import {STOMP_CONFIG} from 'src/app/app-stomp-config';
 
 @NgModule({
   declarations: [
@@ -17,14 +33,38 @@ import {PanelsListComponent} from 'src/app/pages/panelslist/panels-list.componen
     DashboardComponent,
     GroupsListComponent,
     DevicesListComponent,
-    PanelsListComponent
+    PanelsListComponent,
+    StatusComponent,
+    HistoryComponent,
+    DeviceActionsComponent,
+    DeviceStatusComponent,
+    PanelStatusComponent,
+    PanelActionsComponent,
+    GroupActionsComponent,
+    GroupEditComponent,
+    PanelEditComponent,
+    DeviceViewComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    NgbModule,
+    LineChartModule,
+    FormsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: InjectableRxStompConfig,
+      useValue: STOMP_CONFIG,
+    },
+    {
+      provide: RxStompService,
+      useFactory: rxStompServiceFactory,
+      deps: [InjectableRxStompConfig]
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
