@@ -3,6 +3,8 @@ import {DashboardComponent} from './dashboard.component';
 import {MockComponent} from 'ng-mocks';
 import {StatusComponent} from 'src/app/pages/dashboard/status/status.component';
 import {HistoryComponent} from 'src/app/pages/dashboard/history/history.component';
+import {UiUpdateService} from 'src/app/services/ui-update.service';
+import {instance, mock} from 'ts-mockito';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;

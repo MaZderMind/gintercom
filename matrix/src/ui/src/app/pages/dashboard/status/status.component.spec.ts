@@ -1,12 +1,15 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {instance, mock, when} from 'ts-mockito';
+import {anyFunction, instance, mock, when} from 'ts-mockito';
 import {StatusComponent} from './status.component';
 import {StatisticsService} from 'src/app/services/statistics/statistics.service';
+import {UiUpdateService} from 'src/app/services/ui-update.service';
+import {Subscription} from 'rxjs';
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
   let fixture: ComponentFixture<StatusComponent>;
   let statisticsService: StatisticsService;
+  let uiUpdateService: UiUpdateService;
 
   beforeEach(async(() => {
     statisticsService = mock(StatisticsService);
@@ -26,10 +29,14 @@ describe('StatusComponent', () => {
       devicesUnprovisioned: 0,
     });
 
+    uiUpdateService = mock(UiUpdateService);
+    when(uiUpdateService.subscribe(anyFunction())).thenReturn(new Subscription());
+
     TestBed.configureTestingModule({
       declarations: [StatusComponent],
       providers: [
         {provide: StatisticsService, useFactory: () => instance(statisticsService)},
+        {provide: UiUpdateService, useFactory: () => instance(uiUpdateService)},
       ]
     })
       .compileComponents();
