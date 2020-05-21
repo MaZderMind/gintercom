@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DevicesService} from 'src/app/services/devices/devices.service';
 import {DeviceDto} from 'src/app/services/devices/device-dto';
 import {ActivatedRoute} from '@angular/router';
-import {ternarySelection} from 'src/app/utils/ternary-selection';
+import {Filter, Filters} from 'src/app/utils/filter-util';
 
 @Component({
   selector: 'app-devices-list',
@@ -10,10 +10,15 @@ import {ternarySelection} from 'src/app/utils/ternary-selection';
   styleUrls: ['./devices-list.component.scss']
 })
 export class DevicesListComponent implements OnInit {
-  private allDevices: Array<DeviceDto>;
-  devices: Array<DeviceDto>;
+  private static readonly filters: Filters<DeviceDto> = new Filters(
+    'Connected Devices',
+    new Filter('provisioned', 'Provisioned Devices', device => device.provisioned),
+    new Filter('unprovisioned', 'Unprovisioned Devices', device => !device.provisioned),
+  );
 
-  filter: string;
+  devices: Array<DeviceDto>;
+  filter: Filter<DeviceDto>;
+  private allDevices: Array<DeviceDto>;
 
   constructor(
     private devicesService: DevicesService,
@@ -24,35 +29,18 @@ export class DevicesListComponent implements OnInit {
   ngOnInit(): void {
     this.updateList();
     this.activatedRoute.paramMap.subscribe(paramMap => {
-      this.filter = paramMap.get('filter');
-      this.applyFilter();
-    });
-  }
-
-  private updateList() {
-    this.devicesService.getOnlineDevices().then(devices => {
-      this.allDevices = devices;
-      this.applyFilter();
-    });
-  }
-
-  private applyFilter() {
-    if (!this.allDevices) {
-      this.devices = null;
-      return;
-    }
-
-    const provisionedFilter = ternarySelection(this.filter, 'provisioned', 'unprovisioned');
-    this.devices = this.allDevices.filter(device => {
-      if (provisionedFilter != null && device.provisioned !== provisionedFilter) {
-        return false;
-      }
-
-      return true;
+      this.filter = DevicesListComponent.filters.select(paramMap.get('filter'));
+      this.devices = this.filter.apply(this.allDevices);
     });
   }
 
   assignPanel() {
   }
 
+  private updateList() {
+    this.devicesService.getOnlineDevices().then(devices => {
+      this.allDevices = devices;
+      this.devices = this.filter.apply(this.allDevices);
+    });
+  }
 }

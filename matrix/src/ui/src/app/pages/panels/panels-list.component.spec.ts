@@ -5,7 +5,7 @@ import {instance, mock, when} from 'ts-mockito';
 import {PanelsService} from 'src/app/services/panels/panels.service';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ActivatedRoute} from '@angular/router';
-import {EMPTY} from 'rxjs';
+import {of} from 'rxjs';
 
 describe('PanelsListComponent', () => {
   let component: PanelsListComponent;
@@ -21,7 +21,7 @@ describe('PanelsListComponent', () => {
         {provide: PanelsService, useFactory: () => instance(panelsService)},
         {
           provide: ActivatedRoute, useValue: {
-            paramMap: EMPTY,
+            paramMap: of({get: () => undefined}),
           }
         },
       ],

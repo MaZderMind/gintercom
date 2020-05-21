@@ -1,14 +1,10 @@
-<div [ngSwitch]="filter" class="d-flex">
-  <h2 *ngSwitchCase="'unassigned'">Unassigned Panels</h2>
-  <h2 *ngSwitchCase="'assigned'">Assigned Panels</h2>
-  <h2 *ngSwitchCase="'offline'">Online Panels</h2>
-  <h2 *ngSwitchCase="'online'">Offline Panels</h2>
-  <h2 *ngSwitchDefault>Configured Panels</h2>
+<div class="d-flex">
+  <h2>{{ filter.title }}</h2>
 
-  <a class="close" *ngIf="filter" routerLink="/panels" ngbTooltip="Clear Filter">&times;</a>
+  <a *ngIf="filter.active" class="close" ngbTooltip="Clear Filter" routerLink="/panels">&times;</a>
 </div>
 
-<table class="table" *ngIf="panels">
+<table *ngIf="panels" class="table">
   <thead>
   <tr>
     <th>Status</th>
@@ -30,10 +26,10 @@
     <td>
       <a *ngIf="panel.assigned" [routerLink]="['/devices', panel.hostId]">{{ panel.hostId }}</a>
       <button
+        (click)="assignDevice()"
         *ngIf="!panel.assigned"
         class="btn btn-primary btn-sm"
         type="button"
-        (click)="assignDevice()"
       >
         Assign Device
       </button>
@@ -43,9 +39,11 @@
     </td>
   </tr>
   <tr *ngIf="panels.length == 0">
-    <td colspan="6" class="text-center font-italic">No Panels Configured</td>
+    <td class="text-center font-italic" colspan="6">
+      {{ filter.active ? 'No Panels match the Filter' : 'No Panels Configured' }}
+    </td>
   </tr>
   </tbody>
 </table>
 
-<button type="button" class="btn btn-primary" (click)="addPanel()">Add Panel</button>
+<button (click)="addPanel()" class="btn btn-primary" type="button">Add Panel</button>

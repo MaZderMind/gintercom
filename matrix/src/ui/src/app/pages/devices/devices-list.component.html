@@ -1,12 +1,10 @@
-<div [ngSwitch]="filter" class="d-flex">
-  <h2 *ngSwitchCase="'unprovisioned'">Unprovisioned Devices</h2>
-  <h2 *ngSwitchCase="'provisioned'">Provisioned Devices</h2>
-  <h2 *ngSwitchDefault>Connected Devices</h2>
+<div class="d-flex">
+  <h2>{{ filter.title }}</h2>
 
-  <a class="close" *ngIf="filter" routerLink="/devices" ngbTooltip="Clear Filter">&times;</a>
+  <a *ngIf="filter.active" class="close" ngbTooltip="Clear Filter" routerLink="/devices">&times;</a>
 </div>
 
-<table class="table" *ngIf="devices">
+<table *ngIf="devices" class="table">
   <thead>
   <tr>
     <th>Provisioned</th>
@@ -32,10 +30,10 @@
     <td>
       <a *ngIf="device.provisioned" [routerLink]="['/panels', device.panelId]">{{ device.panelId }}</a>
       <button
+        (click)="assignPanel()"
         *ngIf="!device.provisioned"
         class="btn btn-primary btn-sm"
         type="button"
-        (click)="assignPanel()"
       >
         Assign Panel
       </button>
@@ -45,7 +43,9 @@
     </td>
   </tr>
   <tr *ngIf="devices.length == 0">
-    <td colspan="6" class="text-center font-italic">No Devices Connected</td>
+    <td class="text-center font-italic" colspan="6">
+      {{ filter.active ? 'No Devices match the Filter' : 'No Devices Connected' }}
+    </td>
   </tr>
   </tbody>
 </table>

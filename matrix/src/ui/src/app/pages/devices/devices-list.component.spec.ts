@@ -4,7 +4,7 @@ import {DevicesListComponent} from 'src/app/pages/devices/devices-list.component
 import {DevicesService} from 'src/app/services/devices/devices.service';
 import {instance, mock, when} from 'ts-mockito';
 import {ActivatedRoute} from '@angular/router';
-import {EMPTY} from 'rxjs';
+import {of} from 'rxjs';
 
 describe('DevicesListComponent', () => {
   let component: DevicesListComponent;
@@ -21,7 +21,7 @@ describe('DevicesListComponent', () => {
         {provide: DevicesService, useFactory: () => instance(devicesService)},
         {
           provide: ActivatedRoute, useValue: {
-            paramMap: EMPTY,
+            paramMap: of({get: () => undefined}),
           }
         },
       ]
