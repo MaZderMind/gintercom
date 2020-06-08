@@ -3,7 +3,6 @@ package de.mazdermind.gintercom.matrix;
 import org.junit.Before;
 import org.springframework.boot.web.server.LocalServerPort;
 
-import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
 import io.restassured.RestAssured;
 
 public abstract class RestTestBase extends IntegrationTestBase {

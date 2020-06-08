@@ -11,12 +11,9 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
-	private final IpAddressHandshakeInterceptor ipAddressHandshakeInterceptor;
-
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry
-			.addEndpoint("/ws")
-			.addInterceptors(ipAddressHandshakeInterceptor);
+			.addEndpoint("/ws");
 	}
 }

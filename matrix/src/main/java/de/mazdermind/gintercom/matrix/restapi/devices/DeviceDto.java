@@ -1,11 +1,11 @@
 package de.mazdermind.gintercom.matrix.restapi.devices;
 
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
 
 import javax.annotation.Nullable;
 
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionInformation;
+import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -15,16 +15,16 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class DeviceDto {
 	private String hostId;
-	@Nullable
-	private String panelId;
-	private InetAddress remoteIp;
-	private LocalDateTime connectionTime;
 
-	public DeviceDto(PanelConnectionInformation connectionInformation) {
-		hostId = connectionInformation.getHostId();
-		panelId = connectionInformation.getPanelId().orElse(null);
-		remoteIp = connectionInformation.getRemoteIp();
-		connectionTime = connectionInformation.getConnectionTime();
+	@Nullable
+	private String panelId = null;
+	private InetSocketAddress clientAddress;
+	private LocalDateTime firstSeen;
+
+	public DeviceDto(ClientAssociation clientAssociation) {
+		hostId = clientAssociation.getHostId();
+		clientAddress = clientAssociation.getSocketAddress();
+		firstSeen = clientAssociation.getFirstSeen();
 	}
 
 	public boolean isProvisioned() {

@@ -7,18 +7,25 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionManager;
+import de.mazdermind.gintercom.matrix.configuration.model.Config;
+import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class DevicesService {
-	private final PanelConnectionManager panelConnectionManager;
+	private final AssociatedClientsManager associatedClientsManager;
+	private final Config config;
 
 	public Stream<DeviceDto> getOnlineDevices() {
-		return panelConnectionManager.getConnectedPanels().stream()
-			.map(DeviceDto::new)
-			.sorted(Comparator.comparing(DeviceDto::getConnectionTime).reversed());
+		return associatedClientsManager.getAssociations().stream()
+			.map(clientAssociation ->
+				new DeviceDto(clientAssociation)
+					.setPanelId(
+						config.findPanelIdForHostId(clientAssociation.getHostId()).orElse(null)
+					)
+			)
+			.sorted(Comparator.comparing(DeviceDto::getFirstSeen).reversed());
 	}
 
 	public Stream<DeviceDto> getProvisionedDevices() {

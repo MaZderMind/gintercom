@@ -3,21 +3,19 @@ package de.mazdermind.gintercom.matrix.restapi.panels;
 import static com.google.common.base.Predicates.not;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionInformation;
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionManager;
+import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class PanelsService {
 	private final Config config;
-	private final PanelConnectionManager panelConnectionManager;
+	private final AssociatedClientsManager associatedClientsManager;
 
 	public Stream<PanelDto> getConfiguredPanels() {
 		return config.getPanels().entrySet().stream()
@@ -52,9 +50,6 @@ public class PanelsService {
 			return false;
 		}
 
-		Optional<PanelConnectionInformation> connectionInformation = panelConnectionManager
-			.getConnectionInformationForHostId(hostId);
-
-		return connectionInformation.isPresent();
+		return associatedClientsManager.isAssociated(hostId);
 	}
 }
