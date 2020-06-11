@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.controlserver.it;
+package de.mazdermind.gintercom.matrix.controlserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,6 +12,7 @@ import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
+import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import lombok.extern.slf4j.Slf4j;

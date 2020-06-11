@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.controlserver.it;
+package de.mazdermind.gintercom.matrix.controlserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ExampleMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ExampleResponseMessage;
-import de.mazdermind.gintercom.matrix.controlserver.MessageSender;
+import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 
 public class ControlServerIT extends ControlServerTestBase {
 	@Autowired

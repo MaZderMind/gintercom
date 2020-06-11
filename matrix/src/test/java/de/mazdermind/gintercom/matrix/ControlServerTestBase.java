@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.controlserver.it;
+package de.mazdermind.gintercom.matrix;
 
 import java.util.Collection;
 
@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
-import de.mazdermind.gintercom.matrix.IntegrationTestBase;
 import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
+import de.mazdermind.gintercom.matrix.controlserver.TestControlClient;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestEventReceiver;
@@ -57,7 +57,7 @@ public abstract class ControlServerTestBase extends IntegrationTestBase {
 		Collection<ClientAssociation> associations = associatedClientsManager.getAssociations();
 		log.info("At end of Test {} Client(s) associated", associations.size());
 		associations.forEach(association -> {
-			associatedClientsManager.deAssociate(association);
+			associatedClientsManager.deAssociate(association, "Test Cleanup");
 			ClientDeAssociatedEvent deAssociatedEvent = eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
 			Assertions.assertThat(deAssociatedEvent.getAssociation()).isSameAs(association);
 		});

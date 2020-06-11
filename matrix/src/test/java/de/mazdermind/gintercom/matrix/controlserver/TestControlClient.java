@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.controlserver.it;
+package de.mazdermind.gintercom.matrix.controlserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

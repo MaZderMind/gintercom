@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.controlserver.it;
+package de.mazdermind.gintercom.matrix.controlserver;
 
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 import org.junit.Test;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
+import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 
 
 /**

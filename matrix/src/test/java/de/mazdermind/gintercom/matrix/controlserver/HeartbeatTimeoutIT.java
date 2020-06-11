@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.controlserver.it;
+package de.mazdermind.gintercom.matrix.controlserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.HeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
-import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
-import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
-import de.mazdermind.gintercom.matrix.controlserver.TimeoutManager;
+import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import lombok.extern.slf4j.Slf4j;
 
