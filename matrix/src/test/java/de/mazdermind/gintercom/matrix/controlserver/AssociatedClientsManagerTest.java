@@ -70,7 +70,7 @@ public class AssociatedClientsManagerTest {
 	@Test
 	public void canDeAssociateClient() {
 		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
-		associatedClientsManager.deAssociate(HOST_ID_1);
+		associatedClientsManager.deAssociate(HOST_ID_1, "Test");
 
 		assertThat(associatedClientsManager.isAssociated(ADDRESS_1)).isFalse();
 		assertThat(associatedClientsManager.isAssociated(HOST_ID_1)).isFalse();
@@ -81,7 +81,7 @@ public class AssociatedClientsManagerTest {
 
 	@Test(expected = AssociatedClientsManager.NotAssociatedException.class)
 	public void cantDeAssociateUnAssociatedClient() {
-		associatedClientsManager.deAssociate(HOST_ID_1);
+		associatedClientsManager.deAssociate(HOST_ID_1, "Test");
 	}
 
 	@Test

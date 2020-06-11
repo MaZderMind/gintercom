@@ -46,11 +46,12 @@ public class AssociatedClientsManager {
 		return association;
 	}
 
-	void deAssociate(String hostId) {
+	void deAssociate(String hostId, String reason) {
 		ClientAssociation association = getAssociation(hostId);
 
 		eventPublisher.publishEvent(new ClientDeAssociatedEvent()
-			.setAssociation(association));
+			.setAssociation(association)
+			.setReason(reason));
 
 		associations.deAssociate(hostId);
 	}
@@ -111,11 +112,11 @@ public class AssociatedClientsManager {
 
 	@PreDestroy
 	public void deAssociateAll() {
-		associations.getAssociations().forEach(this::deAssociate);
+		associations.getAssociations().forEach(clientAssociation -> deAssociate(clientAssociation, "Shutdown"));
 	}
 
-	public void deAssociate(ClientAssociation clientAssociation) {
-		deAssociate(clientAssociation.getHostId());
+	public void deAssociate(ClientAssociation clientAssociation, String reason) {
+		deAssociate(clientAssociation.getHostId(), reason);
 	}
 
 	public static class HostIdAlreadyAssociatedException extends RuntimeException {

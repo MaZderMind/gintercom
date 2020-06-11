@@ -8,4 +8,5 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ClientDeAssociatedEvent {
 	private ClientAssociation association;
+	private String reason;
 }

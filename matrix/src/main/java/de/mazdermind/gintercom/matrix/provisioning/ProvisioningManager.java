@@ -50,7 +50,7 @@ public class ProvisioningManager {
 	}
 
 	@EventListener
-	public void handleConfiguredClientDEAssociation(ClientDeAssociatedEvent deAssociatedEvent) {
+	public void handleConfiguredClientDeAssociation(ClientDeAssociatedEvent deAssociatedEvent) {
 		String hostId = deAssociatedEvent.getAssociation().getHostId();
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
 

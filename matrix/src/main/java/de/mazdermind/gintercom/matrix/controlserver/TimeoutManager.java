@@ -5,7 +5,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.HeartbeatMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TimeoutManager {
 	private final AssociatedClientsManager associatedClientsManager;
-	private final MessageSender messageSender;
 
 	@Scheduled(fixedRateString = "PT30S")
 	public void deAssociateTimedOutClients() {
@@ -33,11 +31,8 @@ public class TimeoutManager {
 		log.info("DeAssociating Host-ID {} because of HeartBeat Timeout (Last Heartbeat received at {})",
 			clientAssociation.getHostId(), clientAssociation.getLastHeartbeat());
 
-		DeAssociatedMessage deAssociatedMessage = new DeAssociatedMessage()
-			.setReason(String.format("HeartBeat Timeout (Last Heartbeat received at %s)",
-				clientAssociation.getLastHeartbeat()));
+		String reason = String.format("HeartBeat Timeout (Last Heartbeat received at %s)", clientAssociation.getLastHeartbeat());
 
-		messageSender.sendMessageTo(clientAssociation.getHostId(), deAssociatedMessage);
-		associatedClientsManager.deAssociate(clientAssociation);
+		associatedClientsManager.deAssociate(clientAssociation, reason);
 	}
 }

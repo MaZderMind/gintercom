@@ -2,6 +2,9 @@ package de.mazdermind.gintercom.matrix.controlserver;
 
 import java.net.InetSocketAddress;
 
+import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
@@ -9,6 +12,8 @@ import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
+import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
+import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -19,12 +24,12 @@ public class AssociationMessageHandler {
 
 	public boolean handleAssociateMessage(InetSocketAddress sender, AssociateMessage message) {
 		try {
-			ClientAssociation association = associatedClientsManager.associate(sender, message.getHostId());
-			AssociatedMessage response = new AssociatedMessage()
-				.setRtpPanelToMatrixPort(association.getRtpPorts().getPanelToMatrix())
-				.setRtpMatrixToPanelPort(association.getRtpPorts().getMatrixToPanel());
+			associatedClientsManager.associate(sender, message.getHostId());
 
-			messageSender.sendMessageTo(association.getHostId(), response);
+			// The Messages are sent in an @EventListener(ClientAssociatedEvent) instead of directly sending them from here to ensure
+			// correct ordering with other EventListeners (for example the ProvisioningManager) that will send their Messages during the
+			// associatedClientsManager.associate call
+
 			return true;
 		} catch (Exception e) {
 			ErrorMessage errorMessage = new ErrorMessage()
@@ -36,13 +41,33 @@ public class AssociationMessageHandler {
 	}
 
 	public void handleDeAssociateMessage(String hostId, DeAssociateMessage message) {
+		associatedClientsManager.deAssociate(hostId, message.getReason());
+	}
+
+	@EventListener
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	public void handleClientAssociatedEvent(ClientAssociatedEvent associatedEvent) {
+		ClientAssociation association = associatedEvent.getAssociation();
+
+		AssociatedMessage response = new AssociatedMessage()
+			.setRtpPanelToMatrixPort(association.getRtpPorts().getPanelToMatrix())
+			.setRtpMatrixToPanelPort(association.getRtpPorts().getMatrixToPanel());
+
+		messageSender.sendMessageTo(association.getHostId(), response);
+	}
+
+	@EventListener
+	@Order(Ordered.LOWEST_PRECEDENCE)
+	public void handleClientDeAssociatedEvent(ClientDeAssociatedEvent deAssociatedEvent) {
+		ClientAssociation association = deAssociatedEvent.getAssociation();
+
+		String reason = String.format(
+			"Received DeAssociateMessage with reason: '%s'",
+			deAssociatedEvent.getReason());
+
 		DeAssociatedMessage response = new DeAssociatedMessage()
-			.setReason(String.format(
-				"Received DeAssociateMessage with reason: '%s'",
-				message.getReason()));
+			.setReason(reason);
 
-		messageSender.sendMessageTo(hostId, response);
-
-		associatedClientsManager.deAssociate(hostId);
+		messageSender.sendMessageTo(association.getHostId(), response);
 	}
 }

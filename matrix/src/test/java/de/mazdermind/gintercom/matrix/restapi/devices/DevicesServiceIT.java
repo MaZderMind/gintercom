@@ -30,7 +30,7 @@ public class DevicesServiceIT extends IntegrationTestBase {
 	@After
 	public void cleanup() {
 		associatedClientsManager.findAssociation(HOST_ID)
-			.ifPresent(associatedClientsManager::deAssociate);
+			.ifPresent(clientAssociation -> associatedClientsManager.deAssociate(clientAssociation, "Test Cleanup"));
 	}
 
 	@Test
