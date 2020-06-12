@@ -8,9 +8,6 @@ import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * TODO
- */
 @Data
 @Accessors(chain = true)
 public class ClientAssociation {

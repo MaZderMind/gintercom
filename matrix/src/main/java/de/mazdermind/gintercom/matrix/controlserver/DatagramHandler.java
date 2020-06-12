@@ -22,9 +22,6 @@ import io.netty.channel.socket.DatagramPacket;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * TODO
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
