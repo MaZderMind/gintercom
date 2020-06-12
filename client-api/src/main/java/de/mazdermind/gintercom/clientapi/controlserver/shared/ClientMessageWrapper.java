@@ -5,19 +5,19 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ExampleMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ClientHeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.wrapper.WrappedClientMessage;
 
 /**
  * The ClientMessageWrapper takes any on of the Messages that a Client can send to the Matrix and wraps it ito a
  * {@link WrappedClientMessage} class.
  * <p>
- * When The Matrix receives a Message from a Client, for example an {@link ExampleMessage} it can't just distribute it in the
+ * When The Matrix receives a Message from a Client, for example an {@link ClientHeartbeatMessage} it can't just distribute it in the
  * Matrix-Application using the Application-Events Mechanism because consumers of the Message would not know which Client the Message was
- * sent from. Therefore it needs to be wrapped into {@link ExampleMessage.ClientMessage}, which extends {@link WrappedClientMessage}.
+ * sent from. Therefore it needs to be wrapped into {@link ClientHeartbeatMessage.ClientMessage}, which extends {@link WrappedClientMessage}.
  * <p>
  * Unfortunately because of Type-Erasure a Consumer cannot bind to
- * {@code @EventListener public void handleAssociationRequest(WrappedClientMessage<ExampleMessage> message)}
+ * {@code @EventListener public void handleAssociationRequest(WrappedClientMessage<ClientHeartbeatMessage> message)}
  * because such an Event-Handler would get <b>all</b> {@link WrappedClientMessage WrappedClientMessages}
  * <p>
  * Therefor all Client-to-Matrix Message-Classes are expected, to declare an inner class that extends {@link WrappedClientMessage}.

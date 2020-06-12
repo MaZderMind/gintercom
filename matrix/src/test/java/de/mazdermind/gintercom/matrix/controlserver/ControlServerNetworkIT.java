@@ -52,8 +52,7 @@ public class ControlServerNetworkIT extends ControlServerTestBase {
 	public void rejectsMessageWithoutAssociation() {
 		//language=JSON
 		client.transmit("{\n" +
-			"\t\"type\": \"ExampleMessage\",\n" +
-			"\t\"text\": \"Bla\"\n" +
+			"\t\"type\": \"ClientHeartbeatMessage\"\n" +
 			"}");
 
 		ErrorMessage errorMessage = client.awaitMessage(ErrorMessage.class);
@@ -67,7 +66,7 @@ public class ControlServerNetworkIT extends ControlServerTestBase {
 		this.associateClient();
 		//language=JSON
 		client.transmit("{\n" +
-			"\t\"type\": \"ExampleMessage\"\n" +
+			"\t\"type\": \"DeAssociateMessage\"\n" +
 			"}");
 
 		ErrorMessage errorMessage = client.awaitMessage(ErrorMessage.class);
