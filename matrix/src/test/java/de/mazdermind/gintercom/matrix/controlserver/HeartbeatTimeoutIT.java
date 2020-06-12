@@ -19,9 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HeartbeatTimeoutIT extends ControlServerTestBase {
 	@Autowired
-	private AssociatedClientsManager associatedClientsManager;
-
-	@Autowired
 	private TimeoutManager timeoutManager;
 
 	@Before
@@ -47,11 +44,11 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 		assertThat(association).isEmpty();
 
 		DeAssociatedMessage deAssociateMessage = client.awaitMessage(DeAssociatedMessage.class);
-		assertThat(deAssociateMessage.getReason())
-			.contains("HeartBeat Timeout");
+		assertThat(deAssociateMessage.getReason()).contains("HeartBeat Timeout");
 
 		ClientDeAssociatedEvent deAssociatedEvent = eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
 		assertThat(deAssociatedEvent.getAssociation().getHostId()).isEqualTo(HOST_ID);
+		assertThat(deAssociatedEvent.getReason()).contains("HeartBeat Timeout");
 	}
 
 	@Test

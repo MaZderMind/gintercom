@@ -10,14 +10,17 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class TestEventReceiver {
 	private final BlockingQueue<Object> receivedEvents = new LinkedBlockingDeque<>();
 
 	@EventListener
 	public void handleEvent(Object event) {
 		if (event.getClass().getPackage().getName().startsWith("de.mazdermind.gintercom")) {
+			log.info("Received {}", event);
 			receivedEvents.add(event);
 		}
 	}
@@ -35,5 +38,9 @@ public class TestEventReceiver {
 
 	public void assertNoMoreEvents() {
 		assertThat(receivedEvents).isEmpty();
+	}
+
+	public void clear() {
+		receivedEvents.clear();
 	}
 }

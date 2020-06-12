@@ -2,7 +2,6 @@ package de.mazdermind.gintercom.matrix;
 
 import java.util.Collection;
 
-import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.beans.factory.BeanFactory;
@@ -14,7 +13,6 @@ import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 import de.mazdermind.gintercom.matrix.controlserver.TestControlClient;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
-import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestEventReceiver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +31,7 @@ public abstract class ControlServerTestBase extends IntegrationTestBase {
 	protected TestEventReceiver eventReceiver;
 
 	@Autowired
-	private AssociatedClientsManager associatedClientsManager;
+	protected AssociatedClientsManager associatedClientsManager;
 
 	@Before
 	public void createAndBindTestClient() {
@@ -48,19 +46,16 @@ public abstract class ControlServerTestBase extends IntegrationTestBase {
 	}
 
 	@After
-	public void assertNoMoreEvents() {
-		eventReceiver.assertNoMoreEvents();
-	}
-
-	@After
 	public void deAssociateAllClients() {
+		eventReceiver.assertNoMoreEvents();
+
 		Collection<ClientAssociation> associations = associatedClientsManager.getAssociations();
 		log.info("At end of Test {} Client(s) associated", associations.size());
 		associations.forEach(association -> {
 			associatedClientsManager.deAssociate(association, "Test Cleanup");
-			ClientDeAssociatedEvent deAssociatedEvent = eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
-			Assertions.assertThat(deAssociatedEvent.getAssociation()).isSameAs(association);
 		});
+
+		eventReceiver.clear();
 	}
 
 	protected void associateClient() {

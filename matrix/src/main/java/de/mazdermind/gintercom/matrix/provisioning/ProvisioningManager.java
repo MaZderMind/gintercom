@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeProvisionMessage;
@@ -28,6 +30,7 @@ public class ProvisioningManager {
 	private final MessageSender messageSender;
 
 	@EventListener
+	@Order(Ordered.LOWEST_PRECEDENCE)
 	public void handleConfiguredClientAssociation(ClientAssociatedEvent associatedEvent) {
 		String hostId = associatedEvent.getAssociation().getHostId();
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
@@ -50,6 +53,7 @@ public class ProvisioningManager {
 	}
 
 	@EventListener
+	@Order(Ordered.HIGHEST_PRECEDENCE)
 	public void handleConfiguredClientDeAssociation(ClientDeAssociatedEvent deAssociatedEvent) {
 		String hostId = deAssociatedEvent.getAssociation().getHostId();
 		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
