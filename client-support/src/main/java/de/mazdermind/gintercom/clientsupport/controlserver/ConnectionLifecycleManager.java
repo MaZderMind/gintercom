@@ -123,10 +123,10 @@ public class ConnectionLifecycleManager {
 			controlServerClient.disconnect();
 
 			if (lifecycle == ConnectionLifecycle.OPERATIONAL) {
-				eventPublisher.publishEvent(new DeProvisionEvent()); // TODO Test + ensure noMoreInteractions
+				eventPublisher.publishEvent(new DeProvisionEvent());
 			}
 
-			eventPublisher.publishEvent(new DisconnectedEvent()); // TODO Test + ensure noMoreInteractions
+			eventPublisher.publishEvent(new DisconnectedEvent());
 
 			log.info("Restarting Discovery-Scheduler");
 			lifecycle = ConnectionLifecycle.DISCOVERY;

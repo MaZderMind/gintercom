@@ -1,5 +1,8 @@
 package de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -27,5 +30,12 @@ public class AssociateMessage {
 	 * Inner Message-Class which this Message is wrapped in before being distributed within the Matrix.
 	 */
 	public static class ClientMessage extends WrappedClientMessage<AssociateMessage> {
+	}
+
+	@Data
+	@Accessors(chain = true)
+	public static class Capabilities {
+		@NotNull
+		private List<String> buttons = new ArrayList<>();
 	}
 }

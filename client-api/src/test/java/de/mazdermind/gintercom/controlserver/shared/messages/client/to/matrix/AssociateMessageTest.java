@@ -8,7 +8,6 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.Capabilities;
 import de.mazdermind.gintercom.testutils.assertations.IsValidCondition;
 
 public class AssociateMessageTest {
@@ -18,7 +17,7 @@ public class AssociateMessageTest {
 	@Before
 	public void before() {
 		message = new AssociateMessage().setHostId("0000-0000")
-			.setCapabilities(new Capabilities()
+			.setCapabilities(new AssociateMessage.Capabilities()
 				.setButtons(ImmutableList.of("A1", "A2", "B1", "B2")));
 	}
 

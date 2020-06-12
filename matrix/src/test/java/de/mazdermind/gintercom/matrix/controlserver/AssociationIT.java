@@ -7,7 +7,6 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.Capabilities;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
@@ -25,7 +24,7 @@ public class AssociationIT extends ControlServerTestBase {
 		// Request
 		client.transmit(new AssociateMessage()
 			.setHostId(HOST_ID)
-			.setCapabilities(new Capabilities()
+			.setCapabilities(new AssociateMessage.Capabilities()
 				.setButtons(ImmutableList.of("Q1"))));
 
 		// Matrix-Event
