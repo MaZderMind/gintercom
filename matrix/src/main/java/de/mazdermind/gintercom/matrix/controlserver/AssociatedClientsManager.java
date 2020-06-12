@@ -26,7 +26,7 @@ public class AssociatedClientsManager {
 	private final AssociatedClientsStore associations = new AssociatedClientsStore();
 
 	@VisibleForTesting
-	public ClientAssociation associate(InetSocketAddress address, String hostId) {
+	public ClientAssociation  associate(InetSocketAddress address, String hostId) {
 		if (associations.isAssociated(hostId)) {
 			throw new HostIdAlreadyAssociatedException(hostId);
 		} else if (associations.isAssociated(address)) {

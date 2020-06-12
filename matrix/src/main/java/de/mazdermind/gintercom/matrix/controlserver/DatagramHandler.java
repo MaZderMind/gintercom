@@ -33,9 +33,7 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 	private final MessageEncoder messageEncoder;
 	private final ClientMessageWrapper clientMessageWrapper;
 	private final AssociatedClientsManager associatedClientsManager;
-	private final AssociationMessageHandler associationMessageHandler;
 	private final ApplicationEventPublisher eventPublisher;
-	private final MessageSender messageSender;
 
 	private boolean accepting = true;
 
@@ -62,8 +60,11 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 		message = messageDecoder.decode(buffer, Messages.CLIENT_TO_MATRIX);
 
 		if (message instanceof AssociateMessage) {
-			boolean success = associationMessageHandler.handleAssociateMessage(sender, (AssociateMessage) message);
-			if (!success) {
+			try {
+				AssociateMessage associateMessage = (AssociateMessage) message;
+				associatedClientsManager.associate(sender, associateMessage.getHostId());
+			} catch (Exception e) {
+				respondWithError(ctx, e.getMessage(), sender);
 				return;
 			}
 		}
@@ -79,7 +80,8 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 		eventPublisher.publishEvent(clientMessage);
 
 		if (message instanceof DeAssociateMessage) {
-			associationMessageHandler.handleDeAssociateMessage(hostId, (DeAssociateMessage) message);
+			DeAssociateMessage deAssociateMessage = (DeAssociateMessage) message;
+			associatedClientsManager.deAssociate(hostId, deAssociateMessage.getReason());
 		}
 
 	}
