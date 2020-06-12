@@ -26,7 +26,7 @@ public class MessageSender {
 		sendMessageTo(association.getSocketAddress(), message);
 	}
 
-	void sendMessageTo(InetSocketAddress address, Object message) {
+	private void sendMessageTo(InetSocketAddress address, Object message) {
 		try {
 			ByteBuffer encode = messageEncoder.encode(message);
 			channel.write(new DatagramPacket(Unpooled.wrappedBuffer(encode), address));

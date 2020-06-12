@@ -9,10 +9,10 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @JsonSerialize
-public class HeartbeatMessage {
+public class ClientHeartbeatMessage {
 	/**
 	 * Inner Message-Class which this Message is wrapped in before being distributed within the Matrix.
 	 */
-	public static class ClientMessage extends WrappedClientMessage<HeartbeatMessage> {
+	public static class ClientMessage extends WrappedClientMessage<ClientHeartbeatMessage> {
 	}
 }

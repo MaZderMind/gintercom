@@ -7,14 +7,15 @@ import java.util.stream.Collectors;
 import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ClientHeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ExampleMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.HeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeProvisionMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ExampleResponseMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.MatrixHeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ProvisionMessage;
 
 /**
@@ -31,13 +32,14 @@ public class Messages {
 		ErrorMessage.class,
 		ProvisionMessage.class,
 		DeProvisionMessage.class,
+		MatrixHeartbeatMessage.class,
 		ExampleResponseMessage.class
 	).stream().collect(Collectors.toMap(Class::getSimpleName, Function.identity()));
 
 	public static final Map<String, Class<?>> CLIENT_TO_MATRIX = ImmutableList.of(
 		AssociateMessage.class,
 		DeAssociateMessage.class,
-		HeartbeatMessage.class,
+		ClientHeartbeatMessage.class,
 		ExampleMessage.class
 	).stream().collect(Collectors.toMap(Class::getSimpleName, Function.identity()));
 

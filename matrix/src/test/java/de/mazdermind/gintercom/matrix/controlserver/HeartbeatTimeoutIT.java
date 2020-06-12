@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.HeartbeatMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ClientHeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
@@ -67,9 +67,9 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 	}
 
 	private void sendHeartbeat() {
-		timeoutManager.handleHeartBeat((HeartbeatMessage.ClientMessage) new HeartbeatMessage.ClientMessage()
+		timeoutManager.handleHeartBeat((ClientHeartbeatMessage.ClientMessage) new ClientHeartbeatMessage.ClientMessage()
 			.setHostId(HOST_ID)
-			.setMessage(new HeartbeatMessage()));
+			.setMessage(new ClientHeartbeatMessage()));
 	}
 
 	private void setLastTimeoutIntoPast() {
