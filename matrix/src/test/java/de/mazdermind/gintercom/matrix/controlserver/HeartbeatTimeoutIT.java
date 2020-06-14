@@ -44,11 +44,11 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 		assertThat(association).isEmpty();
 
 		DeAssociatedMessage deAssociateMessage = client.awaitMessage(DeAssociatedMessage.class);
-		assertThat(deAssociateMessage.getReason()).contains("HeartBeat Timeout");
+		assertThat(deAssociateMessage.getReason()).matches("HeartBeat Timeout \\(Last Heartbeat received at .*\\)");
 
 		ClientDeAssociatedEvent deAssociatedEvent = eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
 		assertThat(deAssociatedEvent.getAssociation().getHostId()).isEqualTo(HOST_ID);
-		assertThat(deAssociatedEvent.getReason()).contains("HeartBeat Timeout");
+		assertThat(deAssociatedEvent.getReason()).matches("HeartBeat Timeout \\(Last Heartbeat received at .*\\)");
 	}
 
 	@Test

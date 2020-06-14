@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.Messages;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.wrapper.WrappedClientMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.shared.ClientMessageWrapper;
@@ -75,12 +74,6 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 		String hostId = association.get().getHostId();
 		WrappedClientMessage<Object> clientMessage = clientMessageWrapper.wrap(message, hostId);
 		eventPublisher.publishEvent(clientMessage);
-
-		if (message instanceof DeAssociateMessage) {
-			DeAssociateMessage deAssociateMessage = (DeAssociateMessage) message;
-			associatedClientsManager.deAssociate(hostId, deAssociateMessage.getReason());
-		}
-
 	}
 
 	private void respondWithError(ChannelHandlerContext ctx, String error, InetSocketAddress sender) {

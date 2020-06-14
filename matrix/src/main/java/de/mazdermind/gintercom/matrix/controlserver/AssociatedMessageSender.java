@@ -33,12 +33,8 @@ public class AssociatedMessageSender {
 	public void handleClientDeAssociatedEvent(ClientDeAssociatedEvent deAssociatedEvent) {
 		ClientAssociation association = deAssociatedEvent.getAssociation();
 
-		String reason = String.format(
-			"Received DeAssociateMessage with reason: '%s'",
-			deAssociatedEvent.getReason());
-
 		DeAssociatedMessage response = new DeAssociatedMessage()
-			.setReason(reason);
+			.setReason(deAssociatedEvent.getReason());
 
 		messageSender.sendMessageTo(association.getHostId(), response);
 	}

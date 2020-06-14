@@ -7,10 +7,10 @@ import java.util.Optional;
 import javax.annotation.PreDestroy;
 
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.google.common.annotations.VisibleForTesting;
-
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
@@ -25,7 +25,6 @@ public class AssociatedClientsManager {
 
 	private final AssociatedClientsStore associations = new AssociatedClientsStore();
 
-	@VisibleForTesting
 	public ClientAssociation associate(InetSocketAddress address, String hostId) {
 		if (associations.isAssociated(hostId)) {
 			throw new HostIdAlreadyAssociatedException(hostId);
@@ -46,7 +45,20 @@ public class AssociatedClientsManager {
 		return association;
 	}
 
-	void deAssociate(String hostId, String reason) {
+	@EventListener
+	public void handleDeAssociateMessage(DeAssociateMessage.ClientMessage deAssociateMessage) {
+		String reason = String.format(
+			"Received DeAssociateMessage with reason: '%s'",
+			deAssociateMessage.getMessage().getReason());
+
+		deAssociate(deAssociateMessage.getHostId(), reason);
+	}
+
+	public void deAssociate(ClientAssociation clientAssociation, String reason) {
+		deAssociate(clientAssociation.getHostId(), reason);
+	}
+
+	public void deAssociate(String hostId, String reason) {
 		ClientAssociation association = getAssociation(hostId);
 
 		eventPublisher.publishEvent(new ClientDeAssociatedEvent()
@@ -113,10 +125,6 @@ public class AssociatedClientsManager {
 	@PreDestroy
 	public void deAssociateAll() {
 		associations.getAssociations().forEach(clientAssociation -> deAssociate(clientAssociation, "Shutdown"));
-	}
-
-	public void deAssociate(ClientAssociation clientAssociation, String reason) {
-		deAssociate(clientAssociation.getHostId(), reason);
 	}
 
 	public static class HostIdAlreadyAssociatedException extends RuntimeException {
