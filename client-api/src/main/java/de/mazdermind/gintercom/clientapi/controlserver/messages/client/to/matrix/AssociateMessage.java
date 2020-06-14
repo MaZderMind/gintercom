@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.wrapper.WrappedClientMessage;
 import lombok.Data;
@@ -28,6 +30,7 @@ public class AssociateMessage {
 
 	@Data
 	@Accessors(chain = true)
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Capabilities {
 		@NotNull
 		private List<String> buttons = new ArrayList<>();

@@ -2,9 +2,12 @@ package de.mazdermind.gintercom.controlserver.shared.messages.client.to.matrix;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
@@ -42,5 +45,17 @@ public class AssociateMessageTest {
 	public void doesNotValidateWithInvalidCapabilities() {
 		message.getCapabilities().setButtons(null);
 		assertThat(message).isNot(IsValidCondition.VALID);
+	}
+
+	@Test
+	public void capabilitiesCanBeExtendedInTheFuture() throws IOException {
+		//language=JSON
+		String capabilitiesWithExtraField = "{\n" +
+			"\"buttons\":  [\"A\", \"B\", \"B\"],\n" +
+			"\"extraField\": 42" +
+			"}";
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.readValue(capabilitiesWithExtraField, AssociateMessage.Capabilities.class);
 	}
 }
