@@ -37,8 +37,8 @@ public class MessageEncoder {
 	private final Validator validator;
 
 	private final CharsetEncoder encoder = StandardCharsets.UTF_8.newEncoder()
-			.onMalformedInput(CodingErrorAction.REPORT)
-			.onUnmappableCharacter(CodingErrorAction.REPORT);
+		.onMalformedInput(CodingErrorAction.REPORT)
+		.onUnmappableCharacter(CodingErrorAction.REPORT);
 
 	public ByteBuffer encode(Object message) throws Exception {
 		Set<ConstraintViolation<Object>> constraintViolations = validator.validate(message);
@@ -49,7 +49,7 @@ public class MessageEncoder {
 		JsonNode json = objectMapper.valueToTree(message);
 		((ObjectNode) json).put("type", message.getClass().getSimpleName());
 
-		String jsonString = json.toString() + "\n";
+		String jsonString = json.toString();
 		return encoder.encode(CharBuffer.wrap(jsonString));
 	}
 }

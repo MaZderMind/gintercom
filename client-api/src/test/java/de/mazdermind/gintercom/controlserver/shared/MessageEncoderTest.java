@@ -54,7 +54,7 @@ public class MessageEncoderTest {
 			"\"requiredString\":\"Foo\"," +
 			"\"requiredLong\":42," +
 			"\"type\":\"TestMessage\"" +
-			"}\n";
+			"}";
 
 		assertThat(json).isEqualTo(expectedMessageString);
 	}
@@ -86,7 +86,7 @@ public class MessageEncoderTest {
 			"\"localDateTime\":\"2020-03-12T10:25:33.534\"," +
 			"\"localDate\":\"2021-12-30\"," +
 			"\"type\":\"TestMessage\"" +
-			"}\n";
+			"}";
 
 		assertThat(json).isEqualTo(expectedMessageString);
 	}
@@ -109,7 +109,7 @@ public class MessageEncoderTest {
 			"\"inetAddressV4\":\"10.73.0.42\"," +
 			"\"inetAddressV6\":\"2a02:810b:c1c0:421f:8b9:baa:485d:b739\"," +
 			"\"type\":\"TestMessage\"" +
-			"}\n";
+			"}";
 
 		assertThat(json).isEqualTo(expectedMessageString);
 	}
@@ -132,7 +132,7 @@ public class MessageEncoderTest {
 			"\"socketAddressV4\":\"10.73.0.42:9999\"," +
 			"\"socketAddressV6\":\"[2a02:810b:c1c0:421f:8b9:baa:485d:b739]:9999\"," +
 			"\"type\":\"TestMessage\"" +
-			"}\n";
+			"}";
 
 		//language=JSON
 		assertThat(json).isEqualTo(expectedMessageString);
