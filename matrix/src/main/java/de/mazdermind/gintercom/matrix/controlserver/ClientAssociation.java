@@ -15,6 +15,7 @@ public class ClientAssociation {
 
 	private InetSocketAddress socketAddress;
 	private String hostId;
+	private String clientModel;
 	private PortSet rtpPorts;
 	private LocalDateTime firstSeen;
 	private LocalDateTime lastHeartbeat;

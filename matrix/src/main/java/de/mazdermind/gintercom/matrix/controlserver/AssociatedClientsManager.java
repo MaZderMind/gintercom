@@ -27,7 +27,7 @@ public class AssociatedClientsManager {
 
 	private final AssociatedClientsStore associations = new AssociatedClientsStore();
 
-	public ClientAssociation associate(InetSocketAddress address, String hostId) {
+	public ClientAssociation associate(InetSocketAddress address, String hostId, String clientModel) {
 		if (associations.isAssociated(hostId)) {
 			log.warn("Rejecting Association-Request from {} because the Host-ID {} is already associated", address, hostId);
 			throw new HostIdAlreadyAssociatedException(hostId);
@@ -42,6 +42,7 @@ public class AssociatedClientsManager {
 
 		ClientAssociation association = associations.associate(new ClientAssociation()
 			.setHostId(hostId)
+			.setClientModel(clientModel)
 			.setSocketAddress(address)
 			.setRtpPorts(portSet));
 

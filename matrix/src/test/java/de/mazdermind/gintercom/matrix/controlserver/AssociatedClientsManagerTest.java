@@ -25,6 +25,7 @@ public class AssociatedClientsManagerTest {
 
 	private static final String HOST_ID_1 = "0000-0000";
 	private static final String HOST_ID_2 = "0000-0001";
+	private static final String CLIENT_MODEL = "THE_CLIENT_MODEL";
 
 	private AssociatedClientsManager associatedClientsManager;
 	private ApplicationEventPublisher eventPublisher;
@@ -37,7 +38,7 @@ public class AssociatedClientsManagerTest {
 
 	@Test
 	public void canAssociateClient() {
-		ClientAssociation association = associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
+		ClientAssociation association = associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 		assertThat(associatedClientsManager.isAssociated(ADDRESS_1)).isTrue();
 		assertThat(associatedClientsManager.isAssociated(HOST_ID_1)).isTrue();
 		assertThat(associatedClientsManager.getAssociations()).hasSize(1);
@@ -57,19 +58,19 @@ public class AssociatedClientsManagerTest {
 
 	@Test(expected = AssociatedClientsManager.SocketAddressAlreadyAssociatedException.class)
 	public void cantAssociateSameSocketAddressTwice() {
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_2);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_2, CLIENT_MODEL);
 	}
 
 	@Test(expected = AssociatedClientsManager.HostIdAlreadyAssociatedException.class)
 	public void cantAssociateSameHostId() {
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
-		associatedClientsManager.associate(ADDRESS_2, HOST_ID_1);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
+		associatedClientsManager.associate(ADDRESS_2, HOST_ID_1, CLIENT_MODEL);
 	}
 
 	@Test
 	public void canDeAssociateClient() {
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 		associatedClientsManager.deAssociate(HOST_ID_1, "Test");
 
 		assertThat(associatedClientsManager.isAssociated(ADDRESS_1)).isFalse();
@@ -86,8 +87,8 @@ public class AssociatedClientsManagerTest {
 
 	@Test
 	public void canListAssociatedClients() {
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
-		associatedClientsManager.associate(ADDRESS_2, HOST_ID_2);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
+		associatedClientsManager.associate(ADDRESS_2, HOST_ID_2, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.getAssociations()).hasSize(2);
 		assertThat(associatedClientsManager.getAssociations())
@@ -100,7 +101,7 @@ public class AssociatedClientsManagerTest {
 
 	@Test
 	public void canGetAssociationByHostId() {
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.getAssociation(HOST_ID_1)).isNotNull()
 			.extracting(ClientAssociation::getSocketAddress)
@@ -109,7 +110,7 @@ public class AssociatedClientsManagerTest {
 
 	@Test
 	public void canGetAssociationBySocketAddress() {
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.getAssociation(ADDRESS_1)).isNotNull()
 			.extracting(ClientAssociation::getHostId)
@@ -128,7 +129,7 @@ public class AssociatedClientsManagerTest {
 
 	@Test
 	public void canFindAssociationByHostId() {
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.findAssociation(HOST_ID_1)).isPresent().get()
 			.extracting(ClientAssociation::getSocketAddress)
@@ -137,7 +138,7 @@ public class AssociatedClientsManagerTest {
 
 	@Test
 	public void canFindAssociationBySocketAddress() {
-		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1);
+		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.findAssociation(ADDRESS_1)).isPresent().get()
 			.extracting(ClientAssociation::getHostId)

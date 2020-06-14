@@ -17,6 +17,7 @@ public class DevicesServiceIT extends IntegrationTestBase {
 	private static final InetSocketAddress SOCKET_ADDRESS = InetSocketAddress.createUnresolved("some-host", 32541);
 	private static final String HOST_ID = "THE_HOST_ID";
 	private static final String PANEL_ID = "THE_PANEL_ID";
+	private static final String CLIENT_MODEL = "THE_CLIENT_MODEL";
 
 	@Autowired
 	private DevicesService devicesService;
@@ -42,10 +43,11 @@ public class DevicesServiceIT extends IntegrationTestBase {
 
 	@Test
 	public void unprovisionedDeviceOnline() {
-		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID);
+		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
 
 		assertThat(devicesService.getOnlineDevices()).hasSize(1)
-			.extracting(DeviceDto::getHostId).contains(HOST_ID);
+			.flatExtracting(DeviceDto::getHostId, DeviceDto::getClientModel)
+			.contains(HOST_ID, CLIENT_MODEL);
 
 		assertThat(devicesService.getProvisionedDevices()).isEmpty();
 		assertThat(devicesService.getUnprovisionedDevices()).hasSize(1);
@@ -54,10 +56,11 @@ public class DevicesServiceIT extends IntegrationTestBase {
 	@Test
 	public void provisionedDeviceOnline() {
 		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setHostId(HOST_ID));
-		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID);
+		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
 
 		assertThat(devicesService.getOnlineDevices()).hasSize(1)
-			.extracting(DeviceDto::getHostId).contains(HOST_ID);
+			.flatExtracting(DeviceDto::getHostId, DeviceDto::getClientModel)
+			.contains(HOST_ID, CLIENT_MODEL);
 
 		assertThat(devicesService.getProvisionedDevices()).hasSize(1);
 		assertThat(devicesService.getUnprovisionedDevices()).isEmpty();

@@ -15,9 +15,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class DeviceDto {
 	private String hostId;
+	private String clientModel;
 
 	@Nullable
 	private String panelId = null;
+
 	private InetSocketAddress clientAddress;
 	private LocalDateTime firstSeen;
 
@@ -25,6 +27,7 @@ public class DeviceDto {
 		hostId = clientAssociation.getHostId();
 		clientAddress = clientAssociation.getSocketAddress();
 		firstSeen = clientAssociation.getFirstSeen();
+		clientModel = clientAssociation.getClientModel();
 	}
 
 	public boolean isProvisioned() {

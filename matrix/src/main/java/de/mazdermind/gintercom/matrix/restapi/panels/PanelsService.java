@@ -3,12 +3,15 @@ package de.mazdermind.gintercom.matrix.restapi.panels;
 import static com.google.common.base.Predicates.not;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
+import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
+import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,9 +23,21 @@ public class PanelsService {
 	public Stream<PanelDto> getConfiguredPanels() {
 		return config.getPanels().entrySet().stream()
 			.sorted(Map.Entry.comparingByKey())
-			.map(entry -> new PanelDto(
-				entry.getKey(), entry.getValue(),
-				isPanelOnline(entry.getValue().getHostId())));
+			.map(entry -> buildPanelDto(entry.getKey(), entry.getValue()));
+	}
+
+	private PanelDto buildPanelDto(String panelId, PanelConfig panelConfig) {
+		Optional<ClientAssociation> clientAssociation = Optional.ofNullable(panelConfig.getHostId())
+			.flatMap(associatedClientsManager::findAssociation);
+
+		return new PanelDto()
+			.setId(panelId)
+			.setHostId(panelConfig.getHostId())
+			.setDisplay(panelConfig.getDisplay())
+			.setOnline(clientAssociation.isPresent())
+			.setClientModel(clientAssociation
+				.map(ClientAssociation::getClientModel)
+				.orElse(null));
 	}
 
 	public Stream<PanelDto> getAssignedPanels() {
@@ -45,11 +60,4 @@ public class PanelsService {
 			.filter(not(PanelDto::isOnline));
 	}
 
-	private boolean isPanelOnline(String hostId) {
-		if (hostId == null) {
-			return false;
-		}
-
-		return associatedClientsManager.isAssociated(hostId);
-	}
 }

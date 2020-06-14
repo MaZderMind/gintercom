@@ -9,8 +9,6 @@ import java.util.List;
 public interface ClientConfiguration {
 	String getHostId();
 
-	Integer getProtocolVersion();
-
 	String getClientModel();
 
 	List<String> getButtons();

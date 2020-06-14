@@ -24,6 +24,8 @@ public class AssociateMessage {
 	@NotEmpty
 	private String hostId;
 
+	private String clientModel;
+
 	@NotNull
 	@Valid
 	private Capabilities capabilities = new Capabilities();
