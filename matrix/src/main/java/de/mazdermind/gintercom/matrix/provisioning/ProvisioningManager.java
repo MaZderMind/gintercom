@@ -18,7 +18,6 @@ import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.PanelAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.PanelDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
-import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +39,6 @@ public class ProvisioningManager {
 		if (maybePanelId.isPresent()) {
 			String panelId = maybePanelId.get();
 			PanelConfig panelConfig = config.getPanels().get(panelId);
-			PortSet portSet = portAllocationManager.allocatePortSet(panelId);
 
 			log.info("Sending ProvisionMessage for Panel {} to Host-ID {}",
 				panelConfig.getDisplay(), hostId);
@@ -51,7 +49,6 @@ public class ProvisioningManager {
 
 			eventPublisher.publishEvent(new PanelAssociatedEvent()
 				.setAssociation(associatedEvent.getAssociation())
-				.setPortSet(portSet)
 				.setPanelId(panelId)
 				.setPanelConfig(panelConfig));
 		}

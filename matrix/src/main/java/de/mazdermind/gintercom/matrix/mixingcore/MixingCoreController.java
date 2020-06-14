@@ -25,8 +25,8 @@ public class MixingCoreController {
 		Panel panel = mixingCore.addPanel(
 			panelAssociatedEvent.getPanelId(),
 			panelAssociatedEvent.getAssociation().getSocketAddress().getAddress(),
-			panelAssociatedEvent.getPortSet().getPanelToMatrix(),
-			panelAssociatedEvent.getPortSet().getMatrixToPanel()
+			panelAssociatedEvent.getAssociation().getRtpPorts().getPanelToMatrix(),
+			panelAssociatedEvent.getAssociation().getRtpPorts().getMatrixToPanel()
 		);
 
 		log.debug("Configuring initial Group-Membership");
