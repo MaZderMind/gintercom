@@ -58,6 +58,8 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 		if (message instanceof AssociateMessage) {
 			try {
 				AssociateMessage associateMessage = (AssociateMessage) message;
+				log.info("Received Association-Request for Host-ID {} from {}", associateMessage.getHostId(), sender);
+
 				associatedClientsManager.associate(sender, associateMessage.getHostId());
 			} catch (Exception e) {
 				respondWithError(ctx, e.getMessage(), sender);

@@ -16,9 +16,11 @@ import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import de.mazdermind.gintercom.matrix.portpool.PortSet;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AssociatedClientsManager {
 	private final PortAllocationManager portAllocationManager;
 	private final ApplicationEventPublisher eventPublisher;
@@ -27,10 +29,14 @@ public class AssociatedClientsManager {
 
 	public ClientAssociation associate(InetSocketAddress address, String hostId) {
 		if (associations.isAssociated(hostId)) {
+			log.warn("Rejecting Association-Request from {} because the Host-ID {} is already associated", address, hostId);
 			throw new HostIdAlreadyAssociatedException(hostId);
 		} else if (associations.isAssociated(address)) {
+			log.warn("Rejecting Association-Request from {} because this SocketAddress is already associated", address);
 			throw new SocketAddressAlreadyAssociatedException(address);
 		}
+
+		log.info("Associating Address {} with the Matrix as Host-ID {}", address, hostId);
 
 		PortSet portSet = portAllocationManager.allocatePortSet(hostId);
 
@@ -47,6 +53,8 @@ public class AssociatedClientsManager {
 
 	@EventListener
 	public void handleDeAssociateMessage(DeAssociateMessage.ClientMessage deAssociateMessage) {
+		log.info("Received De-Association-Request from Host-ID {}", deAssociateMessage.getHostId());
+
 		String reason = String.format(
 			"Received DeAssociateMessage with reason: '%s'",
 			deAssociateMessage.getMessage().getReason());
@@ -60,6 +68,9 @@ public class AssociatedClientsManager {
 
 	public void deAssociate(String hostId, String reason) {
 		ClientAssociation association = getAssociation(hostId);
+
+		log.info("De-Associating Address {} from the Matrix (was associated as Host-ID {}) for Reason: {}",
+			association.getSocketAddress(), hostId, reason);
 
 		eventPublisher.publishEvent(new ClientDeAssociatedEvent()
 			.setAssociation(association)

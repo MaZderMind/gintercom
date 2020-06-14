@@ -62,7 +62,7 @@ public class Group {
 		expectSuccess(bin.syncStateWithParent());
 
 		debugPipeline(String.format("after-add-group-%s", name), pipeline);
-		log.info("Created Group {}", name);
+		log.debug("Created Group {}", name);
 	}
 
 	public String getName() {
@@ -73,12 +73,12 @@ public class Group {
 		log.info("Removing Group {}", name);
 		debugPipeline(String.format("before-remove-group-%s", name), pipeline);
 
-		log.info("Asking In-Panels to stop Transmitting");
+		log.debug("Asking In-Panels to stop Transmitting");
 		inPanels.forEach(panel -> panel.stopTransmittingTo(this));
 		inPanels.clear();
 		debugPipeline(String.format("after-stop-transmitting-%s", name), pipeline);
 
-		log.info("Asking Out-Panels to stop Receiving");
+		log.debug("Asking Out-Panels to stop Receiving");
 		outPanels.forEach(panel -> panel.stopReceivingFrom(this));
 		outPanels.clear();
 		debugPipeline(String.format("after-stop-receiving-%s", name), pipeline);
@@ -87,7 +87,7 @@ public class Group {
 		expectSuccess(pipeline.remove(bin));
 
 		debugPipeline(String.format("after-remove-group-%s", name), pipeline);
-		log.info("Removed Group {}", name);
+		log.debug("Removed Group {}", name);
 	}
 
 	Pad requestSrcPadAndLinkFor(GhostPad sinkPad, Panel panel) {
@@ -106,13 +106,10 @@ public class Group {
 		outPanels.remove(panel);
 
 		Pad teePad = pad.getTarget();
-		log.info("blocking for releaseSrcPad {}", pad);
 		GstPadBlock.blockAndWait(teePad, () -> {
-			log.info("blocked for releaseSrcPad {}", pad);
 			tee.releaseRequestPad(teePad);
 			bin.removePad(pad);
 		});
-		log.info("after blocking for releaseSrcPad {}", pad);
 	}
 
 	GhostPad requestSinkPadFor(Panel panel) {
@@ -128,12 +125,9 @@ public class Group {
 		inPanels.remove(panel);
 
 		Pad mixerPad = pad.getTarget();
-		log.info("blocking for releaseSinkPad {}", pad);
 		GstPadBlock.blockAndWait(mixerPad, () -> {
-			log.info("blocked for releaseSinkPad {}", pad);
 			mixer.releaseRequestPad(mixerPad);
 			bin.removePad(pad);
 		});
-		log.info("after blocking for releaseSinkPad {}", pad);
 	}
 }

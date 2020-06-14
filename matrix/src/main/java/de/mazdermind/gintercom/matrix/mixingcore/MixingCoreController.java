@@ -21,7 +21,7 @@ public class MixingCoreController {
 
 	@EventListener
 	public void handlePanelRegistration(PanelAssociatedEvent panelAssociatedEvent) {
-		log.info("Registering Panel {}", panelAssociatedEvent.getPanelId());
+		log.debug("Registering Panel {}", panelAssociatedEvent.getPanelId());
 		Panel panel = mixingCore.addPanel(
 			panelAssociatedEvent.getPanelId(),
 			panelAssociatedEvent.getAssociation().getSocketAddress().getAddress(),
@@ -29,7 +29,7 @@ public class MixingCoreController {
 			panelAssociatedEvent.getPortSet().getMatrixToPanel()
 		);
 
-		log.info("Configuring initial Group-Membership");
+		log.debug("Configuring initial Group-Membership");
 		panelAssociatedEvent.getPanelConfig().getRxGroups().forEach(groupId -> {
 			Group group = mixingCore.getGroupByName(groupId);
 			panel.startReceivingFrom(group);
@@ -43,7 +43,7 @@ public class MixingCoreController {
 
 	@EventListener
 	public void handlePanelDeRegistration(PanelDeAssociatedEvent panelDeAssociatedEvent) {
-		log.info("DeRegistering Panel {}", panelDeAssociatedEvent.getPanelId());
+		log.debug("DeRegistering Panel {}", panelDeAssociatedEvent.getPanelId());
 		Panel panel = mixingCore.getPanelByName(panelDeAssociatedEvent.getPanelId());
 		mixingCore.removePanel(panel);
 	}
