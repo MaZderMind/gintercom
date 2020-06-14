@@ -26,16 +26,16 @@ public class AssociateMessage {
 	@Valid
 	private Capabilities capabilities = new Capabilities();
 
-	/**
-	 * Inner Message-Class which this Message is wrapped in before being distributed within the Matrix.
-	 */
-	public static class ClientMessage extends WrappedClientMessage<AssociateMessage> {
-	}
-
 	@Data
 	@Accessors(chain = true)
 	public static class Capabilities {
 		@NotNull
 		private List<String> buttons = new ArrayList<>();
+	}
+
+	/**
+	 * Inner Message-Class which this Message is wrapped in for distribution within the Matrix.
+	 */
+	public static class ClientMessage extends WrappedClientMessage<AssociateMessage> {
 	}
 }

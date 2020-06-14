@@ -18,7 +18,7 @@ public class DeAssociateMessage {
 	private String reason;
 
 	/**
-	 * Inner Message-Class which this Message is wrapped in before being distributed within the Matrix.
+	 * Inner Message-Class which this Message is wrapped in for distribution within the Matrix.
 	 */
 	public static class ClientMessage extends WrappedClientMessage<DeAssociateMessage> {
 	}
