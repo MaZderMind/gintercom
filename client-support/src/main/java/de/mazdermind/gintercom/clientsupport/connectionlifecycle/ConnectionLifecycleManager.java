@@ -21,6 +21,7 @@ import de.mazdermind.gintercom.clientsupport.discovery.MatrixAddressDiscoverySer
 import de.mazdermind.gintercom.clientsupport.discovery.MatrixAddressDiscoveryServiceImplementation;
 import de.mazdermind.gintercom.clientsupport.discovery.MatrixAddressDiscoveryServiceResult;
 import de.mazdermind.gintercom.clientsupport.events.AssociatedEvent;
+import de.mazdermind.gintercom.clientsupport.events.BeforeShutdownEvent;
 import de.mazdermind.gintercom.clientsupport.events.DeAssociatedEvent;
 import de.mazdermind.gintercom.clientsupport.events.connectionlifecycle.AddressDiscoveryEvent;
 import de.mazdermind.gintercom.clientsupport.events.connectionlifecycle.AssociatingEvent;
@@ -46,6 +47,7 @@ public class ConnectionLifecycleManager {
 
 	private ConnectionLifecycle lifecycle = ConnectionLifecycle.STARTING;
 	private ScheduledFuture<?> scheduledAssociationTimeout;
+	private boolean shutdown = false;
 
 	public ConnectionLifecycle getLifecycle() {
 		return lifecycle;
@@ -155,14 +157,24 @@ public class ConnectionLifecycleManager {
 			return;
 		}
 
-		log.info("Received DeAssociatedEvent, Client is now Re-Starting Matrix-Discovery");
+		log.info("Received DeAssociatedEvent, Client is now De-Associated");
 		eventPublisher.publishEvent(new DisconnectedEvent());
 
 		lifecycle = ConnectionLifecycle.DEASSOCIATED;
 		scheduleDiscoveryRetry();
 	}
 
+	@EventListener(BeforeShutdownEvent.class)
+	public void handleBeforeShutdownEvent() {
+		shutdown = true;
+	}
+
 	private void scheduleDiscoveryRetry() {
+		if (shutdown) {
+			return;
+		}
+
+		log.info("Scheduling Re-Discovery");
 		scheduler.schedule(this::discoveryTryNext, ZonedDateTime.now().plus(DISCOVERY_RETRY_INTERVAL).toInstant());
 	}
 }

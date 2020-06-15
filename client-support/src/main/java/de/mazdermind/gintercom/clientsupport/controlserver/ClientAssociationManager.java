@@ -13,11 +13,14 @@ import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientsupport.events.AssociatedEvent;
+import de.mazdermind.gintercom.clientsupport.events.BeforeShutdownEvent;
 import de.mazdermind.gintercom.clientsupport.events.DeAssociatedEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ClientAssociationManager {
 	private final ControlServerClient controlServerClient;
 	private final ClientConfiguration clientConfiguration;
@@ -63,11 +66,18 @@ public class ClientAssociationManager {
 			.setRtpPanelToMatrixPort(associatedMessage.getRtpPanelToMatrixPort());
 	}
 
-	@EventListener
-	public DeAssociatedEvent handleDeAssociatedMessage(DeAssociatedMessage deAssociatedMessage) {
+	@EventListener(DeAssociatedMessage.class)
+	public DeAssociatedEvent handleDeAssociatedMessage() {
 		// run teardown asynchronously
 		executorService.submit(this::teardownClient);
 
 		return new DeAssociatedEvent();
+	}
+
+	@EventListener(BeforeShutdownEvent.class)
+	public void sendDeAssociationMessage() {
+		log.info("Notifying Matrix of Shutdown");
+		clientMessageSender.sendMessage(new DeAssociateMessage()
+			.setReason("Shutdown"));
 	}
 }
