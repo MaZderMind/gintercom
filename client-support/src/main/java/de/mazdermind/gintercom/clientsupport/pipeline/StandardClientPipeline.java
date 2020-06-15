@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.clientsupport.pipeline;
 
 import static de.mazdermind.gintercom.gstreamersupport.GstErrorCheck.expectSuccess;
 
+import java.net.InetAddress;
 import java.util.List;
 
 import org.freedesktop.gstreamer.Bin;
@@ -11,8 +12,6 @@ import org.freedesktop.gstreamer.Element;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
 
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
-import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
 import de.mazdermind.gintercom.clientsupport.pipeline.audiosupport.AudioSystem;
 import de.mazdermind.gintercom.gstreamersupport.GstBuilder;
 import de.mazdermind.gintercom.gstreamersupport.GstConstants;
@@ -41,12 +40,12 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 	}
 
 	@Override
-	public void configurePipeline(MatrixAddressDiscoveryServiceResult matrixAddress, ProvisioningInformation provisioningInformation) {
+	public void configurePipeline(InetAddress matrixAddress, int matrixToPanelPort, int panelToMatrixPort) {
 		log.info("Starting RTP/Audio Pipeline");
 		pipeline = new Pipeline("ClientPipeline");
 
-		txBin = buildTxBin(matrixAddress, provisioningInformation);
-		rxBin = buildRxBin(provisioningInformation);
+		txBin = buildTxBin(matrixAddress, panelToMatrixPort);
+		rxBin = buildRxBin(matrixToPanelPort);
 
 		pipeline.add(rxBin);
 		pipeline.add(txBin);
@@ -87,7 +86,7 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 		}
 	}
 
-	protected Bin buildTxBin(MatrixAddressDiscoveryServiceResult matrixAddress, ProvisioningInformation provisioningInformation) {
+	protected Bin buildTxBin(InetAddress matrixAddress, int panelToMatrixPort) {
 		// @formatter:off
 		return GstBuilder.buildBin("client-tx")
 			.addElement(buildSourceElement())
@@ -98,19 +97,19 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 				.withProperty("mtu", GstConstants.MTU)
 			.withCaps(GstStaticCaps.RTP)
 				.linkElement("udpsink", "client-udpsink")
-					.withProperty("host", matrixAddress.getAddress().getHostAddress())
-					.withProperty("port", provisioningInformation.getPanelToMatrixPort())
+					.withProperty("host", matrixAddress)
+					.withProperty("port", panelToMatrixPort)
 					.withProperty("async", false)
 					.withProperty("sync", false)
 			.build();
 		// @formatter:on
 	}
 
-	protected Bin buildRxBin(ProvisioningInformation provisioningInformation) {
+	protected Bin buildRxBin(int matrixToPanelPort) {
 		// @formatter:off
 		return GstBuilder.buildBin("client-rx")
 			.addElement("udpsrc", "client-udpsrc")
-				.withProperty("port", provisioningInformation.getMatrixToPanelPort())
+				.withProperty("port", matrixToPanelPort)
 			.withCaps(GstStaticCaps.RTP)
 			.linkElement("rtpjitterbuffer")
 				.withProperty("latency", GstConstants.LATENCY_MS)

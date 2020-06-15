@@ -1,10 +1,9 @@
 package de.mazdermind.gintercom.clientsupport.pipeline;
 
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
-import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
+import java.net.InetAddress;
 
 public interface ClientPipeline {
-	void configurePipeline(MatrixAddressDiscoveryServiceResult matrixAddress, ProvisioningInformation provisioningInformation);
+	void configurePipeline(InetAddress matrixAddress, int matrixToPanelPort, int panelToMatrixPort);
 
 	void startPipeline();
 

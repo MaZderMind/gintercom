@@ -19,11 +19,6 @@ public class TestClientConfiguration implements ClientConfiguration {
 	}
 
 	@Override
-	public Integer getProtocolVersion() {
-		return PROTOCOL_VERSION;
-	}
-
-	@Override
 	public String getClientModel() {
 		return CLIENT_MODEL;
 	}

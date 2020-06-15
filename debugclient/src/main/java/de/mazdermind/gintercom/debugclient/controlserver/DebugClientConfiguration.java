@@ -23,11 +23,6 @@ public class DebugClientConfiguration implements ClientConfiguration {
 	}
 
 	@Override
-	public Integer getProtocolVersion() {
-		return 1;
-	}
-
-	@Override
 	public String getClientModel() {
 		return "debug-client";
 	}

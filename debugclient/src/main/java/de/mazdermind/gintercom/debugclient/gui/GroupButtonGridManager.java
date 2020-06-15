@@ -16,7 +16,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.math.IntMath;
 
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ProvisionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,8 +65,8 @@ public class GroupButtonGridManager {
 	}
 
 	@EventListener
-	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
-		EventQueue.invokeLater(() -> provisioningInformation.getButtons().forEach((buttonName, buttonConfig) -> {
+	public void handleProvisionMessage(ProvisionMessage provisionMessage) {
+		EventQueue.invokeLater(() -> provisionMessage.getButtons().forEach((buttonName, buttonConfig) -> {
 			int buttonIndex = Integer.parseInt(buttonName) - 1;
 			buttonList.get(buttonIndex).setText(buttonConfig.getDisplay());
 		}));

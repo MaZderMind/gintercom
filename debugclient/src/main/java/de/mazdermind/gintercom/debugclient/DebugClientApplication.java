@@ -6,10 +6,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan({
-	"de.mazdermind.gintercom.debugclient",
-	"de.mazdermind.gintercom.clientsupport"
-})
+@ComponentScan("de.mazdermind.gintercom")
 public class DebugClientApplication {
 
 	public static void main(String[] args) {
