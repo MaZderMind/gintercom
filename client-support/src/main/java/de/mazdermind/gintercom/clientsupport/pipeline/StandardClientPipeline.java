@@ -97,7 +97,7 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 				.withProperty("mtu", GstConstants.MTU)
 			.withCaps(GstStaticCaps.RTP)
 				.linkElement("udpsink", "client-udpsink")
-					.withProperty("host", matrixAddress)
+					.withProperty("host", matrixAddress.getHostAddress())
 					.withProperty("port", panelToMatrixPort)
 					.withProperty("async", false)
 					.withProperty("sync", false)
