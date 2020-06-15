@@ -8,8 +8,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientsupport.events.AssociatedEvent;
@@ -32,10 +32,10 @@ public class ClientAssociationManager {
 	public void initiateAssociation(InetSocketAddress matrixAddress) {
 		setupClient(matrixAddress);
 
-		clientMessageSender.sendMessage(new AssociateMessage()
+		clientMessageSender.sendMessage(new AssociationRequestMessage()
 			.setHostId(clientConfiguration.getHostId())
 			.setClientModel(clientConfiguration.getClientModel())
-			.setCapabilities(new AssociateMessage.Capabilities()
+			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(clientConfiguration.getButtons())));
 	}
 
@@ -46,7 +46,7 @@ public class ClientAssociationManager {
 	}
 
 	public void deAssociate(String reason) {
-		clientMessageSender.sendMessage(new DeAssociateMessage()
+		clientMessageSender.sendMessage(new DeAssociationRequestMessage()
 			.setReason(reason));
 
 		teardownClient();
@@ -77,7 +77,7 @@ public class ClientAssociationManager {
 	@EventListener(BeforeShutdownEvent.class)
 	public void sendDeAssociationMessage() {
 		log.info("Notifying Matrix of Shutdown");
-		clientMessageSender.sendMessage(new DeAssociateMessage()
+		clientMessageSender.sendMessage(new DeAssociationRequestMessage()
 			.setReason("Shutdown"));
 	}
 }

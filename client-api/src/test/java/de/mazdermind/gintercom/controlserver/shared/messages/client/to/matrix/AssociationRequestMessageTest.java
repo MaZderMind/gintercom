@@ -10,17 +10,17 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
 import de.mazdermind.gintercom.testutils.assertations.IsValidCondition;
 
-public class AssociateMessageTest {
+public class AssociationRequestMessageTest {
 
-	private AssociateMessage message;
+	private AssociationRequestMessage message;
 
 	@Before
 	public void before() {
-		message = new AssociateMessage().setHostId("0000-0000")
-			.setCapabilities(new AssociateMessage.Capabilities()
+		message = new AssociationRequestMessage().setHostId("0000-0000")
+			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(ImmutableList.of("A1", "A2", "B1", "B2")));
 	}
 
@@ -56,6 +56,6 @@ public class AssociateMessageTest {
 			"}";
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.readValue(capabilitiesWithExtraField, AssociateMessage.Capabilities.class);
+		objectMapper.readValue(capabilitiesWithExtraField, AssociationRequestMessage.Capabilities.class);
 	}
 }

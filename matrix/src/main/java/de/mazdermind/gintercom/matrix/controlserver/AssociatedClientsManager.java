@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
@@ -53,14 +53,14 @@ public class AssociatedClientsManager {
 	}
 
 	@EventListener
-	public void handleDeAssociateMessage(DeAssociateMessage.ClientMessage deAssociateMessage) {
-		log.info("Received De-Association-Request from Host-ID {}", deAssociateMessage.getHostId());
+	public void handleDeAssociationRequestMessage(DeAssociationRequestMessage.ClientMessage deAssociationRequestMessage) {
+		log.info("Received De-Association-Request from Host-ID {}", deAssociationRequestMessage.getHostId());
 
 		String reason = String.format(
-			"Received DeAssociateMessage with reason: '%s'",
-			deAssociateMessage.getMessage().getReason());
+			"Received DeAssociationRequestMessage with reason: '%s'",
+			deAssociationRequestMessage.getMessage().getReason());
 
-		deAssociate(deAssociateMessage.getHostId(), reason);
+		deAssociate(deAssociationRequestMessage.getHostId(), reason);
 	}
 
 	public void deAssociate(ClientAssociation clientAssociation, String reason) {

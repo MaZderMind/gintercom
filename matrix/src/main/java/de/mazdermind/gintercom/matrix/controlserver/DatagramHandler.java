@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.Messages;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.wrapper.WrappedClientMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.shared.ClientMessageWrapper;
@@ -55,12 +55,12 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 
 		message = messageDecoder.decode(buffer, Messages.CLIENT_TO_MATRIX);
 
-		if (message instanceof AssociateMessage) {
+		if (message instanceof AssociationRequestMessage) {
 			try {
-				AssociateMessage associateMessage = (AssociateMessage) message;
-				log.info("Received Association-Request for Host-ID {} from {}", associateMessage.getHostId(), sender);
+				AssociationRequestMessage associationRequestMessage = (AssociationRequestMessage) message;
+				log.info("Received Association-Request for Host-ID {} from {}", associationRequestMessage.getHostId(), sender);
 
-				associatedClientsManager.associate(sender, associateMessage.getHostId(), associateMessage.getClientModel());
+				associatedClientsManager.associate(sender, associationRequestMessage.getHostId(), associationRequestMessage.getClientModel());
 			} catch (Exception e) {
 				respondWithError(ctx, e.getMessage(), sender);
 				return;

@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ClientHeartbeatMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeProvisionMessage;
@@ -34,8 +34,8 @@ public class Messages {
 	).stream().collect(Collectors.toMap(Class::getSimpleName, Function.identity()));
 
 	public static final Map<String, Class<?>> CLIENT_TO_MATRIX = ImmutableList.of(
-		AssociateMessage.class,
-		DeAssociateMessage.class,
+		AssociationRequestMessage.class,
+		DeAssociationRequestMessage.class,
 		ClientHeartbeatMessage.class
 	).stream().collect(Collectors.toMap(Class::getSimpleName, Function.identity()));
 

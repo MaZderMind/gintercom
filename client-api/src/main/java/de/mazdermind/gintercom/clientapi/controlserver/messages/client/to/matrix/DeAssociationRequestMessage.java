@@ -8,18 +8,18 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * An DeAssociateMessage is sent from a Client to Matrix to request de-association from it. Usually the Matrix
+ * An DeAssociationRequestMessage is sent from a Client to Matrix to request de-association from it. Usually the Matrix
  * responds with an {@link DeAssociatedMessage}.
  */
 @Data
 @Accessors(chain = true)
-public class DeAssociateMessage {
+public class DeAssociationRequestMessage {
 	@NotEmpty
 	private String reason;
 
 	/**
 	 * Inner Message-Class which this Message is wrapped in for distribution within the Matrix.
 	 */
-	public static class ClientMessage extends WrappedClientMessage<DeAssociateMessage> {
+	public static class ClientMessage extends WrappedClientMessage<DeAssociationRequestMessage> {
 	}
 }

@@ -2,12 +2,12 @@ package de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.clien
 
 import javax.validation.constraints.NotNull;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * An AssociatedMessage is sent from the Matrix to a Client as a response to an {@link AssociateMessage}.
+ * An AssociatedMessage is sent from the Matrix to a Client as a response to an {@link AssociationRequestMessage}.
  * <p>
  * The AssociatedMessage signals to the Client, that the Matrix has allocated an RTP-Endpoint for it ans is already sending an RTP-Stream
  * to it. The Port where this Stream is sent to is denoted by the {@link #rtpMatrixToPanelPort} port and the Client is

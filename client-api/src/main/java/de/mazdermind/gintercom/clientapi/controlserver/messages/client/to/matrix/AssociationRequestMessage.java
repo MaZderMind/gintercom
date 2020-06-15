@@ -15,12 +15,12 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * An AssociateMessage is sent from a Client to Matrix to request association with it. Usually the Matrix
+ * An AssociationRequestMessage is sent from a Client to Matrix to request association with it. Usually the Matrix
  * responds with an {@link AssociatedMessage}.
  */
 @Data
 @Accessors(chain = true)
-public class AssociateMessage {
+public class AssociationRequestMessage {
 	@NotEmpty
 	private String hostId;
 
@@ -41,6 +41,6 @@ public class AssociateMessage {
 	/**
 	 * Inner Message-Class which this Message is wrapped in for distribution within the Matrix.
 	 */
-	public static class ClientMessage extends WrappedClientMessage<AssociateMessage> {
+	public static class ClientMessage extends WrappedClientMessage<AssociationRequestMessage> {
 	}
 }

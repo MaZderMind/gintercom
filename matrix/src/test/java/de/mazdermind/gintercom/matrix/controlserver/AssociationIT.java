@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
@@ -22,9 +22,9 @@ public class AssociationIT extends ControlServerTestBase {
 	@Test
 	public void canAssociateClient() {
 		// Request
-		client.transmit(new AssociateMessage()
+		client.transmit(new AssociationRequestMessage()
 			.setHostId(HOST_ID)
-			.setCapabilities(new AssociateMessage.Capabilities()
+			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(ImmutableList.of("Q1"))));
 
 		// Matrix-Event
@@ -32,7 +32,7 @@ public class AssociationIT extends ControlServerTestBase {
 		assertThat(clientAssociatedEvent.getAssociation().getHostId()).isEqualTo(HOST_ID);
 
 		// Message-Broadcast
-		AssociateMessage.ClientMessage associateMessage = eventReceiver.awaitEvent(AssociateMessage.ClientMessage.class);
+		AssociationRequestMessage.ClientMessage associateMessage = eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 		assertThat(associateMessage.getHostId()).isEqualTo(HOST_ID);
 		assertThat(associateMessage.getMessage().getHostId()).isEqualTo(HOST_ID);
 		assertThat(associateMessage.getMessage().getCapabilities().getButtons()).contains("Q1");
@@ -49,14 +49,14 @@ public class AssociationIT extends ControlServerTestBase {
 		client2.bind();
 
 		// Request 1
-		client.transmit(new AssociateMessage().setHostId(HOST_ID_1));
+		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID_1));
 
 		// Matrix-Event 1
 		ClientAssociatedEvent clientAssociatedEvent1 = eventReceiver.awaitEvent(ClientAssociatedEvent.class);
 		assertThat(clientAssociatedEvent1.getAssociation().getHostId()).isEqualTo(HOST_ID_1);
 
 		// Message-Broadcast 1
-		AssociateMessage.ClientMessage associateMessage1 = eventReceiver.awaitEvent(AssociateMessage.ClientMessage.class);
+		AssociationRequestMessage.ClientMessage associateMessage1 = eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 		assertThat(associateMessage1.getHostId()).isEqualTo(HOST_ID_1);
 		assertThat(associateMessage1.getMessage().getHostId()).isEqualTo(HOST_ID);
 
@@ -67,14 +67,14 @@ public class AssociationIT extends ControlServerTestBase {
 
 
 		// Request 2
-		client2.transmit(new AssociateMessage().setHostId(HOST_ID_2));
+		client2.transmit(new AssociationRequestMessage().setHostId(HOST_ID_2));
 
 		// Matrix-Event 2
 		ClientAssociatedEvent clientAssociatedEvent2 = eventReceiver.awaitEvent(ClientAssociatedEvent.class);
 		assertThat(clientAssociatedEvent2.getAssociation().getHostId()).isEqualTo(HOST_ID_2);
 
 		// Message-Broadcast 2
-		AssociateMessage.ClientMessage associateMessage2 = eventReceiver.awaitEvent(AssociateMessage.ClientMessage.class);
+		AssociationRequestMessage.ClientMessage associateMessage2 = eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 		assertThat(associateMessage2.getHostId()).isEqualTo(HOST_ID_2);
 		assertThat(associateMessage2.getMessage().getHostId()).isEqualTo(HOST_ID_2);
 
@@ -97,14 +97,14 @@ public class AssociationIT extends ControlServerTestBase {
 
 	@Test
 	public void cantAssociateClientTwice() {
-		client.transmit(new AssociateMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
 
 		client.awaitMessage(AssociatedMessage.class);
 
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
-		eventReceiver.awaitEvent(AssociateMessage.ClientMessage.class);
+		eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 
-		client.transmit(new AssociateMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
 
 		ErrorMessage errorMessage = client.awaitMessage(ErrorMessage.class);
 		assertThat(errorMessage.getMessage())
@@ -116,13 +116,13 @@ public class AssociationIT extends ControlServerTestBase {
 	public void canDeAssociateClient() {
 		final String REASON = "Test";
 
-		client.transmit(new AssociateMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
 
 		client.awaitMessage(AssociatedMessage.class);
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
-		eventReceiver.awaitEvent(AssociateMessage.ClientMessage.class);
+		eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 
-		client.transmit(new DeAssociateMessage()
+		client.transmit(new DeAssociationRequestMessage()
 			.setReason(REASON));
 
 		DeAssociatedMessage deAssociatedMessage = client.awaitMessage(DeAssociatedMessage.class);
@@ -130,7 +130,7 @@ public class AssociationIT extends ControlServerTestBase {
 			.contains("Received DeAssociateMessage")
 			.contains(REASON);
 
-		DeAssociateMessage.ClientMessage deAssociateMessage = eventReceiver.awaitEvent(DeAssociateMessage.ClientMessage.class);
+		DeAssociationRequestMessage.ClientMessage deAssociateMessage = eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
 		assertThat(deAssociateMessage.getHostId()).isEqualTo(HOST_ID);
 		assertThat(deAssociateMessage.getMessage().getReason()).isEqualTo(REASON);
 
@@ -140,7 +140,7 @@ public class AssociationIT extends ControlServerTestBase {
 
 	@Test
 	public void cantDeAssociateUnAssociatedClient() {
-		client.transmit(new DeAssociateMessage()
+		client.transmit(new DeAssociationRequestMessage()
 			.setReason("Test"));
 
 		ErrorMessage errorMessage = client.awaitMessage(ErrorMessage.class);

@@ -14,8 +14,8 @@ import com.google.common.collect.ImmutableMap;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeProvisionMessage;
@@ -54,9 +54,9 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 		testConfig.getPanels().put(PANEL_ID, PANEL_CONFIG);
 
 		// Request
-		client.transmit(new AssociateMessage()
+		client.transmit(new AssociationRequestMessage()
 			.setHostId(HOST_ID)
-			.setCapabilities(new AssociateMessage.Capabilities()
+			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(ImmutableList.of("Q1"))));
 
 		// Matrix-Events
@@ -68,7 +68,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 		assertThat(panelAssociatedEvent.getPanelConfig()).isEqualTo(PANEL_CONFIG);
 
 		// Message-Broadcast
-		eventReceiver.awaitEvent(AssociateMessage.ClientMessage.class);
+		eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 
 		// Response
 		client.awaitMessage(AssociatedMessage.class);
@@ -83,10 +83,10 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 		associateAndProvisionClient();
 
 		// Request
-		client.transmit(new DeAssociateMessage().setReason("Test"));
+		client.transmit(new DeAssociationRequestMessage().setReason("Test"));
 
 		// Message-Broadcast
-		eventReceiver.awaitEvent(DeAssociateMessage.ClientMessage.class);
+		eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
 
 		// Matrix-Events
 		PanelDeAssociatedEvent panelDeAssociatedEvent = eventReceiver.awaitEvent(PanelDeAssociatedEvent.class);
@@ -128,11 +128,11 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 	protected void associateAndProvisionClient() {
 		testConfig.getPanels().put(PANEL_ID, PANEL_CONFIG);
 
-		client.transmit(new AssociateMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
 
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
 		eventReceiver.awaitEvent(PanelAssociatedEvent.class);
-		eventReceiver.awaitEvent(AssociateMessage.ClientMessage.class);
+		eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 
 		client.awaitMessage(AssociatedMessage.class);
 		client.awaitMessage(ProvisionMessage.class);

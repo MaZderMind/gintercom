@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociateMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
@@ -59,10 +59,10 @@ public abstract class ControlServerTestBase extends IntegrationTestBase {
 	}
 
 	protected void associateClient() {
-		client.transmit(new AssociateMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
 
 		client.awaitMessage(AssociatedMessage.class);
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
-		eventReceiver.awaitEvent(AssociateMessage.ClientMessage.class);
+		eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 	}
 }

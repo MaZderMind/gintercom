@@ -66,7 +66,7 @@ public class ControlServerNetworkIT extends ControlServerTestBase {
 		this.associateClient();
 		//language=JSON
 		client.transmit("{\n" +
-			"\t\"type\": \"DeAssociateMessage\"\n" +
+			"\t\"type\": \"DeAssociationRequestMessage\"\n" +
 			"}");
 
 		ErrorMessage errorMessage = client.awaitMessage(ErrorMessage.class);
