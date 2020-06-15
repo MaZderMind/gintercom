@@ -2,14 +2,14 @@ package de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matri
 
 import javax.validation.constraints.NotEmpty;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.wrapper.WrappedClientMessage;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 /**
- * An AssociateMessage is sent from a Client to Matrix to request association with it. Usually the Matrix
- * responds with an {@link AssociatedMessage}.
+ * An DeAssociateMessage is sent from a Client to Matrix to request de-association from it. Usually the Matrix
+ * responds with an {@link DeAssociatedMessage}.
  */
 @Data
 @Accessors(chain = true)
