@@ -9,8 +9,9 @@
   <tr>
     <th>Provisioned</th>
     <th>Host-ID</th>
-    <th>Remote IP</th>
-    <th>Connection Time</th>
+    <th>Model</th>
+    <th>Remote Address</th>
+    <th>First Seen</th>
     <th>Assigned Panel</th>
     <th>Actions</th>
   </tr>
@@ -25,8 +26,11 @@
         {{ device.hostId }}
       </a>
     </td>
-    <td class="text-monospace">{{ device.remoteIp }}</td>
-    <td>{{ device.connectionTime | date:'medium' }}</td>
+    <td>
+      {{ device.clientModel }}
+    </td>
+    <td class="text-monospace">{{ device.clientAddress }}</td>
+    <td>{{ device.firstSeen | date:'medium' }}</td>
     <td>
       <a *ngIf="device.provisioned" [routerLink]="['/panels', device.panelId]">{{ device.panelId }}</a>
       <button
