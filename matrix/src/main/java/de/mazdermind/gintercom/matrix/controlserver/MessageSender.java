@@ -28,8 +28,8 @@ public class MessageSender {
 
 	private void sendMessageTo(InetSocketAddress address, Object message) {
 		try {
-			ByteBuffer encode = messageEncoder.encode(message);
-			channel.write(new DatagramPacket(Unpooled.wrappedBuffer(encode), address));
+			ByteBuffer buffer = messageEncoder.encode(message);
+			channel.write(new DatagramPacket(Unpooled.wrappedBuffer(buffer), address));
 			channel.flush();
 		} catch (Exception exception) {
 			log.error("Error {} while sending Message {}", exception, message);

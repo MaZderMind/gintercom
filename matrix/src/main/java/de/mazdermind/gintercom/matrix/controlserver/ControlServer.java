@@ -31,11 +31,11 @@ public class ControlServer {
 		log.info("Starting Server");
 		workerGroup = new NioEventLoopGroup();
 		channel = new Bootstrap()
-				.group(workerGroup)
-				.channel(NioDatagramChannel.class)
-				.handler(datagramHandler)
-				.bind(PORT).sync()
-				.channel();
+			.group(workerGroup)
+			.channel(NioDatagramChannel.class)
+			.handler(datagramHandler)
+			.bind(PORT).sync()
+			.channel();
 
 		messageSender.setChannel(channel);
 
