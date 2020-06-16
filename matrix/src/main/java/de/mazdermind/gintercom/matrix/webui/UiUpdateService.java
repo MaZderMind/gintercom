@@ -18,7 +18,7 @@ public class UiUpdateService {
 	private final SimpMessageSendingOperations simpMessageSendingOperations;
 
 	public void notifyUiAboutUpdates() {
-		log.info("notifyUiAboutUpdates");
+		log.info("Updating UI");
 		simpMessageSendingOperations.convertAndSend("/ui/update", ImmutableMap.of("type", "update"));
 	}
 
