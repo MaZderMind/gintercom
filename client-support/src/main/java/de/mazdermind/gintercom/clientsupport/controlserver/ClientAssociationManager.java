@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ public class ClientAssociationManager {
 	private final ControlServerClient controlServerClient;
 	private final ClientConfiguration clientConfiguration;
 	private final ClientMessageSender clientMessageSender;
+	private final ApplicationEventPublisher eventPublisher;
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 	private InetSocketAddress targetMatrix = null;
@@ -50,6 +52,7 @@ public class ClientAssociationManager {
 			.setReason(reason));
 
 		teardownClient();
+		eventPublisher.publishEvent(new DeAssociatedEvent());
 	}
 
 	private void teardownClient() {
@@ -59,19 +62,20 @@ public class ClientAssociationManager {
 	}
 
 	@EventListener
-	public AssociatedEvent handleAssociatedMessage(AssociatedMessage associatedMessage) {
-		return new AssociatedEvent()
+	public void handleAssociatedMessage(AssociatedMessage associatedMessage) {
+		eventPublisher.publishEvent(new AssociatedEvent()
 			.setMatrixAddress(targetMatrix)
 			.setRtpMatrixToPanelPort(associatedMessage.getRtpMatrixToPanelPort())
-			.setRtpPanelToMatrixPort(associatedMessage.getRtpPanelToMatrixPort());
+			.setRtpPanelToMatrixPort(associatedMessage.getRtpPanelToMatrixPort()));
 	}
 
 	@EventListener(DeAssociatedMessage.class)
-	public DeAssociatedEvent handleDeAssociatedMessage() {
-		// run teardown asynchronously
+	public void handleDeAssociatedMessage() {
+		// run teardown asynchronously, so that the client can be shutdown even tough the shutdown is triggered by an incoming message
+		// (which would otherwise block the socket)
 		executorService.submit(this::teardownClient);
 
-		return new DeAssociatedEvent();
+		eventPublisher.publishEvent(new DeAssociatedEvent());
 	}
 
 	@EventListener(BeforeShutdownEvent.class)
