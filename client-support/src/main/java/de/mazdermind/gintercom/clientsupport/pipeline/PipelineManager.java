@@ -31,8 +31,8 @@ public class PipelineManager {
 		clientPipeline.startPipeline();
 	}
 
-	@EventListener
-	public void handleDeAssociatedEvent(DeAssociatedEvent deAssociatedEvent) {
+	@EventListener(DeAssociatedEvent.class)
+	public void handleDeAssociatedEvent() {
 		clientPipeline.destroyPipeline();
 	}
 

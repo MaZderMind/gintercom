@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 public class HeartbeatResponder {
 	private final ClientMessageSender messageSender;
 
-	@EventListener
-	public void handleMatrixHeartbeatMessage(MatrixHeartbeatMessage matrixHeartbeatMessage) {
+	@EventListener(MatrixHeartbeatMessage.class)
+	public void handleMatrixHeartbeatMessage() {
 		messageSender.sendMessage(new ClientHeartbeatMessage());
 	}
 }

@@ -38,8 +38,8 @@ public class AudioLevelDisplayManager {
 		audioLevelDisplay.updateLevel(audioLevelEvent);
 	}
 
-	@EventListener
-	public void clearOnDisconnect(DisconnectedEvent disconnectedEvent) {
+	@EventListener(DisconnectedEvent.class)
+	public void clearOnDisconnect() {
 		audioLevelDisplay.clear();
 	}
 }

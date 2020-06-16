@@ -106,8 +106,8 @@ public class ConnectionLifecycleManager {
 		scheduleDiscoveryRetry();
 	}
 
-	@EventListener
-	public void handleAssociatedEvent(AssociatedEvent associatedEvent) {
+	@EventListener(AssociatedEvent.class)
+	public void handleAssociatedEvent() {
 		if (lifecycle != ConnectionLifecycle.ASSOCIATING) {
 			log.warn("handleAssociatedEvent in wrong Lifecycle Phase: {}", lifecycle);
 			return;
@@ -123,8 +123,8 @@ public class ConnectionLifecycleManager {
 		lifecycle = ConnectionLifecycle.PROVISIONING;
 	}
 
-	@EventListener
-	public void handleProvisionMessage(ProvisionMessage provisionMessage) {
+	@EventListener(ProvisionMessage.class)
+	public void handleProvisionMessage() {
 		if (lifecycle != ConnectionLifecycle.PROVISIONING) {
 			log.warn("handleProvisionMessage in wrong Lifecycle Phase: {}", lifecycle);
 			return;
@@ -136,8 +136,8 @@ public class ConnectionLifecycleManager {
 		lifecycle = ConnectionLifecycle.OPERATIONAL;
 	}
 
-	@EventListener
-	public void handleDeProvisionMessage(DeProvisionMessage deProvisionMessage) {
+	@EventListener(DeProvisionMessage.class)
+	public void handleDeProvisionMessage() {
 		if (lifecycle != ConnectionLifecycle.OPERATIONAL) {
 			log.warn("handleDeProvisionMessage in wrong Lifecycle Phase: {}", lifecycle);
 			return;
@@ -150,8 +150,8 @@ public class ConnectionLifecycleManager {
 		lifecycle = ConnectionLifecycle.PROVISIONING;
 	}
 
-	@EventListener
-	public void handleDeAssociatedEvent(DeAssociatedEvent deAssociatedEvent) {
+	@EventListener(DeAssociatedEvent.class)
+	public void handleDeAssociatedEvent() {
 		if (lifecycle != ConnectionLifecycle.OPERATIONAL && lifecycle != ConnectionLifecycle.PROVISIONING) {
 			log.warn("handleDeAssociatedEvent in wrong Lifecycle Phase: {}", lifecycle);
 			return;
