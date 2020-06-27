@@ -127,7 +127,7 @@ public class AssociationIT extends ControlServerTestBase {
 
 		DeAssociatedMessage deAssociatedMessage = client.awaitMessage(DeAssociatedMessage.class);
 		assertThat(deAssociatedMessage.getReason())
-			.contains("Received DeAssociateMessage")
+			.contains("Received DeAssociationRequestMessage")
 			.contains(REASON);
 
 		DeAssociationRequestMessage.ClientMessage deAssociateMessage = eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
