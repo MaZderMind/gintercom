@@ -22,6 +22,7 @@ describe('DeviceActionsComponent', () => {
       clientAddress: '127.0.0.1',
       firstSeen: '2020-01-01T10:00:00+0200',
       provisioned: true,
+      clientModel: 'Test-Panel',
     };
     fixture.detectChanges();
   });
