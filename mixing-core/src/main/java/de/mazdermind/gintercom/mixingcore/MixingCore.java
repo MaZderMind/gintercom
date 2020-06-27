@@ -1,7 +1,9 @@
 package de.mazdermind.gintercom.mixingcore;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -107,8 +109,11 @@ public class MixingCore {
 		panel.remove();
 	}
 
-	public void destroy() {
-		panels.values().forEach(this::removePanel);
-		groups.values().forEach(this::removeGroup);
+	public void clear() {
+		List<Panel> panelsToRemove = new ArrayList<>(this.panels.values());
+		panelsToRemove.forEach(this::removePanel);
+
+		List<Group> groupsToRemove = new ArrayList<>(this.groups.values());
+		groupsToRemove.forEach(this::removeGroup);
 	}
 }

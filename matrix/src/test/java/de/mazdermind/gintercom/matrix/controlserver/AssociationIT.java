@@ -44,7 +44,7 @@ public class AssociationIT extends ControlServerTestBase {
 	}
 
 	@Test
-	public void canAssociateTwoHostIds() {
+	public void canAssociateTwoClients() {
 		TestControlClient client2 = beanFactory.getBean(TestControlClient.class);
 		client2.bind();
 

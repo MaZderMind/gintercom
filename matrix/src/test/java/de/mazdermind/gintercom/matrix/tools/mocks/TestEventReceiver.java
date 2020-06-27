@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.matrix.tools.mocks;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -29,11 +30,31 @@ public class TestEventReceiver {
 	public <T> T awaitEvent(Class<T> eventType) {
 		Object result = receivedEvents.poll(1, TimeUnit.SECONDS);
 
-		assertThat(result).isNotNull();
-		assertThat(result).isInstanceOf(eventType);
+		assertThat(result)
+			.describedAs("Expected to receive Event")
+			.isNotNull();
+
+		assertThat(result)
+			.describedAs("Expected to receive Event of Type %s", eventType.getSimpleName())
+			.isInstanceOf(eventType);
 
 		//noinspection unchecked
 		return (T) result;
+	}
+
+	@SneakyThrows
+	public <T> Optional<T> maybeAwaitEvent(Class<T> eventType) {
+		Object result = receivedEvents.poll(1, TimeUnit.SECONDS);
+		if (result != null) {
+			if (eventType.isInstance(result)) {
+				//noinspection unchecked
+				return Optional.of((T) result);
+			} else {
+				receivedEvents.add(result);
+			}
+		}
+
+		return Optional.empty();
 	}
 
 	public void assertNoMoreEvents() {

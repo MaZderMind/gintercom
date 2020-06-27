@@ -15,8 +15,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.controlserver.MessageSender;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
-import de.mazdermind.gintercom.matrix.events.PanelAssociatedEvent;
-import de.mazdermind.gintercom.matrix.events.PanelDeAssociatedEvent;
+import de.mazdermind.gintercom.matrix.events.PanelGroupsChangedEvent;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +46,11 @@ public class ProvisioningManager {
 				.setDisplay(panelConfig.getDisplay())
 				.setButtons(panelConfig.getButtons()));
 
-			eventPublisher.publishEvent(new PanelAssociatedEvent()
+			// Setup initial RX/TX Group Configuration
+			eventPublisher.publishEvent(new PanelGroupsChangedEvent()
 				.setAssociation(associatedEvent.getAssociation())
-				.setPanelId(panelId)
-				.setPanelConfig(panelConfig));
+				.setRxGroups(panelConfig.getRxGroups())
+				.setTxGroups(panelConfig.getTxGroups()));
 		}
 	}
 
@@ -68,10 +68,6 @@ public class ProvisioningManager {
 				panelConfig.getDisplay(), hostId);
 
 			messageSender.sendMessageTo(hostId, new DeProvisionMessage());
-
-			eventPublisher.publishEvent(new PanelDeAssociatedEvent()
-				.setAssociation(deAssociatedEvent.getAssociation())
-				.setPanelId(panelId));
 		}
 	}
 }

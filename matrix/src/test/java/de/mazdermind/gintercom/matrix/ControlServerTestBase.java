@@ -8,11 +8,17 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeProvisionMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ProvisionMessage;
 import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 import de.mazdermind.gintercom.matrix.controlserver.TestControlClient;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
+import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
+import de.mazdermind.gintercom.matrix.events.PanelGroupsChangedEvent;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestEventReceiver;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,11 +64,25 @@ public abstract class ControlServerTestBase extends IntegrationTestBase {
 		eventReceiver.clear();
 	}
 
-	protected void associateClient() {
+	protected ClientAssociation associateClient() {
 		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
 
 		client.awaitMessage(AssociatedMessage.class);
-		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
+		client.maybeAwaitMessage(ProvisionMessage.class);
+
+		ClientAssociatedEvent associatedEvent = eventReceiver.awaitEvent(ClientAssociatedEvent.class);
+		eventReceiver.maybeAwaitEvent(PanelGroupsChangedEvent.class);
 		eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
+
+		return associatedEvent.getAssociation();
+	}
+
+	protected void deAssociateClient() {
+		client.transmit(new DeAssociationRequestMessage().setReason("Test-Request"));
+
+		eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
+		eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
+		client.maybeAwaitMessage(DeProvisionMessage.class);
+		client.awaitMessage(DeAssociatedMessage.class);
 	}
 }

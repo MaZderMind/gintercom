@@ -4,8 +4,10 @@ import static de.mazdermind.gintercom.gstreamersupport.GstDebugger.debugPipeline
 import static de.mazdermind.gintercom.gstreamersupport.GstErrorCheck.expectSuccess;
 
 import java.net.InetAddress;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Caps;
@@ -217,5 +219,13 @@ public class Panel {
 
 		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
 		log.debug("Unlinked Panel {} from Group {} for receiving", name, group.getName());
+	}
+
+	public Set<Group> getRxGroups() {
+		return Collections.unmodifiableSet(rxPads.keySet());
+	}
+
+	public Set<Group> getTxGroups() {
+		return Collections.unmodifiableSet(txPads.keySet());
 	}
 }

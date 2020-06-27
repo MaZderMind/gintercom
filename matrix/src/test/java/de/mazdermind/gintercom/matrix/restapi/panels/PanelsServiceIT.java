@@ -14,7 +14,7 @@ import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 
 public class PanelsServiceIT extends IntegrationTestBase {
-	private static final InetSocketAddress SOCKET_ADDRESS = InetSocketAddress.createUnresolved("some-host", 32541);
+	private static final InetSocketAddress SOCKET_ADDRESS = new InetSocketAddress("10.0.0.1", 32541);
 	private static final String HOST_ID = "THE_HOST_ID";
 	private static final String PANEL_ID = "THE_PANEL_ID";
 	private static final String CLIENT_MODEL = "THE_CLIENT_MODEL";

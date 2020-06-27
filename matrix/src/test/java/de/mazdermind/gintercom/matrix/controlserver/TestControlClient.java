@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -81,11 +82,31 @@ public class TestControlClient {
 	public <T> T awaitMessage(Class<T> messageType) {
 		Object result = receivedMessages.poll(1, TimeUnit.SECONDS);
 
-		assertThat(result).isNotNull();
-		assertThat(result).isInstanceOf(messageType);
+		assertThat(result)
+			.describedAs("Expected to receive Message")
+			.isNotNull();
+
+		assertThat(result)
+			.describedAs("Expected to receive Message of Type %s", messageType.getSimpleName())
+			.isInstanceOf(messageType);
 
 		//noinspection unchecked
 		return (T) result;
+	}
+
+	@SneakyThrows
+	public <T> Optional<T> maybeAwaitMessage(Class<T> messageType) {
+		Object result = receivedMessages.poll(1, TimeUnit.SECONDS);
+		if (result != null) {
+			if (messageType.isInstance(result)) {
+				//noinspection unchecked
+				return Optional.of((T) result);
+			} else {
+				receivedMessages.add(result);
+			}
+		}
+
+		return Optional.empty();
 	}
 
 	public void assertNoMoreMessages() {

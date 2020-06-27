@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ClientHeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.MatrixHeartbeatMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +65,8 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 		Optional<ClientAssociation> association2 = associatedClientsManager.findAssociation(HOST_ID);
 		assertThat(association2).isPresent();
 		assertThat(association2.get().isTimedOut()).isFalse();
+
+		client.maybeAwaitMessage(MatrixHeartbeatMessage.class);
 	}
 
 	private void sendHeartbeat() {
