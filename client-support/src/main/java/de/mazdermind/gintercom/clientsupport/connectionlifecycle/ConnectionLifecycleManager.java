@@ -21,7 +21,7 @@ import de.mazdermind.gintercom.clientsupport.discovery.MatrixAddressDiscoverySer
 import de.mazdermind.gintercom.clientsupport.discovery.MatrixAddressDiscoveryServiceImplementation;
 import de.mazdermind.gintercom.clientsupport.discovery.MatrixAddressDiscoveryServiceResult;
 import de.mazdermind.gintercom.clientsupport.events.AssociatedEvent;
-import de.mazdermind.gintercom.clientsupport.events.BeforeShutdownEvent;
+import de.mazdermind.gintercom.clientsupport.events.BeforeClientShutdownEvent;
 import de.mazdermind.gintercom.clientsupport.events.DeAssociatedEvent;
 import de.mazdermind.gintercom.clientsupport.events.connectionlifecycle.AddressDiscoveryEvent;
 import de.mazdermind.gintercom.clientsupport.events.connectionlifecycle.AssociatingEvent;
@@ -164,7 +164,7 @@ public class ConnectionLifecycleManager {
 		scheduleDiscoveryRetry();
 	}
 
-	@EventListener(BeforeShutdownEvent.class)
+	@EventListener(BeforeClientShutdownEvent.class)
 	public void handleBeforeShutdownEvent() {
 		shutdown = true;
 	}

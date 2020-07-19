@@ -14,7 +14,7 @@ import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeAssociatedMessage;
 import de.mazdermind.gintercom.clientsupport.events.AssociatedEvent;
-import de.mazdermind.gintercom.clientsupport.events.BeforeShutdownEvent;
+import de.mazdermind.gintercom.clientsupport.events.BeforeClientShutdownEvent;
 import de.mazdermind.gintercom.clientsupport.events.DeAssociatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -78,7 +78,7 @@ public class ClientAssociationManager {
 		eventPublisher.publishEvent(new DeAssociatedEvent());
 	}
 
-	@EventListener(BeforeShutdownEvent.class)
+	@EventListener(BeforeClientShutdownEvent.class)
 	public void sendDeAssociationMessage() {
 		log.info("Notifying Matrix of Shutdown");
 		clientMessageSender.sendMessage(new DeAssociationRequestMessage()

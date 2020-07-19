@@ -4,13 +4,12 @@ import java.net.InetSocketAddress;
 import java.util.Collection;
 import java.util.Optional;
 
-import javax.annotation.PreDestroy;
-
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
+import de.mazdermind.gintercom.matrix.events.BeforeMatrixShutdownEvent;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
@@ -134,8 +133,9 @@ public class AssociatedClientsManager {
 		return associations.getAssociations();
 	}
 
-	@PreDestroy
+	@EventListener(BeforeMatrixShutdownEvent.class)
 	public void deAssociateAll() {
+		log.info("DeAssociating all Clients");
 		associations.getAssociations().forEach(clientAssociation -> deAssociate(clientAssociation, "Shutdown"));
 	}
 

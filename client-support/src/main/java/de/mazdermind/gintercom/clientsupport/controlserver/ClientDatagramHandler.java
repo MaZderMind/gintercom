@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.Messages;
 import de.mazdermind.gintercom.clientapi.controlserver.shared.MessageDecoder;
-import de.mazdermind.gintercom.clientsupport.events.BeforeShutdownEvent;
+import de.mazdermind.gintercom.clientsupport.events.BeforeClientShutdownEvent;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -40,7 +40,7 @@ public class ClientDatagramHandler extends SimpleChannelInboundHandler<DatagramP
 		}
 	}
 
-	@EventListener(BeforeShutdownEvent.class)
+	@EventListener(BeforeClientShutdownEvent.class)
 	public void handleBeforeShutdownEvent() {
 		shutdown = true;
 	}

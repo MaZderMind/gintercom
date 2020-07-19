@@ -4,14 +4,14 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.stereotype.Service;
 
-import de.mazdermind.gintercom.clientsupport.events.BeforeShutdownEvent;
+import de.mazdermind.gintercom.clientsupport.events.BeforeClientShutdownEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EarlyShutdownHandler implements SmartLifecycle {
+public class ClientShutdownHandler implements SmartLifecycle {
 	private final ApplicationEventPublisher eventPublisher;
 
 	private boolean started = true;
@@ -24,7 +24,7 @@ public class EarlyShutdownHandler implements SmartLifecycle {
 	@Override
 	public void stop() {
 		log.info("Application Shutdown");
-		eventPublisher.publishEvent(new BeforeShutdownEvent());
+		eventPublisher.publishEvent(new BeforeClientShutdownEvent());
 	}
 
 	@Override
