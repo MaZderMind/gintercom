@@ -42,8 +42,8 @@ public class MixingCoreController {
 	}
 
 	@PreDestroy
-	public void destroyPipeline() {
-		log.info("Destroying MixingCore");
-		mixingCore.clear();
+	public void shutdownPipeline() {
+		log.info("Shutting MixingCore Down");
+		mixingCore.shutdown();
 	}
 }
