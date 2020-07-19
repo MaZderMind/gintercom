@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.it;
+package de.mazdermind.gintercom.mixingcore;
 
 import static org.junit.Assert.assertThrows;
 
@@ -7,12 +7,9 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-import de.mazdermind.gintercom.mixingcore.Group;
-import de.mazdermind.gintercom.mixingcore.MixingCore;
-import de.mazdermind.gintercom.mixingcore.Panel;
 import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationException;
-import de.mazdermind.gintercom.mixingcore.it.tools.IntegrationTestBase;
-import de.mazdermind.gintercom.mixingcore.it.tools.PanelAndClient;
+import de.mazdermind.gintercom.mixingcore.tools.IntegrationTestBase;
+import de.mazdermind.gintercom.mixingcore.tools.PanelAndClient;
 
 /**
  * This Test ensures that the Pipeline does not crash when the API is used in an invalid way and that other Panels and Groups are still

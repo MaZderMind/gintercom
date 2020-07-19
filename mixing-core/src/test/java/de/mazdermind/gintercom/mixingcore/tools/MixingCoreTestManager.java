@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.it.tools;
+package de.mazdermind.gintercom.mixingcore.tools;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import de.mazdermind.gintercom.mixingcore.Panel;
-import de.mazdermind.gintercom.mixingcore.it.portpool.PortPoolConfig;
-import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
-import de.mazdermind.gintercom.mixingcore.it.portpool.PortSetPool;
-import de.mazdermind.gintercom.mixingcore.it.tools.rtp.RtpTestClient;
+import de.mazdermind.gintercom.mixingcore.portpool.PortPoolConfig;
+import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.portpool.PortSetPool;
+import de.mazdermind.gintercom.mixingcore.tools.rtp.RtpTestClient;
 
 public class MixingCoreTestManager {
 	public static final InetAddress MATRIX_HOST;

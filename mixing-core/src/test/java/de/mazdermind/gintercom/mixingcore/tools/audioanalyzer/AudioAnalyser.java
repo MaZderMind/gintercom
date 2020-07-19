@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer;
+package de.mazdermind.gintercom.mixingcore.tools.audioanalyzer;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.PeakDetector;
-import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.PeakSet;
+import de.mazdermind.gintercom.mixingcore.tools.peakdetector.PeakDetector;
+import de.mazdermind.gintercom.mixingcore.tools.peakdetector.PeakSet;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

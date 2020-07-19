@@ -1,12 +1,11 @@
-package de.mazdermind.gintercom.mixingcore.it;
+package de.mazdermind.gintercom.mixingcore;
 
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
-import de.mazdermind.gintercom.mixingcore.Group;
-import de.mazdermind.gintercom.mixingcore.it.tools.IntegrationTestBase;
-import de.mazdermind.gintercom.mixingcore.it.tools.PanelAndClient;
+import de.mazdermind.gintercom.mixingcore.tools.IntegrationTestBase;
+import de.mazdermind.gintercom.mixingcore.tools.PanelAndClient;
 
 public class MixingIT extends IntegrationTestBase {
 	/**

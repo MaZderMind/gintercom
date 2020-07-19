@@ -1,9 +1,9 @@
-package de.mazdermind.gintercom.mixingcore.it.tools;
+package de.mazdermind.gintercom.mixingcore.tools;
 
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import de.mazdermind.gintercom.mixingcore.Panel;
-import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
-import de.mazdermind.gintercom.mixingcore.it.tools.rtp.RtpTestClient;
+import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.tools.rtp.RtpTestClient;
 
 public class PanelAndClient {
 	private final MixingCore mixingCore;

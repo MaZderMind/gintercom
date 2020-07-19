@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.it.tools;
+package de.mazdermind.gintercom.mixingcore.tools;
 
 import org.junit.After;
 import org.junit.Before;

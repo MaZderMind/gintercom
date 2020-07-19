@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.it.portpool;
+package de.mazdermind.gintercom.mixingcore.portpool;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.mixingcore.it.tools.rtp;
+package de.mazdermind.gintercom.mixingcore.tools.rtp;
 
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Bus;
@@ -17,9 +17,9 @@ import de.mazdermind.gintercom.gstreamersupport.GstConstants;
 import de.mazdermind.gintercom.gstreamersupport.GstDebugger;
 import de.mazdermind.gintercom.gstreamersupport.GstErrorCheck;
 import de.mazdermind.gintercom.gstreamersupport.GstStaticCaps;
-import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
-import de.mazdermind.gintercom.mixingcore.it.tools.audioanalyzer.AudioAnalyser;
-import de.mazdermind.gintercom.mixingcore.it.tools.peakdetector.AppSinkSupport;
+import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.tools.audioanalyzer.AudioAnalyser;
+import de.mazdermind.gintercom.mixingcore.tools.peakdetector.AppSinkSupport;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

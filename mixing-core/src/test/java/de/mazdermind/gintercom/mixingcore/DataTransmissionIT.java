@@ -1,15 +1,13 @@
-package de.mazdermind.gintercom.mixingcore.it;
+package de.mazdermind.gintercom.mixingcore;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.mazdermind.gintercom.mixingcore.MixingCore;
-import de.mazdermind.gintercom.mixingcore.Panel;
-import de.mazdermind.gintercom.mixingcore.it.portpool.PortSet;
-import de.mazdermind.gintercom.mixingcore.it.tools.IntegrationTestBase;
-import de.mazdermind.gintercom.mixingcore.it.tools.MixingCoreTestManager;
-import de.mazdermind.gintercom.mixingcore.it.tools.rtp.RtpTestClient;
+import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
+import de.mazdermind.gintercom.mixingcore.tools.IntegrationTestBase;
+import de.mazdermind.gintercom.mixingcore.tools.MixingCoreTestManager;
+import de.mazdermind.gintercom.mixingcore.tools.rtp.RtpTestClient;
 
 public class DataTransmissionIT extends IntegrationTestBase {
 	private static final String PANEL_ID = "data";
