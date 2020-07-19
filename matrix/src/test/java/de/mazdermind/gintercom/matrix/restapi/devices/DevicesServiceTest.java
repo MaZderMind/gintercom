@@ -14,8 +14,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import com.google.common.collect.ImmutableList;
 
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionInformation;
-import de.mazdermind.gintercom.matrix.controlserver.panelregistration.PanelConnectionManager;
+import de.mazdermind.gintercom.matrix.configuration.model.Config;
+import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
+import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DevicesServiceTest {
@@ -23,22 +24,25 @@ public class DevicesServiceTest {
 	private DevicesService devicesService;
 
 	@Mock
-	private PanelConnectionManager panelConnectionManager;
+	private AssociatedClientsManager associatedClientsManager;
+
+	@Mock
+	private Config config;
 
 	@Before
 	public void configureMocks() {
-		when(panelConnectionManager.getConnectedPanels()).thenReturn(ImmutableList.of(
-			new PanelConnectionInformation()
+		when(associatedClientsManager.getAssociations()).thenReturn(ImmutableList.of(
+			new ClientAssociation()
 				.setHostId("10:00")
-				.setConnectionTime(LocalDateTime.of(2020, 5, 1, 10, 0)),
+				.setFirstSeen(LocalDateTime.of(2020, 5, 1, 10, 0)),
 
-			new PanelConnectionInformation()
+			new ClientAssociation()
 				.setHostId("12:00")
-				.setConnectionTime(LocalDateTime.of(2020, 5, 1, 12, 0)),
+				.setFirstSeen(LocalDateTime.of(2020, 5, 1, 12, 0)),
 
-			new PanelConnectionInformation()
+			new ClientAssociation()
 				.setHostId("11:00")
-				.setConnectionTime(LocalDateTime.of(2020, 5, 1, 11, 0))
+				.setFirstSeen(LocalDateTime.of(2020, 5, 1, 11, 0))
 		));
 	}
 

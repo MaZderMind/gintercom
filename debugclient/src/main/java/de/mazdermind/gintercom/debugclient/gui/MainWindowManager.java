@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ProvisionMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +46,7 @@ public class MainWindowManager {
 	}
 
 	@EventListener
-	public void handleProvisioningInformation(ProvisioningInformation provisioningInformation) {
-		EventQueue.invokeLater(() -> mainWindow.setTitle(provisioningInformation.getDisplay()));
+	public void handleProvisionMessage(ProvisionMessage provisionMessage) {
+		EventQueue.invokeLater(() -> mainWindow.setTitle(provisionMessage.getDisplay()));
 	}
 }

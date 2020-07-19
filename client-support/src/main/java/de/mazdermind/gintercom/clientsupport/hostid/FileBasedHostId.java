@@ -10,8 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,35 +19,50 @@ import lombok.extern.slf4j.Slf4j;
 public class FileBasedHostId {
 	private String hostId;
 
-	@EventListener(ContextRefreshedEvent.class)
-	public void readOrCreateHostId() throws IOException {
+	private static String createNewHostId(Path hostIdFilePath) throws IOException {
+		String newHostId = RandomHostIdGenerator.generateRandomHostId();
+		BufferedWriter outStream = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(hostIdFilePath)));
+		outStream.write(newHostId);
+		outStream.close();
+		log.info("Host-ID {} saved to {}", newHostId, hostIdFilePath);
+
+		return newHostId;
+	}
+
+	private static String readHostId(Path hostIdFilePath) throws IOException {
+		InputStream inStream = Files.newInputStream(hostIdFilePath);
+		String readHostId = new BufferedReader(new InputStreamReader(inStream)).readLine().trim();
+		log.info("Read Host-ID {} from {}", readHostId, hostIdFilePath);
+
+		return readHostId;
+	}
+
+	public String readOrCreateHostId() {
 		Path hostIdFilePath = Paths.get(System.getProperty("user.home"), ".gintercom-host-id");
 		log.info("Using Host-ID File {}", hostIdFilePath);
 
 		try {
-			readHostId(hostIdFilePath);
+			log.debug("Trying to read Host-ID");
+			hostId = readHostId(hostIdFilePath);
 		} catch (IOException e) {
-			createNewHostId(hostIdFilePath);
+			log.info("Host-ID could not be read from File, creating a new one");
+			try {
+				hostId = createNewHostId(hostIdFilePath);
+			} catch (IOException e1) {
+				log.error("Host-ID could not be written to from File, using a temporary one");
+				hostId = RandomHostIdGenerator.generateRandomHostId();
+			}
 		}
-	}
 
-	private void createNewHostId(Path hostIdFilePath) throws IOException {
-		log.info("Unable to Read Host-ID from File, trying to create a new ID");
-		String newHostId = RandomHostIdGenerator.generateRandomHostId();
-		log.info("Generated new ID {}", newHostId);
-		BufferedWriter outStream = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(hostIdFilePath)));
-		outStream.write(newHostId);
-		outStream.close();
-		log.info("New ID saved to {}", hostIdFilePath);
-	}
-
-	private void readHostId(Path hostIdFilePath) throws IOException {
-		InputStream inStream = Files.newInputStream(hostIdFilePath);
-		hostId = new BufferedReader(new InputStreamReader(inStream)).readLine().trim();
-		log.info("Read Host-ID {}", hostId);
+		return hostId;
 	}
 
 	public String getHostId() {
-		return hostId;
+		if (hostId != null) {
+			return hostId;
+		} else {
+			log.debug("Host-ID not yet known");
+			return readOrCreateHostId();
+		}
 	}
 }

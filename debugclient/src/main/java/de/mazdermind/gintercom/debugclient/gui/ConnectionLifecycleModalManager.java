@@ -9,7 +9,8 @@ import javax.swing.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientsupport.controlserver.events.connectionlifecycle.ConnectionLifecycleEvent;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
+import de.mazdermind.gintercom.clientsupport.events.connectionlifecycle.ConnectionLifecycleEvent;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -80,22 +81,34 @@ public class ConnectionLifecycleModalManager {
 	}
 
 	@EventListener
+	public void handleErrorMessage(ErrorMessage errorMessage) {
+		updateModalText("Error", errorMessage.getMessage(), true);
+	}
+
+	@EventListener
 	public void handleGenericConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
 		operational = lifecycleEvent.getLifecycle().isOperational();
 
 		log.info("ConnectionLifecycleEvent: {}, Operational={}",
 			lifecycleEvent.getClass().getSimpleName(), operational);
 
+		String displayText = lifecycleEvent.getDisplayText();
+		String detailsText = lifecycleEvent.getDetailsText();
+
+		initialDisplayText = displayText;
+		initialDetailsText = detailsText;
+		initiallyOperational = operational;
+
+		boolean shouldBeVisible = !operational;
+		updateModalText(displayText, detailsText, shouldBeVisible);
+	}
+
+	private void updateModalText(String displayText, String detailsText, boolean shouldBeVisible) {
 		EventQueue.invokeLater(() -> {
-			initialDisplayText = lifecycleEvent.getDisplayText();
-			initialDetailsText = lifecycleEvent.getDetailsText();
-			initiallyOperational = operational;
-
 			if (label != null && dialog != null) {
-				label.setText(lifecycleEvent.getDisplayText());
-				detailsLabel.setText(lifecycleEvent.getDetailsText());
+				label.setText(displayText);
+				detailsLabel.setText(detailsText);
 
-				boolean shouldBeVisible = !operational;
 				// Invoking setVisible, even when the window is already visible,
 				// will give it he System-Wide Focus, which is quite annoying
 				if (dialog.isVisible() != shouldBeVisible) {

@@ -4,8 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.mazdermind.gintercom.matrix.integration.IntegrationTestBase;
-import de.mazdermind.gintercom.matrix.integration.TestConfig;
+import de.mazdermind.gintercom.matrix.IntegrationTestBase;
+import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 
 public class GroupsServiceIT extends IntegrationTestBase {
 	@Autowired

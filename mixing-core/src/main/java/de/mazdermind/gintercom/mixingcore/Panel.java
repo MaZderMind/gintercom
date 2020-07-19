@@ -4,8 +4,10 @@ import static de.mazdermind.gintercom.gstreamersupport.GstDebugger.debugPipeline
 import static de.mazdermind.gintercom.gstreamersupport.GstErrorCheck.expectSuccess;
 
 import java.net.InetAddress;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.freedesktop.gstreamer.Bin;
 import org.freedesktop.gstreamer.Caps;
@@ -93,7 +95,7 @@ public class Panel {
 		expectSuccess(txBin.syncStateWithParent());
 
 		debugPipeline(String.format("after-add-panel-%s", name), pipeline);
-		log.info("Created Panel {}", name);
+		log.debug("Created Panel {}", name);
 	}
 
 	public String getName() {
@@ -112,13 +114,10 @@ public class Panel {
 
 	private void releaseSrcPad(GhostPad pad) {
 		Pad teePad = pad.getTarget();
-		log.info("blocking for releaseSrcPad {}", pad);
 		GstPadBlock.blockAndWait(teePad, () -> {
-			log.info("blocked for releaseSrcPad {}", pad);
 			rxBin.removePad(pad);
 			tee.releaseRequestPad(teePad);
 		});
-		log.info("after blocking for releaseSrcPad {}", pad);
 	}
 
 	private GhostPad requestSinkPad() {
@@ -130,20 +129,17 @@ public class Panel {
 
 	private void releaseSinkPad(GhostPad pad) {
 		Pad mixerPad = pad.getTarget();
-		log.info("blocking for releaseSinkPad {}", pad);
 		GstPadBlock.blockAndWait(mixerPad, () -> {
-			log.info("blocked for releaseSinkPad {}", pad);
 			mixer.releaseRequestPad(mixerPad);
 			txBin.removePad(pad);
 		});
-		log.info("after blocking for releaseSinkPad {}", pad);
 	}
 
 	void remove() {
 		log.info("Removing Panel {}", name);
 		debugPipeline(String.format("before-remove-panel-%s", name), pipeline);
 
-		log.info("Releasing Tx-Pads");
+		log.debug("Releasing Tx-Pads");
 		txPads.forEach((group, pad) -> {
 			releaseSrcPad((GhostPad) pad.getPeer());
 			group.releaseSinkPadFor((GhostPad) pad, this);
@@ -151,7 +147,7 @@ public class Panel {
 		txPads.clear();
 		debugPipeline(String.format("after-releasing-tx-panel-%s", name), pipeline);
 
-		log.info("Releasing Rx-Pads");
+		log.debug("Releasing Rx-Pads");
 		rxPads.forEach((group, pad) -> {
 			Pad peer = pad.getPeer();
 			group.releaseSrcPadFor((GhostPad) pad, this);
@@ -160,14 +156,14 @@ public class Panel {
 		rxPads.clear();
 		debugPipeline(String.format("after-releasing-rx-panel-%s", name), pipeline);
 
-		log.info("De-Configuring Bins");
+		log.debug("De-Configuring Bins");
 		expectSuccess(rxBin.stop());
 		expectSuccess(pipeline.remove(rxBin));
 		expectSuccess(txBin.stop());
 		expectSuccess(pipeline.remove(txBin));
 		debugPipeline(String.format("after-remove-panel-%s", name), pipeline);
 
-		log.info("Removed Panel {}", name);
+		log.debug("Removed Panel {}", name);
 	}
 
 	public void startTransmittingTo(Group group) {
@@ -178,7 +174,7 @@ public class Panel {
 		txPads.put(group, sinkPad);
 
 		debugPipeline(String.format("after-link-panel-%s-to-group-%s", name, group.getName()), pipeline);
-		log.info("Linked Panel {} to Group {} for transmission", name, group.getName());
+		log.debug("Linked Panel {} to Group {} for transmission", name, group.getName());
 	}
 
 	public void stopTransmittingTo(Group group) {
@@ -194,7 +190,7 @@ public class Panel {
 		group.releaseSinkPadFor((GhostPad) pad, this);
 
 		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
-		log.info("Unlinked Panel {} from Group {} for transmission", name, group.getName());
+		log.debug("Unlinked Panel {} from Group {} for transmission", name, group.getName());
 	}
 
 	public void startReceivingFrom(Group group) {
@@ -205,7 +201,7 @@ public class Panel {
 		rxPads.put(group, srcPad);
 
 		debugPipeline(String.format("after-link-group-%s-to-panel-%s", group.getName(), name), pipeline);
-		log.info("Linked Panel {} to Group {} for receiving", name, group.getName());
+		log.debug("Linked Panel {} to Group {} for receiving", name, group.getName());
 	}
 
 	public void stopReceivingFrom(Group group) {
@@ -222,6 +218,14 @@ public class Panel {
 		releaseSinkPad((GhostPad) peer);
 
 		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
-		log.info("Unlinked Panel {} from Group {} for receiving", name, group.getName());
+		log.debug("Unlinked Panel {} from Group {} for receiving", name, group.getName());
+	}
+
+	public Set<Group> getRxGroups() {
+		return Collections.unmodifiableSet(rxPads.keySet());
+	}
+
+	public Set<Group> getTxGroups() {
+		return Collections.unmodifiableSet(txPads.keySet());
 	}
 }

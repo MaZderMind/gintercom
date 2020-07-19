@@ -1,7 +1,9 @@
 package de.mazdermind.gintercom.mixingcore;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -10,6 +12,7 @@ import javax.annotation.Nonnull;
 import org.freedesktop.gstreamer.Bus;
 import org.freedesktop.gstreamer.Gst;
 import org.freedesktop.gstreamer.Pipeline;
+import org.freedesktop.gstreamer.State;
 
 import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationException;
 import de.mazdermind.gintercom.mixingcore.exception.MixingCoreException;
@@ -107,8 +110,23 @@ public class MixingCore {
 		panel.remove();
 	}
 
-	public void destroy() {
-		panels.values().forEach(this::removePanel);
-		groups.values().forEach(this::removeGroup);
+	public void clear() {
+		log.info("Removing all Panels and Groups");
+		List<Panel> panelsToRemove = new ArrayList<>(this.panels.values());
+		panelsToRemove.forEach(this::removePanel);
+
+		List<Group> groupsToRemove = new ArrayList<>(this.groups.values());
+		groupsToRemove.forEach(this::removeGroup);
+	}
+
+	public void shutdown() {
+		clear();
+
+		log.info("Shutting down Pipeline");
+		pipeline.setState(State.NULL);
+	}
+
+	public boolean isRunning() {
+		return pipeline.getState() == State.PLAYING;
 	}
 }

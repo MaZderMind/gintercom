@@ -22,6 +22,7 @@ describe('PanelStatusComponent', () => {
       hostId: '0000-0000',
       assigned: true,
       online: false,
+      clientModel: 'Test-Panel',
     };
     fixture.detectChanges();
   });

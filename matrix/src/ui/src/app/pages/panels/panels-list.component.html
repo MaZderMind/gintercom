@@ -10,6 +10,7 @@
     <th>Status</th>
     <th>Id</th>
     <th>Display-Name</th>
+    <th>Model</th>
     <th>Host-ID</th>
     <th>Actions</th>
   </tr>
@@ -23,6 +24,7 @@
       <a [routerLink]="['/panels', panel.id]">{{ panel.id }}</a>
     </td>
     <td>{{ panel.display }}</td>
+    <td>{{ panel.clientModel }}</td>
     <td>
       <a *ngIf="panel.assigned" [routerLink]="['/devices', panel.hostId]">{{ panel.hostId }}</a>
       <button

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.collect.ImmutableMap;
 
+import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
+import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,12 +18,14 @@ public class UiUpdateService {
 	private final SimpMessageSendingOperations simpMessageSendingOperations;
 
 	public void notifyUiAboutUpdates() {
-		log.info("notifyUiAboutUpdates");
+		log.info("Updating UI");
 		simpMessageSendingOperations.convertAndSend("/ui/update", ImmutableMap.of("type", "update"));
 	}
 
-	@EventListener
-	public void onUiUpdateEvent(UiUpdateEvent updateEvent) {
+	@EventListener({
+		ClientAssociatedEvent.class, ClientDeAssociatedEvent.class
+	})
+	public void onUiUpdateEvent() {
 		notifyUiAboutUpdates();
 	}
 }

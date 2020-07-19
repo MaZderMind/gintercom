@@ -18,6 +18,9 @@ public class PanelDto {
 	@Nullable
 	private String hostId;
 
+	@Nullable
+	private String clientModel;
+
 	public PanelDto(String id, PanelConfig config, boolean online) {
 		this.id = id;
 		display = config.getDisplay();

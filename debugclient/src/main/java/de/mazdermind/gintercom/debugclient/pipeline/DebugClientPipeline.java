@@ -1,5 +1,6 @@
 package de.mazdermind.gintercom.debugclient.pipeline;
 
+import java.net.InetAddress;
 import java.util.List;
 
 import org.freedesktop.gstreamer.Caps;
@@ -7,8 +8,6 @@ import org.freedesktop.gstreamer.Element;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.messages.provision.ProvisioningInformation;
-import de.mazdermind.gintercom.clientsupport.controlserver.discovery.MatrixAddressDiscoveryServiceResult;
 import de.mazdermind.gintercom.clientsupport.pipeline.StandardClientPipeline;
 import de.mazdermind.gintercom.clientsupport.pipeline.audiosupport.AudioSystem;
 import de.mazdermind.gintercom.debugclient.pipeline.audiolevel.AudioLevelMessageListener;
@@ -40,8 +39,8 @@ public class DebugClientPipeline extends StandardClientPipeline {
 	}
 
 	@Override
-	public void configurePipeline(MatrixAddressDiscoveryServiceResult matrixAddress, ProvisioningInformation provisioningInformation) {
-		super.configurePipeline(matrixAddress, provisioningInformation);
+	public void configurePipeline(InetAddress matrixAddress, int matrixToPanelPort, int panelToMatrixPort) {
+		super.configurePipeline(matrixAddress, matrixToPanelPort, panelToMatrixPort);
 		getPipeline().getBus().connect(levelMessageListener);
 
 		configureTone(toneEnabled);
