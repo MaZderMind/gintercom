@@ -5,16 +5,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.Messages;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.MatrixHeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.shared.MessageDecoder;
 import de.mazdermind.gintercom.clientapi.controlserver.shared.MessageEncoder;
 import io.netty.bootstrap.Bootstrap;
@@ -110,7 +113,10 @@ public class TestControlClient {
 	}
 
 	public void assertNoMoreMessages() {
-		assertThat(receivedMessages).isEmpty();
+		List<Object> messagesWithoutHeartbeats = receivedMessages.stream()
+			.filter(message -> !(message instanceof MatrixHeartbeatMessage))
+			.collect(Collectors.toList());
+		assertThat(messagesWithoutHeartbeats).isEmpty();
 	}
 
 	private class Handler extends SimpleChannelInboundHandler<DatagramPacket> {
