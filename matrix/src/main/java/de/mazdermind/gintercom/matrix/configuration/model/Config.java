@@ -26,7 +26,7 @@ public class Config {
 	private Map<String, GroupConfig> groups;
 
 	@Valid
-	private Map<String, ButtonSetConfig> buttonsets;
+	private Map<String, ButtonSetConfig> buttonSets;
 
 	public void validateReferences() {
 		log.debug("Validating Panel -> Group references");
@@ -49,11 +49,11 @@ public class Config {
 		});
 
 		log.debug("Validating Panel -> ButtonSet references");
-		panels.forEach((panelId, panel) -> panel.getButtonsets().forEach(buttonset -> {
-			if (!buttonsets.containsKey(buttonset)) {
+		panels.forEach((panelId, panel) -> panel.getButtonSets().forEach(buttonSet -> {
+			if (!buttonSets.containsKey(buttonSet)) {
 				throw new ValidationException(String.format(
 					"ButtonSet %s referenced from Panel %s does not exist",
-					buttonset, panelId));
+					buttonSet, panelId));
 			}
 		}));
 
@@ -62,7 +62,7 @@ public class Config {
 			validateButtonReferences(panel.getButtons(), String.format("Panel %s", panelId)));
 
 		log.debug("Validating ButtonSet-Button-Target references");
-		buttonsets.forEach((buttonSetId, buttonSet) ->
+		buttonSets.forEach((buttonSetId, buttonSet) ->
 			validateButtonReferences(buttonSet.getButtons(), String.format("ButtonSet %s", buttonSet)));
 	}
 

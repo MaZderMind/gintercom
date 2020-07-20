@@ -18,8 +18,8 @@ public class ButtonSetResolver {
 
 	public Map<String, ButtonConfig> resolveButtons(PanelConfig panelConfig) {
 		Map<String, ButtonConfig> combinedButtons = new HashMap<>();
-		for (String buttonsetId : panelConfig.getButtonsets()) {
-			ButtonSetConfig buttonSetConfig = config.getButtonsets().get(buttonsetId);
+		for (String buttonSetId : panelConfig.getButtonSets()) {
+			ButtonSetConfig buttonSetConfig = config.getButtonSets().get(buttonSetId);
 			combinedButtons.putAll(buttonSetConfig.getButtons());
 		}
 

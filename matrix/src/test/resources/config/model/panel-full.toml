@@ -1,7 +1,7 @@
 display="A/V Tech Romm A"
 rxGroups=["room-a", "av-tech"]
 txGroups=["av-tech"]
-buttonsets=["av-tech"]
+buttonSets=["av-tech"]
 clientId="DEAD-BEEF"
 
 [buttons.6]

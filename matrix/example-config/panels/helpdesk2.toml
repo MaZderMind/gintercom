@@ -1,5 +1,5 @@
 display="Helpdesk 2"
 rxGroups=["helpdesk"]
 txGroups=["helpdesk"]
-buttonsets=["helpdesk"]
+buttonSets=["helpdesk"]
 clientId="0000-0002"

@@ -36,7 +36,7 @@ public class PanelConfigTest {
 		assertThat(panelConfig.getClientId()).isEqualTo("DEAD-BEEF");
 		assertThat(panelConfig.getRxGroups()).containsOnly("room-a", "av-tech");
 		assertThat(panelConfig.getTxGroups()).containsOnly("av-tech");
-		assertThat(panelConfig.getButtonsets()).containsOnly("av-tech");
+		assertThat(panelConfig.getButtonSets()).containsOnly("av-tech");
 
 		assertThat(panelConfig.getButtons()).containsKey("6");
 		ButtonConfig buttonConfig = panelConfig.getButtons().get("6");
@@ -53,7 +53,7 @@ public class PanelConfigTest {
 		assertThat(panelConfig.getClientId()).isNull();
 		assertThat(panelConfig.getRxGroups()).isEmpty();
 		assertThat(panelConfig.getTxGroups()).isEmpty();
-		assertThat(panelConfig.getButtonsets()).isEmpty();
+		assertThat(panelConfig.getButtonSets()).isEmpty();
 
 		assertThat(panelConfig.getButtons()).isNotNull();
 		assertThat(panelConfig.getButtons().size()).isEqualTo(0);

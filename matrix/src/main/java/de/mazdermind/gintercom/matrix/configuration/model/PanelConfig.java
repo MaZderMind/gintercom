@@ -25,7 +25,7 @@ public class PanelConfig {
 
 	private Set<String> rxGroups = emptySet();
 	private Set<String> txGroups = emptySet();
-	private List<String> buttonsets = emptyList();
+	private List<String> buttonSets = emptyList();
 
 	@Valid
 	private Map<String, ButtonConfig> buttons = emptyMap();

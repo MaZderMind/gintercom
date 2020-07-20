@@ -41,7 +41,7 @@ public class TestConfig extends Config {
 				.setBind(null)
 				.setPort(0)));
 
-		setButtonsets(new HashMap<>());
+		setButtonSets(new HashMap<>());
 		setGroups(new HashMap<>());
 		setPanels(new HashMap<>());
 	}
