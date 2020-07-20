@@ -43,8 +43,8 @@ public class MixingCoreIT {
 		assertThat(p1.getTxGroups()).isEmpty();
 		assertThat(p1.getRxGroups()).isEmpty();
 
-		assertThat(mixingCore.getClientIds()).isEmpty();
-		assertThat(mixingCore.getGroupIds()).isEmpty();
+		assertThat(mixingCore.getClients()).isEmpty();
+		assertThat(mixingCore.getGroups()).isEmpty();
 
 		assertThat(mixingCore.isRunning()).isFalse();
 	}
@@ -65,8 +65,8 @@ public class MixingCoreIT {
 		assertThat(p2.getTxGroups()).isEmpty();
 		assertThat(p2.getRxGroups()).isEmpty();
 
-		assertThat(mixingCore.getClientIds()).isEmpty();
-		assertThat(mixingCore.getGroupIds()).isEmpty();
+		assertThat(mixingCore.getClients()).isEmpty();
+		assertThat(mixingCore.getGroups()).isEmpty();
 
 		assertThat(mixingCore.isRunning()).isTrue();
 	}
@@ -101,7 +101,9 @@ public class MixingCoreIT {
 		assertThat(mixingCore.getGroupById("G1")).isSameAs(g1);
 		assertThat(mixingCore.getGroupById("G2")).isSameAs(g2);
 
-		assertThat(mixingCore.getGroupIds()).containsOnly("G1", "G2");
+		assertThat(mixingCore.getGroups())
+			.extracting(Group::getId)
+			.containsOnly("G1", "G2");
 
 		assertThat(mixingCore.hasGroup(g1)).isTrue();
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
@@ -114,7 +116,9 @@ public class MixingCoreIT {
 		assertThat(mixingCore.hasGroup(g1)).isFalse();
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
 
-		assertThat(mixingCore.getGroupIds()).containsOnly("G2");
+		assertThat(mixingCore.getGroups())
+			.extracting(Group::getId)
+			.containsOnly("G2");
 
 		Group g3 = mixingCore.addGroup("G3");
 
@@ -126,7 +130,9 @@ public class MixingCoreIT {
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
 		assertThat(mixingCore.hasGroup(g3)).isTrue();
 
-		assertThat(mixingCore.getGroupIds()).containsOnly("G2", "G3");
+		assertThat(mixingCore.getGroups())
+			.extracting(Group::getId)
+			.containsOnly("G2", "G3");
 	}
 
 	@Test
@@ -134,7 +140,9 @@ public class MixingCoreIT {
 		assertThat(mixingCore.getClientById("P1")).isSameAs(p1);
 		assertThat(mixingCore.getClientById("P2")).isSameAs(p2);
 
-		assertThat(mixingCore.getClientIds()).containsOnly("P1", "P2");
+		assertThat(mixingCore.getClients())
+			.extracting(Client::getId)
+			.containsOnly("P1", "P2");
 
 		assertThat(mixingCore.hasClient(p1)).isTrue();
 		assertThat(mixingCore.hasClient(p2)).isTrue();
@@ -147,7 +155,9 @@ public class MixingCoreIT {
 		assertThat(mixingCore.hasClient(p1)).isFalse();
 		assertThat(mixingCore.hasClient(p2)).isTrue();
 
-		assertThat(mixingCore.getClientIds()).containsOnly("P2");
+		assertThat(mixingCore.getClients())
+			.extracting(Client::getId)
+			.containsOnly("P2");
 
 		Client p3 = mixingCore.addClient("P3", InetAddress.getByName("127.0.0.1"), 20003, 30003);
 
@@ -159,6 +169,8 @@ public class MixingCoreIT {
 		assertThat(mixingCore.hasClient(p2)).isTrue();
 		assertThat(mixingCore.hasClient(p3)).isTrue();
 
-		assertThat(mixingCore.getClientIds()).containsOnly("P2", "P3");
+		assertThat(mixingCore.getClients())
+			.extracting(Client::getId)
+			.containsOnly("P2", "P3");
 	}
 }

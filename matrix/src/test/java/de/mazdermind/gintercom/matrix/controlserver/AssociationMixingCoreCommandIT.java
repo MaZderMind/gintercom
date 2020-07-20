@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
+import de.mazdermind.gintercom.mixingcore.Client;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 
 public class AssociationMixingCoreCommandIT extends ControlServerTestBase {
@@ -16,7 +17,9 @@ public class AssociationMixingCoreCommandIT extends ControlServerTestBase {
 	public void clientIsCreatedOnAssociation() {
 		associateClient();
 
-		assertThat(mixingCore.getClientIds()).containsOnly(HOST_ID);
+		assertThat(mixingCore.getClients())
+			.extracting(Client::getId)
+			.containsOnly(HOST_ID);
 	}
 
 	@Test
@@ -24,6 +27,6 @@ public class AssociationMixingCoreCommandIT extends ControlServerTestBase {
 		associateClient();
 		deAssociateClient();
 
-		assertThat(mixingCore.getClientIds()).isEmpty();
+		assertThat(mixingCore.getClients()).isEmpty();
 	}
 }

@@ -2,10 +2,11 @@ package de.mazdermind.gintercom.mixingcore;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -86,12 +87,12 @@ public class MixingCore {
 		return client.equals(clients.get(client.getId()));
 	}
 
-	public Set<String> getGroupIds() {
-		return groups.keySet();
+	public Collection<Group> getGroups() {
+		return Collections.unmodifiableCollection(groups.values());
 	}
 
-	public Set<String> getClientIds() {
-		return clients.keySet();
+	public Collection<Client> getClients() {
+		return Collections.unmodifiableCollection(clients.values());
 	}
 
 	public void removeGroup(@Nonnull Group group) {
