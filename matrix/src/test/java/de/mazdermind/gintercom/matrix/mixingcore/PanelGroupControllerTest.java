@@ -26,7 +26,7 @@ public class PanelGroupControllerTest {
 	@Before
 	public void prepareMock() {
 		mixingCore = mock(MixingCore.class);
-		when(mixingCore.getGroupByName(anyString()))
+		when(mixingCore.getGroupById(anyString()))
 			.thenAnswer(invocation -> mockGroup(invocation.getArgument(0)));
 
 		panelGroupController = new PanelGroupController(mixingCore);
@@ -39,7 +39,7 @@ public class PanelGroupControllerTest {
 			ImmutableSet.of("A", "B"));
 
 		assertThat(groupsToAdd)
-			.extracting(Group::getName)
+			.extracting(Group::getId)
 			.containsOnly("A", "B");
 	}
 
@@ -50,7 +50,7 @@ public class PanelGroupControllerTest {
 			ImmutableSet.of("A", "B"));
 
 		assertThat(groupsToAdd)
-			.extracting(Group::getName)
+			.extracting(Group::getId)
 			.containsOnly("B");
 	}
 
@@ -79,7 +79,7 @@ public class PanelGroupControllerTest {
 			ImmutableSet.of("A", "B"));
 
 		assertThat(groupsToAdd)
-			.extracting(Group::getName)
+			.extracting(Group::getId)
 			.containsOnly("C");
 	}
 
@@ -90,14 +90,14 @@ public class PanelGroupControllerTest {
 			Collections.emptySet());
 
 		assertThat(groupsToAdd)
-			.extracting(Group::getName)
+			.extracting(Group::getId)
 			.containsOnly("A", "C");
 	}
 
 	@Test
 	public void reconcileGroups() {
 		Client client = mock(Client.class);
-		when(client.getName()).thenReturn("The Panel");
+		when(client.getId()).thenReturn("The Panel");
 
 		Group groupA = mockGroup("A");
 		Group groupB = mockGroup("B");
@@ -106,8 +106,8 @@ public class PanelGroupControllerTest {
 		Group groupY = mockGroup("Y");
 		Group groupZ = mockGroup("Z");
 
-		when(mixingCore.getGroupByName("C")).thenReturn(groupC);
-		when(mixingCore.getGroupByName("X")).thenReturn(groupX);
+		when(mixingCore.getGroupById("C")).thenReturn(groupC);
+		when(mixingCore.getGroupById("X")).thenReturn(groupX);
 
 		when(client.getRxGroups()).thenReturn(ImmutableSet.of(
 			groupA,
@@ -132,7 +132,7 @@ public class PanelGroupControllerTest {
 
 	private Group mockGroup(String name) {
 		Group group = mock(Group.class);
-		when(group.getName()).thenReturn(name);
+		when(group.getId()).thenReturn(name);
 		return group;
 	}
 }

@@ -50,61 +50,61 @@ public class MixingCore {
 	}
 
 
-	public Group addGroup(String name) {
-		if (groups.containsKey(name)) {
-			throw new InvalidMixingCoreOperationException(String.format("Group %s already registered", name));
+	public Group addGroup(String id) {
+		if (groups.containsKey(id)) {
+			throw new InvalidMixingCoreOperationException(String.format("Group %s already registered", id));
 		}
 
-		Group group = new Group(pipeline, name);
-		groups.put(name, group);
+		Group group = new Group(pipeline, id);
+		groups.put(id, group);
 		return group;
 	}
 
-	public Client addClient(String name, InetAddress clientHost, int clientToMatrixPort, int matrixToClientPort) {
-		if (clients.containsKey(name)) {
-			throw new InvalidMixingCoreOperationException(String.format("Client %s already registered", name));
+	public Client addClient(String id, InetAddress clientHost, int clientToMatrixPort, int matrixToClientPort) {
+		if (clients.containsKey(id)) {
+			throw new InvalidMixingCoreOperationException(String.format("Client %s already registered", id));
 		}
 
-		Client client = new Client(pipeline, name, clientHost, clientToMatrixPort, matrixToClientPort);
-		clients.put(name, client);
+		Client client = new Client(pipeline, id, clientHost, clientToMatrixPort, matrixToClientPort);
+		clients.put(id, client);
 		return client;
 	}
 
-	public Group getGroupByName(String name) {
-		return groups.get(name);
+	public Group getGroupById(String id) {
+		return groups.get(id);
 	}
 
-	public Client getClientByName(String name) {
-		return clients.get(name);
+	public Client getClientById(String id) {
+		return clients.get(id);
 	}
 
 	public boolean hasGroup(@Nonnull Group group) {
-		return group.equals(groups.get(group.getName()));
+		return group.equals(groups.get(group.getId()));
 	}
 
 	public boolean hasClient(@Nonnull Client client) {
-		return client.equals(clients.get(client.getName()));
+		return client.equals(clients.get(client.getId()));
 	}
 
-	public Set<String> getGroupNames() {
+	public Set<String> getGroupIds() {
 		return groups.keySet();
 	}
 
-	public Set<String> getClientNames() {
+	public Set<String> getClientIds() {
 		return clients.keySet();
 	}
 
 	public void removeGroup(@Nonnull Group group) {
-		if (groups.remove(group.getName()) == null) {
-			throw new InvalidMixingCoreOperationException(String.format("Group %s not registered", group.getName()));
+		if (groups.remove(group.getId()) == null) {
+			throw new InvalidMixingCoreOperationException(String.format("Group %s not registered", group.getId()));
 		}
 
 		group.remove();
 	}
 
 	public void removeClient(@Nonnull Client client) {
-		if (clients.remove(client.getName()) == null) {
-			throw new InvalidMixingCoreOperationException(String.format("Client %s not registered", client.getName()));
+		if (clients.remove(client.getId()) == null) {
+			throw new InvalidMixingCoreOperationException(String.format("Client %s not registered", client.getId()));
 		}
 
 		client.remove();

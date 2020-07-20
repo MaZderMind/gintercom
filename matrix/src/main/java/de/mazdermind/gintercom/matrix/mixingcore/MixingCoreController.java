@@ -37,7 +37,7 @@ public class MixingCoreController {
 		ClientAssociation association = clientDeAssociatedEvent.getAssociation();
 
 		log.debug("Removing Panel {}", association.getClientId());
-		Client client = mixingCore.getClientByName(association.getClientId());
+		Client client = mixingCore.getClientById(association.getClientId());
 		mixingCore.removeClient(client);
 	}
 

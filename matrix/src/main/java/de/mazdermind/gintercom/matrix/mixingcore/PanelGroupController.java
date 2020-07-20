@@ -25,7 +25,7 @@ public class PanelGroupController {
 	@EventListener
 	public void handlePanelConfigurationChangedEvent(PanelGroupsChangedEvent panelGroupsChangedEvent) {
 		ClientAssociation association = panelGroupsChangedEvent.getAssociation();
-		Client client = mixingCore.getClientByName(association.getClientId());
+		Client client = mixingCore.getClientById(association.getClientId());
 
 		Set<String> desiredRxGroups = panelGroupsChangedEvent.getRxGroups();
 		Set<String> desiredTxGroups = panelGroupsChangedEvent.getTxGroups();
@@ -34,14 +34,14 @@ public class PanelGroupController {
 
 	@VisibleForTesting
 	void reconcileGroups(Client client, Set<String> desiredRxGroups, Set<String> desiredTxGroups) {
-		log.debug("Reconciling rxGroups for Client-Id {}", client.getName());
+		log.debug("Reconciling rxGroups for Client-Id {}", client.getId());
 		calculateGroupsToRemove(client.getRxGroups(), desiredRxGroups)
 			.forEach(client::stopReceivingFrom);
 
 		calculateGroupsToAdd(client.getRxGroups(), desiredRxGroups)
 			.forEach(client::startReceivingFrom);
 
-		log.debug("Reconciling txGroups for Client-Id {}", client.getName());
+		log.debug("Reconciling txGroups for Client-Id {}", client.getId());
 		calculateGroupsToRemove(client.getTxGroups(), desiredTxGroups)
 			.forEach(client::stopTransmittingTo);
 
@@ -52,19 +52,19 @@ public class PanelGroupController {
 	@VisibleForTesting
 	Set<Group> calculateGroupsToAdd(Set<Group> actualGroups, Set<String> desiredGroups) {
 		Set<String> actualGroupNames = actualGroups.stream()
-			.map(Group::getName)
+			.map(Group::getId)
 			.collect(Collectors.toSet());
 
 		return desiredGroups.stream()
 			.filter(desiredGroup -> !actualGroupNames.contains(desiredGroup))
-			.map(mixingCore::getGroupByName)
+			.map(mixingCore::getGroupById)
 			.collect(Collectors.toSet());
 	}
 
 	@VisibleForTesting
 	Set<Group> calculateGroupsToRemove(Set<Group> actualGroups, Set<String> desiredGroups) {
 		return actualGroups.stream()
-			.filter(actualGroup -> !desiredGroups.contains(actualGroup.getName()))
+			.filter(actualGroup -> !desiredGroups.contains(actualGroup.getId()))
 			.collect(Collectors.toSet());
 	}
 }

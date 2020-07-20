@@ -66,21 +66,20 @@ public class MixingCoreTestManager {
 		groups.clear();
 	}
 
-	public Group addGroup(String name) {
-		Group group = mixingCore.addGroup(name);
+	public Group addGroup(String id) {
+		Group group = mixingCore.addGroup(id);
 		groups.add(group);
 
 		return group;
 	}
 
-	public ClientInfo addClient(String name) {
+	public ClientInfo addClient(String id) {
 		PortSet ports = portSetPool.getNextPortSet();
-		Client client = mixingCore.addClient(name, MATRIX_HOST, ports.getClientToMatrix(), ports.getMatrixToClient());
-		RtpTestClient rtpTestClient = new RtpTestClient(ports, name);
+		Client client = mixingCore.addClient(id, MATRIX_HOST, ports.getClientToMatrix(), ports.getMatrixToClient());
+		RtpTestClient rtpTestClient = new RtpTestClient(ports, id);
 		ClientInfo clientInfo = new ClientInfo(mixingCore, client, rtpTestClient, ports);
 		clients.add(clientInfo);
 
 		return clientInfo;
 	}
-
 }

@@ -43,8 +43,8 @@ public class MixingCoreIT {
 		assertThat(p1.getTxGroups()).isEmpty();
 		assertThat(p1.getRxGroups()).isEmpty();
 
-		assertThat(mixingCore.getClientNames()).isEmpty();
-		assertThat(mixingCore.getGroupNames()).isEmpty();
+		assertThat(mixingCore.getClientIds()).isEmpty();
+		assertThat(mixingCore.getGroupIds()).isEmpty();
 
 		assertThat(mixingCore.isRunning()).isFalse();
 	}
@@ -65,8 +65,8 @@ public class MixingCoreIT {
 		assertThat(p2.getTxGroups()).isEmpty();
 		assertThat(p2.getRxGroups()).isEmpty();
 
-		assertThat(mixingCore.getClientNames()).isEmpty();
-		assertThat(mixingCore.getGroupNames()).isEmpty();
+		assertThat(mixingCore.getClientIds()).isEmpty();
+		assertThat(mixingCore.getGroupIds()).isEmpty();
 
 		assertThat(mixingCore.isRunning()).isTrue();
 	}
@@ -98,67 +98,67 @@ public class MixingCoreIT {
 
 	@Test
 	public void groupGetter() {
-		assertThat(mixingCore.getGroupByName("G1")).isSameAs(g1);
-		assertThat(mixingCore.getGroupByName("G2")).isSameAs(g2);
+		assertThat(mixingCore.getGroupById("G1")).isSameAs(g1);
+		assertThat(mixingCore.getGroupById("G2")).isSameAs(g2);
 
-		assertThat(mixingCore.getGroupNames()).containsOnly("G1", "G2");
+		assertThat(mixingCore.getGroupIds()).containsOnly("G1", "G2");
 
 		assertThat(mixingCore.hasGroup(g1)).isTrue();
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
 
 		mixingCore.removeGroup(g1);
 
-		assertThat(mixingCore.getGroupByName("G1")).isNull();
-		assertThat(mixingCore.getGroupByName("G2")).isSameAs(g2);
+		assertThat(mixingCore.getGroupById("G1")).isNull();
+		assertThat(mixingCore.getGroupById("G2")).isSameAs(g2);
 
 		assertThat(mixingCore.hasGroup(g1)).isFalse();
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
 
-		assertThat(mixingCore.getGroupNames()).containsOnly("G2");
+		assertThat(mixingCore.getGroupIds()).containsOnly("G2");
 
 		Group g3 = mixingCore.addGroup("G3");
 
-		assertThat(mixingCore.getGroupByName("G1")).isNull();
-		assertThat(mixingCore.getGroupByName("G2")).isSameAs(g2);
-		assertThat(mixingCore.getGroupByName("G3")).isSameAs(g3);
+		assertThat(mixingCore.getGroupById("G1")).isNull();
+		assertThat(mixingCore.getGroupById("G2")).isSameAs(g2);
+		assertThat(mixingCore.getGroupById("G3")).isSameAs(g3);
 
 		assertThat(mixingCore.hasGroup(g1)).isFalse();
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
 		assertThat(mixingCore.hasGroup(g3)).isTrue();
 
-		assertThat(mixingCore.getGroupNames()).containsOnly("G2", "G3");
+		assertThat(mixingCore.getGroupIds()).containsOnly("G2", "G3");
 	}
 
 	@Test
 	public void clientGetter() throws UnknownHostException {
-		assertThat(mixingCore.getClientByName("P1")).isSameAs(p1);
-		assertThat(mixingCore.getClientByName("P2")).isSameAs(p2);
+		assertThat(mixingCore.getClientById("P1")).isSameAs(p1);
+		assertThat(mixingCore.getClientById("P2")).isSameAs(p2);
 
-		assertThat(mixingCore.getClientNames()).containsOnly("P1", "P2");
+		assertThat(mixingCore.getClientIds()).containsOnly("P1", "P2");
 
 		assertThat(mixingCore.hasClient(p1)).isTrue();
 		assertThat(mixingCore.hasClient(p2)).isTrue();
 
 		mixingCore.removeClient(p1);
 
-		assertThat(mixingCore.getClientByName("P1")).isNull();
-		assertThat(mixingCore.getClientByName("P2")).isSameAs(p2);
+		assertThat(mixingCore.getClientById("P1")).isNull();
+		assertThat(mixingCore.getClientById("P2")).isSameAs(p2);
 
 		assertThat(mixingCore.hasClient(p1)).isFalse();
 		assertThat(mixingCore.hasClient(p2)).isTrue();
 
-		assertThat(mixingCore.getClientNames()).containsOnly("P2");
+		assertThat(mixingCore.getClientIds()).containsOnly("P2");
 
 		Client p3 = mixingCore.addClient("P3", InetAddress.getByName("127.0.0.1"), 20003, 30003);
 
-		assertThat(mixingCore.getClientByName("P1")).isNull();
-		assertThat(mixingCore.getClientByName("P2")).isSameAs(p2);
-		assertThat(mixingCore.getClientByName("P3")).isSameAs(p3);
+		assertThat(mixingCore.getClientById("P1")).isNull();
+		assertThat(mixingCore.getClientById("P2")).isSameAs(p2);
+		assertThat(mixingCore.getClientById("P3")).isSameAs(p3);
 
 		assertThat(mixingCore.hasClient(p1)).isFalse();
 		assertThat(mixingCore.hasClient(p2)).isTrue();
 		assertThat(mixingCore.hasClient(p3)).isTrue();
 
-		assertThat(mixingCore.getClientNames()).containsOnly("P2", "P3");
+		assertThat(mixingCore.getClientIds()).containsOnly("P2", "P3");
 	}
 }

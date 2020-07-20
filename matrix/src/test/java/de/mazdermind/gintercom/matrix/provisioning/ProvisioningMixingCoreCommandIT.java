@@ -46,25 +46,25 @@ public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	public void initialGroupsAreLinkedOnProvisioning() {
 		associateClient();
 
-		Client client = mixingCore.getClientByName(HOST_ID);
+		Client client = mixingCore.getClientById(HOST_ID);
 		assertThat(client.getRxGroups())
-			.extracting(Group::getName)
+			.extracting(Group::getId)
 			.containsOnly(RX_GROUP);
 
 		assertThat(client.getTxGroups())
-			.extracting(Group::getName)
+			.extracting(Group::getId)
 			.containsOnly(TX_GROUP_1, TX_GROUP_2);
 	}
 
 	@Test
 	public void initialGroupsAreUnlinkedOnDeProvisioning() {
 		associateClient();
-		Client client = mixingCore.getClientByName(HOST_ID);
+		Client client = mixingCore.getClientById(HOST_ID);
 
 		deAssociateClient();
 
 		assertThat(client.getTxGroups()).isEmpty();
 		assertThat(client.getRxGroups()).isEmpty();
-		assertThat(mixingCore.getClientByName(HOST_ID)).isNull();
+		assertThat(mixingCore.getClientById(HOST_ID)).isNull();
 	}
 }

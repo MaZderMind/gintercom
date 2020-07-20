@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Group {
-	private final String name;
+	private final String id;
 
 	private final Pipeline pipeline;
 	private final Bin bin;
@@ -31,18 +31,18 @@ public class Group {
 	private final Set<Client> inClients = new HashSet<>();
 	private final Set<Client> outClients = new HashSet<>();
 
-	Group(Pipeline pipeline, String name) {
-		log.info("Creating Group {}", name);
+	Group(Pipeline pipeline, String id) {
+		log.info("Creating Group {}", id);
 
-		this.name = name;
+		this.id = id;
 		this.pipeline = pipeline;
 
-		String teeName = String.format("group-%s-out", name);
-		String mixerName = String.format("group-%s-in", name);
+		String teeName = String.format("group-%s-out", id);
+		String mixerName = String.format("group-%s-in", id);
 
 		// @formatter:off
-		bin = GstBuilder.buildBin(String.format("group-%s", name))
-				.addElement("audiotestsrc", String.format("group-%s-silencesrc", name))
+		bin = GstBuilder.buildBin(String.format("group-%s", id))
+				.addElement("audiotestsrc", String.format("group-%s-silencesrc", id))
 					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
 					.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
@@ -61,33 +61,33 @@ public class Group {
 		expectSuccess(pipeline.add(bin));
 		expectSuccess(bin.syncStateWithParent());
 
-		debugPipeline(String.format("after-add-group-%s", name), pipeline);
-		log.debug("Created Group {}", name);
+		debugPipeline(String.format("after-add-group-%s", id), pipeline);
+		log.debug("Created Group {}", id);
 	}
 
-	public String getName() {
-		return name;
+	public String getId() {
+		return id;
 	}
 
 	void remove() {
-		log.info("Removing Group {}", name);
-		debugPipeline(String.format("before-remove-group-%s", name), pipeline);
+		log.info("Removing Group {}", id);
+		debugPipeline(String.format("before-remove-group-%s", id), pipeline);
 
 		log.debug("Asking In-Clients to stop Transmitting");
 		inClients.forEach(client -> client.stopTransmittingTo(this));
 		inClients.clear();
-		debugPipeline(String.format("after-stop-transmitting-%s", name), pipeline);
+		debugPipeline(String.format("after-stop-transmitting-%s", id), pipeline);
 
 		log.debug("Asking Out-Clients to stop Receiving");
 		outClients.forEach(client -> client.stopReceivingFrom(this));
 		outClients.clear();
-		debugPipeline(String.format("after-stop-receiving-%s", name), pipeline);
+		debugPipeline(String.format("after-stop-receiving-%s", id), pipeline);
 
 		expectSuccess(bin.stop());
 		expectSuccess(pipeline.remove(bin));
 
-		debugPipeline(String.format("after-remove-group-%s", name), pipeline);
-		log.debug("Removed Group {}", name);
+		debugPipeline(String.format("after-remove-group-%s", id), pipeline);
+		log.debug("Removed Group {}", id);
 	}
 
 	Pad requestSrcPadAndLinkFor(GhostPad sinkPad, Client client) {
