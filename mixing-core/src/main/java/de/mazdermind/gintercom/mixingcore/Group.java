@@ -28,8 +28,8 @@ public class Group {
 	private final Element tee;
 	private final Element mixer;
 
-	private final Set<Panel> inPanels = new HashSet<>();
-	private final Set<Panel> outPanels = new HashSet<>();
+	private final Set<Client> inClients = new HashSet<>();
+	private final Set<Client> outClients = new HashSet<>();
 
 	Group(Pipeline pipeline, String name) {
 		log.info("Creating Group {}", name);
@@ -73,14 +73,14 @@ public class Group {
 		log.info("Removing Group {}", name);
 		debugPipeline(String.format("before-remove-group-%s", name), pipeline);
 
-		log.debug("Asking In-Panels to stop Transmitting");
-		inPanels.forEach(panel -> panel.stopTransmittingTo(this));
-		inPanels.clear();
+		log.debug("Asking In-Clients to stop Transmitting");
+		inClients.forEach(client -> client.stopTransmittingTo(this));
+		inClients.clear();
 		debugPipeline(String.format("after-stop-transmitting-%s", name), pipeline);
 
-		log.debug("Asking Out-Panels to stop Receiving");
-		outPanels.forEach(panel -> panel.stopReceivingFrom(this));
-		outPanels.clear();
+		log.debug("Asking Out-Clients to stop Receiving");
+		outClients.forEach(client -> client.stopReceivingFrom(this));
+		outClients.clear();
 		debugPipeline(String.format("after-stop-receiving-%s", name), pipeline);
 
 		expectSuccess(bin.stop());
@@ -90,8 +90,8 @@ public class Group {
 		log.debug("Removed Group {}", name);
 	}
 
-	Pad requestSrcPadAndLinkFor(GhostPad sinkPad, Panel panel) {
-		outPanels.add(panel);
+	Pad requestSrcPadAndLinkFor(GhostPad sinkPad, Client client) {
+		outClients.add(client);
 
 		Pad teePad = tee.getRequestPad("src_%u");
 		return GstPadBlock.blockAndWait(teePad, () -> {
@@ -102,8 +102,8 @@ public class Group {
 		});
 	}
 
-	void releaseSrcPadFor(GhostPad pad, Panel panel) {
-		outPanels.remove(panel);
+	void releaseSrcPadFor(GhostPad pad, Client client) {
+		outClients.remove(client);
 
 		Pad teePad = pad.getTarget();
 		GstPadBlock.blockAndWait(teePad, () -> {
@@ -112,8 +112,8 @@ public class Group {
 		});
 	}
 
-	GhostPad requestSinkPadFor(Panel panel) {
-		inPanels.add(panel);
+	GhostPad requestSinkPadFor(Client client) {
+		inClients.add(client);
 
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
 		GhostPad ghostPad = new GhostPad(mixerPad.getName() + "_ghost", mixerPad);
@@ -121,8 +121,8 @@ public class Group {
 		return ghostPad;
 	}
 
-	void releaseSinkPadFor(GhostPad pad, Panel panel) {
-		inPanels.remove(panel);
+	void releaseSinkPadFor(GhostPad pad, Client client) {
+		inClients.remove(client);
 
 		Pad mixerPad = pad.getTarget();
 		GstPadBlock.blockAndWait(mixerPad, () -> {

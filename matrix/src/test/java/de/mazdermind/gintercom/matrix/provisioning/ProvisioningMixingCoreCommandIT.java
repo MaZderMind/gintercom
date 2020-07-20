@@ -11,9 +11,9 @@ import com.google.common.collect.ImmutableSet;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
+import de.mazdermind.gintercom.mixingcore.Client;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
-import de.mazdermind.gintercom.mixingcore.Panel;
 
 public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	private static final String PANEL_ID = "THE_PANEL_ID";
@@ -46,12 +46,12 @@ public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	public void initialGroupsAreLinkedOnProvisioning() {
 		associateClient();
 
-		Panel panel = mixingCore.getPanelByName(HOST_ID);
-		assertThat(panel.getRxGroups())
+		Client client = mixingCore.getClientByName(HOST_ID);
+		assertThat(client.getRxGroups())
 			.extracting(Group::getName)
 			.containsOnly(RX_GROUP);
 
-		assertThat(panel.getTxGroups())
+		assertThat(client.getTxGroups())
 			.extracting(Group::getName)
 			.containsOnly(TX_GROUP_1, TX_GROUP_2);
 	}
@@ -59,12 +59,12 @@ public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	@Test
 	public void initialGroupsAreUnlinkedOnDeProvisioning() {
 		associateClient();
-		Panel panel = mixingCore.getPanelByName(HOST_ID);
+		Client client = mixingCore.getClientByName(HOST_ID);
 
 		deAssociateClient();
 
-		assertThat(panel.getTxGroups()).isEmpty();
-		assertThat(panel.getRxGroups()).isEmpty();
-		assertThat(mixingCore.getPanelByName(HOST_ID)).isNull();
+		assertThat(client.getTxGroups()).isEmpty();
+		assertThat(client.getRxGroups()).isEmpty();
+		assertThat(mixingCore.getClientByName(HOST_ID)).isNull();
 	}
 }

@@ -12,7 +12,7 @@ import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 import de.mazdermind.gintercom.matrix.events.PanelGroupsChangedEvent;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
-import de.mazdermind.gintercom.mixingcore.Panel;
+import de.mazdermind.gintercom.mixingcore.Client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,28 +25,28 @@ public class PanelGroupController {
 	@EventListener
 	public void handlePanelConfigurationChangedEvent(PanelGroupsChangedEvent panelGroupsChangedEvent) {
 		ClientAssociation association = panelGroupsChangedEvent.getAssociation();
-		Panel panel = mixingCore.getPanelByName(association.getHostId());
+		Client client = mixingCore.getClientByName(association.getHostId());
 
 		Set<String> desiredRxGroups = panelGroupsChangedEvent.getRxGroups();
 		Set<String> desiredTxGroups = panelGroupsChangedEvent.getTxGroups();
-		reconcileGroups(panel, desiredRxGroups, desiredTxGroups);
+		reconcileGroups(client, desiredRxGroups, desiredTxGroups);
 	}
 
 	@VisibleForTesting
-	void reconcileGroups(Panel panel, Set<String> desiredRxGroups, Set<String> desiredTxGroups) {
-		log.debug("Reconciling rx-groups for {}", panel.getName());
-		calculateGroupsToRemove(panel.getRxGroups(), desiredRxGroups)
-			.forEach(panel::stopReceivingFrom);
+	void reconcileGroups(Client client, Set<String> desiredRxGroups, Set<String> desiredTxGroups) {
+		log.debug("Reconciling rx-groups for {}", client.getName());
+		calculateGroupsToRemove(client.getRxGroups(), desiredRxGroups)
+			.forEach(client::stopReceivingFrom);
 
-		calculateGroupsToAdd(panel.getRxGroups(), desiredRxGroups)
-			.forEach(panel::startReceivingFrom);
+		calculateGroupsToAdd(client.getRxGroups(), desiredRxGroups)
+			.forEach(client::startReceivingFrom);
 
-		log.debug("Reconciling tx-groups for {}", panel.getName());
-		calculateGroupsToRemove(panel.getTxGroups(), desiredTxGroups)
-			.forEach(panel::stopTransmittingTo);
+		log.debug("Reconciling tx-groups for {}", client.getName());
+		calculateGroupsToRemove(client.getTxGroups(), desiredTxGroups)
+			.forEach(client::stopTransmittingTo);
 
-		calculateGroupsToAdd(panel.getTxGroups(), desiredTxGroups)
-			.forEach(panel::startTransmittingTo);
+		calculateGroupsToAdd(client.getTxGroups(), desiredTxGroups)
+			.forEach(client::startTransmittingTo);
 	}
 
 	@VisibleForTesting

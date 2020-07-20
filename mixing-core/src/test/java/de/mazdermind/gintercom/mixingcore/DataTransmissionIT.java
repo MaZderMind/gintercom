@@ -10,83 +10,83 @@ import de.mazdermind.gintercom.mixingcore.tools.MixingCoreTestManager;
 import de.mazdermind.gintercom.mixingcore.tools.rtp.RtpTestClient;
 
 public class DataTransmissionIT extends IntegrationTestBase {
-	private static final String PANEL_ID = "data";
+	private static final String CLIENT_ID = "data";
 
-	private RtpTestClient client;
+	private RtpTestClient rtpTestClient;
 	private PortSet ports;
-	private Panel panel;
+	private Client client;
 	private MixingCore mixingCore;
 
 	@Before
-	public void setupPanel() {
+	public void setupClient() {
 		ports = testManager.getPortSetPool().getNextPortSet();
 		mixingCore = testManager.getMixingCore();
-		client = new RtpTestClient(ports, PANEL_ID);
+		rtpTestClient = new RtpTestClient(ports, CLIENT_ID);
 	}
 
 	@After
-	public void cleanupPanelAndClient() {
-		if (client != null) {
-			client.stop();
+	public void cleanupClient() {
+		if (rtpTestClient != null) {
+			rtpTestClient.stop();
 		}
 
-		if (panel != null) {
-			mixingCore.removePanel(panel);
+		if (client != null) {
+			mixingCore.removeClient(client);
 		}
 	}
 
 	@Test
 	public void doesNotReceiveDataInitially() {
-		client.start();
-		client.getAudioAnalyser().awaitNoData();
+		rtpTestClient.start();
+		rtpTestClient.getAudioAnalyser().awaitNoData();
 	}
 
 	@Test
-	public void receivesDataAfterPanelAdded() {
-		client.getAudioAnalyser().awaitNoData();
+	public void receivesDataAfterClientAdded() {
+		rtpTestClient.getAudioAnalyser().awaitNoData();
 
-		panel = testManager.getMixingCore().addPanel(
-			PANEL_ID, MixingCoreTestManager.MATRIX_HOST,
-			ports.getPanelToMatrix(), ports.getMatrixToPanel());
+		client = testManager.getMixingCore().addClient(
+			CLIENT_ID, MixingCoreTestManager.MATRIX_HOST,
+			ports.getClientToMatrix(), ports.getMatrixToClient());
 
-		client.getAudioAnalyser().awaitData();
+		rtpTestClient.getAudioAnalyser().awaitData();
 	}
 
 	@Test
-	public void doesNotReceiveDataAfterPanelRemoved() {
-		client.getAudioAnalyser().awaitNoData();
+	public void doesNotReceiveDataAfterClientRemoved() {
+		rtpTestClient.getAudioAnalyser().awaitNoData();
 
-		panel = testManager.getMixingCore().addPanel(
-			PANEL_ID, MixingCoreTestManager.MATRIX_HOST,
-			ports.getPanelToMatrix(), ports.getMatrixToPanel());
+		client = testManager.getMixingCore().addClient(
+			CLIENT_ID, MixingCoreTestManager.MATRIX_HOST,
+			ports.getClientToMatrix(), ports.getMatrixToClient());
 
-		client.getAudioAnalyser().awaitData();
+		rtpTestClient.getAudioAnalyser().awaitData();
 
-		mixingCore.removePanel(panel);
-		panel = null;
+		mixingCore.removeClient(client);
+		client = null;
 
-		client.getAudioAnalyser().awaitNoData();
+		rtpTestClient.getAudioAnalyser().awaitNoData();
 	}
 
 	@Test
 	public void receivesAudioDataAfterAddedAgain() {
-		client.getAudioAnalyser().awaitNoData();
+		rtpTestClient.getAudioAnalyser().awaitNoData();
 
-		panel = testManager.getMixingCore().addPanel(
-			PANEL_ID, MixingCoreTestManager.MATRIX_HOST,
-			ports.getPanelToMatrix(), ports.getMatrixToPanel());
+		client = testManager.getMixingCore().addClient(
+			CLIENT_ID, MixingCoreTestManager.MATRIX_HOST,
+			ports.getClientToMatrix(), ports.getMatrixToClient());
 
-		client.getAudioAnalyser().awaitData();
+		rtpTestClient.getAudioAnalyser().awaitData();
 
-		mixingCore.removePanel(panel);
-		panel = null;
+		mixingCore.removeClient(client);
+		client = null;
 
-		client.getAudioAnalyser().awaitNoData();
+		rtpTestClient.getAudioAnalyser().awaitNoData();
 
-		panel = testManager.getMixingCore().addPanel(
-			PANEL_ID, MixingCoreTestManager.MATRIX_HOST,
-			ports.getPanelToMatrix(), ports.getMatrixToPanel());
+		client = testManager.getMixingCore().addClient(
+			CLIENT_ID, MixingCoreTestManager.MATRIX_HOST,
+			ports.getClientToMatrix(), ports.getMatrixToClient());
 
-		client.getAudioAnalyser().awaitData();
+		rtpTestClient.getAudioAnalyser().awaitData();
 	}
 }

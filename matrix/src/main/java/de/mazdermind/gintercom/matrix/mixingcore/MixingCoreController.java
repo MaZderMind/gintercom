@@ -9,7 +9,7 @@ import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
-import de.mazdermind.gintercom.mixingcore.Panel;
+import de.mazdermind.gintercom.mixingcore.Client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,7 +24,7 @@ public class MixingCoreController {
 		ClientAssociation association = clientAssociatedEvent.getAssociation();
 
 		log.debug("Adding Client {}", association.getHostId());
-		mixingCore.addPanel(
+		mixingCore.addClient(
 			association.getHostId(),
 			association.getSocketAddress().getAddress(),
 			association.getRtpPorts().getPanelToMatrix(),
@@ -37,8 +37,8 @@ public class MixingCoreController {
 		ClientAssociation association = clientDeAssociatedEvent.getAssociation();
 
 		log.debug("Removing Panel {}", association.getHostId());
-		Panel panel = mixingCore.getPanelByName(association.getHostId());
-		mixingCore.removePanel(panel);
+		Client client = mixingCore.getClientByName(association.getHostId());
+		mixingCore.removeClient(client);
 	}
 
 	@PreDestroy

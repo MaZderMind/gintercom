@@ -24,7 +24,7 @@ import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationEx
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Panel {
+public class Client {
 	private final String name;
 
 	private final Pipeline pipeline;
@@ -37,8 +37,8 @@ public class Panel {
 	private final Map<Group, Pad> txPads = new HashMap<>();
 	private final Map<Group, Pad> rxPads = new HashMap<>();
 
-	Panel(Pipeline pipeline, String name, InetAddress panelHost, int panelToMatrixPort, int matrixToPanelPort) {
-		log.info("Creating Panel {}", name);
+	Client(Pipeline pipeline, String name, InetAddress clientHost, int clientToMatrixPort, int matrixToClientPort) {
+		log.info("Creating Client {}", name);
 		this.name = name;
 		this.pipeline = pipeline;
 
@@ -46,11 +46,11 @@ public class Panel {
 		String mixerName = String.format("tx-%s", name);
 
 		// @formatter:off
-		rxBin = GstBuilder.buildBin(String.format("panel-%s-rx", name))
-				.addElement("udpsrc", String.format("panel-%s-udpsrc", name))
-					.withProperty("port", panelToMatrixPort)
+		rxBin = GstBuilder.buildBin(String.format("client-%s-rx", name))
+				.addElement("udpsrc", String.format("client-%s-udpsrc", name))
+					.withProperty("port", clientToMatrixPort)
 				.withCaps(GstStaticCaps.RTP)
-				.linkElement("rtpjitterbuffer", String.format("panel-%s-jitterbuffer", name))
+				.linkElement("rtpjitterbuffer", String.format("client-%s-jitterbuffer", name))
 					.withProperty("latency", GstConstants.LATENCY_MS)
 					.withProperty("drop-on-latency", true)
 				.linkElement("rtpL16depay")
@@ -63,8 +63,8 @@ public class Panel {
 		// @formatter:on
 
 		// @formatter:off
-		txBin = GstBuilder.buildBin(String.format("panel-%s-tx", name))
-				.addElement("audiotestsrc", String.format("panel-%s-silencesrc", name))
+		txBin = GstBuilder.buildBin(String.format("client-%s-tx", name))
+				.addElement("audiotestsrc", String.format("client-%s-silencesrc", name))
 					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
 					.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
@@ -77,8 +77,8 @@ public class Panel {
 				.linkElement("rtpL16pay")
 					.withProperty("mtu", GstConstants.MTU)
 				.linkElement("udpsink")
-					.withProperty("host", panelHost.getHostAddress())
-					.withProperty("port", matrixToPanelPort)
+					.withProperty("host", clientHost.getHostAddress())
+					.withProperty("port", matrixToClientPort)
 					.withProperty("async", false)
 					.withProperty("sync", false)
 
@@ -94,8 +94,8 @@ public class Panel {
 		expectSuccess(pipeline.add(txBin));
 		expectSuccess(txBin.syncStateWithParent());
 
-		debugPipeline(String.format("after-add-panel-%s", name), pipeline);
-		log.debug("Created Panel {}", name);
+		debugPipeline(String.format("after-add-client-%s", name), pipeline);
+		log.debug("Created Client {}", name);
 	}
 
 	public String getName() {
@@ -136,8 +136,8 @@ public class Panel {
 	}
 
 	void remove() {
-		log.info("Removing Panel {}", name);
-		debugPipeline(String.format("before-remove-panel-%s", name), pipeline);
+		log.info("Removing Client {}", name);
+		debugPipeline(String.format("before-remove-client-%s", name), pipeline);
 
 		log.debug("Releasing Tx-Pads");
 		txPads.forEach((group, pad) -> {
@@ -145,7 +145,7 @@ public class Panel {
 			group.releaseSinkPadFor((GhostPad) pad, this);
 		});
 		txPads.clear();
-		debugPipeline(String.format("after-releasing-tx-panel-%s", name), pipeline);
+		debugPipeline(String.format("after-releasing-tx-client-%s", name), pipeline);
 
 		log.debug("Releasing Rx-Pads");
 		rxPads.forEach((group, pad) -> {
@@ -154,71 +154,71 @@ public class Panel {
 			releaseSinkPad((GhostPad) peer);
 		});
 		rxPads.clear();
-		debugPipeline(String.format("after-releasing-rx-panel-%s", name), pipeline);
+		debugPipeline(String.format("after-releasing-rx-client-%s", name), pipeline);
 
 		log.debug("De-Configuring Bins");
 		expectSuccess(rxBin.stop());
 		expectSuccess(pipeline.remove(rxBin));
 		expectSuccess(txBin.stop());
 		expectSuccess(pipeline.remove(txBin));
-		debugPipeline(String.format("after-remove-panel-%s", name), pipeline);
+		debugPipeline(String.format("after-remove-client-%s", name), pipeline);
 
-		log.debug("Removed Panel {}", name);
+		log.debug("Removed Client {}", name);
 	}
 
 	public void startTransmittingTo(Group group) {
-		log.info("Linking Panel {} to Group {} for transmission", name, group.getName());
+		log.info("Linking Client {} to Group {} for transmission", name, group.getName());
 
 		Pad sinkPad = group.requestSinkPadFor(this);
 		requestSrcPadAndLink(sinkPad);
 		txPads.put(group, sinkPad);
 
-		debugPipeline(String.format("after-link-panel-%s-to-group-%s", name, group.getName()), pipeline);
-		log.debug("Linked Panel {} to Group {} for transmission", name, group.getName());
+		debugPipeline(String.format("after-link-client-%s-to-group-%s", name, group.getName()), pipeline);
+		log.debug("Linked Client {} to Group {} for transmission", name, group.getName());
 	}
 
 	public void stopTransmittingTo(Group group) {
-		log.info("Unlinking Panel {} from Group {} for transmission", name, group.getName());
+		log.info("Unlinking Client {} from Group {} for transmission", name, group.getName());
 
 		Pad pad = txPads.remove(group);
 		if (pad == null) {
 			throw new InvalidMixingCoreOperationException(String.format(
-				"Panel %s not linked to Group %s for transmission", name, group.getName()));
+				"Client %s not linked to Group %s for transmission", name, group.getName()));
 		}
 
 		releaseSrcPad((GhostPad) pad.getPeer());
 		group.releaseSinkPadFor((GhostPad) pad, this);
 
-		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
-		log.debug("Unlinked Panel {} from Group {} for transmission", name, group.getName());
+		debugPipeline(String.format("after-unlink-client-%s-from-group-%s", name, group.getName()), pipeline);
+		log.debug("Unlinked Client {} from Group {} for transmission", name, group.getName());
 	}
 
 	public void startReceivingFrom(Group group) {
-		log.info("Linking Panel {} to Group {} for receiving", name, group.getName());
+		log.info("Linking Client {} to Group {} for receiving", name, group.getName());
 
 		GhostPad sinkPad = requestSinkPad();
 		Pad srcPad = group.requestSrcPadAndLinkFor(sinkPad, this);
 		rxPads.put(group, srcPad);
 
-		debugPipeline(String.format("after-link-group-%s-to-panel-%s", group.getName(), name), pipeline);
-		log.debug("Linked Panel {} to Group {} for receiving", name, group.getName());
+		debugPipeline(String.format("after-link-group-%s-to-client-%s", group.getName(), name), pipeline);
+		log.debug("Linked Client {} to Group {} for receiving", name, group.getName());
 	}
 
 	public void stopReceivingFrom(Group group) {
-		log.info("Unlinking Panel {} from Group {} for receiving", name, group.getName());
+		log.info("Unlinking Client {} from Group {} for receiving", name, group.getName());
 
 		Pad pad = rxPads.remove(group);
 		if (pad == null) {
 			throw new InvalidMixingCoreOperationException(String.format(
-				"Panel %s not linked from Group %s for receiving", name, group.getName()));
+				"Client %s not linked from Group %s for receiving", name, group.getName()));
 		}
 
 		Pad peer = pad.getPeer();
 		group.releaseSrcPadFor((GhostPad) pad, this);
 		releaseSinkPad((GhostPad) peer);
 
-		debugPipeline(String.format("after-unlink-panel-%s-from-group-%s", name, group.getName()), pipeline);
-		log.debug("Unlinked Panel {} from Group {} for receiving", name, group.getName());
+		debugPipeline(String.format("after-unlink-client-%s-from-group-%s", name, group.getName()), pipeline);
+		log.debug("Unlinked Client {} from Group {} for receiving", name, group.getName());
 	}
 
 	public Set<Group> getRxGroups() {

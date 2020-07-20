@@ -1,18 +1,18 @@
 package de.mazdermind.gintercom.mixingcore.portpool;
 
 public class PortSetPool {
-	private final PortPool matrixToPanelPool;
-	private final PortPool panelToMatrixPool;
+	private final PortPool matrixToClientPool;
+	private final PortPool clientToMatrixPool;
 
-	public PortSetPool(PortPoolConfig matrixToPanel, PortPoolConfig panelToMatrix) {
-		matrixToPanelPool = new PortPool(matrixToPanel);
-		panelToMatrixPool = new PortPool(panelToMatrix);
+	public PortSetPool(PortPoolConfig matrixToClient, PortPoolConfig clientToMatrix) {
+		matrixToClientPool = new PortPool(matrixToClient);
+		clientToMatrixPool = new PortPool(clientToMatrix);
 	}
 
 	public synchronized PortSet getNextPortSet() {
 		return new PortSet(
-				matrixToPanelPool.getNextPort(),
-				panelToMatrixPool.getNextPort()
+				matrixToClientPool.getNextPort(),
+				clientToMatrixPool.getNextPort()
 		);
 	}
 }

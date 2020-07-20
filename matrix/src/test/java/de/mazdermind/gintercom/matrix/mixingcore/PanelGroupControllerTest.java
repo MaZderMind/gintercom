@@ -14,9 +14,9 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableSet;
 
+import de.mazdermind.gintercom.mixingcore.Client;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
-import de.mazdermind.gintercom.mixingcore.Panel;
 
 public class PanelGroupControllerTest {
 
@@ -96,8 +96,8 @@ public class PanelGroupControllerTest {
 
 	@Test
 	public void reconcileGroups() {
-		Panel panel = mock(Panel.class);
-		when(panel.getName()).thenReturn("The Panel");
+		Client client = mock(Client.class);
+		when(client.getName()).thenReturn("The Panel");
 
 		Group groupA = mockGroup("A");
 		Group groupB = mockGroup("B");
@@ -109,25 +109,25 @@ public class PanelGroupControllerTest {
 		when(mixingCore.getGroupByName("C")).thenReturn(groupC);
 		when(mixingCore.getGroupByName("X")).thenReturn(groupX);
 
-		when(panel.getRxGroups()).thenReturn(ImmutableSet.of(
+		when(client.getRxGroups()).thenReturn(ImmutableSet.of(
 			groupA,
 			groupB
 		));
 
-		when(panel.getTxGroups()).thenReturn(ImmutableSet.of(
+		when(client.getTxGroups()).thenReturn(ImmutableSet.of(
 			groupY,
 			groupZ
 		));
 
-		panelGroupController.reconcileGroups(panel,
+		panelGroupController.reconcileGroups(client,
 			ImmutableSet.of("A", "C"),
 			ImmutableSet.of("Z", "X"));
 
-		verify(panel).startReceivingFrom(groupC);
-		verify(panel).stopReceivingFrom(groupB);
+		verify(client).startReceivingFrom(groupC);
+		verify(client).stopReceivingFrom(groupB);
 
-		verify(panel).startTransmittingTo(groupX);
-		verify(panel).stopTransmittingTo(groupY);
+		verify(client).startTransmittingTo(groupX);
+		verify(client).stopTransmittingTo(groupY);
 	}
 
 	private Group mockGroup(String name) {

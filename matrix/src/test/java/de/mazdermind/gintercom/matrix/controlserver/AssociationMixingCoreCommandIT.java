@@ -16,7 +16,7 @@ public class AssociationMixingCoreCommandIT extends ControlServerTestBase {
 	public void clientIsCreatedOnAssociation() {
 		associateClient();
 
-		assertThat(mixingCore.getPanelNames()).containsOnly(HOST_ID);
+		assertThat(mixingCore.getClientNames()).containsOnly(HOST_ID);
 	}
 
 	@Test
@@ -24,6 +24,6 @@ public class AssociationMixingCoreCommandIT extends ControlServerTestBase {
 		associateClient();
 		deAssociateClient();
 
-		assertThat(mixingCore.getPanelNames()).isEmpty();
+		assertThat(mixingCore.getClientNames()).isEmpty();
 	}
 }
