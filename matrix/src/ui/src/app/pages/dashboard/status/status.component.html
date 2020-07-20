@@ -3,23 +3,23 @@
     <div class="card mb-3">
       <div class="card-body">
         <h4>
-          <a routerLink="/devices">
-            <strong>{{ statistics.devicesOnline }}</strong>
-            {{ statistics.devicesOnline == 1 ? 'Device' : 'Devices' }} online
+          <a routerLink="/clients">
+            <strong>{{ statistics.clientsOnline }}</strong>
+            {{ statistics.clientsOnline == 1 ? 'Client' : 'Clients' }} online
           </a>
         </h4>
         <h5>
           <a
-            [routerLink]="['/devices', {filter: 'unprovisioned'}]"
+            [routerLink]="['/clients', {filter: 'unprovisioned'}]"
             class="text-warning"
-            *ngIf="statistics.devicesUnprovisioned > 0"
+            *ngIf="statistics.clientsUnprovisioned > 0"
           >
-            <strong>{{ statistics.devicesUnprovisioned }}</strong> not provisioned
+            <strong>{{ statistics.clientsUnprovisioned }}</strong> not provisioned
           </a>
           <a
-            routerLink="/devices"
+            routerLink="/clients"
             class="text-success"
-            *ngIf="statistics.devicesUnprovisioned == 0"
+            *ngIf="statistics.clientsUnprovisioned == 0"
           >
             <strong>all</strong> provisioned
           </a>

@@ -45,7 +45,7 @@ export class PanelsListComponent implements OnInit, OnDestroy {
     this.uiUpdateSubscription.unsubscribe();
   }
 
-  assignDevice() {
+  assignClient() {
   }
 
   addPanel() {

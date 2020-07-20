@@ -1,0 +1,55 @@
+<div class="d-flex">
+  <h2>{{ filter.title }}</h2>
+
+  <a *ngIf="filter.active" class="close" ngbTooltip="Clear Filter" routerLink="/clients">&times;</a>
+</div>
+
+<table *ngIf="clients" class="table">
+  <thead>
+  <tr>
+    <th>Provisioned</th>
+    <th>Host-ID</th>
+    <th>Model</th>
+    <th>Remote Address</th>
+    <th>First Seen</th>
+    <th>Assigned Panel</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let client of clients">
+    <td>
+      <app-client-status [client]="client"></app-client-status>
+    </td>
+    <td class="text-monospace">
+      <a [routerLink]="['/clients', client.hostId]">
+        {{ client.hostId }}
+      </a>
+    </td>
+    <td>
+      {{ client.clientModel }}
+    </td>
+    <td class="text-monospace">{{ client.clientAddress }}</td>
+    <td>{{ client.firstSeen | date:'medium' }}</td>
+    <td>
+      <a *ngIf="client.provisioned" [routerLink]="['/panels', client.panelId]">{{ client.panelId }}</a>
+      <button
+        (click)="assignPanel()"
+        *ngIf="!client.provisioned"
+        class="btn btn-primary btn-sm"
+        type="button"
+      >
+        Assign Panel
+      </button>
+    </td>
+    <td>
+      <app-client-actions [client]="client"></app-client-actions>
+    </td>
+  </tr>
+  <tr *ngIf="clients.length == 0">
+    <td class="text-center font-italic" colspan="6">
+      {{ filter.active ? 'No Clients match the Filter' : 'No Clients Connected' }}
+    </td>
+  </tr>
+  </tbody>
+</table>

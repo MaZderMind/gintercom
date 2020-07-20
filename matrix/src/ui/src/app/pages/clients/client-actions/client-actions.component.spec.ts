@@ -1,22 +1,22 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {DeviceActionsComponent} from './device-actions.component';
+import {ClientActionsComponent} from 'src/app/pages/clients/client-actions/client-actions.component';
 
-describe('DeviceActionsComponent', () => {
-  let component: DeviceActionsComponent;
-  let fixture: ComponentFixture<DeviceActionsComponent>;
+describe('ionsComponent', () => {
+  let component: ClientActionsComponent;
+  let fixture: ComponentFixture<ClientActionsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DeviceActionsComponent]
+      declarations: [ClientActionsComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeviceActionsComponent);
+    fixture = TestBed.createComponent(ClientActionsComponent);
     component = fixture.componentInstance;
-    component.device = {
+    component.client = {
       hostId: '0000-0000',
       panelId: 'somePanel',
       clientAddress: '127.0.0.1',

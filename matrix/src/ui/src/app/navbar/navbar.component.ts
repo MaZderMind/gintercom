@@ -15,10 +15,10 @@ export class NavbarComponent {
       link: '/',
       exact: true
     }, {
-      title: 'Devices',
-      description: 'Connected Devices',
+      title: 'Clients',
+      description: 'Connected Clients',
       icon: 'fas fa-mobile-alt',
-      link: '/devices'
+      link: '/clients'
     }, {
       title: 'Panels',
       description: 'Intercom Panels',

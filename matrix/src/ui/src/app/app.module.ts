@@ -8,21 +8,21 @@ import {AppComponent} from './app.component';
 import {NavbarComponent} from './navbar/navbar.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {GroupsListComponent} from 'src/app/pages/groups/groups-list.component';
-import {DevicesListComponent} from 'src/app/pages/devices/devices-list.component';
+import {ClientsListComponent} from 'src/app/pages/clients/clients-list.component';
 import {PanelsListComponent} from 'src/app/pages/panels/panels-list.component';
 import {StatusComponent} from './pages/dashboard/status/status.component';
 import {HistoryComponent} from './pages/dashboard/history/history.component';
 import {LineChartModule} from '@swimlane/ngx-charts';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DeviceActionsComponent} from './pages/devices/device-actions/device-actions.component';
-import {DeviceStatusComponent} from './pages/devices/device-status/device-status.component';
+import {ClientActionsComponent} from 'src/app/pages/clients/client-actions/client-actions.component';
+import {ClientStatusComponent} from 'src/app/pages/clients/client-status/client-status.component';
 import {PanelStatusComponent} from './pages/panels/panel-status/panel-status.component';
 import {PanelActionsComponent} from './pages/panels/panel-actions/panel-actions.component';
 import {GroupActionsComponent} from './pages/groups/group-actions/group-actions.component';
 import {GroupEditComponent} from './pages/groups/group-edit/group-edit.component';
 import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component';
-import {DeviceViewComponent} from './pages/devices/device-view/device-view.component';
+import {ClientViewComponent} from 'src/app/pages/clients/client-view/client-view.component';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
 import {STOMP_CONFIG} from 'src/app/app-stomp-config';
 
@@ -32,18 +32,18 @@ import {STOMP_CONFIG} from 'src/app/app-stomp-config';
     NavbarComponent,
     DashboardComponent,
     GroupsListComponent,
-    DevicesListComponent,
+    ClientsListComponent,
     PanelsListComponent,
     StatusComponent,
     HistoryComponent,
-    DeviceActionsComponent,
-    DeviceStatusComponent,
+    ClientActionsComponent,
+    ClientStatusComponent,
     PanelStatusComponent,
     PanelActionsComponent,
     GroupActionsComponent,
     GroupEditComponent,
     PanelEditComponent,
-    DeviceViewComponent
+    ClientViewComponent
   ],
   imports: [
     BrowserModule,

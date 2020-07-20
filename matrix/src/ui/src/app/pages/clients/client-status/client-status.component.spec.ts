@@ -1,22 +1,22 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {DeviceStatusComponent} from './device-status.component';
+import {ClientStatusComponent} from 'src/app/pages/clients/client-status/client-status.component';
 
-describe('DeviceStatusComponent', () => {
-  let component: DeviceStatusComponent;
-  let fixture: ComponentFixture<DeviceStatusComponent>;
+describe('ClientStatusComponent', () => {
+  let component: ClientStatusComponent;
+  let fixture: ComponentFixture<ClientStatusComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [DeviceStatusComponent]
+      declarations: [ClientStatusComponent]
     })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeviceStatusComponent);
+    fixture = TestBed.createComponent(ClientStatusComponent);
     component = fixture.componentInstance;
-    component.device = {
+    component.client = {
       hostId: '0000-0000',
       panelId: 'somePanel',
       clientAddress: '127.0.0.1',

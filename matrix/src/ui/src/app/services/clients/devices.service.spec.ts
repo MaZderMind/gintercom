@@ -1,10 +1,10 @@
 import {TestBed} from '@angular/core/testing';
 
-import {DevicesService} from './devices.service';
+import {ClientsService} from 'src/app/services/clients/clients.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 
-describe('DevicesService', () => {
-  let service: DevicesService;
+describe('ClientsService', () => {
+  let service: ClientsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -12,7 +12,7 @@ describe('DevicesService', () => {
         HttpClientTestingModule
       ]
     });
-    service = TestBed.inject(DevicesService);
+    service = TestBed.inject(ClientsService);
   });
 
   it('should be created', () => {

@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.restapi.devices;
+package de.mazdermind.gintercom.matrix.restapi.clients;
 
 import static com.google.common.base.Predicates.not;
 
@@ -13,28 +13,28 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DevicesService {
+public class ClientsService {
 	private final AssociatedClientsManager associatedClientsManager;
 	private final Config config;
 
-	public Stream<DeviceDto> getOnlineDevices() {
+	public Stream<ClientDto> getOnlineClients() {
 		return associatedClientsManager.getAssociations().stream()
 			.map(clientAssociation ->
-				new DeviceDto(clientAssociation)
+				new ClientDto(clientAssociation)
 					.setPanelId(
 						config.findPanelIdForHostId(clientAssociation.getHostId()).orElse(null)
 					)
 			)
-			.sorted(Comparator.comparing(DeviceDto::getFirstSeen).reversed());
+			.sorted(Comparator.comparing(ClientDto::getFirstSeen).reversed());
 	}
 
-	public Stream<DeviceDto> getProvisionedDevices() {
-		return getOnlineDevices()
-			.filter(DeviceDto::isProvisioned);
+	public Stream<ClientDto> getProvisionedClients() {
+		return getOnlineClients()
+			.filter(ClientDto::isProvisioned);
 	}
 
-	public Stream<DeviceDto> getUnprovisionedDevices() {
-		return getOnlineDevices()
-			.filter(not(DeviceDto::isProvisioned));
+	public Stream<ClientDto> getUnprovisionedClients() {
+		return getOnlineClients()
+			.filter(not(ClientDto::isProvisioned));
 	}
 }

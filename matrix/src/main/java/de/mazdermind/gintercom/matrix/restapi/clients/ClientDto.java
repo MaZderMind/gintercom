@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.restapi.devices;
+package de.mazdermind.gintercom.matrix.restapi.clients;
 
 import java.net.InetSocketAddress;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
-public class DeviceDto {
+public class ClientDto {
 	private String hostId;
 	private String clientModel;
 
@@ -23,7 +23,7 @@ public class DeviceDto {
 	private InetSocketAddress clientAddress;
 	private LocalDateTime firstSeen;
 
-	public DeviceDto(ClientAssociation clientAssociation) {
+	public ClientDto(ClientAssociation clientAssociation) {
 		hostId = clientAssociation.getHostId();
 		clientAddress = clientAssociation.getSocketAddress();
 		firstSeen = clientAssociation.getFirstSeen();

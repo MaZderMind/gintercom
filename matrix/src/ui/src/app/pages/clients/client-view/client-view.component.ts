@@ -2,11 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
-  selector: 'app-device-view',
-  templateUrl: './device-view.component.html',
-  styleUrls: ['./device-view.component.scss']
+  selector: 'app-client-view',
+  templateUrl: './client-view.component.html',
+  styleUrls: ['./client-view.component.scss']
 })
-export class DeviceViewComponent implements OnInit {
+export class ClientViewComponent implements OnInit {
   selectedId: string;
 
   constructor(private route: ActivatedRoute) {

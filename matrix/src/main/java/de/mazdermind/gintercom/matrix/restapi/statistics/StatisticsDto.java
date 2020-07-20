@@ -18,7 +18,7 @@ public class StatisticsDto {
 	private long panelsOnline;
 	private long panelsOffline;
 
-	private long devicesOnline;
-	private long devicesProvisioned;
-	private long devicesUnprovisioned;
+	private long clientsOnline;
+	private long clientsProvisioned;
+	private long clientsUnprovisioned;
 }

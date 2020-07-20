@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
-import de.mazdermind.gintercom.matrix.restapi.devices.DevicesService;
+import de.mazdermind.gintercom.matrix.restapi.clients.ClientsService;
 import de.mazdermind.gintercom.matrix.restapi.groups.GroupsService;
 import de.mazdermind.gintercom.matrix.restapi.panels.PanelsService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class StatisticsService {
 	private final GroupsService groupsService;
 	private final PanelsService panelsService;
-	private final DevicesService devicesService;
+	private final ClientsService clientsService;
 
 	public StatisticsDto collectStatistics() {
 		return new StatisticsDto()
@@ -28,8 +28,8 @@ public class StatisticsService {
 			.setPanelsOnline(panelsService.getOnlinePanels().count())
 			.setPanelsOffline(panelsService.getOfflinePanels().count())
 
-			.setDevicesOnline(devicesService.getOnlineDevices().count())
-			.setDevicesProvisioned(devicesService.getProvisionedDevices().count())
-			.setDevicesUnprovisioned(devicesService.getUnprovisionedDevices().count());
+			.setClientsOnline(clientsService.getOnlineClients().count())
+			.setClientsProvisioned(clientsService.getProvisionedClients().count())
+			.setClientsUnprovisioned(clientsService.getUnprovisionedClients().count());
 	}
 }

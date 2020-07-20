@@ -1,29 +1,29 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {DevicesListComponent} from 'src/app/pages/devices/devices-list.component';
-import {DevicesService} from 'src/app/services/devices/devices.service';
+import {ClientsListComponent} from 'src/app/pages/clients/clients-list.component';
+import {ClientsService} from 'src/app/services/clients/clients.service';
 import {anyFunction, instance, mock, when} from 'ts-mockito';
 import {ActivatedRoute} from '@angular/router';
 import {of, Subscription} from 'rxjs';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
 
-describe('DevicesListComponent', () => {
-  let component: DevicesListComponent;
-  let fixture: ComponentFixture<DevicesListComponent>;
-  let devicesService: DevicesService;
+describe('ClientsListComponent', () => {
+  let component: ClientsListComponent;
+  let fixture: ComponentFixture<ClientsListComponent>;
+  let clientsService: ClientsService;
   let uiUpdateService: UiUpdateService;
 
   beforeEach(async(() => {
-    devicesService = mock(DevicesService);
-    when(devicesService.getOnlineDevices()).thenResolve([]);
+    clientsService = mock(ClientsService);
+    when(clientsService.getOnlineClients()).thenResolve([]);
 
     uiUpdateService = mock(UiUpdateService);
     when(uiUpdateService.subscribe(anyFunction())).thenReturn(new Subscription());
 
     TestBed.configureTestingModule({
-      declarations: [DevicesListComponent],
+      declarations: [ClientsListComponent],
       providers: [
-        {provide: DevicesService, useFactory: () => instance(devicesService)},
+        {provide: ClientsService, useFactory: () => instance(clientsService)},
         {provide: UiUpdateService, useFactory: () => instance(uiUpdateService)},
         {
           provide: ActivatedRoute, useValue: {
@@ -36,7 +36,7 @@ describe('DevicesListComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DevicesListComponent);
+    fixture = TestBed.createComponent(ClientsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

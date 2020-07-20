@@ -1,4 +1,4 @@
-export interface DeviceDto {
+export interface ClientDto {
   hostId: string;
   panelId: string;
   clientAddress: string;

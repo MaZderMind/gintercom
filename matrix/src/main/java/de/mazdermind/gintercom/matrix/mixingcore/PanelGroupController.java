@@ -34,14 +34,14 @@ public class PanelGroupController {
 
 	@VisibleForTesting
 	void reconcileGroups(Client client, Set<String> desiredRxGroups, Set<String> desiredTxGroups) {
-		log.debug("Reconciling rx-groups for {}", client.getName());
+		log.debug("Reconciling rxGroups for Host-ID {}", client.getName());
 		calculateGroupsToRemove(client.getRxGroups(), desiredRxGroups)
 			.forEach(client::stopReceivingFrom);
 
 		calculateGroupsToAdd(client.getRxGroups(), desiredRxGroups)
 			.forEach(client::startReceivingFrom);
 
-		log.debug("Reconciling tx-groups for {}", client.getName());
+		log.debug("Reconciling txGroups for Host-ID {}", client.getName());
 		calculateGroupsToRemove(client.getTxGroups(), desiredTxGroups)
 			.forEach(client::stopTransmittingTo);
 

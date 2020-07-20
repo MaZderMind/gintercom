@@ -1,15 +1,15 @@
-package de.mazdermind.gintercom.matrix.restapi.devices;
+package de.mazdermind.gintercom.matrix.restapi.clients;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
-public class DeviceDtoTest {
+public class ClientDtoTest {
 	private static final String PANEL_ID = "THE_PANEL_ID";
 
 	@Test
 	public void provisionedState() {
-		DeviceDto dto = new DeviceDto();
+		ClientDto dto = new ClientDto();
 		assertThat(dto.getPanelId()).isNull();
 		assertThat(dto.isProvisioned()).isFalse();
 

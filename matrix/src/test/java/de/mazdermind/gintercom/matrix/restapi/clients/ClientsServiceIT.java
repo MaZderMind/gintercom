@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.restapi.devices;
+package de.mazdermind.gintercom.matrix.restapi.clients;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,14 +13,14 @@ import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 
-public class DevicesServiceIT extends IntegrationTestBase {
+public class ClientsServiceIT extends IntegrationTestBase {
 	private static final InetSocketAddress SOCKET_ADDRESS = new InetSocketAddress("10.0.0.1", 32541);
 	private static final String HOST_ID = "THE_HOST_ID";
 	private static final String PANEL_ID = "THE_PANEL_ID";
 	private static final String CLIENT_MODEL = "THE_CLIENT_MODEL";
 
 	@Autowired
-	private DevicesService devicesService;
+	private ClientsService clientsService;
 
 	@Autowired
 	private AssociatedClientsManager associatedClientsManager;
@@ -35,34 +35,34 @@ public class DevicesServiceIT extends IntegrationTestBase {
 	}
 
 	@Test
-	public void noDevicesOnline() {
-		assertThat(devicesService.getOnlineDevices()).isEmpty();
-		assertThat(devicesService.getProvisionedDevices()).isEmpty();
-		assertThat(devicesService.getUnprovisionedDevices()).isEmpty();
+	public void noClientsOnline() {
+		assertThat(clientsService.getOnlineClients()).isEmpty();
+		assertThat(clientsService.getProvisionedClients()).isEmpty();
+		assertThat(clientsService.getUnprovisionedClients()).isEmpty();
 	}
 
 	@Test
-	public void unprovisionedDeviceOnline() {
+	public void unprovisionedClientOnline() {
 		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
 
-		assertThat(devicesService.getOnlineDevices()).hasSize(1)
-			.flatExtracting(DeviceDto::getHostId, DeviceDto::getClientModel)
+		assertThat(clientsService.getOnlineClients()).hasSize(1)
+			.flatExtracting(ClientDto::getHostId, ClientDto::getClientModel)
 			.contains(HOST_ID, CLIENT_MODEL);
 
-		assertThat(devicesService.getProvisionedDevices()).isEmpty();
-		assertThat(devicesService.getUnprovisionedDevices()).hasSize(1);
+		assertThat(clientsService.getProvisionedClients()).isEmpty();
+		assertThat(clientsService.getUnprovisionedClients()).hasSize(1);
 	}
 
 	@Test
-	public void provisionedDeviceOnline() {
+	public void provisionedClientOnline() {
 		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setHostId(HOST_ID));
 		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
 
-		assertThat(devicesService.getOnlineDevices()).hasSize(1)
-			.flatExtracting(DeviceDto::getHostId, DeviceDto::getClientModel)
+		assertThat(clientsService.getOnlineClients()).hasSize(1)
+			.flatExtracting(ClientDto::getHostId, ClientDto::getClientModel)
 			.contains(HOST_ID, CLIENT_MODEL);
 
-		assertThat(devicesService.getProvisionedDevices()).hasSize(1);
-		assertThat(devicesService.getUnprovisionedDevices()).isEmpty();
+		assertThat(clientsService.getProvisionedClients()).hasSize(1);
+		assertThat(clientsService.getUnprovisionedClients()).isEmpty();
 	}
 }

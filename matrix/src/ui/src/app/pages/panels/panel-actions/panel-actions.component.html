@@ -4,8 +4,8 @@
   </button>
   <div class="dropdown-menu" ngbDropdownMenu>
     <a type="button" class="dropdown-item" [routerLink]="['/panels', panel.id]" ngbDropdownItem>Edit</a>
-    <button *ngIf="panel.assigned" type="button" class="dropdown-item" (click)="unassignDevice()" ngbDropdownItem>Unassign Device</button>
-    <button *ngIf="!panel.assigned" type="button" class="dropdown-item" (click)="assignDevice()" ngbDropdownItem>Assign Device</button>
+    <button *ngIf="panel.assigned" type="button" class="dropdown-item" (click)="unassignClient()" ngbDropdownItem>Unassign Client</button>
+    <button *ngIf="!panel.assigned" type="button" class="dropdown-item" (click)="assignClient()" ngbDropdownItem>Assign Client</button>
     <button class="dropdown-item" type="button" ngbDropdownItem (click)="deletePanel()">
       Delete <i class="fa fa-exclamation-triangle text-danger"></i>
     </button>

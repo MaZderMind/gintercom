@@ -24,9 +24,9 @@ describe('StatusComponent', () => {
       panelsOnline: 0,
       panelsOffline: 0,
 
-      devicesOnline: 0,
-      devicesProvisioned: 0,
-      devicesUnprovisioned: 0,
+      clientsOnline: 0,
+      clientsProvisioned: 0,
+      clientsUnprovisioned: 0,
     });
 
     uiUpdateService = mock(UiUpdateService);

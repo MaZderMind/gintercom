@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.restapi.devices;
+package de.mazdermind.gintercom.matrix.restapi.clients;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -19,9 +19,9 @@ import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
 import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DevicesServiceTest {
+public class ClientsServiceTest {
 	@InjectMocks
-	private DevicesService devicesService;
+	private ClientsService clientsService;
 
 	@Mock
 	private AssociatedClientsManager associatedClientsManager;
@@ -47,9 +47,9 @@ public class DevicesServiceTest {
 	}
 
 	@Test
-	public void sortsNewerDevicesFirst() {
-		assertThat(devicesService.getOnlineDevices())
-			.extracting(DeviceDto::getHostId)
+	public void sortsRecentClientsFirst() {
+		assertThat(clientsService.getOnlineClients())
+			.extracting(ClientDto::getHostId)
 			.containsExactly("12:00", "11:00", "10:00");
 	}
 }
