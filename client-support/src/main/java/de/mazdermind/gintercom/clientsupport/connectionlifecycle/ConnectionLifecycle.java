@@ -11,4 +11,8 @@ public enum ConnectionLifecycle {
 	public boolean isOperational() {
 		return this == OPERATIONAL;
 	}
+
+	public boolean isConnected() {
+		return this == PROVISIONING || this == OPERATIONAL;
+	}
 }

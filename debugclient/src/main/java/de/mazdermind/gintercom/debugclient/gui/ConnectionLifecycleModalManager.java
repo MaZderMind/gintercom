@@ -17,6 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class ConnectionLifecycleModalManager {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(400, 100);
+
+	private static final String TITLE_NOT_CONNECTED = "Not Connected to Matrix";
+	private static final String TITLE_CONNECTED = "Connected to Matrix";
+	private static final String TITLE_ERROR = "Error Message Received";
+
 	private JDialog dialog;
 	private JLabel label;
 	private JLabel detailsLabel;
@@ -33,7 +38,7 @@ public class ConnectionLifecycleModalManager {
 	public void create(JFrame owner) {
 		log.info("Creating");
 		JDialog dialog = new JDialog(owner, Dialog.ModalityType.DOCUMENT_MODAL);
-		dialog.setTitle("Not Connected to Matrix");
+		dialog.setTitle(TITLE_NOT_CONNECTED);
 		dialog.setSize(INITIAL_DIMENSION);
 		dialog.setResizable(false);
 		dialog.setLocationRelativeTo(owner);
@@ -82,30 +87,33 @@ public class ConnectionLifecycleModalManager {
 
 	@EventListener
 	public void handleErrorMessage(ErrorMessage errorMessage) {
-		updateModalText("Error", errorMessage.getMessage(), true);
+		updateModalText("Error", errorMessage.getMessage(), TITLE_ERROR, true);
 	}
 
 	@EventListener
 	public void handleGenericConnectionLifecycleEvent(ConnectionLifecycleEvent lifecycleEvent) {
 		operational = lifecycleEvent.getLifecycle().isOperational();
+		boolean connected = lifecycleEvent.getLifecycle().isConnected();
 
 		log.info("ConnectionLifecycleEvent: {}, Operational={}",
 			lifecycleEvent.getClass().getSimpleName(), operational);
 
 		String displayText = lifecycleEvent.getDisplayText();
 		String detailsText = lifecycleEvent.getDetailsText();
+		String dialogTitle = connected ? TITLE_CONNECTED : TITLE_NOT_CONNECTED;
 
 		initialDisplayText = displayText;
 		initialDetailsText = detailsText;
 		initiallyOperational = operational;
 
 		boolean shouldBeVisible = !operational;
-		updateModalText(displayText, detailsText, shouldBeVisible);
+		updateModalText(displayText, detailsText, dialogTitle, shouldBeVisible);
 	}
 
-	private void updateModalText(String displayText, String detailsText, boolean shouldBeVisible) {
+	private void updateModalText(String displayText, String detailsText, String dialogTitle, boolean shouldBeVisible) {
 		EventQueue.invokeLater(() -> {
 			if (label != null && dialog != null) {
+				dialog.setTitle(dialogTitle);
 				label.setText(displayText);
 				detailsLabel.setText(detailsText);
 
