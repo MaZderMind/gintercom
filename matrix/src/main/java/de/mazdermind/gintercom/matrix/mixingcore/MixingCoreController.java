@@ -27,8 +27,8 @@ public class MixingCoreController {
 		mixingCore.addClient(
 			association.getClientId(),
 			association.getSocketAddress().getAddress(),
-			association.getRtpPorts().getPanelToMatrix(),
-			association.getRtpPorts().getMatrixToPanel()
+			association.getRtpPorts().getClientToMatrix(),
+			association.getRtpPorts().getMatrixToClient()
 		);
 	}
 

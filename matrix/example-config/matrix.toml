@@ -4,11 +4,11 @@ display="GIntercom Example-Config"
 bind="0.0.0.0"
 port=8080
 
-[ports.panelToMatrix]
+[ports.clientToMatrix]
 start=20000
 limit=9999
 
-[ports.matrixToPanel]
+[ports.matrixToClient]
 start=10000
 limit=9999
 

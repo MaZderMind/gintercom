@@ -65,8 +65,8 @@ public class ClientAssociationManager {
 	public void handleAssociatedMessage(AssociatedMessage associatedMessage) {
 		eventPublisher.publishEvent(new AssociatedEvent()
 			.setMatrixAddress(targetMatrix)
-			.setRtpMatrixToPanelPort(associatedMessage.getRtpMatrixToPanelPort())
-			.setRtpPanelToMatrixPort(associatedMessage.getRtpPanelToMatrixPort()));
+			.setRtpMatrixToClientPort(associatedMessage.getRtpMatrixToClientPort())
+			.setRtpClientToMatrixPort(associatedMessage.getRtpClientToMatrixPort()));
 	}
 
 	@EventListener(DeAssociatedMessage.class)

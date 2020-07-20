@@ -30,10 +30,10 @@ public class MatrixConfigTest {
 
 		assertThat(matrixConfig.getRtp().getJitterbuffer()).isEqualTo(50L);
 
-		assertThat(matrixConfig.getPorts().getPanelToMatrix().getStart()).isEqualTo(20000);
-		assertThat(matrixConfig.getPorts().getPanelToMatrix().getLimit()).isEqualTo(9999);
-		assertThat(matrixConfig.getPorts().getMatrixToPanel().getStart()).isEqualTo(40000);
-		assertThat(matrixConfig.getPorts().getMatrixToPanel().getLimit()).isEqualTo(9999);
+		assertThat(matrixConfig.getPorts().getClientToMatrix().getStart()).isEqualTo(20000);
+		assertThat(matrixConfig.getPorts().getClientToMatrix().getLimit()).isEqualTo(9999);
+		assertThat(matrixConfig.getPorts().getMatrixToClient().getStart()).isEqualTo(40000);
+		assertThat(matrixConfig.getPorts().getMatrixToClient().getLimit()).isEqualTo(9999);
 	}
 
 
@@ -100,29 +100,29 @@ public class MatrixConfigTest {
 	}
 
 	@Test
-	public void validationFailsWithoutPanelToMatrixConfig() {
-		testJson.getObject("ports").remove("panelToMatrix");
+	public void validationFailsWithoutClientToMatrixConfig() {
+		testJson.getObject("ports").remove("clientToMatrix");
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig).isNot(VALID);
 	}
 
 	@Test
-	public void validationFailsWithoutMatrixToPanelConfig() {
-		testJson.getObject("ports").remove("matrixToPanel");
+	public void validationFailsWithoutMatrixToClientConfig() {
+		testJson.getObject("ports").remove("matrixToClient");
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig).isNot(VALID);
 	}
 
 	@Test
-	public void validationFailsWithInvalidPanelToMatrixConfig() {
-		testJson.getObject("ports").getObject("panelToMatrix").remove("start");
+	public void validationFailsWithInvalidClientToMatrixConfig() {
+		testJson.getObject("ports").getObject("clientToMatrix").remove("start");
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig).isNot(VALID);
 	}
 
 	@Test
-	public void validationFailsWithInvalidMatrixToPanelConfig() {
-		testJson.getObject("ports").getObject("matrixToPanel").remove("start");
+	public void validationFailsWithInvalidMatrixToClientConfig() {
+		testJson.getObject("ports").getObject("matrixToClient").remove("start");
 		MatrixConfig matrixConfig = convertJsonTo(MatrixConfig.class, testJson);
 		assertThat(matrixConfig).isNot(VALID);
 	}

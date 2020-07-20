@@ -50,8 +50,8 @@ public class AssociatedClientsManagerTest {
 		assertThat(association.getSocketAddress()).isEqualTo(ADDRESS_1);
 		assertThat(association.getFirstSeen()).isCloseTo(LocalDateTime.now(), within(5, ChronoUnit.SECONDS));
 		assertThat(association.getLastHeartbeat()).isEqualTo(association.getFirstSeen());
-		assertThat(association.getRtpPorts().getMatrixToPanel()).isNotNegative().isNotZero();
-		assertThat(association.getRtpPorts().getPanelToMatrix()).isNotNegative().isNotZero();
+		assertThat(association.getRtpPorts().getMatrixToClient()).isNotNegative().isNotZero();
+		assertThat(association.getRtpPorts().getClientToMatrix()).isNotNegative().isNotZero();
 
 		verify(eventPublisher).publishEvent(any(ClientAssociatedEvent.class));
 	}

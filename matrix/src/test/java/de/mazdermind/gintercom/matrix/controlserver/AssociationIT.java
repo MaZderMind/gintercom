@@ -39,8 +39,8 @@ public class AssociationIT extends ControlServerTestBase {
 
 		// Response
 		AssociatedMessage associatedMessage = client.awaitMessage(AssociatedMessage.class);
-		assertThat(associatedMessage.getRtpMatrixToPanelPort()).isNotNegative().isNotZero();
-		assertThat(associatedMessage.getRtpPanelToMatrixPort()).isNotNegative().isNotZero();
+		assertThat(associatedMessage.getRtpMatrixToClientPort()).isNotNegative().isNotZero();
+		assertThat(associatedMessage.getRtpClientToMatrixPort()).isNotNegative().isNotZero();
 	}
 
 	@Test
@@ -62,8 +62,8 @@ public class AssociationIT extends ControlServerTestBase {
 
 		// Response 1
 		AssociatedMessage associatedMessage1 = client.awaitMessage(AssociatedMessage.class);
-		assertThat(associatedMessage1.getRtpMatrixToPanelPort()).isNotNegative().isNotZero();
-		assertThat(associatedMessage1.getRtpPanelToMatrixPort()).isNotNegative().isNotZero();
+		assertThat(associatedMessage1.getRtpMatrixToClientPort()).isNotNegative().isNotZero();
+		assertThat(associatedMessage1.getRtpClientToMatrixPort()).isNotNegative().isNotZero();
 
 
 		// Request 2
@@ -80,15 +80,15 @@ public class AssociationIT extends ControlServerTestBase {
 
 		// Response 2
 		AssociatedMessage associatedMessage2 = client2.awaitMessage(AssociatedMessage.class);
-		assertThat(associatedMessage2.getRtpMatrixToPanelPort()).isNotNegative().isNotZero();
-		assertThat(associatedMessage2.getRtpPanelToMatrixPort()).isNotNegative().isNotZero();
+		assertThat(associatedMessage2.getRtpMatrixToClientPort()).isNotNegative().isNotZero();
+		assertThat(associatedMessage2.getRtpClientToMatrixPort()).isNotNegative().isNotZero();
 
 		// Comparison
-		assertThat(associatedMessage1.getRtpMatrixToPanelPort())
-			.isNotEqualTo(associatedMessage2.getRtpMatrixToPanelPort());
+		assertThat(associatedMessage1.getRtpMatrixToClientPort())
+			.isNotEqualTo(associatedMessage2.getRtpMatrixToClientPort());
 
-		assertThat(associatedMessage1.getRtpPanelToMatrixPort())
-			.isNotEqualTo(associatedMessage2.getRtpPanelToMatrixPort());
+		assertThat(associatedMessage1.getRtpClientToMatrixPort())
+			.isNotEqualTo(associatedMessage2.getRtpClientToMatrixPort());
 
 		// Shutdown
 		client2.shutdown();

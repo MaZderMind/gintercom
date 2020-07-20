@@ -22,8 +22,8 @@ public class AssociatedMessageSender {
 		ClientAssociation association = associatedEvent.getAssociation();
 
 		AssociatedMessage response = new AssociatedMessage()
-			.setRtpPanelToMatrixPort(association.getRtpPorts().getPanelToMatrix())
-			.setRtpMatrixToPanelPort(association.getRtpPorts().getMatrixToPanel());
+			.setRtpClientToMatrixPort(association.getRtpPorts().getClientToMatrix())
+			.setRtpMatrixToClientPort(association.getRtpPorts().getMatrixToClient());
 
 		messageSender.sendMessageTo(association.getClientId(), response);
 	}

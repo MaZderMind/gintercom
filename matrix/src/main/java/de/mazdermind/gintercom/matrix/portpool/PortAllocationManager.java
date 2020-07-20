@@ -11,20 +11,20 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 @Component
 public class PortAllocationManager {
 
-	private final PortPool matrixToPanel;
-	private final PortPool panelToMatrix;
+	private final PortPool matrixToClient;
+	private final PortPool clientToMatrix;
 	private final Map<String, PortSet> allocatedPorts = new HashMap<>();
 
 	public PortAllocationManager(@Autowired Config config) {
-		matrixToPanel = new PortPool(config.getMatrixConfig().getPorts().getMatrixToPanel());
-		panelToMatrix = new PortPool(config.getMatrixConfig().getPorts().getPanelToMatrix());
+		matrixToClient = new PortPool(config.getMatrixConfig().getPorts().getMatrixToClient());
+		clientToMatrix = new PortPool(config.getMatrixConfig().getPorts().getClientToMatrix());
 	}
 
 	public PortSet allocatePortSet(String clientId) {
 		return allocatedPorts.computeIfAbsent(clientId, (key) ->
 			new PortSet(
-				matrixToPanel.getNextPort(),
-				panelToMatrix.getNextPort()
+				matrixToClient.getNextPort(),
+				clientToMatrix.getNextPort()
 			));
 	}
 }

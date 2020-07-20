@@ -25,8 +25,8 @@ public class PipelineManager {
 	@EventListener
 	public void handleAssociatedEvent(AssociatedEvent associatedEvent) {
 		clientPipeline.configurePipeline(associatedEvent.getMatrixAddress().getAddress(),
-			associatedEvent.getRtpMatrixToPanelPort(),
-			associatedEvent.getRtpPanelToMatrixPort());
+			associatedEvent.getRtpMatrixToClientPort(),
+			associatedEvent.getRtpClientToMatrixPort());
 
 		clientPipeline.startPipeline();
 	}
