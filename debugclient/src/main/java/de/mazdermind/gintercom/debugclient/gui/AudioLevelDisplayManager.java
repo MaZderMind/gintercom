@@ -35,7 +35,9 @@ public class AudioLevelDisplayManager {
 	@EventListener
 	public void audioLevelEventHandler(AudioLevelEvent audioLevelEvent) {
 		log.trace("Received Audio-Level Event");
-		audioLevelDisplay.updateLevel(audioLevelEvent);
+		if (audioLevelDisplay != null) {
+			audioLevelDisplay.updateLevel(audioLevelEvent);
+		}
 	}
 
 	@EventListener(DisconnectedEvent.class)
