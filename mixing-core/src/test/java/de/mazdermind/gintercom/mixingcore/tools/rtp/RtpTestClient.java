@@ -44,11 +44,11 @@ public class RtpTestClient {
 		this.audioAnalyser = new AudioAnalyser(48000, clientId);
 	}
 
-	public RtpTestClient enableSine(double freq) {
+	public RtpTestClient enableSine(double freqency) {
 		ensureStarted();
 
 		Element testSrc = txBin.getElementByName(TESTSRC_NAME);
-		testSrc.set("freq", freq);
+		testSrc.set("freq", freqency);
 		testSrc.set("volume", 0.2);
 
 		return this;

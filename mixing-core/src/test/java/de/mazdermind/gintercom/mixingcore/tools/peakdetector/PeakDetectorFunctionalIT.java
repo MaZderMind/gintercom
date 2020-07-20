@@ -198,12 +198,12 @@ public class PeakDetectorFunctionalIT {
 	public void detectsSingleTonesBetween100hzAnd6KHz() throws InterruptedException {
 		src1.set("wave", 0);
 
-		for (int freq = 100; freq < 6000; freq += 100) {
-			src1.set("freq", freq);
+		for (int freqency = 100; freqency < 6000; freqency += 100) {
+			src1.set("freq", freqency);
 			pipeline.play();
 
 			PeakSet peaks = Objects.requireNonNull(peakDetector.getPeakSearchResults().poll(TIMEOUT.toMillis(), TimeUnit.MILLISECONDS));
-			peaks.assertMatches(ImmutableSet.of((double) freq));
+			peaks.assertMatches(ImmutableSet.of((double) freqency));
 
 			pipeline.stop();
 			pipeline.seek(0);
