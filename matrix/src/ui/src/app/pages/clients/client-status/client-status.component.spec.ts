@@ -17,7 +17,7 @@ describe('ClientStatusComponent', () => {
     fixture = TestBed.createComponent(ClientStatusComponent);
     component = fixture.componentInstance;
     component.client = {
-      hostId: '0000-0000',
+      clientId: '0000-0000',
       panelId: 'somePanel',
       clientAddress: '127.0.0.1',
       firstSeen: '2020-01-01T10:00:00+0200',

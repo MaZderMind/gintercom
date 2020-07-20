@@ -30,7 +30,7 @@ public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	@Before
 	public void prepareConfig() {
 		PanelConfig panelConfig = new PanelConfig()
-			.setHostId(HOST_ID)
+			.setClientId(HOST_ID)
 			.setDisplay("THE_DISPLAY_NAME")
 			.setRxGroups(ImmutableSet.of(RX_GROUP))
 			.setTxGroups(ImmutableSet.of(TX_GROUP_1, TX_GROUP_2));

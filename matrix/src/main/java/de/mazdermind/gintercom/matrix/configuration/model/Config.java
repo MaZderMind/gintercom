@@ -86,9 +86,9 @@ public class Config {
 		});
 	}
 
-	public Optional<String> findPanelIdForHostId(String hostId) {
+	public Optional<String> findPanelIdForClientId(String clientId) {
 		return panels.entrySet().stream()
-			.filter(entry -> hostId.equals(entry.getValue().getHostId()))
+			.filter(entry -> clientId.equals(entry.getValue().getClientId()))
 			.findFirst()
 			.map(Map.Entry::getKey);
 	}

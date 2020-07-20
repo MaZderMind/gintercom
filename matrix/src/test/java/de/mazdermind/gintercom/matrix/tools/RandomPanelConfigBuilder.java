@@ -7,7 +7,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 public class RandomPanelConfigBuilder {
 	public static PanelConfig randomPanelConfig() {
 		return new PanelConfig()
-			.setHostId(TestHostIdGenerator.generateTestHostId())
+			.setClientId(TestClientIdGenerator.generateTestClientId())
 			.setDisplay("panel_" + randomName());
 	}
 }

@@ -118,7 +118,7 @@ public class ConnectionLifecycleManager {
 
 		log.info("Received AssociatedEvent, Client is now waiting for Provisioning");
 		eventPublisher.publishEvent(new AwaitingProvisioningEvent()
-			.setHostId(clientConfiguration.getHostId()));
+			.setClientId(clientConfiguration.getClientId()));
 
 		lifecycle = ConnectionLifecycle.PROVISIONING;
 	}
@@ -144,7 +144,7 @@ public class ConnectionLifecycleManager {
 		}
 
 		eventPublisher.publishEvent(new AwaitingProvisioningEvent()
-			.setHostId(clientConfiguration.getHostId()));
+			.setClientId(clientConfiguration.getClientId()));
 
 		log.info("Received DeProvisionMessage, Client is now waiting for Provisioning");
 		lifecycle = ConnectionLifecycle.PROVISIONING;

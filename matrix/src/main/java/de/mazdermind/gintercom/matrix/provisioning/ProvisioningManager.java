@@ -32,17 +32,17 @@ public class ProvisioningManager {
 	@EventListener
 	@Order(Ordered.LOWEST_PRECEDENCE)
 	public void handleConfiguredClientAssociation(ClientAssociatedEvent associatedEvent) {
-		String hostId = associatedEvent.getAssociation().getHostId();
-		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
+		String clientId = associatedEvent.getAssociation().getClientId();
+		Optional<String> maybePanelId = config.findPanelIdForClientId(clientId);
 
 		if (maybePanelId.isPresent()) {
 			String panelId = maybePanelId.get();
 			PanelConfig panelConfig = config.getPanels().get(panelId);
 
-			log.info("Sending ProvisionMessage for Panel {} to Host-ID {}",
-				panelConfig.getDisplay(), hostId);
+			log.info("Sending ProvisionMessage for Panel {} to Client-Id {}",
+				panelConfig.getDisplay(), clientId);
 
-			messageSender.sendMessageTo(hostId, new ProvisionMessage()
+			messageSender.sendMessageTo(clientId, new ProvisionMessage()
 				.setDisplay(panelConfig.getDisplay())
 				.setButtons(panelConfig.getButtons()));
 
@@ -57,17 +57,17 @@ public class ProvisioningManager {
 	@EventListener
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	public void handleConfiguredClientDeAssociation(ClientDeAssociatedEvent deAssociatedEvent) {
-		String hostId = deAssociatedEvent.getAssociation().getHostId();
-		Optional<String> maybePanelId = config.findPanelIdForHostId(hostId);
+		String clientId = deAssociatedEvent.getAssociation().getClientId();
+		Optional<String> maybePanelId = config.findPanelIdForClientId(clientId);
 
 		if (maybePanelId.isPresent()) {
 			String panelId = maybePanelId.get();
 			PanelConfig panelConfig = config.getPanels().get(panelId);
 
-			log.info("Sending DeProvisionMessage for Panel {} to Host-ID {}",
-				panelConfig.getDisplay(), hostId);
+			log.info("Sending DeProvisionMessage for Panel {} to Client-Id {}",
+				panelConfig.getDisplay(), clientId);
 
-			messageSender.sendMessageTo(hostId, new DeProvisionMessage());
+			messageSender.sendMessageTo(clientId, new DeProvisionMessage());
 		}
 	}
 }

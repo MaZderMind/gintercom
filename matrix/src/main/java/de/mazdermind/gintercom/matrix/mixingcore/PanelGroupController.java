@@ -25,7 +25,7 @@ public class PanelGroupController {
 	@EventListener
 	public void handlePanelConfigurationChangedEvent(PanelGroupsChangedEvent panelGroupsChangedEvent) {
 		ClientAssociation association = panelGroupsChangedEvent.getAssociation();
-		Client client = mixingCore.getClientByName(association.getHostId());
+		Client client = mixingCore.getClientByName(association.getClientId());
 
 		Set<String> desiredRxGroups = panelGroupsChangedEvent.getRxGroups();
 		Set<String> desiredTxGroups = panelGroupsChangedEvent.getTxGroups();
@@ -34,14 +34,14 @@ public class PanelGroupController {
 
 	@VisibleForTesting
 	void reconcileGroups(Client client, Set<String> desiredRxGroups, Set<String> desiredTxGroups) {
-		log.debug("Reconciling rxGroups for Host-ID {}", client.getName());
+		log.debug("Reconciling rxGroups for Client-Id {}", client.getName());
 		calculateGroupsToRemove(client.getRxGroups(), desiredRxGroups)
 			.forEach(client::stopReceivingFrom);
 
 		calculateGroupsToAdd(client.getRxGroups(), desiredRxGroups)
 			.forEach(client::startReceivingFrom);
 
-		log.debug("Reconciling txGroups for Host-ID {}", client.getName());
+		log.debug("Reconciling txGroups for Client-Id {}", client.getName());
 		calculateGroupsToRemove(client.getTxGroups(), desiredTxGroups)
 			.forEach(client::stopTransmittingTo);
 

@@ -5,20 +5,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
 public class PanelDtoTest {
-	private static final String HOST_ID = "THE_HOST_ID";
+	private static final String CLIENT_ID = "THE_CLIENT_ID";
 
 	@Test
 	public void provisionedState() {
 		PanelDto dto = new PanelDto();
-		assertThat(dto.getHostId()).isNull();
+		assertThat(dto.getClientId()).isNull();
 		assertThat(dto.isAssigned()).isFalse();
 
-		dto.setHostId(HOST_ID);
-		assertThat(dto.getHostId()).isNotNull();
+		dto.setClientId(CLIENT_ID);
+		assertThat(dto.getClientId()).isNotNull();
 		assertThat(dto.isAssigned()).isTrue();
 
-		dto.setHostId(null);
-		assertThat(dto.getHostId()).isNull();
+		dto.setClientId(null);
+		assertThat(dto.getClientId()).isNull();
 		assertThat(dto.isAssigned()).isFalse();
 	}
 

@@ -36,7 +36,7 @@ run-matrix:
 
 run-debugclient:
 	GST_DEBUG_DUMP_DOT_DIR=./debugclient/ mvn --projects debugclient --also-make spring-boot:run \
-		-Dspring-boot.run.arguments="--host=127.0.0.1,--port=9999,--host-id=0000-0001" \
+		-Dspring-boot.run.arguments="--host=127.0.0.1,--port=9999,--client-id=0000-0001" \
 		-Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(CLIENT_DEBUG_PORT)"
 
 # run `make package` first, then execute the prod-builds
@@ -44,13 +44,13 @@ run-packaged-matrix:
 	java -jar matrix/target/matrix-*.jar --config-directory=./matrix/example-config
 
 run-packaged-debugclient-0:
-	java -jar debugclient/target/debugclient-*.jar -host=127.0.0.1 --port=9999 --host-id=0000-0000
+	java -jar debugclient/target/debugclient-*.jar -host=127.0.0.1 --port=9999 --client-id=0000-0000
 
 run-packaged-debugclient-1:
-	java -jar debugclient/target/debugclient-*.jar -host=127.0.0.1 --port=9999 --host-id=0000-0001
+	java -jar debugclient/target/debugclient-*.jar -host=127.0.0.1 --port=9999 --client-id=0000-0001
 
 run-packaged-debugclient-2:
-	java -jar debugclient/target/debugclient-*.jar -host=127.0.0.1 --port=9999 --host-id=0000-0002
+	java -jar debugclient/target/debugclient-*.jar -host=127.0.0.1 --port=9999 --client-id=0000-0002
 
 # ui-targets
 ui-install: matrix/src/ui/node_modules

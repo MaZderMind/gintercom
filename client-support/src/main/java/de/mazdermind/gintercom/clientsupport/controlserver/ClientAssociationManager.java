@@ -35,7 +35,7 @@ public class ClientAssociationManager {
 		setupClient(matrixAddress);
 
 		clientMessageSender.sendMessage(new AssociationRequestMessage()
-			.setHostId(clientConfiguration.getHostId())
+			.setClientId(clientConfiguration.getClientId())
 			.setClientModel(clientConfiguration.getClientModel())
 			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(clientConfiguration.getButtons())));

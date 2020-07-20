@@ -22,7 +22,7 @@ public class ClientsService {
 			.map(clientAssociation ->
 				new ClientDto(clientAssociation)
 					.setPanelId(
-						config.findPanelIdForHostId(clientAssociation.getHostId()).orElse(null)
+						config.findPanelIdForClientId(clientAssociation.getClientId()).orElse(null)
 					)
 			)
 			.sorted(Comparator.comparing(ClientDto::getFirstSeen).reversed());

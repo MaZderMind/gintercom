@@ -21,7 +21,7 @@ public class PanelConfig {
 	@NotNull
 	private String display;
 
-	private String hostId;
+	private String clientId;
 
 	private Set<String> rxGroups = emptySet();
 	private Set<String> txGroups = emptySet();

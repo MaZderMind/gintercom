@@ -46,7 +46,7 @@ public class ClientsServiceIT extends IntegrationTestBase {
 		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
 
 		assertThat(clientsService.getOnlineClients()).hasSize(1)
-			.flatExtracting(ClientDto::getHostId, ClientDto::getClientModel)
+			.flatExtracting(ClientDto::getClientId, ClientDto::getClientModel)
 			.contains(HOST_ID, CLIENT_MODEL);
 
 		assertThat(clientsService.getProvisionedClients()).isEmpty();
@@ -55,11 +55,11 @@ public class ClientsServiceIT extends IntegrationTestBase {
 
 	@Test
 	public void provisionedClientOnline() {
-		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setHostId(HOST_ID));
+		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setClientId(HOST_ID));
 		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
 
 		assertThat(clientsService.getOnlineClients()).hasSize(1)
-			.flatExtracting(ClientDto::getHostId, ClientDto::getClientModel)
+			.flatExtracting(ClientDto::getClientId, ClientDto::getClientModel)
 			.contains(HOST_ID, CLIENT_MODEL);
 
 		assertThat(clientsService.getProvisionedClients()).hasSize(1);

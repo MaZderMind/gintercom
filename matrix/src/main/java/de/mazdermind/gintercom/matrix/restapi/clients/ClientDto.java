@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @NoArgsConstructor
 public class ClientDto {
-	private String hostId;
+	private String clientId;
 	private String clientModel;
 
 	@Nullable
@@ -24,7 +24,7 @@ public class ClientDto {
 	private LocalDateTime firstSeen;
 
 	public ClientDto(ClientAssociation clientAssociation) {
-		hostId = clientAssociation.getHostId();
+		clientId = clientAssociation.getClientId();
 		clientAddress = clientAssociation.getSocketAddress();
 		firstSeen = clientAssociation.getFirstSeen();
 		clientModel = clientAssociation.getClientModel();

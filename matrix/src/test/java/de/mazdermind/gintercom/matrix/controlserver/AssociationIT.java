@@ -23,18 +23,18 @@ public class AssociationIT extends ControlServerTestBase {
 	public void canAssociateClient() {
 		// Request
 		client.transmit(new AssociationRequestMessage()
-			.setHostId(HOST_ID)
+			.setClientId(HOST_ID)
 			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(ImmutableList.of("Q1"))));
 
 		// Matrix-Event
 		ClientAssociatedEvent clientAssociatedEvent = eventReceiver.awaitEvent(ClientAssociatedEvent.class);
-		assertThat(clientAssociatedEvent.getAssociation().getHostId()).isEqualTo(HOST_ID);
+		assertThat(clientAssociatedEvent.getAssociation().getClientId()).isEqualTo(HOST_ID);
 
 		// Message-Broadcast
 		AssociationRequestMessage.ClientMessage associateMessage = eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
-		assertThat(associateMessage.getHostId()).isEqualTo(HOST_ID);
-		assertThat(associateMessage.getMessage().getHostId()).isEqualTo(HOST_ID);
+		assertThat(associateMessage.getClientId()).isEqualTo(HOST_ID);
+		assertThat(associateMessage.getMessage().getClientId()).isEqualTo(HOST_ID);
 		assertThat(associateMessage.getMessage().getCapabilities().getButtons()).contains("Q1");
 
 		// Response
@@ -49,16 +49,16 @@ public class AssociationIT extends ControlServerTestBase {
 		client2.bind();
 
 		// Request 1
-		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID_1));
+		client.transmit(new AssociationRequestMessage().setClientId(HOST_ID_1));
 
 		// Matrix-Event 1
 		ClientAssociatedEvent clientAssociatedEvent1 = eventReceiver.awaitEvent(ClientAssociatedEvent.class);
-		assertThat(clientAssociatedEvent1.getAssociation().getHostId()).isEqualTo(HOST_ID_1);
+		assertThat(clientAssociatedEvent1.getAssociation().getClientId()).isEqualTo(HOST_ID_1);
 
 		// Message-Broadcast 1
 		AssociationRequestMessage.ClientMessage associateMessage1 = eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
-		assertThat(associateMessage1.getHostId()).isEqualTo(HOST_ID_1);
-		assertThat(associateMessage1.getMessage().getHostId()).isEqualTo(HOST_ID);
+		assertThat(associateMessage1.getClientId()).isEqualTo(HOST_ID_1);
+		assertThat(associateMessage1.getMessage().getClientId()).isEqualTo(HOST_ID);
 
 		// Response 1
 		AssociatedMessage associatedMessage1 = client.awaitMessage(AssociatedMessage.class);
@@ -67,16 +67,16 @@ public class AssociationIT extends ControlServerTestBase {
 
 
 		// Request 2
-		client2.transmit(new AssociationRequestMessage().setHostId(HOST_ID_2));
+		client2.transmit(new AssociationRequestMessage().setClientId(HOST_ID_2));
 
 		// Matrix-Event 2
 		ClientAssociatedEvent clientAssociatedEvent2 = eventReceiver.awaitEvent(ClientAssociatedEvent.class);
-		assertThat(clientAssociatedEvent2.getAssociation().getHostId()).isEqualTo(HOST_ID_2);
+		assertThat(clientAssociatedEvent2.getAssociation().getClientId()).isEqualTo(HOST_ID_2);
 
 		// Message-Broadcast 2
 		AssociationRequestMessage.ClientMessage associateMessage2 = eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
-		assertThat(associateMessage2.getHostId()).isEqualTo(HOST_ID_2);
-		assertThat(associateMessage2.getMessage().getHostId()).isEqualTo(HOST_ID_2);
+		assertThat(associateMessage2.getClientId()).isEqualTo(HOST_ID_2);
+		assertThat(associateMessage2.getMessage().getClientId()).isEqualTo(HOST_ID_2);
 
 		// Response 2
 		AssociatedMessage associatedMessage2 = client2.awaitMessage(AssociatedMessage.class);
@@ -97,14 +97,14 @@ public class AssociationIT extends ControlServerTestBase {
 
 	@Test
 	public void cantAssociateClientTwice() {
-		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setClientId(HOST_ID));
 
 		client.awaitMessage(AssociatedMessage.class);
 
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
 		eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
 
-		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setClientId(HOST_ID));
 
 		ErrorMessage errorMessage = client.awaitMessage(ErrorMessage.class);
 		assertThat(errorMessage.getMessage())
@@ -116,7 +116,7 @@ public class AssociationIT extends ControlServerTestBase {
 	public void canDeAssociateClient() {
 		final String REASON = "Test";
 
-		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setClientId(HOST_ID));
 
 		client.awaitMessage(AssociatedMessage.class);
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
@@ -131,11 +131,11 @@ public class AssociationIT extends ControlServerTestBase {
 			.contains(REASON);
 
 		DeAssociationRequestMessage.ClientMessage deAssociateMessage = eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
-		assertThat(deAssociateMessage.getHostId()).isEqualTo(HOST_ID);
+		assertThat(deAssociateMessage.getClientId()).isEqualTo(HOST_ID);
 		assertThat(deAssociateMessage.getMessage().getReason()).isEqualTo(REASON);
 
 		ClientDeAssociatedEvent clientDeAssociatedEvent = eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
-		assertThat(clientDeAssociatedEvent.getAssociation().getHostId()).isEqualTo(HOST_ID);
+		assertThat(clientDeAssociatedEvent.getAssociation().getClientId()).isEqualTo(HOST_ID);
 	}
 
 	@Test

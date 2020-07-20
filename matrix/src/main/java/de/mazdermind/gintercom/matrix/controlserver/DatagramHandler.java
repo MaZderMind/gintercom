@@ -58,10 +58,10 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 		if (message instanceof AssociationRequestMessage) {
 			try {
 				AssociationRequestMessage associationRequestMessage = (AssociationRequestMessage) message;
-				log.info("Received Association-Request for Host-ID {} from {}", associationRequestMessage.getHostId(), sender);
+				log.info("Received Association-Request for Client-Id {} from {}", associationRequestMessage.getClientId(), sender);
 
 				associatedClientsManager.associate(sender,
-					associationRequestMessage.getHostId(),
+					associationRequestMessage.getClientId(),
 					associationRequestMessage.getClientModel());
 			} catch (Exception e) {
 				log.error("Exception during Association", e);
@@ -76,8 +76,8 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 			return;
 		}
 
-		String hostId = association.get().getHostId();
-		WrappedClientMessage<Object> clientMessage = clientMessageWrapper.wrap(message, hostId);
+		String clientId = association.get().getClientId();
+		WrappedClientMessage<Object> clientMessage = clientMessageWrapper.wrap(message, clientId);
 		eventPublisher.publishEvent(clientMessage);
 	}
 

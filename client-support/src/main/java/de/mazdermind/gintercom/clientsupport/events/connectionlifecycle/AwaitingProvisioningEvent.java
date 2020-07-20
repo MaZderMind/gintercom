@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class AwaitingProvisioningEvent extends ConnectionLifecycleEvent {
-	private String hostId;
+	private String clientId;
 
 	@Override
 	public String getDisplayText() {
@@ -18,7 +18,7 @@ public class AwaitingProvisioningEvent extends ConnectionLifecycleEvent {
 
 	@Override
 	public String getDetailsText() {
-		return "Host-ID: " + hostId;
+		return "Client-Id: " + clientId;
 	}
 
 	@Override

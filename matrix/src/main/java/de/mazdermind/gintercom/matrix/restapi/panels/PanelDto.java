@@ -16,7 +16,7 @@ public class PanelDto {
 	private boolean online;
 
 	@Nullable
-	private String hostId;
+	private String clientId;
 
 	@Nullable
 	private String clientModel;
@@ -24,11 +24,11 @@ public class PanelDto {
 	public PanelDto(String id, PanelConfig config, boolean online) {
 		this.id = id;
 		display = config.getDisplay();
-		hostId = config.getHostId();
+		clientId = config.getClientId();
 		this.online = online;
 	}
 
 	public boolean isAssigned() {
-		return hostId != null;
+		return clientId != null;
 	}
 }

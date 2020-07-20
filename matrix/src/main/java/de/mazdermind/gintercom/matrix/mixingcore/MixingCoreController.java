@@ -23,9 +23,9 @@ public class MixingCoreController {
 	public void handleClientAssociatedEvent(ClientAssociatedEvent clientAssociatedEvent) {
 		ClientAssociation association = clientAssociatedEvent.getAssociation();
 
-		log.debug("Adding Client {}", association.getHostId());
+		log.debug("Adding Client {}", association.getClientId());
 		mixingCore.addClient(
-			association.getHostId(),
+			association.getClientId(),
 			association.getSocketAddress().getAddress(),
 			association.getRtpPorts().getPanelToMatrix(),
 			association.getRtpPorts().getMatrixToPanel()
@@ -36,8 +36,8 @@ public class MixingCoreController {
 	public void handleClientDeAssociatedEvent(ClientDeAssociatedEvent clientDeAssociatedEvent) {
 		ClientAssociation association = clientDeAssociatedEvent.getAssociation();
 
-		log.debug("Removing Panel {}", association.getHostId());
-		Client client = mixingCore.getClientByName(association.getHostId());
+		log.debug("Removing Panel {}", association.getClientId());
+		Client client = mixingCore.getClientByName(association.getClientId());
 		mixingCore.removeClient(client);
 	}
 

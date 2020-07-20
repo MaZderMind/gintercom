@@ -1,5 +1,5 @@
 export interface ClientDto {
-  hostId: string;
+  clientId: string;
   panelId: string;
   clientAddress: string;
   clientModel: string;

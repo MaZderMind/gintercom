@@ -43,7 +43,7 @@ public class PortAllocationManagerTest {
 	}
 
 	@Test
-	public void allocatesNewPortsForNewHostId() {
+	public void allocatesNewPortsForNewClientId() {
 		PortSet portSet1 = portAllocationManager.allocatePortSet(HOST_ID_1);
 		assertThat(portSet1.getMatrixToPanel()).isEqualTo(2000);
 		assertThat(portSet1.getPanelToMatrix()).isEqualTo(3000);
@@ -54,7 +54,7 @@ public class PortAllocationManagerTest {
 	}
 
 	@Test
-	public void returnsSamePortsForSameHostId() {
+	public void returnsSamePortsForSameClientId() {
 		PortSet portSet1 = portAllocationManager.allocatePortSet(HOST_ID_1);
 		PortSet portSet2 = portAllocationManager.allocatePortSet(HOST_ID_2);
 

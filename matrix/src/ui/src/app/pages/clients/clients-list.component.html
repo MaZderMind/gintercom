@@ -8,7 +8,7 @@
   <thead>
   <tr>
     <th>Provisioned</th>
-    <th>Host-ID</th>
+    <th>Client-Id</th>
     <th>Model</th>
     <th>Remote Address</th>
     <th>First Seen</th>
@@ -22,8 +22,8 @@
       <app-client-status [client]="client"></app-client-status>
     </td>
     <td class="text-monospace">
-      <a [routerLink]="['/clients', client.hostId]">
-        {{ client.hostId }}
+      <a [routerLink]="['/clients', client.clientId]">
+        {{ client.clientId }}
       </a>
     </td>
     <td>

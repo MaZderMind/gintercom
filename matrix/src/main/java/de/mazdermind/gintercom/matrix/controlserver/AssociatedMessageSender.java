@@ -25,7 +25,7 @@ public class AssociatedMessageSender {
 			.setRtpPanelToMatrixPort(association.getRtpPorts().getPanelToMatrix())
 			.setRtpMatrixToPanelPort(association.getRtpPorts().getMatrixToPanel());
 
-		messageSender.sendMessageTo(association.getHostId(), response);
+		messageSender.sendMessageTo(association.getClientId(), response);
 	}
 
 	@EventListener
@@ -36,6 +36,6 @@ public class AssociatedMessageSender {
 		DeAssociatedMessage response = new DeAssociatedMessage()
 			.setReason(deAssociatedEvent.getReason());
 
-		messageSender.sendMessageTo(association.getHostId(), response);
+		messageSender.sendMessageTo(association.getClientId(), response);
 	}
 }

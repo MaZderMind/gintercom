@@ -41,9 +41,9 @@ public class CliArguments {
 		options.addOption(new Option("p", "port", true,
 			"Port of the Matrix. Needs to be specified together with -h/--host"));
 
-		options.addOption(new Option("i", "host-id", true,
-			"Host-ID of this Client. If not specified, a random Host-ID will be generated on first Start " +
-				"and stored on-disk. The Host-ID is used to identify the Client and map a Panel-Config to it."));
+		options.addOption(new Option("i", "client-id", true,
+			"Client-Id of this Client. If not specified, a random Client-Id will be generated on first Start " +
+				"and stored on-disk. The Client-Id is used to identify the Client and map a Panel-Config to it."));
 
 		options.addOption(new Option("b", "buttons", true,
 			"List of Button-Names, separated by Commas. Used to Test different Button-Configurations"));
@@ -95,8 +95,8 @@ public class CliArguments {
 		return getMatrixHost().isPresent() && getMatrixPort().isPresent();
 	}
 
-	public Optional<String> getHostId() {
-		return Optional.ofNullable(commandLine.getOptionValue("host-id"));
+	public Optional<String> getClientId() {
+		return Optional.ofNullable(commandLine.getOptionValue("client-id"));
 	}
 
 	public Optional<List<String>> getButtons() {

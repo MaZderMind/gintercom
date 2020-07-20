@@ -58,14 +58,14 @@ public class PanelsServiceIT extends IntegrationTestBase {
 
 		PanelDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
 		assertThat(panel.getId()).isEqualTo(PANEL_ID);
-		assertThat(panel.getHostId()).isEqualTo(null);
+		assertThat(panel.getClientId()).isEqualTo(null);
 		assertThat(panel.getClientModel()).isEqualTo(null);
 		assertThat(panel.getDisplay()).isEqualTo(null);
 	}
 
 	@Test
 	public void assignedPanel() {
-		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setHostId(HOST_ID));
+		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setClientId(HOST_ID));
 
 		assertThat(panelsService.getConfiguredPanels()).hasSize(1)
 			.flatExtracting(PanelDto::getId).contains(PANEL_ID);
@@ -77,14 +77,14 @@ public class PanelsServiceIT extends IntegrationTestBase {
 
 		PanelDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
 		assertThat(panel.getId()).isEqualTo(PANEL_ID);
-		assertThat(panel.getHostId()).isEqualTo(HOST_ID);
+		assertThat(panel.getClientId()).isEqualTo(HOST_ID);
 		assertThat(panel.getClientModel()).isEqualTo(null);
 		assertThat(panel.getDisplay()).isEqualTo(null);
 	}
 
 	@Test
 	public void onlinePanel() {
-		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setHostId(HOST_ID).setDisplay(DISPLAY));
+		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setClientId(HOST_ID).setDisplay(DISPLAY));
 		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
 
 		assertThat(panelsService.getConfiguredPanels()).hasSize(1)
@@ -97,7 +97,7 @@ public class PanelsServiceIT extends IntegrationTestBase {
 
 		PanelDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
 		assertThat(panel.getId()).isEqualTo(PANEL_ID);
-		assertThat(panel.getHostId()).isEqualTo(HOST_ID);
+		assertThat(panel.getClientId()).isEqualTo(HOST_ID);
 		assertThat(panel.getClientModel()).isEqualTo(CLIENT_MODEL);
 		assertThat(panel.getDisplay()).isEqualTo(DISPLAY);
 	}

@@ -21,8 +21,8 @@ public class MessageSender {
 
 	private Channel channel;
 
-	public void sendMessageTo(String hostId, Object message) {
-		ClientAssociation association = associatedClientsManager.getAssociation(hostId);
+	public void sendMessageTo(String clientId, Object message) {
+		ClientAssociation association = associatedClientsManager.getAssociation(clientId);
 		sendMessageTo(association.getSocketAddress(), message);
 	}
 

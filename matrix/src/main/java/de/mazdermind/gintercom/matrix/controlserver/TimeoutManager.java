@@ -28,13 +28,13 @@ public class TimeoutManager {
 
 	@EventListener
 	public void handleHeartBeat(ClientHeartbeatMessage.ClientMessage message) {
-		associatedClientsManager.getAssociation(message.getHostId())
+		associatedClientsManager.getAssociation(message.getClientId())
 			.registerHeartbeat();
 	}
 
 	private void handleTimedOutClient(ClientAssociation clientAssociation) {
-		log.info("DeAssociating Host-ID {} because of HeartBeat Timeout (Last Heartbeat received at {})",
-			clientAssociation.getHostId(), clientAssociation.getLastHeartbeat());
+		log.info("DeAssociating Client-Id {} because of HeartBeat Timeout (Last Heartbeat received at {})",
+			clientAssociation.getClientId(), clientAssociation.getLastHeartbeat());
 
 		String reason = String.format("HeartBeat Timeout (Last Heartbeat received at %s)", clientAssociation.getLastHeartbeat());
 
@@ -44,6 +44,6 @@ public class TimeoutManager {
 	@Scheduled(fixedRateString = HEARTBEAT_SENDING_GAP)
 	public void sendHeartbeatMessages() {
 		associatedClientsManager.getAssociations().forEach(association ->
-			messageSender.sendMessageTo(association.getHostId(), new MatrixHeartbeatMessage()));
+			messageSender.sendMessageTo(association.getClientId(), new MatrixHeartbeatMessage()));
 	}
 }

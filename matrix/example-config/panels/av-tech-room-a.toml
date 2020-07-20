@@ -2,7 +2,7 @@ display="A/V Tech Room A"
 rxGroups=["room-a", "av-tech"]
 txGroups=["av-tech"]
 buttonsets=["av-tech"]
-hostId="0000-0004"
+clientId="0000-0004"
 
 [buttons.6]
 display="Room A Broadcast"

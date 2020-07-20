@@ -20,8 +20,8 @@ public class PortAllocationManager {
 		panelToMatrix = new PortPool(config.getMatrixConfig().getPorts().getPanelToMatrix());
 	}
 
-	public PortSet allocatePortSet(String hostId) {
-		return allocatedPorts.computeIfAbsent(hostId, (key) ->
+	public PortSet allocatePortSet(String clientId) {
+		return allocatedPorts.computeIfAbsent(clientId, (key) ->
 			new PortSet(
 				matrixToPanel.getNextPort(),
 				panelToMatrix.getNextPort()

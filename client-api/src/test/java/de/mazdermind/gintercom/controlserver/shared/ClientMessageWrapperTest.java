@@ -29,7 +29,7 @@ public class ClientMessageWrapperTest {
 		assertThat(wrapped).isNotNull();
 		assertThat(wrapped).isInstanceOf(TestButtonPressedMessage.ClientMessage.class);
 		assertThat(wrapped).isInstanceOf(WrappedClientMessage.class);
-		assertThat(wrapped.getHostId()).isEqualTo(HOST_ID);
+		assertThat(wrapped.getClientId()).isEqualTo(HOST_ID);
 
 		assertThat(wrapped.getMessage()).isNotNull();
 		assertThat(wrapped.getMessage()).isInstanceOf(TestButtonPressedMessage.class);

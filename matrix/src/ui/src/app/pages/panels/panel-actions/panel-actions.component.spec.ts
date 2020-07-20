@@ -21,7 +21,7 @@ describe('PanelActionsComponent', () => {
     component.panel = {
       id: 'myPanel',
       display: 'My Panel',
-      hostId: '0000-0000',
+      clientId: '0000-0000',
       assigned: true,
       online: false,
       clientModel: 'Test-Panel',
