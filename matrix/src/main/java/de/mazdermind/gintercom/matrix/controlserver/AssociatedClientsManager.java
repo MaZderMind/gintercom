@@ -62,21 +62,19 @@ public class AssociatedClientsManager {
 		deAssociate(deAssociationRequestMessage.getClientId(), reason);
 	}
 
-	public void deAssociate(ClientAssociation clientAssociation, String reason) {
-		deAssociate(clientAssociation.getClientId(), reason);
+	public void deAssociate(String clientId, String reason) {
+		deAssociate(getAssociation(clientId), reason);
 	}
 
-	public void deAssociate(String clientId, String reason) {
-		ClientAssociation association = getAssociation(clientId);
-
+	public void deAssociate(ClientAssociation association, String reason) {
 		log.info("De-Associating Address {} from the Matrix (was associated as Client-Id {}) for Reason: {}",
-			association.getSocketAddress(), clientId, reason);
+			association.getSocketAddress(), association.getClientId(), reason);
 
 		eventPublisher.publishEvent(new ClientDeAssociatedEvent()
 			.setAssociation(association)
 			.setReason(reason));
 
-		associations.deAssociate(clientId);
+		associations.deAssociate(association.getClientId());
 	}
 
 	/**
