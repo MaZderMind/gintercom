@@ -1,24 +1,28 @@
 [buttons.1]
 display="A/V Tech Broadcast"
 action="push"
+direction="rx"
 targetType="group"
 target="av-tech"
 
 [buttons.2]
 display="Room A Broadcast"
 action="push"
+direction="rx"
 targetType="group"
 target="room-a"
 
 [buttons.3]
 display="Room B Broadcast"
 action="push"
+direction="rx"
 targetType="group"
 target="room-b"
 
 [buttons.4]
 display="Helpdesk Broadcast"
 action="push"
+direction="rx"
 targetType="group"
 target="helpdesk"
 
@@ -27,11 +31,13 @@ target="helpdesk"
 [buttons.5]
 display="A/V Tech Room A"
 action="push"
+direction="rx"
 targetType="panel"
 target="av-tech-room-a"
 
 [buttons.6]
 display="A/V Tech Room B"
 action="push"
+direction="rx"
 targetType="panel"
 target="av-tech-room-b"

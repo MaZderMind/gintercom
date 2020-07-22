@@ -1,5 +1,6 @@
 [buttons.1]
 display="A/V Tech Group"
 action="push"
+direction="rx"
 targetType="group"
 target="av-tech"

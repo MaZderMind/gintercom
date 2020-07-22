@@ -1,5 +1,6 @@
 package de.mazdermind.gintercom.matrix.provisioning;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -8,15 +9,16 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.DeProvisionMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ProvisionMessage;
+import de.mazdermind.gintercom.matrix.configuration.ButtonSetResolver;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.controlserver.MessageSender;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.PanelGroupsChangedEvent;
-import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,9 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProvisioningManager {
 	private final Config config;
-	private final PortAllocationManager portAllocationManager;
 	private final ApplicationEventPublisher eventPublisher;
 	private final MessageSender messageSender;
+	private final ButtonSetResolver buttonSetResolver;
 
 	@EventListener
 	@Order(Ordered.LOWEST_PRECEDENCE)
@@ -42,9 +44,12 @@ public class ProvisioningManager {
 			log.info("Sending ProvisionMessage for Panel {} to Client-Id {}",
 				panelConfig.getDisplay(), clientId);
 
+			Map<String, ButtonConfig> resolvedButtons = buttonSetResolver.resolveButtons(panelConfig);
 			messageSender.sendMessageTo(clientId, new ProvisionMessage()
 				.setDisplay(panelConfig.getDisplay())
-				.setButtons(panelConfig.getButtons()));
+				.setButtons(resolvedButtons)
+				.setRxGroups(panelConfig.getRxGroups())
+				.setTxGroups(panelConfig.getTxGroups()));
 
 			// Setup initial RX/TX Group Configuration
 			eventPublisher.publishEvent(new PanelGroupsChangedEvent()

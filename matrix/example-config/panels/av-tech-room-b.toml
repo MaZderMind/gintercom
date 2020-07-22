@@ -7,5 +7,6 @@ clientId="0000-0005"
 [buttons.6]
 display="Room B Broadcast"
 action="push"
+direction="rx"
 targetType="group"
 target="room-b"

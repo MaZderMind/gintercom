@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableSet;
 
 import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
+import de.mazdermind.gintercom.clientapi.configuration.ButtonDirection;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
@@ -61,6 +62,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 				"Q1", new ButtonConfig()
 					.setDisplay("Phone Home")
 					.setAction(ButtonAction.PUSH)
+					.setDirection(ButtonDirection.RX)
 					.setTarget("Home")
 					.setTargetType(ButtonTargetType.GROUP)
 			));
@@ -137,6 +139,23 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 
 		DeAssociatedMessage deAssociatedMessage = client.awaitMessage(DeAssociatedMessage.class);
 		assertThat(deAssociatedMessage.getReason()).contains("HeartBeat Timeout");
+	}
+
+	@Test
+	public void provisionsInitialGroupsAndButtonsOnAssociation() {
+		panelConfig
+			.setButtons(ImmutableMap.of(
+				"Q1", new ButtonConfig()
+					.setDisplay("Phone Home")
+					.setAction(ButtonAction.PUSH)
+					.setTarget("Home")
+					.setTargetType(ButtonTargetType.GROUP),
+				"Q2", new ButtonConfig()
+					.setDisplay("Phone Home")
+					.setAction(ButtonAction.TOGGLE)
+					.setTarget("Home")
+					.setTargetType(ButtonTargetType.GROUP)
+			));
 	}
 
 	protected void associateAndProvisionClient() {

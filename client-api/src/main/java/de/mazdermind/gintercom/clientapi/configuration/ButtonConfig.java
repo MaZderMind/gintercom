@@ -12,11 +12,14 @@ public class ButtonConfig {
 	private String display;
 
 	@NotNull
+	private String target;
+
+	@NotNull
 	private ButtonAction action;
 
 	@NotNull
-	private ButtonTargetType targetType;
+	private ButtonDirection direction;
 
 	@NotNull
-	private String target;
+	private ButtonTargetType targetType;
 }
