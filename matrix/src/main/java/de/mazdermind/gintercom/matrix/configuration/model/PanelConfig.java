@@ -21,11 +21,11 @@ public class PanelConfig {
 	@NotNull
 	private String display;
 
-	private String hostId;
+	private String clientId;
 
 	private Set<String> rxGroups = emptySet();
 	private Set<String> txGroups = emptySet();
-	private List<String> buttonsets = emptyList();
+	private List<String> buttonSets = emptyList();
 
 	@Valid
 	private Map<String, ButtonConfig> buttons = emptyMap();

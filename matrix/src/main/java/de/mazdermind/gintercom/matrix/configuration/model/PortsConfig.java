@@ -11,9 +11,9 @@ import lombok.experimental.Accessors;
 public class PortsConfig {
 	@Valid
 	@NotNull
-	private PortPoolConfig panelToMatrix;
+	private PortPoolConfig clientToMatrix;
 
 	@Valid
 	@NotNull
-	private PortPoolConfig matrixToPanel;
+	private PortPoolConfig matrixToClient;
 }

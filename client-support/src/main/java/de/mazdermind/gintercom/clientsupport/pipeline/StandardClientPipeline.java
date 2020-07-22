@@ -40,12 +40,12 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 	}
 
 	@Override
-	public void configurePipeline(InetAddress matrixAddress, int matrixToPanelPort, int panelToMatrixPort) {
+	public void configurePipeline(InetAddress matrixAddress, int matrixToClientPort, int clientToMatrixPort) {
 		log.info("Starting RTP/Audio Pipeline");
 		pipeline = new Pipeline("ClientPipeline");
 
-		txBin = buildTxBin(matrixAddress, panelToMatrixPort);
-		rxBin = buildRxBin(matrixToPanelPort);
+		txBin = buildTxBin(matrixAddress, clientToMatrixPort);
+		rxBin = buildRxBin(matrixToClientPort);
 
 		pipeline.add(rxBin);
 		pipeline.add(txBin);
@@ -86,7 +86,7 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 		}
 	}
 
-	protected Bin buildTxBin(InetAddress matrixAddress, int panelToMatrixPort) {
+	protected Bin buildTxBin(InetAddress matrixAddress, int clientToMatrixPort) {
 		// @formatter:off
 		return GstBuilder.buildBin("client-tx")
 			.addElement(buildSourceElement())
@@ -98,18 +98,18 @@ public abstract class StandardClientPipeline implements ClientPipeline {
 			.withCaps(GstStaticCaps.RTP)
 				.linkElement("udpsink", "client-udpsink")
 					.withProperty("host", matrixAddress.getHostAddress())
-					.withProperty("port", panelToMatrixPort)
+					.withProperty("port", clientToMatrixPort)
 					.withProperty("async", false)
 					.withProperty("sync", false)
 			.build();
 		// @formatter:on
 	}
 
-	protected Bin buildRxBin(int matrixToPanelPort) {
+	protected Bin buildRxBin(int matrixToClientPort) {
 		// @formatter:off
 		return GstBuilder.buildBin("client-rx")
 			.addElement("udpsrc", "client-udpsrc")
-				.withProperty("port", matrixToPanelPort)
+				.withProperty("port", matrixToClientPort)
 			.withCaps(GstStaticCaps.RTP)
 			.linkElement("rtpjitterbuffer")
 				.withProperty("latency", GstConstants.LATENCY_MS)

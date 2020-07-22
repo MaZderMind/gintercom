@@ -26,21 +26,21 @@ public class AssociatedClientsManager {
 
 	private final AssociatedClientsStore associations = new AssociatedClientsStore();
 
-	public ClientAssociation associate(InetSocketAddress address, String hostId, String clientModel) {
-		if (associations.isAssociated(hostId)) {
-			log.warn("Rejecting Association-Request from {} because the Host-ID {} is already associated", address, hostId);
-			throw new HostIdAlreadyAssociatedException(hostId);
+	public ClientAssociation associate(InetSocketAddress address, String clientId, String clientModel) {
+		if (associations.isAssociated(clientId)) {
+			log.warn("Rejecting Association-Request from {} because the Client-Id {} is already associated", address, clientId);
+			throw new ClientIdAlreadyAssociatedException(clientId);
 		} else if (associations.isAssociated(address)) {
 			log.warn("Rejecting Association-Request from {} because this SocketAddress is already associated", address);
 			throw new SocketAddressAlreadyAssociatedException(address);
 		}
 
-		log.info("Associating Address {} with the Matrix as Host-ID {}", address, hostId);
+		log.info("Associating Address {} with the Matrix as Client-Id {}", address, clientId);
 
-		PortSet portSet = portAllocationManager.allocatePortSet(hostId);
+		PortSet portSet = portAllocationManager.allocatePortSet(clientId);
 
 		ClientAssociation association = associations.associate(new ClientAssociation()
-			.setHostId(hostId)
+			.setClientId(clientId)
 			.setClientModel(clientModel)
 			.setSocketAddress(address)
 			.setRtpPorts(portSet));
@@ -53,41 +53,39 @@ public class AssociatedClientsManager {
 
 	@EventListener
 	public void handleDeAssociationRequestMessage(DeAssociationRequestMessage.ClientMessage deAssociationRequestMessage) {
-		log.info("Received De-Association-Request from Host-ID {}", deAssociationRequestMessage.getHostId());
+		log.info("Received De-Association-Request from Client-Id {}", deAssociationRequestMessage.getClientId());
 
 		String reason = String.format(
 			"Received DeAssociationRequestMessage with reason: '%s'",
 			deAssociationRequestMessage.getMessage().getReason());
 
-		deAssociate(deAssociationRequestMessage.getHostId(), reason);
+		deAssociate(deAssociationRequestMessage.getClientId(), reason);
 	}
 
-	public void deAssociate(ClientAssociation clientAssociation, String reason) {
-		deAssociate(clientAssociation.getHostId(), reason);
+	public void deAssociate(String clientId, String reason) {
+		deAssociate(getAssociation(clientId), reason);
 	}
 
-	public void deAssociate(String hostId, String reason) {
-		ClientAssociation association = getAssociation(hostId);
-
-		log.info("De-Associating Address {} from the Matrix (was associated as Host-ID {}) for Reason: {}",
-			association.getSocketAddress(), hostId, reason);
+	public void deAssociate(ClientAssociation association, String reason) {
+		log.info("De-Associating Address {} from the Matrix (was associated as Client-Id {}) for Reason: {}",
+			association.getSocketAddress(), association.getClientId(), reason);
 
 		eventPublisher.publishEvent(new ClientDeAssociatedEvent()
 			.setAssociation(association)
 			.setReason(reason));
 
-		associations.deAssociate(hostId);
+		associations.deAssociate(association.getClientId());
 	}
 
 	/**
 	 * Returns the Association or Fails with an Exception if not Association could be found.
 	 *
-	 * @param hostId Host-ID to get the Association for
+	 * @param clientId Client-Id to get the Association for
 	 * @return found Association
 	 */
-	public ClientAssociation getAssociation(String hostId) {
-		return associations.findAssociation(hostId)
-			.orElseThrow(() -> new NotAssociatedException(hostId));
+	public ClientAssociation getAssociation(String clientId) {
+		return associations.findAssociation(clientId)
+			.orElseThrow(() -> new NotAssociatedException(clientId));
 	}
 
 	/**
@@ -104,11 +102,11 @@ public class AssociatedClientsManager {
 	/**
 	 * Returns the Association if known
 	 *
-	 * @param hostId Host-ID to find the Association for
+	 * @param clientId Client-Id to find the Association for
 	 * @return found Association
 	 */
-	public Optional<ClientAssociation> findAssociation(String hostId) {
-		return associations.findAssociation(hostId);
+	public Optional<ClientAssociation> findAssociation(String clientId) {
+		return associations.findAssociation(clientId);
 	}
 
 	/**
@@ -121,8 +119,8 @@ public class AssociatedClientsManager {
 		return associations.findAssociation(address);
 	}
 
-	public boolean isAssociated(String hostId) {
-		return associations.isAssociated(hostId);
+	public boolean isAssociated(String clientId) {
+		return associations.isAssociated(clientId);
 	}
 
 	public boolean isAssociated(InetSocketAddress address) {
@@ -139,9 +137,9 @@ public class AssociatedClientsManager {
 		associations.getAssociations().forEach(clientAssociation -> deAssociate(clientAssociation, "Shutdown"));
 	}
 
-	public static class HostIdAlreadyAssociatedException extends RuntimeException {
-		public HostIdAlreadyAssociatedException(String hostId) {
-			super(String.format("Host-Id %s is already associated", hostId));
+	public static class ClientIdAlreadyAssociatedException extends RuntimeException {
+		public ClientIdAlreadyAssociatedException(String clientId) {
+			super(String.format("Client-Id %s is already associated", clientId));
 		}
 	}
 
@@ -152,8 +150,8 @@ public class AssociatedClientsManager {
 	}
 
 	public static class NotAssociatedException extends RuntimeException {
-		public NotAssociatedException(String hostId) {
-			super(String.format("Host-Id %s not associated", hostId));
+		public NotAssociatedException(String clientId) {
+			super(String.format("Client-Id %s not associated", clientId));
 		}
 
 		public NotAssociatedException(InetSocketAddress address) {

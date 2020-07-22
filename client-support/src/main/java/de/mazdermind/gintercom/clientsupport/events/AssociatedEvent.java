@@ -10,6 +10,6 @@ import lombok.experimental.Accessors;
 public class AssociatedEvent {
 	private InetSocketAddress matrixAddress;
 
-	private Integer rtpMatrixToPanelPort;
-	private Integer rtpPanelToMatrixPort;
+	private Integer rtpMatrixToClientPort;
+	private Integer rtpClientToMatrixPort;
 }

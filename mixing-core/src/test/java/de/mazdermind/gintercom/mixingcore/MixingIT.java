@@ -5,302 +5,302 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableSet;
 
 import de.mazdermind.gintercom.mixingcore.tools.IntegrationTestBase;
-import de.mazdermind.gintercom.mixingcore.tools.PanelAndClient;
+import de.mazdermind.gintercom.mixingcore.tools.ClientInfo;
 
 public class MixingIT extends IntegrationTestBase {
 	/**
-	 * 1 Group, 1 Panel
-	 * Panel 1 transmits to Group 1
-	 * Panel 1 receives from Group 1
-	 * assert that Panel 1 hears itself
+	 * 1 Group, 1 Client
+	 * Client 1 transmits to Group 1
+	 * Client 1 receives from Group 1
+	 * assert that Client 1 hears itself
 	 */
 	@Test
-	public void panelTransmittingIntoAGroupItIsAlsoReceivingFromHearsItsOwnAudio() {
+	public void clientTransmittingIntoAGroupItIsAlsoReceivingFromHearsItsOwnAudio() {
 		Group group1 = testManager.addGroup("1");
-		PanelAndClient panel1 = testManager.addPanel("1");
+		ClientInfo client1 = testManager.addClient("1");
 
-		panel1.getPanel().startTransmittingTo(group1);
-		panel1.getPanel().startReceivingFrom(group1);
+		client1.getClientEntity().startTransmittingTo(group1);
+		client1.getClientEntity().startReceivingFrom(group1);
 
-		panel1.getClient().enableSine(800.);
-		panel1.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(800.));
+		client1.getRtpClient().enableSine(800.);
+		client1.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(800.));
 	}
 
 	/**
-	 * 1 Group, 2 Panels
-	 * Panel 1 transmits to Group 1
-	 * Panel 2 receives from Group 1
-	 * assert that Panel 2 hears Panel 1
+	 * 1 Group, 2 Clients
+	 * Client 1 transmits to Group 1
+	 * Client 2 receives from Group 1
+	 * assert that Client 2 hears Client 1
 	 */
 	@Test
-	public void panelReceivingFromAGroupHearsAudioTransmittedFromAnotherPanelIntoThisGroup() {
+	public void clientReceivingFromAGroupHearsAudioTransmittedFromAnotherClientIntoThisGroup() {
 		Group group1 = testManager.addGroup("1");
-		PanelAndClient panel1 = testManager.addPanel("1");
-		PanelAndClient panel2 = testManager.addPanel("2");
+		ClientInfo client1 = testManager.addClient("1");
+		ClientInfo client2 = testManager.addClient("2");
 
-		panel1.getPanel().startTransmittingTo(group1);
-		panel2.getPanel().startReceivingFrom(group1);
+		client1.getClientEntity().startTransmittingTo(group1);
+		client2.getClientEntity().startReceivingFrom(group1);
 
-		panel1.getClient().enableSine(2000.);
-		panel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2000.));
-		panel1.getClient().getAudioAnalyser().awaitSilence();
+		client1.getRtpClient().enableSine(2000.);
+		client2.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2000.));
+		client1.getRtpClient().getAudioAnalyser().awaitSilence();
 	}
 
 	/**
-	 * 1 Group, 3 Panels
-	 * Panel 1 transmits to Group 1
-	 * Panel 2 receives from Group 1
-	 * Panel 3 receives from Group 1
-	 * assert that Panel 2 hears Panel 1
-	 * Panel 3 joins
-	 * assert that Panel 3 also hears Panel 1
-	 * assert that Panel 2 still hears Panel 1
-	 * Panel 3 leaves
-	 * assert that Panel 2 still hears Panel 1
+	 * 1 Group, 3 Clients
+	 * Client 1 transmits to Group 1
+	 * Client 2 receives from Group 1
+	 * Client 3 receives from Group 1
+	 * assert that Client 2 hears Client 1
+	 * Client 3 joins
+	 * assert that Client 3 also hears Client 1
+	 * assert that Client 2 still hears Client 1
+	 * Client 3 leaves
+	 * assert that Client 2 still hears Client 1
 	 */
 	@Test
-	public void panelCanJoinAndLeaveGroupWithoutDisturbingOtherPanels() {
+	public void clientCanJoinAndLeaveGroupWithoutDisturbingOtherClients() {
 		Group group1 = testManager.addGroup("1");
-		PanelAndClient panel1 = testManager.addPanel("1");
-		PanelAndClient panel2 = testManager.addPanel("2");
+		ClientInfo client1 = testManager.addClient("1");
+		ClientInfo client2 = testManager.addClient("2");
 
-		panel1.getPanel().startTransmittingTo(group1);
-		panel2.getPanel().startReceivingFrom(group1);
+		client1.getClientEntity().startTransmittingTo(group1);
+		client2.getClientEntity().startReceivingFrom(group1);
 
-		panel1.getClient().enableSine(2500.);
-		panel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2500.));
+		client1.getRtpClient().enableSine(2500.);
+		client2.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2500.));
 
-		PanelAndClient panel3 = testManager.addPanel("3");
-		panel3.getPanel().startReceivingFrom(group1);
-		panel3.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2500.));
+		ClientInfo client3 = testManager.addClient("3");
+		client3.getClientEntity().startReceivingFrom(group1);
+		client3.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2500.));
 
-		panel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2500.));
+		client2.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2500.));
 
-		panel3.stopAndRemove();
+		client3.stopAndRemove();
 
-		panel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2500.));
+		client2.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(2500.));
 	}
 
 	/**
-	 * 2 Groups, 2 Panels
-	 * Panel 1 receives from Group 1
-	 * Panel 1 transmits to Group 2
-	 * Panel 2 transmits to Group 1
-	 * Panel 2 receives from Group 2
-	 * assert that the panels hear each other but not them self
+	 * 2 Groups, 2 Clients
+	 * Client 1 receives from Group 1
+	 * Client 1 transmits to Group 2
+	 * Client 2 transmits to Group 1
+	 * Client 2 receives from Group 2
+	 * assert that the clients hear each other but not them self
 	 */
 	@Test
-	public void panelTransmittingIntoAGroupItIsNotReceivingFromDoesNotHearItsOwnAudio() {
+	public void clientTransmittingIntoAGroupItIsNotReceivingFromDoesNotHearItsOwnAudio() {
 		Group group1 = testManager.addGroup("1");
 		Group group2 = testManager.addGroup("2");
 
-		PanelAndClient panel1 = testManager.addPanel("1");
-		PanelAndClient panel2 = testManager.addPanel("2");
+		ClientInfo client1 = testManager.addClient("1");
+		ClientInfo client2 = testManager.addClient("2");
 
-		panel1.getPanel().startReceivingFrom(group1);
-		panel1.getPanel().startTransmittingTo(group2);
+		client1.getClientEntity().startReceivingFrom(group1);
+		client1.getClientEntity().startTransmittingTo(group2);
 
-		panel2.getPanel().startReceivingFrom(group2);
-		panel2.getPanel().startTransmittingTo(group1);
+		client2.getClientEntity().startReceivingFrom(group2);
+		client2.getClientEntity().startTransmittingTo(group1);
 
-		panel1.getClient().enableSine(800.);
-		panel2.getClient().enableSine(400.);
+		client1.getRtpClient().enableSine(800.);
+		client2.getRtpClient().enableSine(400.);
 
-		panel1.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(400.));
-		panel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(800.));
+		client1.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(400.));
+		client2.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(800.));
 	}
 
 	/**
-	 * 2 Groups, 3 Panel
-	 * Panel 1 transmits to Group 1, Group 2
-	 * Panel 2 receives from Group 1
-	 * Panel 3 receives from Group 2
-	 * assert that Panel 2 and Panel 3 both hear Panel 1
+	 * 2 Groups, 3 Client
+	 * Client 1 transmits to Group 1, Group 2
+	 * Client 2 receives from Group 1
+	 * Client 3 receives from Group 2
+	 * assert that Client 2 and Client 3 both hear Client 1
 	 */
 	@Test
-	public void panelTransmittingIntoMultipleGroupsIsHeardInAllOfThem() {
+	public void clientTransmittingIntoMultipleGroupsIsHeardInAllOfThem() {
 		Group group1 = testManager.addGroup("1");
 		Group group2 = testManager.addGroup("2");
 
-		PanelAndClient panel1 = testManager.addPanel("1");
-		PanelAndClient panel2 = testManager.addPanel("2");
-		PanelAndClient panel3 = testManager.addPanel("3");
+		ClientInfo client1 = testManager.addClient("1");
+		ClientInfo client2 = testManager.addClient("2");
+		ClientInfo client3 = testManager.addClient("3");
 
-		panel1.getPanel().startTransmittingTo(group1);
-		panel1.getPanel().startTransmittingTo(group2);
-		panel1.getClient().enableSine(600.);
+		client1.getClientEntity().startTransmittingTo(group1);
+		client1.getClientEntity().startTransmittingTo(group2);
+		client1.getRtpClient().enableSine(600.);
 
-		panel2.getPanel().startReceivingFrom(group1);
-		panel3.getPanel().startReceivingFrom(group2);
+		client2.getClientEntity().startReceivingFrom(group1);
+		client3.getClientEntity().startReceivingFrom(group2);
 
-		panel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
-		panel3.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+		client2.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+		client3.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
 	}
 
 
 	/**
-	 * 2 Groups, 3 Panel
-	 * Panel 1 receives from Group 1, Group 2
-	 * Panel 2 transmits to Group 1
-	 * Panel 3 transmits to Group 2
-	 * assert that Panel 1 hears both Panel 2 and Panel 3
+	 * 2 Groups, 3 Client
+	 * Client 1 receives from Group 1, Group 2
+	 * Client 2 transmits to Group 1
+	 * Client 3 transmits to Group 2
+	 * assert that Client 1 hears both Client 2 and Client 3
 	 */
 	@Test
-	public void panelReceivingMultipleGroupsHearsAudioFromAllOfThem() {
+	public void clientReceivingMultipleGroupsHearsAudioFromAllOfThem() {
 		Group group1 = testManager.addGroup("1");
 		Group group2 = testManager.addGroup("2");
 
-		PanelAndClient panel1 = testManager.addPanel("1");
-		PanelAndClient panel2 = testManager.addPanel("2");
-		PanelAndClient panel3 = testManager.addPanel("3");
+		ClientInfo client1 = testManager.addClient("1");
+		ClientInfo client2 = testManager.addClient("2");
+		ClientInfo client3 = testManager.addClient("3");
 
-		panel1.getPanel().startReceivingFrom(group1);
-		panel1.getPanel().startReceivingFrom(group2);
+		client1.getClientEntity().startReceivingFrom(group1);
+		client1.getClientEntity().startReceivingFrom(group2);
 
-		panel2.getPanel().startTransmittingTo(group1);
-		panel3.getPanel().startTransmittingTo(group2);
+		client2.getClientEntity().startTransmittingTo(group1);
+		client3.getClientEntity().startTransmittingTo(group2);
 
-		panel2.getClient().enableSine(1000.);
-		panel3.getClient().enableSine(2000.);
+		client2.getRtpClient().enableSine(1000.);
+		client3.getRtpClient().enableSine(2000.);
 
-		panel1.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000., 2000.));
+		client1.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000., 2000.));
 	}
 
 	/**
-	 * 2 Groups, 4 Panels
-	 * Panel 1 transmits to Group 1
-	 * Panel 2 receives from Group 1
-	 * Panel 3 transmits to Group 2
-	 * Panel 4 transmits to Group 2
-	 * assert that Panel 2 hears Panel 1 and Panel 4 hears Panel 3 but nothing else
+	 * 2 Groups, 4 Clients
+	 * Client 1 transmits to Group 1
+	 * Client 2 receives from Group 1
+	 * Client 3 transmits to Group 2
+	 * Client 4 transmits to Group 2
+	 * assert that Client 2 hears Client 1 and Client 4 hears Client 3 but nothing else
 	 */
 	@Test
-	public void panelsCanCommunicateInParallel() {
+	public void clientsCanCommunicateInParallel() {
 		Group group1 = testManager.addGroup("1");
 		Group group2 = testManager.addGroup("2");
 
-		PanelAndClient panel1 = testManager.addPanel("1");
-		PanelAndClient panel2 = testManager.addPanel("2");
-		PanelAndClient panel3 = testManager.addPanel("3");
-		PanelAndClient panel4 = testManager.addPanel("4");
+		ClientInfo client1 = testManager.addClient("1");
+		ClientInfo client2 = testManager.addClient("2");
+		ClientInfo client3 = testManager.addClient("3");
+		ClientInfo client4 = testManager.addClient("4");
 
-		panel1.getPanel().startTransmittingTo(group1);
-		panel2.getPanel().startTransmittingTo(group2);
-		panel3.getPanel().startReceivingFrom(group1);
-		panel4.getPanel().startReceivingFrom(group2);
+		client1.getClientEntity().startTransmittingTo(group1);
+		client2.getClientEntity().startTransmittingTo(group2);
+		client3.getClientEntity().startReceivingFrom(group1);
+		client4.getClientEntity().startReceivingFrom(group2);
 
-		panel1.getClient().enableSine(400.);
-		panel2.getClient().enableSine(600.);
+		client1.getRtpClient().enableSine(400.);
+		client2.getRtpClient().enableSine(600.);
 
-		panel3.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(400.));
-		panel4.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+		client3.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(400.));
+		client4.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
 	}
 
 	/**
-	 * 1 Group, 3 Panels
-	 * Panel 1 transmits to Group
-	 * Panel 3 receives from Group
-	 * assert that Panel 3 hears Panel 1
-	 * Panel 2 starts transmitting to Group
-	 * assert that Panel 3 hears Panel 1 and 2
-	 * Panel 2 stops transmitting to Group
-	 * assert that Panel 3 hears Panel 1
-	 * Panel 2 starts transmitting to Group
-	 * assert that Panel 3 hears Panel 1 and 2
+	 * 1 Group, 3 Clients
+	 * Client 1 transmits to Group
+	 * Client 3 receives from Group
+	 * assert that Client 3 hears Client 1
+	 * Client 2 starts transmitting to Group
+	 * assert that Client 3 hears Client 1 and 2
+	 * Client 2 stops transmitting to Group
+	 * assert that Client 3 hears Client 1
+	 * Client 2 starts transmitting to Group
+	 * assert that Client 3 hears Client 1 and 2
 	 */
 	@Test
-	public void panelStartAndStopTransmittingToAGroup() {
+	public void clientStartAndStopTransmittingToAGroup() {
 		Group group1 = testManager.addGroup("1");
 
-		PanelAndClient panel1 = testManager.addPanel("1");
-		PanelAndClient panel2 = testManager.addPanel("2");
-		PanelAndClient rxPanel = testManager.addPanel("3");
+		ClientInfo client1 = testManager.addClient("1");
+		ClientInfo client2 = testManager.addClient("2");
+		ClientInfo rxClient = testManager.addClient("3");
 
-		rxPanel.getPanel().startReceivingFrom(group1);
+		rxClient.getClientEntity().startReceivingFrom(group1);
 
-		panel1.getClient().enableSine(1000.);
-		panel2.getClient().enableSine(3000.);
+		client1.getRtpClient().enableSine(1000.);
+		client2.getRtpClient().enableSine(3000.);
 
-		rxPanel.getClient().getAudioAnalyser().awaitSilence();
+		rxClient.getRtpClient().getAudioAnalyser().awaitSilence();
 
-		panel1.getPanel().startTransmittingTo(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
+		client1.getClientEntity().startTransmittingTo(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
 
-		panel2.getPanel().startTransmittingTo(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000., 3000.));
+		client2.getClientEntity().startTransmittingTo(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000., 3000.));
 
-		panel1.getPanel().stopTransmittingTo(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(3000.));
+		client1.getClientEntity().stopTransmittingTo(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(3000.));
 
-		panel2.getPanel().stopTransmittingTo(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitSilence();
+		client2.getClientEntity().stopTransmittingTo(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitSilence();
 
-		panel1.getPanel().startTransmittingTo(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
+		client1.getClientEntity().startTransmittingTo(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000.));
 
-		panel2.getPanel().startTransmittingTo(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000., 3000.));
+		client2.getClientEntity().startTransmittingTo(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(1000., 3000.));
 	}
 
 	@Test
-	public void panelStartAndStopReceivingAGroup() {
+	public void clientStartAndStopReceivingAGroup() {
 		Group group1 = testManager.addGroup("1");
 		Group group2 = testManager.addGroup("2");
 
-		PanelAndClient panel1 = testManager.addPanel("1");
-		PanelAndClient panel2 = testManager.addPanel("2");
-		PanelAndClient rxPanel = testManager.addPanel("3");
+		ClientInfo client1 = testManager.addClient("1");
+		ClientInfo client2 = testManager.addClient("2");
+		ClientInfo rxClient = testManager.addClient("3");
 
-		panel1.getPanel().startTransmittingTo(group1);
-		panel1.getClient().enableSine(300.);
+		client1.getClientEntity().startTransmittingTo(group1);
+		client1.getRtpClient().enableSine(300.);
 
-		panel2.getPanel().startTransmittingTo(group2);
-		panel2.getClient().enableSine(600.);
+		client2.getClientEntity().startTransmittingTo(group2);
+		client2.getRtpClient().enableSine(600.);
 
-		rxPanel.getClient().getAudioAnalyser().awaitSilence();
+		rxClient.getRtpClient().getAudioAnalyser().awaitSilence();
 
-		rxPanel.getPanel().startReceivingFrom(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300.));
+		rxClient.getClientEntity().startReceivingFrom(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300.));
 
-		rxPanel.getPanel().startReceivingFrom(group2);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300., 600.));
+		rxClient.getClientEntity().startReceivingFrom(group2);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300., 600.));
 
-		rxPanel.getPanel().stopReceivingFrom(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+		rxClient.getClientEntity().stopReceivingFrom(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
 
-		rxPanel.getPanel().stopReceivingFrom(group2);
-		rxPanel.getClient().getAudioAnalyser().awaitSilence();
+		rxClient.getClientEntity().stopReceivingFrom(group2);
+		rxClient.getRtpClient().getAudioAnalyser().awaitSilence();
 
-		rxPanel.getPanel().startReceivingFrom(group1);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300.));
+		rxClient.getClientEntity().startReceivingFrom(group1);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300.));
 
-		rxPanel.getPanel().startReceivingFrom(group2);
-		rxPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300., 600.));
+		rxClient.getClientEntity().startReceivingFrom(group2);
+		rxClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(300., 600.));
 
 	}
 
 	@Test
-	public void groupCanBeRemovedWhilePanelsAreConnected() {
+	public void groupCanBeRemovedWhileClientsAreConnected() {
 		Group group1 = testManager.addGroup("1");
 		Group group2 = testManager.addGroup("2");
 
-		PanelAndClient txPanel = testManager.addPanel("tx");
-		PanelAndClient rxPanel1 = testManager.addPanel("rx1");
-		PanelAndClient rxPanel2 = testManager.addPanel("rx2");
+		ClientInfo txClient = testManager.addClient("tx");
+		ClientInfo rxClient1 = testManager.addClient("rx1");
+		ClientInfo rxClient2 = testManager.addClient("rx2");
 
-		txPanel.getPanel().startTransmittingTo(group1);
-		txPanel.getPanel().startTransmittingTo(group2);
+		txClient.getClientEntity().startTransmittingTo(group1);
+		txClient.getClientEntity().startTransmittingTo(group2);
 
-		rxPanel1.getPanel().startReceivingFrom(group1);
-		rxPanel2.getPanel().startReceivingFrom(group2);
+		rxClient1.getClientEntity().startReceivingFrom(group1);
+		rxClient2.getClientEntity().startReceivingFrom(group2);
 
-		txPanel.getClient().enableSine(600.);
-		rxPanel1.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
-		rxPanel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+		txClient.getRtpClient().enableSine(600.);
+		rxClient1.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+		rxClient2.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
 
 		testManager.getMixingCore().removeGroup(group1);
 
-		rxPanel1.getClient().getAudioAnalyser().awaitSilence();
-		rxPanel2.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
+		rxClient1.getRtpClient().getAudioAnalyser().awaitSilence();
+		rxClient2.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(600.));
 	}
 }

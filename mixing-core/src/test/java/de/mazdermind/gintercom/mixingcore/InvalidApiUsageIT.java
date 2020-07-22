@@ -9,39 +9,39 @@ import com.google.common.collect.ImmutableSet;
 
 import de.mazdermind.gintercom.mixingcore.exception.InvalidMixingCoreOperationException;
 import de.mazdermind.gintercom.mixingcore.tools.IntegrationTestBase;
-import de.mazdermind.gintercom.mixingcore.tools.PanelAndClient;
+import de.mazdermind.gintercom.mixingcore.tools.ClientInfo;
 
 /**
- * This Test ensures that the Pipeline does not crash when the API is used in an invalid way and that other Panels and Groups are still
- * operable. The Mis-Used Panels and Groups are not expected to be functional after misusing the API with them.
+ * This Test ensures that the Pipeline does not crash when the API is used in an invalid way and that other Clients and Groups are still
+ * operable. The Mis-Used Clients and Groups are not expected to be functional after misusing the API with them.
  */
 public class InvalidApiUsageIT extends IntegrationTestBase {
-	private Panel panel;
+	private Client client;
 	private Group group;
 	private MixingCore mixingCore;
 
 	@Before
 	public void before() {
-		panel = testManager.addPanel("p").getPanel();
+		client = testManager.addClient("p").getClientEntity();
 		group = testManager.addGroup("g");
 		mixingCore = testManager.getMixingCore();
 	}
 
 	@Test
 	public void toleratesInvalidOrderOfOperation() {
-		assertThrows(InvalidMixingCoreOperationException.class, () -> panel.stopTransmittingTo(group));
-		assertThrows(InvalidMixingCoreOperationException.class, () -> panel.stopTransmittingTo(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> client.stopTransmittingTo(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> client.stopTransmittingTo(group));
 
-		assertThrows(InvalidMixingCoreOperationException.class, () -> panel.stopReceivingFrom(group));
-		assertThrows(InvalidMixingCoreOperationException.class, () -> panel.stopReceivingFrom(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> client.stopReceivingFrom(group));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> client.stopReceivingFrom(group));
 
 		ensurePipelineIsStillFunctional();
 	}
 
 	@Test
 	public void toleratesMultipleRemoval() {
-		mixingCore.removePanel(panel);
-		assertThrows(InvalidMixingCoreOperationException.class, () -> mixingCore.removePanel(panel));
+		mixingCore.removeClient(client);
+		assertThrows(InvalidMixingCoreOperationException.class, () -> mixingCore.removeClient(client));
 
 		mixingCore.removeGroup(group);
 		assertThrows(InvalidMixingCoreOperationException.class, () -> mixingCore.removeGroup(group));
@@ -51,20 +51,20 @@ public class InvalidApiUsageIT extends IntegrationTestBase {
 
 	@Test
 	public void toleratesDuplicateNames() {
-		assertThrows(InvalidMixingCoreOperationException.class, () -> testManager.addPanel("p"));
+		assertThrows(InvalidMixingCoreOperationException.class, () -> testManager.addClient("p"));
 		assertThrows(InvalidMixingCoreOperationException.class, () -> testManager.addGroup("g"));
 
 		ensurePipelineIsStillFunctional();
 	}
 
 	private void ensurePipelineIsStillFunctional() {
-		PanelAndClient newPanel = testManager.addPanel("p-new");
+		ClientInfo newClient = testManager.addClient("p-new");
 		Group newGroup = testManager.addGroup("g-new");
 
-		newPanel.getPanel().startReceivingFrom(newGroup);
-		newPanel.getPanel().startTransmittingTo(newGroup);
+		newClient.getClientEntity().startReceivingFrom(newGroup);
+		newClient.getClientEntity().startTransmittingTo(newGroup);
 
-		newPanel.getClient().enableSine(880.);
-		newPanel.getClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(880.));
+		newClient.getRtpClient().enableSine(880.);
+		newClient.getRtpClient().getAudioAnalyser().awaitFrequencies(ImmutableSet.of(880.));
 	}
 }

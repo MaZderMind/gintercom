@@ -53,7 +53,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 	@Before
 	public void prepareConfig() {
 		panelConfig = new PanelConfig()
-			.setHostId(HOST_ID)
+			.setClientId(HOST_ID)
 			.setDisplay("THE_DISPLAY_NAME")
 			.setRxGroups(ImmutableSet.of(RX_GROUP))
 			.setTxGroups(ImmutableSet.of(TX_GROUP_1, TX_GROUP_2))
@@ -77,7 +77,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 
 		// Request
 		client.transmit(new AssociationRequestMessage()
-			.setHostId(HOST_ID)
+			.setClientId(HOST_ID)
 			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(ImmutableList.of("Q1"))));
 
@@ -85,7 +85,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
 
 		PanelGroupsChangedEvent panelGroupsChangedEvent = eventReceiver.awaitEvent(PanelGroupsChangedEvent.class);
-		assertThat(panelGroupsChangedEvent.getAssociation().getHostId()).isEqualTo(HOST_ID);
+		assertThat(panelGroupsChangedEvent.getAssociation().getClientId()).isEqualTo(HOST_ID);
 		assertThat(panelGroupsChangedEvent.getRxGroups()).containsOnly(RX_GROUP);
 		assertThat(panelGroupsChangedEvent.getTxGroups()).containsOnly(TX_GROUP_1, TX_GROUP_2);
 
@@ -142,7 +142,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 	protected void associateAndProvisionClient() {
 		testConfig.getPanels().put(PANEL_ID, panelConfig);
 
-		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setClientId(HOST_ID));
 
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
 		eventReceiver.awaitEvent(PanelGroupsChangedEvent.class);

@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Group {
-	private final String name;
+	private final String id;
 
 	private final Pipeline pipeline;
 	private final Bin bin;
@@ -28,21 +28,21 @@ public class Group {
 	private final Element tee;
 	private final Element mixer;
 
-	private final Set<Panel> inPanels = new HashSet<>();
-	private final Set<Panel> outPanels = new HashSet<>();
+	private final Set<Client> inClients = new HashSet<>();
+	private final Set<Client> outClients = new HashSet<>();
 
-	Group(Pipeline pipeline, String name) {
-		log.info("Creating Group {}", name);
+	Group(Pipeline pipeline, String id) {
+		log.info("Creating Group {}", id);
 
-		this.name = name;
+		this.id = id;
 		this.pipeline = pipeline;
 
-		String teeName = String.format("group-%s-out", name);
-		String mixerName = String.format("group-%s-in", name);
+		String teeName = String.format("group-%s-out", id);
+		String mixerName = String.format("group-%s-in", id);
 
 		// @formatter:off
-		bin = GstBuilder.buildBin(String.format("group-%s", name))
-				.addElement("audiotestsrc", String.format("group-%s-silencesrc", name))
+		bin = GstBuilder.buildBin(String.format("group-%s", id))
+				.addElement("audiotestsrc", String.format("group-%s-silencesrc", id))
 					.withProperty("wave", "silence")
 					.withProperty("is-live", true)
 					.withProperty("samplesperbuffer", GstConstants.SAMPLES_PER_BUFFER)
@@ -61,37 +61,37 @@ public class Group {
 		expectSuccess(pipeline.add(bin));
 		expectSuccess(bin.syncStateWithParent());
 
-		debugPipeline(String.format("after-add-group-%s", name), pipeline);
-		log.debug("Created Group {}", name);
+		debugPipeline(String.format("after-add-group-%s", id), pipeline);
+		log.debug("Created Group {}", id);
 	}
 
-	public String getName() {
-		return name;
+	public String getId() {
+		return id;
 	}
 
 	void remove() {
-		log.info("Removing Group {}", name);
-		debugPipeline(String.format("before-remove-group-%s", name), pipeline);
+		log.info("Removing Group {}", id);
+		debugPipeline(String.format("before-remove-group-%s", id), pipeline);
 
-		log.debug("Asking In-Panels to stop Transmitting");
-		inPanels.forEach(panel -> panel.stopTransmittingTo(this));
-		inPanels.clear();
-		debugPipeline(String.format("after-stop-transmitting-%s", name), pipeline);
+		log.debug("Asking In-Clients to stop Transmitting");
+		inClients.forEach(client -> client.stopTransmittingTo(this));
+		inClients.clear();
+		debugPipeline(String.format("after-stop-transmitting-%s", id), pipeline);
 
-		log.debug("Asking Out-Panels to stop Receiving");
-		outPanels.forEach(panel -> panel.stopReceivingFrom(this));
-		outPanels.clear();
-		debugPipeline(String.format("after-stop-receiving-%s", name), pipeline);
+		log.debug("Asking Out-Clients to stop Receiving");
+		outClients.forEach(client -> client.stopReceivingFrom(this));
+		outClients.clear();
+		debugPipeline(String.format("after-stop-receiving-%s", id), pipeline);
 
 		expectSuccess(bin.stop());
 		expectSuccess(pipeline.remove(bin));
 
-		debugPipeline(String.format("after-remove-group-%s", name), pipeline);
-		log.debug("Removed Group {}", name);
+		debugPipeline(String.format("after-remove-group-%s", id), pipeline);
+		log.debug("Removed Group {}", id);
 	}
 
-	Pad requestSrcPadAndLinkFor(GhostPad sinkPad, Panel panel) {
-		outPanels.add(panel);
+	Pad requestSrcPadAndLinkFor(GhostPad sinkPad, Client client) {
+		outClients.add(client);
 
 		Pad teePad = tee.getRequestPad("src_%u");
 		return GstPadBlock.blockAndWait(teePad, () -> {
@@ -102,8 +102,8 @@ public class Group {
 		});
 	}
 
-	void releaseSrcPadFor(GhostPad pad, Panel panel) {
-		outPanels.remove(panel);
+	void releaseSrcPadFor(GhostPad pad, Client client) {
+		outClients.remove(client);
 
 		Pad teePad = pad.getTarget();
 		GstPadBlock.blockAndWait(teePad, () -> {
@@ -112,8 +112,8 @@ public class Group {
 		});
 	}
 
-	GhostPad requestSinkPadFor(Panel panel) {
-		inPanels.add(panel);
+	GhostPad requestSinkPadFor(Client client) {
+		inClients.add(client);
 
 		Pad mixerPad = mixer.getRequestPad("sink_%u");
 		GhostPad ghostPad = new GhostPad(mixerPad.getName() + "_ghost", mixerPad);
@@ -121,8 +121,8 @@ public class Group {
 		return ghostPad;
 	}
 
-	void releaseSinkPadFor(GhostPad pad, Panel panel) {
-		inPanels.remove(panel);
+	void releaseSinkPadFor(GhostPad pad, Client client) {
+		inClients.remove(client);
 
 		Pad mixerPad = pad.getTarget();
 		GstPadBlock.blockAndWait(mixerPad, () -> {

@@ -9,7 +9,7 @@ export interface StatisticsDto {
   panelsOnline: number;
   panelsOffline: number;
 
-  devicesOnline: number;
-  devicesProvisioned: number;
-  devicesUnprovisioned: number;
+  clientsOnline: number;
+  clientsProvisioned: number;
+  clientsUnprovisioned: number;
 }

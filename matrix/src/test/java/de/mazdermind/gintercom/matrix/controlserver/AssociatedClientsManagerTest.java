@@ -46,12 +46,12 @@ public class AssociatedClientsManagerTest {
 		assertThat(associatedClientsManager.getAssociation(ADDRESS_1)).isNotNull().isSameAs(association);
 		assertThat(associatedClientsManager.getAssociation(HOST_ID_1)).isNotNull().isSameAs(association);
 
-		assertThat(association.getHostId()).isEqualTo(HOST_ID_1);
+		assertThat(association.getClientId()).isEqualTo(HOST_ID_1);
 		assertThat(association.getSocketAddress()).isEqualTo(ADDRESS_1);
 		assertThat(association.getFirstSeen()).isCloseTo(LocalDateTime.now(), within(5, ChronoUnit.SECONDS));
 		assertThat(association.getLastHeartbeat()).isEqualTo(association.getFirstSeen());
-		assertThat(association.getRtpPorts().getMatrixToPanel()).isNotNegative().isNotZero();
-		assertThat(association.getRtpPorts().getPanelToMatrix()).isNotNegative().isNotZero();
+		assertThat(association.getRtpPorts().getMatrixToClient()).isNotNegative().isNotZero();
+		assertThat(association.getRtpPorts().getClientToMatrix()).isNotNegative().isNotZero();
 
 		verify(eventPublisher).publishEvent(any(ClientAssociatedEvent.class));
 	}
@@ -62,8 +62,8 @@ public class AssociatedClientsManagerTest {
 		associatedClientsManager.associate(ADDRESS_1, HOST_ID_2, CLIENT_MODEL);
 	}
 
-	@Test(expected = AssociatedClientsManager.HostIdAlreadyAssociatedException.class)
-	public void cantAssociateSameHostId() {
+	@Test(expected = AssociatedClientsManager.ClientIdAlreadyAssociatedException.class)
+	public void cantAssociateSameClientId() {
 		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 		associatedClientsManager.associate(ADDRESS_2, HOST_ID_1, CLIENT_MODEL);
 	}
@@ -92,7 +92,7 @@ public class AssociatedClientsManagerTest {
 
 		assertThat(associatedClientsManager.getAssociations()).hasSize(2);
 		assertThat(associatedClientsManager.getAssociations())
-			.extracting(ClientAssociation::getHostId)
+			.extracting(ClientAssociation::getClientId)
 			.contains(HOST_ID_1, HOST_ID_2);
 		assertThat(associatedClientsManager.getAssociations())
 			.extracting(ClientAssociation::getSocketAddress)
@@ -100,7 +100,7 @@ public class AssociatedClientsManagerTest {
 	}
 
 	@Test
-	public void canGetAssociationByHostId() {
+	public void canGetAssociationByClientId() {
 		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.getAssociation(HOST_ID_1)).isNotNull()
@@ -113,12 +113,12 @@ public class AssociatedClientsManagerTest {
 		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.getAssociation(ADDRESS_1)).isNotNull()
-			.extracting(ClientAssociation::getHostId)
+			.extracting(ClientAssociation::getClientId)
 			.isSameAs(HOST_ID_1);
 	}
 
 	@Test(expected = AssociatedClientsManager.NotAssociatedException.class)
-	public void getAssociationThrowsExceptionForNonExistingAssociationByHostId() {
+	public void getAssociationThrowsExceptionForNonExistingAssociationByClientId() {
 		associatedClientsManager.getAssociation(HOST_ID_1);
 	}
 
@@ -128,7 +128,7 @@ public class AssociatedClientsManagerTest {
 	}
 
 	@Test
-	public void canFindAssociationByHostId() {
+	public void canFindAssociationByClientId() {
 		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.findAssociation(HOST_ID_1)).isPresent().get()
@@ -141,12 +141,12 @@ public class AssociatedClientsManagerTest {
 		associatedClientsManager.associate(ADDRESS_1, HOST_ID_1, CLIENT_MODEL);
 
 		assertThat(associatedClientsManager.findAssociation(ADDRESS_1)).isPresent().get()
-			.extracting(ClientAssociation::getHostId)
+			.extracting(ClientAssociation::getClientId)
 			.isSameAs(HOST_ID_1);
 	}
 
 	@Test
-	public void findAssociationReturnsEmptyForNonExistingAssociationByHostId() {
+	public void findAssociationReturnsEmptyForNonExistingAssociationByClientId() {
 		assertThat(associatedClientsManager.findAssociation(HOST_ID_1)).isEmpty();
 	}
 

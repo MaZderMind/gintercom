@@ -1,8 +1,8 @@
 display="A/V Tech Romm A"
 rxGroups=["room-a", "av-tech"]
 txGroups=["av-tech"]
-buttonsets=["av-tech"]
-hostId="DEAD-BEEF"
+buttonSets=["av-tech"]
+clientId="DEAD-BEEF"
 
 [buttons.6]
 display="Room A Broadcast"

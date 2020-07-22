@@ -3,6 +3,6 @@ export interface PanelDto {
   display: string;
   clientModel: string;
   online: boolean;
-  hostId: string | null;
+  clientId: string | null;
   assigned: boolean;
 }

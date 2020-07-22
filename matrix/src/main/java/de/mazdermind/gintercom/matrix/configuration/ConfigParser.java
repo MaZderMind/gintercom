@@ -49,7 +49,7 @@ public class ConfigParser {
 			.setMatrixConfig(loadConfigFile(Paths.get(configDirectory, "matrix.toml"), MatrixConfig.class))
 			.setPanels(loadConfigFiles(Paths.get(configDirectory, "panels"), PanelConfig.class))
 			.setGroups(loadConfigFiles(Paths.get(configDirectory, "groups"), GroupConfig.class))
-			.setButtonsets(loadConfigFiles(Paths.get(configDirectory, "buttonsets"), ButtonSetConfig.class));
+			.setButtonSets(loadConfigFiles(Paths.get(configDirectory, "buttonSets"), ButtonSetConfig.class));
 
 		log.info("Validating Config");
 		Set<ConstraintViolation<Config>> constraintViolations = validator.validate(config);
@@ -64,10 +64,10 @@ public class ConfigParser {
 
 		config.validateReferences();
 
-		log.info("Loaded {} Panels, {} Groups and {} Buttonsets from Config",
+		log.info("Loaded {} Panels, {} Groups and {} ButtonSets from Config",
 			config.getPanels().size(),
 			config.getGroups().size(),
-			config.getButtonsets().size());
+			config.getButtonSets().size());
 
 		return config;
 	}

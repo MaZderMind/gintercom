@@ -48,7 +48,7 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 		assertThat(deAssociateMessage.getReason()).matches("HeartBeat Timeout \\(Last Heartbeat received at .*\\)");
 
 		ClientDeAssociatedEvent deAssociatedEvent = eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
-		assertThat(deAssociatedEvent.getAssociation().getHostId()).isEqualTo(HOST_ID);
+		assertThat(deAssociatedEvent.getAssociation().getClientId()).isEqualTo(HOST_ID);
 		assertThat(deAssociatedEvent.getReason()).matches("HeartBeat Timeout \\(Last Heartbeat received at .*\\)");
 	}
 
@@ -71,7 +71,7 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 
 	private void sendHeartbeat() {
 		timeoutManager.handleHeartBeat((ClientHeartbeatMessage.ClientMessage) new ClientHeartbeatMessage.ClientMessage()
-			.setHostId(HOST_ID)
+			.setClientId(HOST_ID)
 			.setMessage(new ClientHeartbeatMessage()));
 	}
 

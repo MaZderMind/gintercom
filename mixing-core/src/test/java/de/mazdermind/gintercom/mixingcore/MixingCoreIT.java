@@ -12,8 +12,8 @@ import org.junit.Test;
 public class MixingCoreIT {
 	private MixingCore mixingCore;
 
-	private Panel p1;
-	private Panel p2;
+	private Client p1;
+	private Client p2;
 
 	private Group g1;
 	private Group g2;
@@ -22,8 +22,8 @@ public class MixingCoreIT {
 	public void before() throws UnknownHostException {
 		mixingCore = new MixingCore();
 
-		p1 = mixingCore.addPanel("P1", InetAddress.getByName("127.0.0.1"), 20001, 30001);
-		p2 = mixingCore.addPanel("P2", InetAddress.getByName("127.0.0.1"), 20002, 30002);
+		p1 = mixingCore.addClient("P1", InetAddress.getByName("127.0.0.1"), 20001, 30001);
+		p2 = mixingCore.addClient("P2", InetAddress.getByName("127.0.0.1"), 20002, 30002);
 
 		g1 = mixingCore.addGroup("G1");
 		g2 = mixingCore.addGroup("G2");
@@ -43,8 +43,8 @@ public class MixingCoreIT {
 		assertThat(p1.getTxGroups()).isEmpty();
 		assertThat(p1.getRxGroups()).isEmpty();
 
-		assertThat(mixingCore.getPanelNames()).isEmpty();
-		assertThat(mixingCore.getGroupNames()).isEmpty();
+		assertThat(mixingCore.getClients()).isEmpty();
+		assertThat(mixingCore.getGroups()).isEmpty();
 
 		assertThat(mixingCore.isRunning()).isFalse();
 	}
@@ -65,14 +65,14 @@ public class MixingCoreIT {
 		assertThat(p2.getTxGroups()).isEmpty();
 		assertThat(p2.getRxGroups()).isEmpty();
 
-		assertThat(mixingCore.getPanelNames()).isEmpty();
-		assertThat(mixingCore.getGroupNames()).isEmpty();
+		assertThat(mixingCore.getClients()).isEmpty();
+		assertThat(mixingCore.getGroups()).isEmpty();
 
 		assertThat(mixingCore.isRunning()).isTrue();
 	}
 
 	@Test
-	public void perPanelGetter() {
+	public void perClientGetter() {
 		p1.startReceivingFrom(g1);
 		p1.startReceivingFrom(g2);
 		p1.startTransmittingTo(g2);
@@ -98,67 +98,79 @@ public class MixingCoreIT {
 
 	@Test
 	public void groupGetter() {
-		assertThat(mixingCore.getGroupByName("G1")).isSameAs(g1);
-		assertThat(mixingCore.getGroupByName("G2")).isSameAs(g2);
+		assertThat(mixingCore.getGroupById("G1")).isSameAs(g1);
+		assertThat(mixingCore.getGroupById("G2")).isSameAs(g2);
 
-		assertThat(mixingCore.getGroupNames()).containsOnly("G1", "G2");
+		assertThat(mixingCore.getGroups())
+			.extracting(Group::getId)
+			.containsOnly("G1", "G2");
 
 		assertThat(mixingCore.hasGroup(g1)).isTrue();
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
 
 		mixingCore.removeGroup(g1);
 
-		assertThat(mixingCore.getGroupByName("G1")).isNull();
-		assertThat(mixingCore.getGroupByName("G2")).isSameAs(g2);
+		assertThat(mixingCore.getGroupById("G1")).isNull();
+		assertThat(mixingCore.getGroupById("G2")).isSameAs(g2);
 
 		assertThat(mixingCore.hasGroup(g1)).isFalse();
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
 
-		assertThat(mixingCore.getGroupNames()).containsOnly("G2");
+		assertThat(mixingCore.getGroups())
+			.extracting(Group::getId)
+			.containsOnly("G2");
 
 		Group g3 = mixingCore.addGroup("G3");
 
-		assertThat(mixingCore.getGroupByName("G1")).isNull();
-		assertThat(mixingCore.getGroupByName("G2")).isSameAs(g2);
-		assertThat(mixingCore.getGroupByName("G3")).isSameAs(g3);
+		assertThat(mixingCore.getGroupById("G1")).isNull();
+		assertThat(mixingCore.getGroupById("G2")).isSameAs(g2);
+		assertThat(mixingCore.getGroupById("G3")).isSameAs(g3);
 
 		assertThat(mixingCore.hasGroup(g1)).isFalse();
 		assertThat(mixingCore.hasGroup(g2)).isTrue();
 		assertThat(mixingCore.hasGroup(g3)).isTrue();
 
-		assertThat(mixingCore.getGroupNames()).containsOnly("G2", "G3");
+		assertThat(mixingCore.getGroups())
+			.extracting(Group::getId)
+			.containsOnly("G2", "G3");
 	}
 
 	@Test
-	public void panelGetter() throws UnknownHostException {
-		assertThat(mixingCore.getPanelByName("P1")).isSameAs(p1);
-		assertThat(mixingCore.getPanelByName("P2")).isSameAs(p2);
+	public void clientGetter() throws UnknownHostException {
+		assertThat(mixingCore.getClientById("P1")).isSameAs(p1);
+		assertThat(mixingCore.getClientById("P2")).isSameAs(p2);
 
-		assertThat(mixingCore.getPanelNames()).containsOnly("P1", "P2");
+		assertThat(mixingCore.getClients())
+			.extracting(Client::getId)
+			.containsOnly("P1", "P2");
 
-		assertThat(mixingCore.hasPanel(p1)).isTrue();
-		assertThat(mixingCore.hasPanel(p2)).isTrue();
+		assertThat(mixingCore.hasClient(p1)).isTrue();
+		assertThat(mixingCore.hasClient(p2)).isTrue();
 
-		mixingCore.removePanel(p1);
+		mixingCore.removeClient(p1);
 
-		assertThat(mixingCore.getPanelByName("P1")).isNull();
-		assertThat(mixingCore.getPanelByName("P2")).isSameAs(p2);
+		assertThat(mixingCore.getClientById("P1")).isNull();
+		assertThat(mixingCore.getClientById("P2")).isSameAs(p2);
 
-		assertThat(mixingCore.hasPanel(p1)).isFalse();
-		assertThat(mixingCore.hasPanel(p2)).isTrue();
+		assertThat(mixingCore.hasClient(p1)).isFalse();
+		assertThat(mixingCore.hasClient(p2)).isTrue();
 
-		assertThat(mixingCore.getPanelNames()).containsOnly("P2");
+		assertThat(mixingCore.getClients())
+			.extracting(Client::getId)
+			.containsOnly("P2");
 
-		Panel p3 = mixingCore.addPanel("P3", InetAddress.getByName("127.0.0.1"), 20003, 30003);
+		Client p3 = mixingCore.addClient("P3", InetAddress.getByName("127.0.0.1"), 20003, 30003);
 
-		assertThat(mixingCore.getPanelByName("P1")).isNull();
-		assertThat(mixingCore.getPanelByName("P2")).isSameAs(p2);
-		assertThat(mixingCore.getPanelByName("P3")).isSameAs(p3);
+		assertThat(mixingCore.getClientById("P1")).isNull();
+		assertThat(mixingCore.getClientById("P2")).isSameAs(p2);
+		assertThat(mixingCore.getClientById("P3")).isSameAs(p3);
 
-		assertThat(mixingCore.hasPanel(p1)).isFalse();
-		assertThat(mixingCore.hasPanel(p2)).isTrue();
-		assertThat(mixingCore.hasPanel(p3)).isTrue();
+		assertThat(mixingCore.hasClient(p1)).isFalse();
+		assertThat(mixingCore.hasClient(p2)).isTrue();
+		assertThat(mixingCore.hasClient(p3)).isTrue();
 
-		assertThat(mixingCore.getPanelNames()).containsOnly("P2", "P3");
+		assertThat(mixingCore.getClients())
+			.extracting(Client::getId)
+			.containsOnly("P2", "P3");
 	}
 }

@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class AssociationRequestMessage {
 	@NotEmpty
-	private String hostId;
+	private String clientId;
 
 	private String clientModel;
 

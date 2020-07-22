@@ -29,10 +29,10 @@ public class TestConfig extends Config {
 		setMatrixConfig(new MatrixConfig()
 			.setDisplay("")
 			.setPorts(new PortsConfig()
-				.setMatrixToPanel(new PortPoolConfig()
+				.setMatrixToClient(new PortPoolConfig()
 					.setStart(40000)
 					.setLimit(1000))
-				.setPanelToMatrix(new PortPoolConfig()
+				.setClientToMatrix(new PortPoolConfig()
 					.setStart(50000)
 					.setLimit(1000)))
 			.setRtp(new RtpConfig()
@@ -41,7 +41,7 @@ public class TestConfig extends Config {
 				.setBind(null)
 				.setPort(0)));
 
-		setButtonsets(new HashMap<>());
+		setButtonSets(new HashMap<>());
 		setGroups(new HashMap<>());
 		setPanels(new HashMap<>());
 	}

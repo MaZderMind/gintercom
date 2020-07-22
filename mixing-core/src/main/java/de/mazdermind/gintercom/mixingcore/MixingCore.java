@@ -2,10 +2,11 @@ package de.mazdermind.gintercom.mixingcore;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -26,7 +27,7 @@ public class MixingCore {
 
 	private final Pipeline pipeline;
 
-	private final Map<String, Panel> panels = new HashMap<>();
+	private final Map<String, Client> clients = new HashMap<>();
 	private final Map<String, Group> groups = new HashMap<>();
 
 	public MixingCore() {
@@ -50,70 +51,70 @@ public class MixingCore {
 	}
 
 
-	public Group addGroup(String name) {
-		if (groups.containsKey(name)) {
-			throw new InvalidMixingCoreOperationException(String.format("Group %s already registered", name));
+	public Group addGroup(String id) {
+		if (groups.containsKey(id)) {
+			throw new InvalidMixingCoreOperationException(String.format("Group %s already registered", id));
 		}
 
-		Group group = new Group(pipeline, name);
-		groups.put(name, group);
+		Group group = new Group(pipeline, id);
+		groups.put(id, group);
 		return group;
 	}
 
-	public Panel addPanel(String name, InetAddress panelHost, int panelToMatrixPort, int matrixToPanelPort) {
-		if (panels.containsKey(name)) {
-			throw new InvalidMixingCoreOperationException(String.format("Panel %s already registered", name));
+	public Client addClient(String id, InetAddress clientHost, int clientToMatrixPort, int matrixToClientPort) {
+		if (clients.containsKey(id)) {
+			throw new InvalidMixingCoreOperationException(String.format("Client %s already registered", id));
 		}
 
-		Panel panel = new Panel(pipeline, name, panelHost, panelToMatrixPort, matrixToPanelPort);
-		panels.put(name, panel);
-		return panel;
+		Client client = new Client(pipeline, id, clientHost, clientToMatrixPort, matrixToClientPort);
+		clients.put(id, client);
+		return client;
 	}
 
-	public Group getGroupByName(String name) {
-		return groups.get(name);
+	public Group getGroupById(String id) {
+		return groups.get(id);
 	}
 
-	public Panel getPanelByName(String name) {
-		return panels.get(name);
+	public Client getClientById(String id) {
+		return clients.get(id);
 	}
 
 	public boolean hasGroup(@Nonnull Group group) {
-		return group.equals(groups.get(group.getName()));
+		return group.equals(groups.get(group.getId()));
 	}
 
-	public boolean hasPanel(@Nonnull Panel panel) {
-		return panel.equals(panels.get(panel.getName()));
+	public boolean hasClient(@Nonnull Client client) {
+		return client.equals(clients.get(client.getId()));
 	}
 
-	public Set<String> getGroupNames() {
-		return groups.keySet();
+	public Collection<Group> getGroups() {
+		return Collections.unmodifiableCollection(groups.values());
 	}
 
-	public Set<String> getPanelNames() {
-		return panels.keySet();
+	public Collection<Client> getClients() {
+		return Collections.unmodifiableCollection(clients.values());
 	}
 
 	public void removeGroup(@Nonnull Group group) {
-		if (groups.remove(group.getName()) == null) {
-			throw new InvalidMixingCoreOperationException(String.format("Group %s not registered", group.getName()));
+		if (groups.remove(group.getId()) == null) {
+			throw new InvalidMixingCoreOperationException(String.format("Group %s not registered", group.getId()));
 		}
 
 		group.remove();
 	}
 
-	public void removePanel(@Nonnull Panel panel) {
-		if (panels.remove(panel.getName()) == null) {
-			throw new InvalidMixingCoreOperationException(String.format("Panel %s not registered", panel.getName()));
+	public void removeClient(@Nonnull Client client) {
+		if (clients.remove(client.getId()) == null) {
+			throw new InvalidMixingCoreOperationException(String.format("Client %s not registered", client.getId()));
 		}
 
-		panel.remove();
+		client.remove();
 	}
 
 	public void clear() {
-		log.info("Removing all Panels and Groups");
-		List<Panel> panelsToRemove = new ArrayList<>(this.panels.values());
-		panelsToRemove.forEach(this::removePanel);
+		log.info("Removing all Clients and Groups");
+		List<Client> clientsToRemove = new ArrayList<>(this.clients.values());
+		clientsToRemove.forEach(this::removeClient);
 
 		List<Group> groupsToRemove = new ArrayList<>(this.groups.values());
 		groupsToRemove.forEach(this::removeGroup);

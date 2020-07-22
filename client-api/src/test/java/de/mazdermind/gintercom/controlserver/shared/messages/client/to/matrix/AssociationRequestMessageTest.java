@@ -19,7 +19,7 @@ public class AssociationRequestMessageTest {
 
 	@Before
 	public void before() {
-		message = new AssociationRequestMessage().setHostId("0000-0000")
+		message = new AssociationRequestMessage().setClientId("0000-0000")
 			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(ImmutableList.of("A1", "A2", "B1", "B2")));
 	}
@@ -30,8 +30,8 @@ public class AssociationRequestMessageTest {
 	}
 
 	@Test
-	public void doesNotValidateWithoutHostId() {
-		message.setHostId(null);
+	public void doesNotValidateWithoutClientId() {
+		message.setClientId(null);
 		assertThat(message).isNot(IsValidCondition.VALID);
 	}
 

@@ -35,7 +35,7 @@ public class ClientAssociationManager {
 		setupClient(matrixAddress);
 
 		clientMessageSender.sendMessage(new AssociationRequestMessage()
-			.setHostId(clientConfiguration.getHostId())
+			.setClientId(clientConfiguration.getClientId())
 			.setClientModel(clientConfiguration.getClientModel())
 			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(clientConfiguration.getButtons())));
@@ -65,8 +65,8 @@ public class ClientAssociationManager {
 	public void handleAssociatedMessage(AssociatedMessage associatedMessage) {
 		eventPublisher.publishEvent(new AssociatedEvent()
 			.setMatrixAddress(targetMatrix)
-			.setRtpMatrixToPanelPort(associatedMessage.getRtpMatrixToPanelPort())
-			.setRtpPanelToMatrixPort(associatedMessage.getRtpPanelToMatrixPort()));
+			.setRtpMatrixToClientPort(associatedMessage.getRtpMatrixToClientPort())
+			.setRtpClientToMatrixPort(associatedMessage.getRtpClientToMatrixPort()));
 	}
 
 	@EventListener(DeAssociatedMessage.class)

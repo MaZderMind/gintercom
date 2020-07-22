@@ -4,9 +4,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import de.mazdermind.gintercom.mixingcore.Client;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
-import de.mazdermind.gintercom.mixingcore.Panel;
 import de.mazdermind.gintercom.mixingcore.portpool.PortPoolConfig;
 import de.mazdermind.gintercom.mixingcore.portpool.PortSet;
 import de.mazdermind.gintercom.mixingcore.portpool.PortSetPool;
@@ -26,16 +26,16 @@ public class MixingCoreTestManager {
 
 	private final PortSetPool portSetPool;
 	private final MixingCore mixingCore;
-	private final ArrayList<PanelAndClient> panels;
+	private final ArrayList<ClientInfo> clients;
 	private final ArrayList<Group> groups;
 
 	private MixingCoreTestManager() {
-		PortPoolConfig matrixToPanel = new PortPoolConfig().setStart(10000).setLimit(9999).setResetting(true);
-		PortPoolConfig panelToMatrix = new PortPoolConfig().setStart(20000).setLimit(9999).setResetting(true);
-		portSetPool = new PortSetPool(matrixToPanel, panelToMatrix);
+		PortPoolConfig matrixToClient = new PortPoolConfig().setStart(10000).setLimit(9999).setResetting(true);
+		PortPoolConfig clientToMatrix = new PortPoolConfig().setStart(20000).setLimit(9999).setResetting(true);
+		portSetPool = new PortSetPool(matrixToClient, clientToMatrix);
 		mixingCore = new MixingCore();
 
-		panels = new ArrayList<>();
+		clients = new ArrayList<>();
 		groups = new ArrayList<>();
 	}
 
@@ -56,8 +56,8 @@ public class MixingCoreTestManager {
 	}
 
 	public void cleanup() {
-		panels.forEach(PanelAndClient::stopAndRemove);
-		panels.clear();
+		clients.forEach(ClientInfo::stopAndRemove);
+		clients.clear();
 		groups.forEach(group -> {
 			if (mixingCore.hasGroup(group)) {
 				mixingCore.removeGroup(group);
@@ -66,21 +66,20 @@ public class MixingCoreTestManager {
 		groups.clear();
 	}
 
-	public Group addGroup(String name) {
-		Group group = mixingCore.addGroup(name);
+	public Group addGroup(String id) {
+		Group group = mixingCore.addGroup(id);
 		groups.add(group);
 
 		return group;
 	}
 
-	public PanelAndClient addPanel(String name) {
+	public ClientInfo addClient(String id) {
 		PortSet ports = portSetPool.getNextPortSet();
-		Panel panel = mixingCore.addPanel(name, MATRIX_HOST, ports.getPanelToMatrix(), ports.getMatrixToPanel());
-		RtpTestClient client = new RtpTestClient(ports, name);
-		PanelAndClient panelAndClient = new PanelAndClient(mixingCore, panel, client, ports);
-		panels.add(panelAndClient);
+		Client client = mixingCore.addClient(id, MATRIX_HOST, ports.getClientToMatrix(), ports.getMatrixToClient());
+		RtpTestClient rtpTestClient = new RtpTestClient(ports, id);
+		ClientInfo clientInfo = new ClientInfo(mixingCore, client, rtpTestClient, ports);
+		clients.add(clientInfo);
 
-		return panelAndClient;
+		return clientInfo;
 	}
-
 }

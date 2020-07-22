@@ -8,10 +8,10 @@
   <thead>
   <tr>
     <th>Status</th>
-    <th>Id</th>
+    <th>Panel-Id</th>
     <th>Display-Name</th>
     <th>Model</th>
-    <th>Host-ID</th>
+    <th>Client-Id</th>
     <th>Actions</th>
   </tr>
   </thead>
@@ -26,14 +26,14 @@
     <td>{{ panel.display }}</td>
     <td>{{ panel.clientModel }}</td>
     <td>
-      <a *ngIf="panel.assigned" [routerLink]="['/devices', panel.hostId]">{{ panel.hostId }}</a>
+      <a *ngIf="panel.assigned" [routerLink]="['/clients', panel.clientId]">{{ panel.clientId }}</a>
       <button
-        (click)="assignDevice()"
+        (click)="assignClient()"
         *ngIf="!panel.assigned"
         class="btn btn-primary btn-sm"
         type="button"
       >
-        Assign Device
+        Assign Client
       </button>
     </td>
     <td>

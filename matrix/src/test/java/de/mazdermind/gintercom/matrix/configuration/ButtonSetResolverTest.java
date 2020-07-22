@@ -34,7 +34,7 @@ public class ButtonSetResolverTest {
 			));
 
 		Config config = new Config()
-			.setButtonsets(ImmutableMap.of(
+			.setButtonSets(ImmutableMap.of(
 				"avCrews", avCrews,
 				"orgaCrewa", orgaCrewa
 			));
@@ -58,9 +58,9 @@ public class ButtonSetResolverTest {
 	}
 
 	@Test
-	public void buttonsetOnlyButtonsAreApplied() {
+	public void buttonSetOnlyButtonsAreApplied() {
 		Map<String, ButtonConfig> buttons = buttonSetResolver.resolveButtons(new PanelConfig()
-			.setButtonsets(ImmutableList.of("avCrews")));
+			.setButtonSets(ImmutableList.of("avCrews")));
 		assertThat(buttons).hasSize(3);
 		assertThat(buttons.get("1").getDisplay()).isEqualTo("A/V Broadcast");
 		assertThat(buttons.get("2").getDisplay()).isEqualTo("Audio");
@@ -68,9 +68,9 @@ public class ButtonSetResolverTest {
 	}
 
 	@Test
-	public void panelButtonsOverrideButtonsetButtons() {
+	public void panelButtonsOverrideButtonSetButtons() {
 		Map<String, ButtonConfig> buttons = buttonSetResolver.resolveButtons(new PanelConfig()
-			.setButtonsets(ImmutableList.of("avCrews"))
+			.setButtonSets(ImmutableList.of("avCrews"))
 			.setButtons(ImmutableMap.of(
 				"1", new ButtonConfig().setDisplay("Special Button"))
 			));
@@ -81,9 +81,9 @@ public class ButtonSetResolverTest {
 	}
 
 	@Test
-	public void laterButtonsetsOverrideEarlier() {
+	public void laterButtonSetsOverrideEarlier() {
 		Map<String, ButtonConfig> buttons = buttonSetResolver.resolveButtons(new PanelConfig()
-			.setButtonsets(ImmutableList.of("avCrews", "orgaCrewa"))
+			.setButtonSets(ImmutableList.of("avCrews", "orgaCrewa"))
 			.setButtons(ImmutableMap.of(
 				"1", new ButtonConfig().setDisplay("Special Button"))
 			));

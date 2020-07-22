@@ -39,8 +39,8 @@ public class DebugClientPipeline extends StandardClientPipeline {
 	}
 
 	@Override
-	public void configurePipeline(InetAddress matrixAddress, int matrixToPanelPort, int panelToMatrixPort) {
-		super.configurePipeline(matrixAddress, matrixToPanelPort, panelToMatrixPort);
+	public void configurePipeline(InetAddress matrixAddress, int matrixToClientPort, int clientToMatrixPort) {
+		super.configurePipeline(matrixAddress, matrixToClientPort, clientToMatrixPort);
 		getPipeline().getBus().connect(levelMessageListener);
 
 		configureTone(toneEnabled);

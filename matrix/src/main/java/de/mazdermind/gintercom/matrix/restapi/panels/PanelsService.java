@@ -27,12 +27,12 @@ public class PanelsService {
 	}
 
 	private PanelDto buildPanelDto(String panelId, PanelConfig panelConfig) {
-		Optional<ClientAssociation> clientAssociation = Optional.ofNullable(panelConfig.getHostId())
+		Optional<ClientAssociation> clientAssociation = Optional.ofNullable(panelConfig.getClientId())
 			.flatMap(associatedClientsManager::findAssociation);
 
 		return new PanelDto()
 			.setId(panelId)
-			.setHostId(panelConfig.getHostId())
+			.setClientId(panelConfig.getClientId())
 			.setDisplay(panelConfig.getDisplay())
 			.setOnline(clientAssociation.isPresent())
 			.setClientModel(clientAssociation

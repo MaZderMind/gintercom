@@ -96,8 +96,8 @@ export class HistoryComponent implements OnInit {
         series: this.formatChartSeries(timeline, 'panelsOnline')
       },
       {
-        name: 'Devices (Online)',
-        series: this.formatChartSeries(timeline, 'devicesOnline')
+        name: 'Clients (Online)',
+        series: this.formatChartSeries(timeline, 'clientsOnline')
       }
     ];
   }

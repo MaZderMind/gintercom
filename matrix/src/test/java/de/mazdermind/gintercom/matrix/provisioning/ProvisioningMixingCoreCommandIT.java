@@ -11,9 +11,9 @@ import com.google.common.collect.ImmutableSet;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
+import de.mazdermind.gintercom.mixingcore.Client;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
-import de.mazdermind.gintercom.mixingcore.Panel;
 
 public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	private static final String PANEL_ID = "THE_PANEL_ID";
@@ -30,7 +30,7 @@ public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	@Before
 	public void prepareConfig() {
 		PanelConfig panelConfig = new PanelConfig()
-			.setHostId(HOST_ID)
+			.setClientId(HOST_ID)
 			.setDisplay("THE_DISPLAY_NAME")
 			.setRxGroups(ImmutableSet.of(RX_GROUP))
 			.setTxGroups(ImmutableSet.of(TX_GROUP_1, TX_GROUP_2));
@@ -46,25 +46,25 @@ public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	public void initialGroupsAreLinkedOnProvisioning() {
 		associateClient();
 
-		Panel panel = mixingCore.getPanelByName(HOST_ID);
-		assertThat(panel.getRxGroups())
-			.extracting(Group::getName)
+		Client client = mixingCore.getClientById(HOST_ID);
+		assertThat(client.getRxGroups())
+			.extracting(Group::getId)
 			.containsOnly(RX_GROUP);
 
-		assertThat(panel.getTxGroups())
-			.extracting(Group::getName)
+		assertThat(client.getTxGroups())
+			.extracting(Group::getId)
 			.containsOnly(TX_GROUP_1, TX_GROUP_2);
 	}
 
 	@Test
 	public void initialGroupsAreUnlinkedOnDeProvisioning() {
 		associateClient();
-		Panel panel = mixingCore.getPanelByName(HOST_ID);
+		Client client = mixingCore.getClientById(HOST_ID);
 
 		deAssociateClient();
 
-		assertThat(panel.getTxGroups()).isEmpty();
-		assertThat(panel.getRxGroups()).isEmpty();
-		assertThat(mixingCore.getPanelByName(HOST_ID)).isNull();
+		assertThat(client.getTxGroups()).isEmpty();
+		assertThat(client.getRxGroups()).isEmpty();
+		assertThat(mixingCore.getClientById(HOST_ID)).isNull();
 	}
 }

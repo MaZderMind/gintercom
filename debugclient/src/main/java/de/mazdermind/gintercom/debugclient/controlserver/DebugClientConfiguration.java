@@ -7,19 +7,19 @@ import org.springframework.context.annotation.Configuration;
 import com.google.common.collect.ImmutableList;
 
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
-import de.mazdermind.gintercom.clientsupport.hostid.FileBasedHostId;
+import de.mazdermind.gintercom.clientsupport.clientid.FileBasedClientId;
 import de.mazdermind.gintercom.debugclient.configuration.CliArguments;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
 public class DebugClientConfiguration implements ClientConfiguration {
-	private final FileBasedHostId fileBasedHostId;
+	private final FileBasedClientId fileBasedClientId;
 	private final CliArguments cliArguments;
 
 	@Override
-	public String getHostId() {
-		return cliArguments.getHostId().orElseGet(fileBasedHostId::getHostId);
+	public String getClientId() {
+		return cliArguments.getClientId().orElseGet(fileBasedClientId::getClientId);
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class ControlServerIT extends ControlServerTestBase {
 		client.transmit(new ClientHeartbeatMessage());
 		ClientHeartbeatMessage.ClientMessage receivedEvent = eventReceiver.awaitEvent(ClientHeartbeatMessage.ClientMessage.class);
 
-		assertThat(receivedEvent.getHostId()).isEqualTo(HOST_ID);
+		assertThat(receivedEvent.getClientId()).isEqualTo(HOST_ID);
 	}
 
 	@Test

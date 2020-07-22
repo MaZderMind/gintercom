@@ -8,6 +8,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @AllArgsConstructor
 public class PortSet {
-	private int matrixToPanel;
-	private int panelToMatrix;
+	private int matrixToClient;
+	private int clientToMatrix;
 }

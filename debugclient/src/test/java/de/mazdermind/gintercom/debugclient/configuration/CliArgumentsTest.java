@@ -41,7 +41,7 @@ public class CliArgumentsTest {
 		assertThat(cliArguments.getMatrixPort()).isEmpty();
 		assertThat(cliArguments.getMatrixHost()).isEmpty();
 		assertThat(cliArguments.getButtons()).isEmpty();
-		assertThat(cliArguments.getHostId()).isEmpty();
+		assertThat(cliArguments.getClientId()).isEmpty();
 	}
 
 	@Test
@@ -71,11 +71,11 @@ public class CliArgumentsTest {
 	}
 
 	@Test
-	public void parsesHostId() throws ParseException {
-		sourceArgs = ImmutableList.of("--host-id", "FOO:BAR");
+	public void parsesClientId() throws ParseException {
+		sourceArgs = ImmutableList.of("--client-id", "FOO:BAR");
 		cliArguments.parseArgs();
 
-		assertThat(cliArguments.getHostId()).hasValue("FOO:BAR");
+		assertThat(cliArguments.getClientId()).hasValue("FOO:BAR");
 	}
 
 	@Test

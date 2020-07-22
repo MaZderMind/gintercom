@@ -65,7 +65,7 @@ public abstract class ControlServerTestBase extends IntegrationTestBase {
 	}
 
 	protected ClientAssociation associateClient() {
-		client.transmit(new AssociationRequestMessage().setHostId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setClientId(HOST_ID));
 
 		client.awaitMessage(AssociatedMessage.class);
 		client.maybeAwaitMessage(ProvisionMessage.class);

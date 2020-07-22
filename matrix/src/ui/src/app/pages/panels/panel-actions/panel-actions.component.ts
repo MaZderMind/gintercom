@@ -13,10 +13,10 @@ export class PanelActionsComponent {
   deletePanel() {
   }
 
-  assignDevice() {
+  assignClient() {
   }
 
-  unassignDevice() {
+  unassignClient() {
   }
 
 }

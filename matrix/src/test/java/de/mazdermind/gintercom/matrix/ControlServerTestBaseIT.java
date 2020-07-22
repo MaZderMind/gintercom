@@ -35,7 +35,7 @@ public class ControlServerTestBaseIT extends ControlServerTestBase {
 	@Test
 	public void testAssociationHelperWithConfiguredPanel() {
 		PanelConfig panelConfig = new PanelConfig()
-			.setHostId(HOST_ID)
+			.setClientId(HOST_ID)
 			.setDisplay("THE_DISPLAY_NAME");
 
 		testConfig.getPanels().put(PANEL_ID, panelConfig);

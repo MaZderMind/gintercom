@@ -28,7 +28,7 @@ public class RtpTestClient {
 	private static final String APPSINK_NAME = "client-appsink";
 
 	private final PortSet portSet;
-	private final String panelId;
+	private final String clientId;
 	private final AudioAnalyser audioAnalyser;
 
 	private AppSink.NEW_SAMPLE newSampleCallback;
@@ -38,17 +38,17 @@ public class RtpTestClient {
 	private Bin txBin;
 	private Bin rxBin;
 
-	public RtpTestClient(PortSet portSet, String panelId) {
+	public RtpTestClient(PortSet portSet, String clientId) {
 		this.portSet = portSet;
-		this.panelId = panelId;
-		this.audioAnalyser = new AudioAnalyser(48000, panelId);
+		this.clientId = clientId;
+		this.audioAnalyser = new AudioAnalyser(48000, clientId);
 	}
 
-	public RtpTestClient enableSine(double freq) {
+	public RtpTestClient enableSine(double freqency) {
 		ensureStarted();
 
 		Element testSrc = txBin.getElementByName(TESTSRC_NAME);
-		testSrc.set("freq", freq);
+		testSrc.set("freq", freqency);
 		testSrc.set("volume", 0.2);
 
 		return this;
@@ -68,7 +68,7 @@ public class RtpTestClient {
 			throw new IllegalStateException("Cannot be started twice");
 		}
 
-		log.info("{}: Starting RtpTestClient for PortSet {}", panelId, portSet);
+		log.info("{}: Starting RtpTestClient for PortSet {}", clientId, portSet);
 		pipeline = new Pipeline("RtpTestClient");
 
 		// @formatter:off
@@ -85,7 +85,7 @@ public class RtpTestClient {
 				.withCaps(GstStaticCaps.RTP)
 				.linkElement("udpsink", "client-udpsink")
 					.withProperty("host", "127.0.0.1")
-					.withProperty("port", portSet.getPanelToMatrix())
+					.withProperty("port", portSet.getClientToMatrix())
 					.withProperty("async", false)
 					.withProperty("sync", false)
 				.build();
@@ -94,7 +94,7 @@ public class RtpTestClient {
 		// @formatter:off
 		rxBin = GstBuilder.buildBin("rx")
 				.addElement("udpsrc", "client-udpsrc")
-					.withProperty("port", portSet.getMatrixToPanel())
+					.withProperty("port", portSet.getMatrixToClient())
 				.withCaps(GstStaticCaps.RTP)
 				.linkElement("rtpjitterbuffer")
 					.withProperty("latency", GstConstants.LATENCY_MS)
@@ -114,16 +114,16 @@ public class RtpTestClient {
 		installStateChangeLogger();
 		installAudioAnalyzer();
 
-		log.info("{}: starting pipeline", panelId);
+		log.info("{}: starting pipeline", clientId);
 		GstErrorCheck.expectSuccess(pipeline.play());
-		GstDebugger.debugPipeline(String.format("rtp-test-client-%s", panelId), pipeline);
-		log.info("{}: successfully started pipeline", panelId);
+		GstDebugger.debugPipeline(String.format("rtp-test-client-%s", clientId), pipeline);
+		log.info("{}: successfully started pipeline", clientId);
 
 		return this;
 	}
 
 	private void installStateChangeLogger() {
-		stateChangeLogger = new PipelineStateChangeLogger(panelId);
+		stateChangeLogger = new PipelineStateChangeLogger(clientId);
 		pipeline.getBus().connect((Bus.EOS) stateChangeLogger);
 		pipeline.getBus().connect((Bus.ERROR) stateChangeLogger);
 		pipeline.getBus().connect((Bus.WARNING) stateChangeLogger);

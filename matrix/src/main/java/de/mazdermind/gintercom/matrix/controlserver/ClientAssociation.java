@@ -14,7 +14,7 @@ public class ClientAssociation {
 	static final Duration HEARTBEAT_TIMEOUT = Duration.ofSeconds(15);
 
 	private InetSocketAddress socketAddress;
-	private String hostId;
+	private String clientId;
 	private String clientModel;
 	private PortSet rtpPorts;
 	private LocalDateTime firstSeen;

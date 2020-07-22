@@ -22,10 +22,10 @@ public class AssociatedMessageSender {
 		ClientAssociation association = associatedEvent.getAssociation();
 
 		AssociatedMessage response = new AssociatedMessage()
-			.setRtpPanelToMatrixPort(association.getRtpPorts().getPanelToMatrix())
-			.setRtpMatrixToPanelPort(association.getRtpPorts().getMatrixToPanel());
+			.setRtpClientToMatrixPort(association.getRtpPorts().getClientToMatrix())
+			.setRtpMatrixToClientPort(association.getRtpPorts().getMatrixToClient());
 
-		messageSender.sendMessageTo(association.getHostId(), response);
+		messageSender.sendMessageTo(association.getClientId(), response);
 	}
 
 	@EventListener
@@ -36,6 +36,6 @@ public class AssociatedMessageSender {
 		DeAssociatedMessage response = new DeAssociatedMessage()
 			.setReason(deAssociatedEvent.getReason());
 
-		messageSender.sendMessageTo(association.getHostId(), response);
+		messageSender.sendMessageTo(association.getClientId(), response);
 	}
 }

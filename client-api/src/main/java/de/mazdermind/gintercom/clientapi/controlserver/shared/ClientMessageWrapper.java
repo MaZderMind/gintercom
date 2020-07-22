@@ -35,14 +35,14 @@ public class ClientMessageWrapper {
 	 * {@link WrappedClientMessage}.
 	 *
 	 * @param message The Message (received from an associated Client) to be wrapped
-	 * @param hostId  The Host-ID this Message was received from
+	 * @param clientId  The Client-Id this Message was received from
 	 * @param <T>     The Type of the Message
 	 * @return An Instance of the Messages' Client-Message Class wrapping {@code message}
 	 */
-	public <T> WrappedClientMessage<T> wrap(T message, String hostId) {
+	public <T> WrappedClientMessage<T> wrap(T message, String clientId) {
 		return (WrappedClientMessage<T>) findWrappingClass(message.getClass(), WrappedClientMessage.class)
 			.setMessage(message)
-			.setHostId(hostId);
+			.setClientId(clientId);
 	}
 
 	/**
