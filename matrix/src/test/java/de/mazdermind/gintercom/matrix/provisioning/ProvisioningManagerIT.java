@@ -60,7 +60,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 			.setButtons(ImmutableMap.of(
 				"Q1", new ButtonConfig()
 					.setDisplay("Phone Home")
-					.setAction(ButtonAction.PTT)
+					.setAction(ButtonAction.PUSH)
 					.setTarget("Home")
 					.setTargetType(ButtonTargetType.GROUP)
 			));

@@ -6,6 +6,6 @@ clientId="DEAD-BEEF"
 
 [buttons.6]
 display="Room A Broadcast"
-action="ptt"
+action="push"
 targetType="group"
 target="room-a"

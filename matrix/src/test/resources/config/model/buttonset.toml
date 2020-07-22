@@ -1,11 +1,11 @@
 [buttons.1]
 display="A/V Tech Broadcast"
-action="ptt"
+action="push"
 targetType="group"
 target="av-tech"
 
 [buttons.2]
 display="Room A Broadcast"
-action="ptt"
+action="push"
 targetType="group"
 target="room-a"

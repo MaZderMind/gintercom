@@ -41,7 +41,7 @@ public class PanelConfigTest {
 		assertThat(panelConfig.getButtons()).containsKey("6");
 		ButtonConfig buttonConfig = panelConfig.getButtons().get("6");
 		assertThat(buttonConfig.getDisplay()).isEqualTo("Room A Broadcast");
-		assertThat(buttonConfig.getAction()).isEqualTo(ButtonAction.PTT);
+		assertThat(buttonConfig.getAction()).isEqualTo(ButtonAction.PUSH);
 		assertThat(buttonConfig.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
 		assertThat(buttonConfig.getTarget()).isEqualTo("room-a");
 	}

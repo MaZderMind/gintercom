@@ -33,13 +33,13 @@ public class ButtonSetConfigTest {
 
 		ButtonConfig buttonConfig1 = buttonSetConfig.getButtons().get("1");
 		assertThat(buttonConfig1.getDisplay()).isEqualTo("A/V Tech Broadcast");
-		assertThat(buttonConfig1.getAction()).isEqualTo(ButtonAction.PTT);
+		assertThat(buttonConfig1.getAction()).isEqualTo(ButtonAction.PUSH);
 		assertThat(buttonConfig1.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
 		assertThat(buttonConfig1.getTarget()).isEqualTo("av-tech");
 
 		ButtonConfig buttonConfig2 = buttonSetConfig.getButtons().get("2");
 		assertThat(buttonConfig2.getDisplay()).isEqualTo("Room A Broadcast");
-		assertThat(buttonConfig2.getAction()).isEqualTo(ButtonAction.PTT);
+		assertThat(buttonConfig2.getAction()).isEqualTo(ButtonAction.PUSH);
 		assertThat(buttonConfig2.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
 		assertThat(buttonConfig2.getTarget()).isEqualTo("room-a");
 	}

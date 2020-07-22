@@ -1,5 +1,5 @@
 [buttons.1]
 display="A/V Tech Group"
-action="ptt"
+action="push"
 targetType="group"
 target="av-tech"
