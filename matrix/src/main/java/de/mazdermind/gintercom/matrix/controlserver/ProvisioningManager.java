@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.provisioning;
+package de.mazdermind.gintercom.matrix.controlserver;
 
 import java.util.Map;
 import java.util.Optional;
@@ -15,7 +15,6 @@ import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client
 import de.mazdermind.gintercom.matrix.configuration.ButtonSetResolver;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
-import de.mazdermind.gintercom.matrix.controlserver.MessageSender;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.PanelGroupsChangedEvent;

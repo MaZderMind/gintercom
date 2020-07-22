@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.provisioning;
+package de.mazdermind.gintercom.matrix.controlserver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,7 +25,6 @@ import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ProvisionMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
-import de.mazdermind.gintercom.matrix.controlserver.TimeoutManager;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.PanelGroupsChangedEvent;
