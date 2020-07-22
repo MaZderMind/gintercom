@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.mixingcore.tools.peakdetector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class PeakDetector {
 	private final String identifier;
 
 	public PeakDetector(int sampleRate, int fftBands, String identifier) {
-		this.identifier = identifier;
+		this.identifier = Optional.ofNullable(identifier).orElse("none");
 		if (!ArithmeticUtils.isPowerOfTwo(fftBands)) {
 			throw new IllegalArgumentException(String.format("fftBands must be a power of 2, %s isn't", fftBands));
 		}
