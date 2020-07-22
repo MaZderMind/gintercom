@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MainWindowManager {
 	private static final Dimension INITIAL_DIMENSION = new Dimension(640, 480);
-	private final GroupButtonGridManager groupButtonGridManager;
+	private final ActionButtonGridManager actionButtonGridManager;
 	private final AudioLevelDisplayManager audioLevelDisplayManager;
 	private final DebugToolButtonsManager debugToolButtonsManager;
 	private JFrame mainWindow;
@@ -38,7 +38,7 @@ public class MainWindowManager {
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		mainWindow.setContentPane(contentPane);
 
-		mainWindow.add(groupButtonGridManager.create());
+		mainWindow.add(actionButtonGridManager.create());
 		mainWindow.add(audioLevelDisplayManager.create());
 		mainWindow.add(debugToolButtonsManager.create());
 
