@@ -27,6 +27,7 @@ test-backend:
 
 # run
 run-tmux:
+	mvn compile test-compile
 	tmux new-session \; source-file "$$PWD/run-split-tmux"
 
 run-matrix:
