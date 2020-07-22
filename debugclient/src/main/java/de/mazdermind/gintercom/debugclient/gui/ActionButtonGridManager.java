@@ -101,7 +101,10 @@ public class ActionButtonGridManager {
 
 		final AtomicBoolean lastState = new AtomicBoolean(false);
 		model.addChangeListener(e -> {
-			boolean newState = isPushButton ? model.isPressed() : model.isSelected();
+			boolean newState = isPushButton ?
+				model.isPressed() :
+				model.isSelected() || model.isPressed();
+
 			if (lastState.get() == newState) {
 				return;
 			}
