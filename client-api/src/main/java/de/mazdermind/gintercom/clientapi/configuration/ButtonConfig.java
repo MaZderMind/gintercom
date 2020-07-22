@@ -15,11 +15,11 @@ public class ButtonConfig {
 	private String target;
 
 	@NotNull
-	private ButtonAction action;
+	private ButtonTargetType targetType = ButtonTargetType.GROUP;
 
 	@NotNull
-	private ButtonDirection direction;
+	private ButtonAction action = ButtonAction.PUSH;
 
 	@NotNull
-	private ButtonTargetType targetType;
+	private ButtonDirection direction = ButtonDirection.TX;
 }

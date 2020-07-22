@@ -1,0 +1,4 @@
+display="Cam Operator Room B"
+rxGroups=["cams-b"]
+txGroups=["cams-b"]
+clientId="0000-0006"

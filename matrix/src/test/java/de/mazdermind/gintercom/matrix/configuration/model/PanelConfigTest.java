@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
+import de.mazdermind.gintercom.clientapi.configuration.ButtonDirection;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
 import de.mazdermind.gintercom.testutils.JsonMap;
 import de.mazdermind.gintercom.testutils.JsonMapUtils;
@@ -43,6 +44,7 @@ public class PanelConfigTest {
 		assertThat(buttonConfig.getDisplay()).isEqualTo("Room A Broadcast");
 		assertThat(buttonConfig.getAction()).isEqualTo(ButtonAction.PUSH);
 		assertThat(buttonConfig.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
+		assertThat(buttonConfig.getDirection()).isEqualTo(ButtonDirection.TX);
 		assertThat(buttonConfig.getTarget()).isEqualTo("room-a");
 	}
 
@@ -87,19 +89,27 @@ public class PanelConfigTest {
 	}
 
 	@Test
-	public void validationFailsWithoutButtonAction() {
+	public void validationSucceedsWithoutButtonAction() {
 		buttonJson.remove("action");
 
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig).isNot(VALID);
+		assertThat(panelConfig).is(VALID);
 	}
 
 	@Test
-	public void validationFailsWithoutButtonTargetType() {
+	public void validationSucceedsWithoutButtonDirection() {
+		buttonJson.remove("direction");
+
+		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
+		assertThat(panelConfig).is(VALID);
+	}
+
+	@Test
+	public void validationSucceedsWithoutButtonTargetType() {
 		buttonJson.remove("targetType");
 
 		PanelConfig panelConfig = convertJsonTo(PanelConfig.class, testJsonFull);
-		assertThat(panelConfig).isNot(VALID);
+		assertThat(panelConfig).is(VALID);
 	}
 
 	@Test

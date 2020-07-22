@@ -1,12 +1,11 @@
 display="A/V Tech Room A"
 rxGroups=["room-a", "av-tech"]
-txGroups=["av-tech"]
 buttonSets=["av-tech"]
 clientId="0000-0004"
 
 [buttons.6]
 display="Room A Broadcast"
 action="push"
-direction="rx"
+direction="tx"
 targetType="group"
 target="room-a"
