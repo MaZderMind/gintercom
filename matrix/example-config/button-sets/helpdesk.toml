@@ -1,30 +1,32 @@
 [buttons.1]
 display="A/V Tech Broadcast"
-action="push"
+action="toggle"
 direction="tx"
 targetType="group"
 target="av-tech"
 
 [buttons.2]
+display="Helpdesk Broadcast"
+action="toggle"
+direction="tx"
+targetType="group"
+target="helpdesk"
+
+#######
+
+[buttons.3]
 display="Room A Broadcast"
 action="push"
 direction="tx"
 targetType="group"
 target="room-a"
 
-[buttons.3]
+[buttons.4]
 display="Room B Broadcast"
 action="push"
 direction="tx"
 targetType="group"
 target="room-b"
-
-[buttons.4]
-display="Helpdesk Broadcast"
-action="push"
-direction="tx"
-targetType="group"
-target="helpdesk"
 
 #######
 
