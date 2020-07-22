@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 
@@ -19,7 +20,9 @@ import com.google.common.math.IntMath;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
+import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.MembershipChangeMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ProvisionMessage;
+import de.mazdermind.gintercom.clientsupport.controlserver.ClientMessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,9 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class ActionButtonGridManager {
-	private final static int COLS = 2;
-
+	private static final int COLS = 2;
 	private final ClientConfiguration clientConfiguration;
+	private final ClientMessageSender messageSender;
+
 	private JPanel buttonPanel;
 
 	@VisibleForTesting
@@ -70,8 +74,8 @@ public class ActionButtonGridManager {
 				}
 
 				String buttonName = buttons.get(i);
-				ButtonConfig defaultButtonconfig = new ButtonConfig().setDisplay(buttonName);
-				ButtonConfig buttonConfig = buttonConfigMap.getOrDefault(buttonName, defaultButtonconfig);
+				ButtonConfig defaultButtonConfig = new ButtonConfig().setDisplay(buttonName);
+				ButtonConfig buttonConfig = buttonConfigMap.getOrDefault(buttonName, defaultButtonConfig);
 
 				buttonPanel.add(createButton(buttonConfig));
 			}
@@ -88,9 +92,37 @@ public class ActionButtonGridManager {
 	}
 
 	private AbstractButton createButton(ButtonConfig buttonConfig) {
-		return buttonConfig.getAction() == ButtonAction.PUSH ?
+		boolean isPushButton = buttonConfig.getAction() == ButtonAction.PUSH;
+		AbstractButton button = isPushButton ?
 			new JButton(buttonConfig.getDisplay()) :
 			new JToggleButton(buttonConfig.getDisplay());
+
+		ButtonModel model = button.getModel();
+
+		final AtomicBoolean lastState = new AtomicBoolean(false);
+		model.addChangeListener(e -> {
+			boolean newState = isPushButton ? model.isPressed() : model.isSelected();
+			if (lastState.get() == newState) {
+				return;
+			}
+
+			lastState.set(newState);
+
+			MembershipChangeMessage message = new MembershipChangeMessage()
+				.setChange(newState ? MembershipChangeMessage.Change.JOIN : MembershipChangeMessage.Change.LEAVE)
+				.setDirection(buttonConfig.getDirection())
+				.setTarget(buttonConfig.getTarget())
+				.setTargetType(buttonConfig.getTargetType());
+
+			log.info("Button {} {}, sending MembershipChangeMessage {}",
+				buttonConfig.getDisplay(),
+				newState ? "pressed" : "released",
+				message);
+
+			messageSender.sendMessage(message);
+		});
+
+		return button;
 	}
 
 	@EventListener
