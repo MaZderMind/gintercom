@@ -9,17 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.ImmutableSet;
 
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
-import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 import de.mazdermind.gintercom.mixingcore.Client;
 import de.mazdermind.gintercom.mixingcore.Group;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 
 public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
-	private static final String PANEL_ID = "THE_PANEL_ID";
-	private static final String RX_GROUP = "THE_RX_GROUP";
-	private static final String TX_GROUP_1 = "THE_TX_GROUP_1";
-	private static final String TX_GROUP_2 = "THE_TX_GROUP_2";
 
 	@Autowired
 	private TestConfig testConfig;
@@ -27,44 +23,47 @@ public class ProvisioningMixingCoreCommandIT extends ControlServerTestBase {
 	@Autowired
 	private MixingCore mixingCore;
 
+	private String clientId;
+	private String rxGroup;
+	private String txGroup2;
+	private String txGroup1;
+
 	@Before
 	public void prepareConfig() {
-		PanelConfig panelConfig = new PanelConfig()
-			.setClientId(HOST_ID)
-			.setDisplay("THE_DISPLAY_NAME")
-			.setRxGroups(ImmutableSet.of(RX_GROUP))
-			.setTxGroups(ImmutableSet.of(TX_GROUP_1, TX_GROUP_2));
+		rxGroup = testConfig.addRandomGroupToMixingCore();
+		txGroup2 = testConfig.addRandomGroupToMixingCore();
+		txGroup1 = testConfig.addRandomGroupToMixingCore();
 
-		testConfig.getPanels().put(PANEL_ID, panelConfig);
-
-		mixingCore.addGroup(RX_GROUP);
-		mixingCore.addGroup(TX_GROUP_1);
-		mixingCore.addGroup(TX_GROUP_2);
+		clientId = TestClientIdGenerator.generateTestClientId();
+		String panelId = testConfig.addRandomPanel(clientId);
+		testConfig.getPanels().get(panelId)
+			.setRxGroups(ImmutableSet.of(rxGroup))
+			.setTxGroups(ImmutableSet.of(txGroup1, txGroup2));
 	}
 
 	@Test
 	public void initialGroupsAreLinkedOnProvisioning() {
-		associateClient();
+		associateClient(clientId);
 
-		Client client = mixingCore.getClientById(HOST_ID);
+		Client client = mixingCore.getClientById(clientId);
 		assertThat(client.getRxGroups())
 			.extracting(Group::getId)
-			.containsOnly(RX_GROUP);
+			.containsOnly(rxGroup);
 
 		assertThat(client.getTxGroups())
 			.extracting(Group::getId)
-			.containsOnly(TX_GROUP_1, TX_GROUP_2);
+			.containsOnly(txGroup1, txGroup2);
 	}
 
 	@Test
 	public void initialGroupsAreUnlinkedOnDeProvisioning() {
-		associateClient();
-		Client client = mixingCore.getClientById(HOST_ID);
+		associateClient(clientId);
+		Client client = mixingCore.getClientById(clientId);
 
 		deAssociateClient();
 
 		assertThat(client.getTxGroups()).isEmpty();
 		assertThat(client.getRxGroups()).isEmpty();
-		assertThat(mixingCore.getClientById(HOST_ID)).isNull();
+		assertThat(mixingCore.getClientById(clientId)).isNull();
 	}
 }

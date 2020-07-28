@@ -17,14 +17,15 @@ import org.springframework.context.ApplicationEventPublisher;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.portpool.PortAllocationManager;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 
 public class AssociatedClientsManagerTest {
 	private static final InetSocketAddress ADDRESS_1 = new InetSocketAddress("10.73.100.42", 9999);
 	private static final InetSocketAddress ADDRESS_2 = new InetSocketAddress("10.73.100.23", 9999);
 
-	private static final String HOST_ID_1 = "0000-0000";
-	private static final String HOST_ID_2 = "0000-0001";
+	private static final String HOST_ID_1 = TestClientIdGenerator.generateTestClientId();
+	private static final String HOST_ID_2 = TestClientIdGenerator.generateTestClientId();
 	private static final String CLIENT_MODEL = "THE_CLIENT_MODEL";
 
 	private AssociatedClientsManager associatedClientsManager;

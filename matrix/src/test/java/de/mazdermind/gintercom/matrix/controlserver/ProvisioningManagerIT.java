@@ -28,19 +28,13 @@ import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.PanelGroupsChangedEvent;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ProvisioningManagerIT extends ControlServerTestBase {
-	private static final String PANEL_ID = "THE_PANEL_ID";
-	private static final String RX_GROUP = "THE_RX_GROUP";
-	private static final String TX_GROUP_1 = "THE_TX_GROUP_1";
-	private static final String TX_GROUP_2 = "THE_TX_GROUP_2";
-
-	private PanelConfig panelConfig;
-
 	@Autowired
 	private TimeoutManager timeoutManager;
 
@@ -50,13 +44,25 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 	@Autowired
 	private MixingCore mixingCore;
 
+	private PanelConfig panelConfig;
+	private String panelId;
+	private String clientId;
+
+	private String rxGroup;
+	private String txGroup1;
+	private String txGroup2;
+
 	@Before
 	public void prepareConfig() {
-		panelConfig = new PanelConfig()
-			.setClientId(HOST_ID)
-			.setDisplay("THE_DISPLAY_NAME")
-			.setRxGroups(ImmutableSet.of(RX_GROUP))
-			.setTxGroups(ImmutableSet.of(TX_GROUP_1, TX_GROUP_2))
+		rxGroup = testConfig.addRandomGroupToMixingCore();
+		txGroup1 = testConfig.addRandomGroupToMixingCore();
+		txGroup2 = testConfig.addRandomGroupToMixingCore();
+
+		clientId = TestClientIdGenerator.generateTestClientId();
+		panelId = testConfig.addRandomPanel(clientId);
+		panelConfig = testConfig.getPanels().get(panelId)
+			.setRxGroups(ImmutableSet.of(rxGroup))
+			.setTxGroups(ImmutableSet.of(txGroup1, txGroup2))
 			.setButtons(ImmutableMap.of(
 				"Q1", new ButtonConfig()
 					.setDisplay("Phone Home")
@@ -65,20 +71,16 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 					.setTarget("Home")
 					.setTargetType(CommunicationTargetType.GROUP)
 			));
-
-		mixingCore.addGroup(RX_GROUP);
-		mixingCore.addGroup(TX_GROUP_1);
-		mixingCore.addGroup(TX_GROUP_2);
 	}
 
 	@Test
 	public void doesProvisionKnownClientsOnAssociation() {
 		// Configure
-		testConfig.getPanels().put(PANEL_ID, panelConfig);
+		testConfig.getPanels().put(panelId, panelConfig);
 
 		// Request
 		client.transmit(new AssociationRequestMessage()
-			.setClientId(HOST_ID)
+			.setClientId(clientId)
 			.setCapabilities(new AssociationRequestMessage.Capabilities()
 				.setButtons(ImmutableList.of("Q1"))));
 
@@ -86,9 +88,9 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
 
 		PanelGroupsChangedEvent panelGroupsChangedEvent = eventReceiver.awaitEvent(PanelGroupsChangedEvent.class);
-		assertThat(panelGroupsChangedEvent.getAssociation().getClientId()).isEqualTo(HOST_ID);
-		assertThat(panelGroupsChangedEvent.getRxGroups()).containsOnly(RX_GROUP);
-		assertThat(panelGroupsChangedEvent.getTxGroups()).containsOnly(TX_GROUP_1, TX_GROUP_2);
+		assertThat(panelGroupsChangedEvent.getAssociation().getClientId()).isEqualTo(clientId);
+		assertThat(panelGroupsChangedEvent.getRxGroups()).containsOnly(rxGroup);
+		assertThat(panelGroupsChangedEvent.getTxGroups()).containsOnly(txGroup1, txGroup2);
 
 		// Message-Broadcast
 		eventReceiver.awaitEvent(AssociationRequestMessage.ClientMessage.class);
@@ -158,9 +160,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 	}
 
 	protected void associateAndProvisionClient() {
-		testConfig.getPanels().put(PANEL_ID, panelConfig);
-
-		client.transmit(new AssociationRequestMessage().setClientId(HOST_ID));
+		client.transmit(new AssociationRequestMessage().setClientId(clientId));
 
 		eventReceiver.awaitEvent(ClientAssociatedEvent.class);
 		eventReceiver.awaitEvent(PanelGroupsChangedEvent.class);
@@ -171,7 +171,7 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 	}
 
 	private void setLastTimeoutIntoPast() {
-		associatedClientsManager.getAssociation(HOST_ID).setLastHeartbeat(
+		associatedClientsManager.getAssociation(clientId).setLastHeartbeat(
 			LocalDateTime.now().minus(Duration.ofMinutes(30)));
 	}
 }

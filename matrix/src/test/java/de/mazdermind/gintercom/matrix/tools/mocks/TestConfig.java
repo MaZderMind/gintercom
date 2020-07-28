@@ -2,7 +2,7 @@ package de.mazdermind.gintercom.matrix.tools.mocks;
 
 import java.util.HashMap;
 
-import org.apache.commons.text.WordUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.context.annotation.Primary;
 
@@ -16,11 +16,13 @@ import de.mazdermind.gintercom.matrix.configuration.model.PortPoolConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PortsConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.RtpConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.ServerConfig;
-import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
+import de.mazdermind.gintercom.mixingcore.MixingCore;
 
 @TestComponent
 @Primary
 public class TestConfig extends Config {
+	@Autowired
+	private MixingCore mixingCore;
 
 	public TestConfig() {
 		reset();
@@ -51,8 +53,18 @@ public class TestConfig extends Config {
 		String panelId = Nomen.randomName().toLowerCase();
 
 		PanelConfig panelConfig = new PanelConfig()
-			.setClientId(TestClientIdGenerator.generateTestClientId())
-			.setDisplay(WordUtils.capitalize(panelId));
+			.setDisplay(panelId);
+
+		getPanels().put(panelId, panelConfig);
+		return panelId;
+	}
+
+	public String addRandomPanel(String clientId) {
+		String panelId = Nomen.randomName().toLowerCase();
+
+		PanelConfig panelConfig = new PanelConfig()
+			.setClientId(clientId)
+			.setDisplay(panelId);
 
 		getPanels().put(panelId, panelConfig);
 		return panelId;
@@ -62,9 +74,15 @@ public class TestConfig extends Config {
 		String groupId = Nomen.randomName().toLowerCase();
 
 		GroupConfig groupConfig = new GroupConfig()
-			.setDisplay(WordUtils.capitalize(groupId));
+			.setDisplay(groupId);
 
 		getGroups().put(groupId, groupConfig);
+		return groupId;
+	}
+
+	public String addRandomGroupToMixingCore() {
+		String groupId = addRandomGroup();
+		mixingCore.addGroup(groupId);
 		return groupId;
 	}
 }

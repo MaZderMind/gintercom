@@ -11,6 +11,7 @@ import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.MembershipChangeMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 import de.mazdermind.gintercom.mixingcore.Client;
 import de.mazdermind.gintercom.mixingcore.Group;
@@ -24,15 +25,15 @@ public class MembershipChangeMessageIT extends ControlServerTestBase {
 
 	@Autowired
 	private TestConfig testConfig;
+
 	private String groupId;
-	private String panelId;
 	private String clientId;
 
 	@Before
 	public void before() {
-		panelId = testConfig.addRandomPanel();
+		clientId = TestClientIdGenerator.generateTestClientId();
+		testConfig.addRandomPanel(clientId);
 		groupId = testConfig.addRandomGroup();
-		clientId = testConfig.getPanels().get(panelId).getClientId();
 
 		associateClient(clientId);
 		mixingCore.addGroup(groupId);
