@@ -24,10 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public abstract class ControlServerTestBase extends IntegrationTestBase {
-	protected static final String HOST_ID_1 = "TEST-0001";
-	protected static final String HOST_ID_2 = "TEST-0002";
-	protected static final String HOST_ID = HOST_ID_1;
-
 	protected TestControlClient client;
 
 	@Autowired
@@ -64,12 +60,8 @@ public abstract class ControlServerTestBase extends IntegrationTestBase {
 		eventReceiver.clear();
 	}
 
-	protected ClientAssociation associateClient() {
-		return associateClient(HOST_ID);
-	}
-
-	protected ClientAssociation associateClient(String hostId) {
-		client.transmit(new AssociationRequestMessage().setClientId(hostId));
+	protected ClientAssociation associateClient(String clientId) {
+		client.transmit(new AssociationRequestMessage().setClientId(clientId));
 
 		client.awaitMessage(AssociatedMessage.class);
 		client.maybeAwaitMessage(ProvisionMessage.class);

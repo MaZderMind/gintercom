@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.MatrixHeartbeatMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -14,7 +15,7 @@ public class HeartbeatTimeoutSendingIT extends ControlServerTestBase {
 
 	@Test
 	public void sendsHeartbeatMessagesToAssociatedClient() {
-		associateClient();
+		associateClient(TestClientIdGenerator.generateTestClientId());
 
 		timeoutManager.sendHeartbeatMessages();
 		client.awaitMessage(MatrixHeartbeatMessage.class);

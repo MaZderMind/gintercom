@@ -15,23 +15,26 @@ import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.MatrixHeartbeatMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class HeartbeatTimeoutIT extends ControlServerTestBase {
 	@Autowired
 	private TimeoutManager timeoutManager;
+	private String clientId;
 
 	@Before
 	public void doAssociateClient() {
-		associateClient();
+		clientId = TestClientIdGenerator.generateTestClientId();
+		associateClient(clientId);
 	}
 
 	@Test
 	public void keepsNotTimedOutClients() {
 		timeoutManager.deAssociateTimedOutClients();
 
-		Optional<ClientAssociation> association = associatedClientsManager.findAssociation(HOST_ID);
+		Optional<ClientAssociation> association = associatedClientsManager.findAssociation(clientId);
 		assertThat(association).isPresent();
 	}
 
@@ -41,14 +44,14 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 
 		timeoutManager.deAssociateTimedOutClients();
 
-		Optional<ClientAssociation> association = associatedClientsManager.findAssociation(HOST_ID);
+		Optional<ClientAssociation> association = associatedClientsManager.findAssociation(clientId);
 		assertThat(association).isEmpty();
 
 		DeAssociatedMessage deAssociateMessage = client.awaitMessage(DeAssociatedMessage.class);
 		assertThat(deAssociateMessage.getReason()).matches("HeartBeat Timeout \\(Last Heartbeat received at .*\\)");
 
 		ClientDeAssociatedEvent deAssociatedEvent = eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
-		assertThat(deAssociatedEvent.getAssociation().getClientId()).isEqualTo(HOST_ID);
+		assertThat(deAssociatedEvent.getAssociation().getClientId()).isEqualTo(clientId);
 		assertThat(deAssociatedEvent.getReason()).matches("HeartBeat Timeout \\(Last Heartbeat received at .*\\)");
 	}
 
@@ -56,13 +59,13 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 	public void registersHeartbeatMessages() {
 		setLastTimeoutIntoPast();
 
-		Optional<ClientAssociation> association1 = associatedClientsManager.findAssociation(HOST_ID);
+		Optional<ClientAssociation> association1 = associatedClientsManager.findAssociation(clientId);
 		assertThat(association1).isPresent();
 		assertThat(association1.get().isTimedOut()).isTrue();
 
 		sendHeartbeat();
 
-		Optional<ClientAssociation> association2 = associatedClientsManager.findAssociation(HOST_ID);
+		Optional<ClientAssociation> association2 = associatedClientsManager.findAssociation(clientId);
 		assertThat(association2).isPresent();
 		assertThat(association2.get().isTimedOut()).isFalse();
 
@@ -71,12 +74,12 @@ public class HeartbeatTimeoutIT extends ControlServerTestBase {
 
 	private void sendHeartbeat() {
 		timeoutManager.handleHeartBeat((ClientHeartbeatMessage.ClientMessage) new ClientHeartbeatMessage.ClientMessage()
-			.setClientId(HOST_ID)
+			.setClientId(clientId)
 			.setMessage(new ClientHeartbeatMessage()));
 	}
 
 	private void setLastTimeoutIntoPast() {
-		associatedClientsManager.getAssociation(HOST_ID).setLastHeartbeat(
+		associatedClientsManager.getAssociation(clientId).setLastHeartbeat(
 			LocalDateTime.now().minus(Duration.ofMinutes(30)));
 	}
 }

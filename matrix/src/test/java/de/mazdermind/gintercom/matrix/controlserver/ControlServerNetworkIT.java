@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 
 
 /**
@@ -63,7 +64,7 @@ public class ControlServerNetworkIT extends ControlServerTestBase {
 
 	@Test
 	public void rejectsInvalidMessage() {
-		this.associateClient();
+		this.associateClient(TestClientIdGenerator.generateTestClientId());
 		//language=JSON
 		client.transmit("{\n" +
 			"\t\"type\": \"DeAssociationRequestMessage\"\n" +

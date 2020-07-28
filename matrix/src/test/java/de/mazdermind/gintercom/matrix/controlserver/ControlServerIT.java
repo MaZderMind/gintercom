@@ -9,14 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.ClientHeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.MatrixHeartbeatMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 
 public class ControlServerIT extends ControlServerTestBase {
 	@Autowired
 	private MessageSender messageSender;
 
+	private String clientId;
+
 	@Before
 	public void before() {
-		associateClient();
+		clientId = TestClientIdGenerator.generateTestClientId();
+		associateClient(clientId);
 	}
 
 	@Test
@@ -24,12 +28,12 @@ public class ControlServerIT extends ControlServerTestBase {
 		client.transmit(new ClientHeartbeatMessage());
 		ClientHeartbeatMessage.ClientMessage receivedEvent = eventReceiver.awaitEvent(ClientHeartbeatMessage.ClientMessage.class);
 
-		assertThat(receivedEvent.getClientId()).isEqualTo(HOST_ID);
+		assertThat(receivedEvent.getClientId()).isEqualTo(clientId);
 	}
 
 	@Test
 	public void matrixToClientMessage() {
-		messageSender.sendMessageTo(HOST_ID, new MatrixHeartbeatMessage());
+		messageSender.sendMessageTo(clientId, new MatrixHeartbeatMessage());
 
 		client.awaitMessage(MatrixHeartbeatMessage.class);
 	}

@@ -2,10 +2,19 @@ package de.mazdermind.gintercom.matrix.restapi.clients;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import com.oblac.nomen.Nomen;
+
 public class ClientDtoTest {
-	private static final String PANEL_ID = "THE_PANEL_ID";
+
+	private String panelId;
+
+	@Before
+	public void before() {
+		panelId = Nomen.randomName();
+	}
 
 	@Test
 	public void provisionedState() {
@@ -13,7 +22,7 @@ public class ClientDtoTest {
 		assertThat(dto.getPanelId()).isNull();
 		assertThat(dto.isProvisioned()).isFalse();
 
-		dto.setPanelId(PANEL_ID);
+		dto.setPanelId(panelId);
 		assertThat(dto.getPanelId()).isNotNull();
 		assertThat(dto.isProvisioned()).isTrue();
 

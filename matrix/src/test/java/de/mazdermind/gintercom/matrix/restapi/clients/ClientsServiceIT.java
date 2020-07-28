@@ -5,18 +5,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.net.InetSocketAddress;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import de.mazdermind.gintercom.matrix.IntegrationTestBase;
-import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 import de.mazdermind.gintercom.matrix.controlserver.AssociatedClientsManager;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 
 public class ClientsServiceIT extends IntegrationTestBase {
 	private static final InetSocketAddress SOCKET_ADDRESS = new InetSocketAddress("10.0.0.1", 32541);
-	private static final String HOST_ID = "THE_HOST_ID";
-	private static final String PANEL_ID = "THE_PANEL_ID";
 	private static final String CLIENT_MODEL = "THE_CLIENT_MODEL";
 
 	@Autowired
@@ -28,9 +27,16 @@ public class ClientsServiceIT extends IntegrationTestBase {
 	@Autowired
 	private TestConfig testConfig;
 
+	private String clientId;
+
+	@Before
+	public void before() {
+		clientId = TestClientIdGenerator.generateTestClientId();
+	}
+
 	@After
 	public void cleanup() {
-		associatedClientsManager.findAssociation(HOST_ID)
+		associatedClientsManager.findAssociation(clientId)
 			.ifPresent(clientAssociation -> associatedClientsManager.deAssociate(clientAssociation, "Test Cleanup"));
 	}
 
@@ -43,11 +49,11 @@ public class ClientsServiceIT extends IntegrationTestBase {
 
 	@Test
 	public void unprovisionedClientOnline() {
-		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
+		associatedClientsManager.associate(SOCKET_ADDRESS, clientId, CLIENT_MODEL);
 
 		assertThat(clientsService.getOnlineClients()).hasSize(1)
 			.flatExtracting(ClientDto::getClientId, ClientDto::getClientModel)
-			.contains(HOST_ID, CLIENT_MODEL);
+			.contains(clientId, CLIENT_MODEL);
 
 		assertThat(clientsService.getProvisionedClients()).isEmpty();
 		assertThat(clientsService.getUnprovisionedClients()).hasSize(1);
@@ -55,12 +61,12 @@ public class ClientsServiceIT extends IntegrationTestBase {
 
 	@Test
 	public void provisionedClientOnline() {
-		testConfig.getPanels().put(PANEL_ID, new PanelConfig().setClientId(HOST_ID));
-		associatedClientsManager.associate(SOCKET_ADDRESS, HOST_ID, CLIENT_MODEL);
+		testConfig.addRandomPanel(clientId);
+		associatedClientsManager.associate(SOCKET_ADDRESS, clientId, CLIENT_MODEL);
 
 		assertThat(clientsService.getOnlineClients()).hasSize(1)
 			.flatExtracting(ClientDto::getClientId, ClientDto::getClientModel)
-			.contains(HOST_ID, CLIENT_MODEL);
+			.contains(clientId, CLIENT_MODEL);
 
 		assertThat(clientsService.getProvisionedClients()).hasSize(1);
 		assertThat(clientsService.getUnprovisionedClients()).isEmpty();

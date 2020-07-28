@@ -4,8 +4,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class TestClientIdGenerator {
 	public static String generateTestClientId() {
-		return String.format("TEST-%s",
-			RandomStringUtils.randomNumeric(4).toUpperCase()
+		return String.format("TEST-%s-%s",
+			RandomStringUtils.randomAlphanumeric(4).toUpperCase(),
+			RandomStringUtils.randomAlphanumeric(4).toUpperCase()
 		);
 	}
 }
