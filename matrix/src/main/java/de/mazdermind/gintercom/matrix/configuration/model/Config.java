@@ -7,7 +7,7 @@ import javax.validation.Valid;
 import javax.validation.ValidationException;
 
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
-import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -69,14 +69,14 @@ public class Config {
 	private void validateButtonReferences(Map<String, ButtonConfig> buttons, String container) {
 		buttons.forEach((buttonId, button) -> {
 			String targetId = button.getTarget();
-			ButtonTargetType targetType = button.getTargetType();
-			if (targetType == ButtonTargetType.GROUP) {
+			CommunicationTargetType targetType = button.getTargetType();
+			if (targetType == CommunicationTargetType.GROUP) {
 				if (!groups.containsKey(targetId)) {
 					throw new ValidationException(String.format(
 						"Group %s referenced as target from Button %s of %s does not exist",
 						targetId, buttonId, container));
 				}
-			} else if (targetType == ButtonTargetType.PANEL) {
+			} else if (targetType == CommunicationTargetType.PANEL) {
 				if (!panels.containsKey(targetId)) {
 					throw new ValidationException(String.format(
 						"Panel %s referenced as target from Button %s of %s does not exist",

@@ -1,6 +1,6 @@
 package de.mazdermind.gintercom.clientapi.configuration;
 
-public enum ButtonDirection {
+public enum CommunicationDirection {
 	RX,
 	TX
 }

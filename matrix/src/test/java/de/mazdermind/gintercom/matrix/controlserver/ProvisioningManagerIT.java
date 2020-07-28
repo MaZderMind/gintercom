@@ -15,8 +15,8 @@ import com.google.common.collect.ImmutableSet;
 
 import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
-import de.mazdermind.gintercom.clientapi.configuration.ButtonDirection;
-import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.DeAssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.AssociatedMessage;
@@ -61,9 +61,9 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 				"Q1", new ButtonConfig()
 					.setDisplay("Phone Home")
 					.setAction(ButtonAction.PUSH)
-					.setDirection(ButtonDirection.RX)
+					.setDirection(CommunicationDirection.RX)
 					.setTarget("Home")
-					.setTargetType(ButtonTargetType.GROUP)
+					.setTargetType(CommunicationTargetType.GROUP)
 			));
 
 		mixingCore.addGroup(RX_GROUP);
@@ -148,12 +148,12 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 					.setDisplay("Phone Home")
 					.setAction(ButtonAction.PUSH)
 					.setTarget("Home")
-					.setTargetType(ButtonTargetType.GROUP),
+					.setTargetType(CommunicationTargetType.GROUP),
 				"Q2", new ButtonConfig()
 					.setDisplay("Phone Home")
 					.setAction(ButtonAction.TOGGLE)
 					.setTarget("Home")
-					.setTargetType(ButtonTargetType.GROUP)
+					.setTargetType(CommunicationTargetType.GROUP)
 			));
 	}
 

@@ -5,8 +5,8 @@ import javax.annotation.PreDestroy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.configuration.ButtonDirection;
-import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.MembershipChangeMessage;
 import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
@@ -53,21 +53,21 @@ public class MixingCoreController {
 		Client client = mixingCore.getClientById(clientMessage.getClientId());
 
 		MembershipChangeMessage.Change change = membershipChangeMessage.getChange();
-		ButtonDirection direction = membershipChangeMessage.getDirection();
+		CommunicationDirection direction = membershipChangeMessage.getDirection();
 
-		if (membershipChangeMessage.getTargetType() == ButtonTargetType.GROUP) {
+		if (membershipChangeMessage.getTargetType() == CommunicationTargetType.GROUP) {
 			Group group = mixingCore.getGroupById(membershipChangeMessage.getTarget());
 
-			if (change == MembershipChangeMessage.Change.JOIN && direction == ButtonDirection.RX) {
+			if (change == MembershipChangeMessage.Change.JOIN && direction == CommunicationDirection.RX) {
 				client.startReceivingFrom(group);
-			} else if (change == MembershipChangeMessage.Change.LEAVE && direction == ButtonDirection.RX) {
+			} else if (change == MembershipChangeMessage.Change.LEAVE && direction == CommunicationDirection.RX) {
 				client.stopReceivingFrom(group);
-			} else if (change == MembershipChangeMessage.Change.JOIN && direction == ButtonDirection.TX) {
+			} else if (change == MembershipChangeMessage.Change.JOIN && direction == CommunicationDirection.TX) {
 				client.startTransmittingTo(group);
-			} else if (change == MembershipChangeMessage.Change.LEAVE && direction == ButtonDirection.TX) {
+			} else if (change == MembershipChangeMessage.Change.LEAVE && direction == CommunicationDirection.TX) {
 				client.stopTransmittingTo(group);
 			}
-		} else if (membershipChangeMessage.getTargetType() == ButtonTargetType.PANEL) {
+		} else if (membershipChangeMessage.getTargetType() == CommunicationTargetType.PANEL) {
 			log.error("Panel-to-Panel-Messages are not yet implemented");
 		}
 	}

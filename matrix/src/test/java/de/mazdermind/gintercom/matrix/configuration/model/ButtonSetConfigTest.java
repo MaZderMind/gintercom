@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
-import de.mazdermind.gintercom.clientapi.configuration.ButtonDirection;
-import de.mazdermind.gintercom.clientapi.configuration.ButtonTargetType;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.testutils.JsonMap;
 import de.mazdermind.gintercom.testutils.JsonMapUtils;
 
@@ -37,15 +37,15 @@ public class ButtonSetConfigTest {
 		ButtonConfig buttonConfig1 = buttonSetConfig.getButtons().get("1");
 		assertThat(buttonConfig1.getDisplay()).isEqualTo("A/V Tech Broadcast");
 		assertThat(buttonConfig1.getAction()).isEqualTo(ButtonAction.PUSH);
-		assertThat(buttonConfig1.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
-		assertThat(buttonConfig1.getDirection()).isEqualTo(ButtonDirection.TX);
+		assertThat(buttonConfig1.getTargetType()).isEqualTo(CommunicationTargetType.GROUP);
+		assertThat(buttonConfig1.getDirection()).isEqualTo(CommunicationDirection.TX);
 		assertThat(buttonConfig1.getTarget()).isEqualTo("av-tech");
 
 		ButtonConfig buttonConfig2 = buttonSetConfig.getButtons().get("2");
 		assertThat(buttonConfig2.getDisplay()).isEqualTo("Room A Broadcast");
 		assertThat(buttonConfig2.getAction()).isEqualTo(ButtonAction.PUSH);
-		assertThat(buttonConfig2.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
-		assertThat(buttonConfig2.getDirection()).isEqualTo(ButtonDirection.TX);
+		assertThat(buttonConfig2.getTargetType()).isEqualTo(CommunicationTargetType.GROUP);
+		assertThat(buttonConfig2.getDirection()).isEqualTo(CommunicationDirection.TX);
 		assertThat(buttonConfig2.getTarget()).isEqualTo("room-a");
 	}
 
@@ -59,8 +59,8 @@ public class ButtonSetConfigTest {
 		ButtonConfig buttonConfig1 = buttonSetConfig.getButtons().get("1");
 		assertThat(buttonConfig1.getDisplay()).isEqualTo("Camera Operators Broadcast");
 		assertThat(buttonConfig1.getAction()).isEqualTo(ButtonAction.PUSH);
-		assertThat(buttonConfig1.getTargetType()).isEqualTo(ButtonTargetType.GROUP);
-		assertThat(buttonConfig1.getDirection()).isEqualTo(ButtonDirection.TX);
+		assertThat(buttonConfig1.getTargetType()).isEqualTo(CommunicationTargetType.GROUP);
+		assertThat(buttonConfig1.getDirection()).isEqualTo(CommunicationDirection.TX);
 		assertThat(buttonConfig1.getTarget()).isEqualTo("cams");
 	}
 
