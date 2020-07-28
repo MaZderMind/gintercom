@@ -12,20 +12,15 @@ import java.time.LocalDateTime;
 import javax.validation.Validation;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import de.mazdermind.gintercom.clientapi.controlserver.shared.MessageEncoder;
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 public class MessageEncoderTest {
 	private MessageEncoder messageEncoder;
@@ -136,25 +131,5 @@ public class MessageEncoderTest {
 
 		//language=JSON
 		assertThat(json).isEqualTo(expectedMessageString);
-	}
-
-	@Data
-	@Accessors(chain = true)
-	@JsonInclude(JsonInclude.Include.NON_NULL)
-	private static class TestMessage {
-		@NotEmpty
-		private String requiredString;
-
-		@NotNull
-		private Long requiredLong;
-
-		private LocalDateTime localDateTime;
-		private LocalDate localDate;
-
-		private InetAddress inetAddressV4;
-		private InetAddress inetAddressV6;
-
-		private InetSocketAddress socketAddressV4;
-		private InetSocketAddress socketAddressV6;
 	}
 }

@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.Messages;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.AssociationRequestMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ErrorMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.wrapper.WrappedClientMessage;
@@ -25,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket> {
+	private static final String MESSAGE_PACKAGE = "de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix";
+
 	private final MessageDecoder messageDecoder;
 	private final MessageEncoder messageEncoder;
 	private final ClientMessageWrapper clientMessageWrapper;
@@ -53,7 +54,7 @@ public class DatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>
 	private void handlePacket(ChannelHandlerContext ctx, InetSocketAddress sender, ByteBuffer buffer) throws Exception {
 		Object message;
 
-		message = messageDecoder.decode(buffer, Messages.CLIENT_TO_MATRIX);
+		message = messageDecoder.decode(buffer, MESSAGE_PACKAGE);
 
 		if (message instanceof AssociationRequestMessage) {
 			try {
