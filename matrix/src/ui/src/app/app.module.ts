@@ -13,7 +13,7 @@ import {PanelsListComponent} from 'src/app/pages/panels/panels-list.component';
 import {StatusComponent} from './pages/dashboard/status/status.component';
 import {HistoryComponent} from './pages/dashboard/history/history.component';
 import {LineChartModule} from '@swimlane/ngx-charts';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ClientActionsComponent} from 'src/app/pages/clients/client-actions/client-actions.component';
 import {ClientStatusComponent} from 'src/app/pages/clients/client-status/client-status.component';
@@ -25,6 +25,7 @@ import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component
 import {ClientViewComponent} from 'src/app/pages/clients/client-view/client-view.component';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
 import {GroupAddDialogComponent} from './pages/groups/group-add-dialog/group-add-dialog.component';
+import { ValidateOnSubmitDirective } from './utils/validate-on-submit.directive';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {GroupAddDialogComponent} from './pages/groups/group-add-dialog/group-add
     GroupEditComponent,
     PanelEditComponent,
     ClientViewComponent,
-    GroupAddDialogComponent
+    GroupAddDialogComponent,
+    ValidateOnSubmitDirective
   ],
   imports: [
     BrowserModule,
@@ -54,6 +56,7 @@ import {GroupAddDialogComponent} from './pages/groups/group-add-dialog/group-add
     NgbModule,
     LineChartModule,
     FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     {

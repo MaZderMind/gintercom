@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-group-edit',
@@ -7,6 +8,11 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./group-edit.component.scss']
 })
 export class GroupEditComponent implements OnInit {
+  groupEditForm = new FormGroup({
+    groupId: new FormControl('', [Validators.required]),
+    displayName: new FormControl(''),
+  });
+
   groupId: string;
 
   constructor(private route: ActivatedRoute) {
@@ -16,5 +22,9 @@ export class GroupEditComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.groupId = params.get('id');
     });
+  }
+
+  onSubmit() {
+    console.log('validSubmit');
   }
 }
