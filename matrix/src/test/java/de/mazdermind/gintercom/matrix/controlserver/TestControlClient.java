@@ -16,7 +16,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.controlserver.messages.Messages;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.MatrixHeartbeatMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.shared.MessageDecoder;
 import de.mazdermind.gintercom.clientapi.controlserver.shared.MessageEncoder;
@@ -37,7 +36,8 @@ import lombok.extern.slf4j.Slf4j;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @RequiredArgsConstructor
 public class TestControlClient {
-	public static final InetSocketAddress MATRIX_ADDRESS = new InetSocketAddress("::1", 9999);
+	private static final String MESSAGE_PACKAGE = "de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client";
+	private static final InetSocketAddress MATRIX_ADDRESS = new InetSocketAddress("::1", 9999);
 
 	private final MessageEncoder messageEncoder;
 	private final MessageDecoder messageDecoder;
@@ -122,7 +122,7 @@ public class TestControlClient {
 	private class Handler extends SimpleChannelInboundHandler<DatagramPacket> {
 		@Override
 		protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
-			Object message = messageDecoder.decode(msg.content().nioBuffer(), Messages.MATRIX_TO_CLIENT);
+			Object message = messageDecoder.decode(msg.content().nioBuffer(), MESSAGE_PACKAGE);
 			log.info("Received {}", message);
 			receivedMessages.add(message);
 		}

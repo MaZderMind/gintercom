@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
@@ -46,12 +45,12 @@ public class MessageDecoder {
 	 * and validated according to Bean-Validation rules. If the Validation succeeds, the successfully converted Message-Object is returned; in all other Cases an
 	 * Exception is thrown.
 	 *
-	 * @param buffer          Byte-Buffer to convert
-	 * @param allowedMessages Map of allowed Message-Types
+	 * @param buffer         Byte-Buffer to convert
+	 * @param messagePackage Package in which Message-Classes are looked up
 	 * @return Instance of the successfully converted Message
 	 * @throws Exception One of multiple Exceptions can be thrown, when an invalid or not allowed Message is received
 	 */
-	public Object decode(ByteBuffer buffer, Map<String, Class<?>> allowedMessages) throws Exception {
+	public Object decode(ByteBuffer buffer, String messagePackage) throws Exception {
 		String string = decoder.decode(buffer).toString();
 		JsonNode json = objectMapper.readTree(string);
 
@@ -64,14 +63,16 @@ public class MessageDecoder {
 		}
 
 		String messageType = json.get("type").textValue();
-		if (!allowedMessages.containsKey(messageType)) {
-			throw new MalformedMessageException(String.format("type-field does not name a valid Message (expected one of %s)",
-				allowedMessages.keySet()));
+		String qualifiedClass = messagePackage + "." + messageType;
+		Class<?> messageTypeClass;
+		try {
+			messageTypeClass = getClass().getClassLoader().loadClass(qualifiedClass);
+		} catch (ClassNotFoundException e) {
+			throw new MalformedMessageException(String.format(
+				"type-field does not name a valid Message (Class %s not found)", qualifiedClass));
 		}
 
 		((ObjectNode) json).remove("type");
-
-		Class<?> messageTypeClass = allowedMessages.get(messageType);
 		Object parsedMessage = objectMapper.treeToValue(json, messageTypeClass);
 
 		Set<ConstraintViolation<Object>> constraintViolations = validator.validate(parsedMessage);
