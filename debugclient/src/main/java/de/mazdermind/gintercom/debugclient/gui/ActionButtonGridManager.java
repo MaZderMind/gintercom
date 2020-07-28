@@ -22,7 +22,7 @@ import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 import de.mazdermind.gintercom.clientapi.configuration.ClientConfiguration;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.MembershipChangeMessage;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.matrix.to.client.ProvisionMessage;
-import de.mazdermind.gintercom.clientsupport.controlserver.ClientMessageSender;
+import de.mazdermind.gintercom.clientsupport.controlserver.MembershipController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ActionButtonGridManager {
 	private static final int COLS = 2;
 	private final ClientConfiguration clientConfiguration;
-	private final ClientMessageSender messageSender;
+	private final MembershipController membershipController;
 
 	private JPanel buttonPanel;
 
@@ -99,30 +99,27 @@ public class ActionButtonGridManager {
 
 		ButtonModel model = button.getModel();
 
-		final AtomicBoolean lastState = new AtomicBoolean(false);
+		final AtomicBoolean lastButtonPressedState = new AtomicBoolean(false);
 		model.addChangeListener(e -> {
-			boolean newState = isPushButton ?
+			boolean newButtonPressedState = isPushButton ?
 				model.isPressed() :
 				model.isSelected() || model.isPressed();
 
-			if (lastState.get() == newState) {
+			if (lastButtonPressedState.get() == newButtonPressedState) {
 				return;
 			}
 
-			lastState.set(newState);
+			lastButtonPressedState.set(newButtonPressedState);
 
-			MembershipChangeMessage message = new MembershipChangeMessage()
-				.setChange(newState ? MembershipChangeMessage.Change.JOIN : MembershipChangeMessage.Change.LEAVE)
-				.setDirection(buttonConfig.getDirection())
-				.setTarget(buttonConfig.getTarget())
-				.setTargetType(buttonConfig.getTargetType());
-
-			log.info("Button {} {}, sending MembershipChangeMessage {}",
+			log.info("Button {} {}",
 				buttonConfig.getDisplay(),
-				newState ? "pressed" : "released",
-				message);
+				newButtonPressedState ? "pressed" : "released");
 
-			messageSender.sendMessage(message);
+			membershipController.changeMembership(
+				newButtonPressedState ? MembershipChangeMessage.Change.JOIN : MembershipChangeMessage.Change.LEAVE,
+				buttonConfig.getDirection(),
+				buttonConfig.getTargetType(),
+				buttonConfig.getTarget());
 		});
 
 		return button;
@@ -130,6 +127,7 @@ public class ActionButtonGridManager {
 
 	@EventListener
 	public void handleProvisionMessage(ProvisionMessage provisionMessage) {
+		membershipController.leaveAllJoined();
 		EventQueue.invokeLater(() -> configureButtons(provisionMessage.getButtons()));
 	}
 }
