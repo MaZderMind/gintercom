@@ -1,5 +1,4 @@
 MATRIX_DEBUG_PORT = 5010
-CLIENT_DEBUG_PORT ?= 5011
 NG=./node_modules/.bin/ng
 
 clean:
@@ -35,10 +34,19 @@ run-matrix:
 		-Dspring-boot.run.arguments="--config-directory=./matrix/example-config" \
 		-Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(MATRIX_DEBUG_PORT)"
 
-run-debugclient:
+run-debugclient-0:
 	GST_DEBUG_DUMP_DOT_DIR=./debugclient/ mvn --projects debugclient --also-make spring-boot:run \
-		-Dspring-boot.run.arguments="--host=127.0.0.1,--port=9999,--client-id=0000-0001" \
-		-Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=$(CLIENT_DEBUG_PORT)"
+		-Dspring-boot.run.arguments="--host=127.0.0.1,--port=9999,--client-id=0000-0000"
+
+run-debugclient-1:
+	GST_DEBUG_DUMP_DOT_DIR=./debugclient/ mvn --projects debugclient --also-make spring-boot:run \
+		-Dspring-boot.run.arguments="--host=127.0.0.1,--port=9999,--client-id=0000-0001"
+
+run-debugclient-2:
+	GST_DEBUG_DUMP_DOT_DIR=./debugclient/ mvn --projects debugclient --also-make spring-boot:run \
+		-Dspring-boot.run.arguments="--host=127.0.0.1,--port=9999,--client-id=0000-0002"
+
+run-debugclient: run-debugclient-1
 
 # run `make package` first, then execute the prod-builds
 run-packaged-matrix:

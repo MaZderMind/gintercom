@@ -16,18 +16,30 @@ set -g history-limit 10000
 set -g mouse on
 
 # show pane name
-set -g pane-border-format "#{pane_index} #{pane_current_command}"
+set -g pane-border-format "#{pane_index} #T"
+set -g pane-border-status bottom
 
 split-window -d -t 0 -v
-resize-pane -t 0 -y 10
+split-window -d -t 1 -v
+split-window -d -t 2 -h
 
-# left
-send-keys -t 0 "printf '\\033]2;%s\\033\\\\' 'ui build'" Enter
+resize-pane -t 0 -y 10
+resize-pane -t 2 -y 15
+
+# top
+select-pane -t 0 -T "ui-build"
 send-keys -t 0 'make ui-run' Enter
 
-# right
-send-keys -t 1 "printf '\\033]2;%s\\033\\\\' 'matrix'" Enter
+# center
+select-pane -t 1 -T "matrix"
 send-keys -t 1 'make run-matrix' Enter
 
-select-pane -t 2
+# bottom left
+select-pane -t 2 -T "client-1"
+send-keys -t 2 'sleep 2; make run-debugclient-1' Enter
+
+# bottom right
+select-pane -t 3 -T "client-2"
+send-keys -t 3 'sleep 2; make run-debugclient-2' Enter
+
 attach
