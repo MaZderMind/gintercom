@@ -1,12 +1,12 @@
 package de.mazdermind.gintercom.matrix.tools.mocks;
 
-import static de.mazdermind.gintercom.matrix.tools.RandomGroupConfigBuilder.randomGroupConfig;
-import static de.mazdermind.gintercom.matrix.tools.RandomPanelConfigBuilder.randomPanelConfig;
-
 import java.util.HashMap;
 
+import org.apache.commons.text.WordUtils;
 import org.springframework.boot.test.context.TestComponent;
 import org.springframework.context.annotation.Primary;
+
+import com.oblac.nomen.Nomen;
 
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
@@ -16,6 +16,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.PortPoolConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PortsConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.RtpConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.ServerConfig;
+import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 
 @TestComponent
 @Primary
@@ -46,15 +47,24 @@ public class TestConfig extends Config {
 		setPanels(new HashMap<>());
 	}
 
-	public PanelConfig addRandomPanel() {
-		PanelConfig panelConfig = randomPanelConfig();
-		getPanels().put(panelConfig.getDisplay(), panelConfig);
-		return panelConfig;
+	public String addRandomPanel() {
+		String panelId = Nomen.randomName().toLowerCase();
+
+		PanelConfig panelConfig = new PanelConfig()
+			.setClientId(TestClientIdGenerator.generateTestClientId())
+			.setDisplay(WordUtils.capitalize(panelId));
+
+		getPanels().put(panelId, panelConfig);
+		return panelId;
 	}
 
-	public GroupConfig addRandomGroup() {
-		GroupConfig groupConfig = randomGroupConfig();
-		getGroups().put(groupConfig.getDisplay(), groupConfig);
-		return groupConfig;
+	public String addRandomGroup() {
+		String groupId = Nomen.randomName().toLowerCase();
+
+		GroupConfig groupConfig = new GroupConfig()
+			.setDisplay(WordUtils.capitalize(groupId));
+
+		getGroups().put(groupId, groupConfig);
+		return groupId;
 	}
 }
