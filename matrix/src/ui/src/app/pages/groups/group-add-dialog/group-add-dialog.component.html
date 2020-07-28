@@ -1,0 +1,11 @@
+<ng-template #addGroupModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Add Group</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modal.dismiss()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-group-edit></app-group-edit>
+  </div>
+</ng-template>

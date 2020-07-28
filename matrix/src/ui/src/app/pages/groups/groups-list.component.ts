@@ -3,6 +3,7 @@ import {GroupsService} from 'src/app/services/groups/groups.service';
 import {GroupDto} from 'src/app/services/groups/group-dto';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
 import {Subscription} from 'rxjs';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-groups-list',
@@ -15,8 +16,9 @@ export class GroupsListComponent implements OnInit, OnDestroy {
 
   constructor(
     private groupsService: GroupsService,
-    private uiUpdateService: UiUpdateService
-    ) {
+    private uiUpdateService: UiUpdateService,
+    public modalService: NgbModal
+  ) {
   }
 
   ngOnInit(): void {
@@ -31,8 +33,5 @@ export class GroupsListComponent implements OnInit, OnDestroy {
   private updateList() {
     this.groupsService.getConfiguredGroups().then(
       groups => this.groups = groups);
-  }
-
-  addGroup() {
   }
 }

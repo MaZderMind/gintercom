@@ -7,14 +7,14 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./group-edit.component.scss']
 })
 export class GroupEditComponent implements OnInit {
-  selectedId: string;
+  groupId: string;
 
   constructor(private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      this.selectedId = params.get('id');
+      this.groupId = params.get('id');
     });
   }
 }

@@ -1,8 +1,8 @@
+import {STOMP_CONFIG} from 'src/app/app-stomp-config';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {NavbarComponent} from './navbar/navbar.component';
@@ -24,7 +24,7 @@ import {GroupEditComponent} from './pages/groups/group-edit/group-edit.component
 import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component';
 import {ClientViewComponent} from 'src/app/pages/clients/client-view/client-view.component';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
-import {STOMP_CONFIG} from 'src/app/app-stomp-config';
+import {GroupAddDialogComponent} from './pages/groups/group-add-dialog/group-add-dialog.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,8 @@ import {STOMP_CONFIG} from 'src/app/app-stomp-config';
     GroupActionsComponent,
     GroupEditComponent,
     PanelEditComponent,
-    ClientViewComponent
+    ClientViewComponent,
+    GroupAddDialogComponent
   ],
   imports: [
     BrowserModule,
