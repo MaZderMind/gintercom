@@ -130,12 +130,13 @@ public class AssociationIT extends ControlServerTestBase {
 			.contains("Received DeAssociationRequestMessage")
 			.contains(REASON);
 
-		DeAssociationRequestMessage.ClientMessage deAssociateMessage = eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
-		assertThat(deAssociateMessage.getClientId()).isEqualTo(HOST_ID);
-		assertThat(deAssociateMessage.getMessage().getReason()).isEqualTo(REASON);
-
 		ClientDeAssociatedEvent clientDeAssociatedEvent = eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
 		assertThat(clientDeAssociatedEvent.getAssociation().getClientId()).isEqualTo(HOST_ID);
+
+		DeAssociationRequestMessage.ClientMessage deAssociateMessage = eventReceiver
+			.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
+		assertThat(deAssociateMessage.getClientId()).isEqualTo(HOST_ID);
+		assertThat(deAssociateMessage.getMessage().getReason()).isEqualTo(REASON);
 	}
 
 	@Test

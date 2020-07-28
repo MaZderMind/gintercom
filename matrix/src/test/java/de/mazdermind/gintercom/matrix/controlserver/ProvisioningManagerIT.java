@@ -108,11 +108,11 @@ public class ProvisioningManagerIT extends ControlServerTestBase {
 		// Request
 		client.transmit(new DeAssociationRequestMessage().setReason("Test"));
 
-		// Message-Broadcast
-		eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
-
 		// Matrix-Events
 		eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
+
+		// Message-Broadcast
+		eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
 
 		// Response
 		DeProvisionMessage deProvisionMessage = client.awaitMessage(DeProvisionMessage.class);

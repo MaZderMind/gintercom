@@ -8,6 +8,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import lombok.SneakyThrows;
@@ -19,6 +21,7 @@ public class TestEventReceiver {
 	private final BlockingQueue<Object> receivedEvents = new LinkedBlockingDeque<>();
 
 	@EventListener
+	@Order(Ordered.LOWEST_PRECEDENCE)
 	public void handleEvent(Object event) {
 		if (event.getClass().getPackage().getName().startsWith("de.mazdermind.gintercom")) {
 			log.info("Received {}", event);

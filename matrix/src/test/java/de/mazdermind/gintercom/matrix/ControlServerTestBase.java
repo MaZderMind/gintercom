@@ -84,8 +84,8 @@ public abstract class ControlServerTestBase extends IntegrationTestBase {
 	protected void deAssociateClient() {
 		client.transmit(new DeAssociationRequestMessage().setReason("Test-Request"));
 
-		eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
 		eventReceiver.awaitEvent(ClientDeAssociatedEvent.class);
+		eventReceiver.awaitEvent(DeAssociationRequestMessage.ClientMessage.class);
 		client.maybeAwaitMessage(DeProvisionMessage.class);
 		client.awaitMessage(DeAssociatedMessage.class);
 	}
