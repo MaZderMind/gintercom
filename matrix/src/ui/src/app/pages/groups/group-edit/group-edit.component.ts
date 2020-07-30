@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {GroupsService} from 'src/app/services/groups/groups.service';
 
 @Component({
   selector: 'app-group-edit',
@@ -15,7 +16,10 @@ export class GroupEditComponent implements OnInit {
 
   groupId: string;
 
-  constructor(private route: ActivatedRoute) {
+  constructor(
+    private route: ActivatedRoute,
+    private groupsService: GroupsService
+  ) {
   }
 
   ngOnInit(): void {
@@ -25,6 +29,7 @@ export class GroupEditComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('validSubmit');
+    // this.groupsService.addGroup()
+    this.groupEditForm.disable();
   }
 }
