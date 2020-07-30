@@ -12,4 +12,16 @@ export class GroupsService {
   getConfiguredGroups(): Promise<Array<GroupDto>> {
     return this.httpClient.get<Array<GroupDto>>('/rest/groups').toPromise();
   }
+
+  getGroup(groupId: string): Promise<GroupDto> {
+    return this.httpClient.get<GroupDto>(`/rest/group/${groupId}`).toPromise();
+  }
+
+  addGroup(groupDto: GroupDto): Promise<void> {
+    return this.httpClient.post<void>('/rest/group', groupDto).toPromise();
+  }
+
+  deleteGroup(groupId: string): Promise<void> {
+    return this.httpClient.delete<void>(`/rest/group/${groupId}`).toPromise();
+  }
 }
