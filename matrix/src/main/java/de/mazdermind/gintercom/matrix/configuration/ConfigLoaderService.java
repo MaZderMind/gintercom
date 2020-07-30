@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ConfigParser {
+public class ConfigLoaderService {
 	private final ObjectMapper objectMapper;
 	private final Toml toml;
 
