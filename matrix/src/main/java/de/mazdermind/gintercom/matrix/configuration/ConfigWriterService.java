@@ -2,9 +2,9 @@ package de.mazdermind.gintercom.matrix.configuration;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
@@ -25,17 +25,17 @@ public class ConfigWriterService {
 	private final ObjectMapper objectMapper;
 	private final TomlWriter tomlWriter;
 
-	private final CliArguments cliArguments;
+	private final ConfigDirectoryService configDirectoryService;
 	private final Config config;
 
 	public void writeConfig() {
-		String configDirectory = cliArguments.getConfigDirectory();
+		Path configDirectory = configDirectoryService.getConfigDirectory();
 		log.info("Writing Configuration to Directory {}", configDirectory);
 
-		writeConfigFile(config.getMatrixConfig(), Paths.get(configDirectory, "matrix.toml"));
-		writeConfigFiles(config.getPanels(), Paths.get(configDirectory, "panels"));
-		writeConfigFiles(config.getGroups(), Paths.get(configDirectory, "groups"));
-		writeConfigFiles(config.getButtonSets(), Paths.get(configDirectory, "button-sets"));
+		writeConfigFile(config.getMatrixConfig(), configDirectory.resolve("matrix.toml"));
+		writeConfigFiles(config.getPanels(), configDirectory.resolve("panels"));
+		writeConfigFiles(config.getGroups(), configDirectory.resolve("groups"));
+		writeConfigFiles(config.getButtonSets(), configDirectory.resolve("button-sets"));
 	}
 
 	private <T> void writeConfigFile(T config, Path configFile) {
@@ -50,6 +50,14 @@ public class ConfigWriterService {
 	}
 
 	private <T> void writeConfigFiles(Map<String, T> configs, Path folder) {
+		try {
+			Files.createDirectory(folder);
+		} catch (FileAlreadyExistsException e) {
+			// pass
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
 		configs.forEach((id, config) -> {
 			Path configFile = folder.resolve(id + ".toml");
 			writeConfigFile(config, configFile);

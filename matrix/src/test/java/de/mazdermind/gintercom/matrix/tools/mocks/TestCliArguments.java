@@ -14,6 +14,6 @@ public class TestCliArguments extends CliArguments {
 	}
 
 	public void reset() {
-		setConfigDirectory("/opt/gintercom/test-config/");
+		setConfigDirectory("/etc/gintercom");
 	}
 }

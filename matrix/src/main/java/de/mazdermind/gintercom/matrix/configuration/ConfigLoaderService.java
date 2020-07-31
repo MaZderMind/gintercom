@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
 import java.util.Set;
@@ -36,20 +35,20 @@ public class ConfigLoaderService {
 	private final ObjectMapper objectMapper;
 	private final Toml toml;
 
-	private final CliArguments cliArguments;
+	private final ConfigDirectoryService configDirectoryService;
 	private final Validator validator;
 
 	@Bean
 	@ConditionalOnMissingBean(Config.class)
 	public Config loadConfig() throws IOException {
-		String configDirectory = cliArguments.getConfigDirectory();
+		Path configDirectory = configDirectoryService.getConfigDirectory();
 		log.info("Loading Configuration from Directory {}", configDirectory);
 
 		Config config = new Config()
-			.setMatrixConfig(loadConfigFile(Paths.get(configDirectory, "matrix.toml"), MatrixConfig.class))
-			.setPanels(loadConfigFiles(Paths.get(configDirectory, "panels"), PanelConfig.class))
-			.setGroups(loadConfigFiles(Paths.get(configDirectory, "groups"), GroupConfig.class))
-			.setButtonSets(loadConfigFiles(Paths.get(configDirectory, "button-sets"), ButtonSetConfig.class));
+			.setMatrixConfig(loadConfigFile(configDirectory.resolve("matrix.toml"), MatrixConfig.class))
+			.setPanels(loadConfigFiles(configDirectory.resolve("panels"), PanelConfig.class))
+			.setGroups(loadConfigFiles(configDirectory.resolve("groups"), GroupConfig.class))
+			.setButtonSets(loadConfigFiles(configDirectory.resolve("button-sets"), ButtonSetConfig.class));
 
 		log.info("Validating Config");
 		Set<ConstraintViolation<Config>> constraintViolations = validator.validate(config);

@@ -1,6 +1,6 @@
 package de.mazdermind.gintercom.matrix;
 
-import org.junit.After;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
+import de.mazdermind.gintercom.matrix.tools.mocks.TestConfigDirectoryService;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 
 @RunWith(SpringRunner.class)
@@ -22,13 +23,21 @@ public abstract class IntegrationTestBase {
 	@Autowired
 	private MixingCore mixingCore;
 
-	@After
+	@Autowired
+	private TestConfigDirectoryService testConfigDirectoryService;
+
+	@Before
 	public void resetConfig() {
 		testConfig.reset();
 	}
 
-	@After
+	@Before
 	public void resetMixingCore() {
 		mixingCore.clear();
+	}
+
+	@Before
+	public void resetConfigDirectory() {
+		testConfigDirectoryService.reset();
 	}
 }
