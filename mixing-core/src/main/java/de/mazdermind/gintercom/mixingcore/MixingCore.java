@@ -53,7 +53,7 @@ public class MixingCore {
 
 	public Group addGroup(String id) {
 		if (groups.containsKey(id)) {
-			throw new InvalidMixingCoreOperationException(String.format("Group %s already registered", id));
+			throw new InvalidMixingCoreOperationException(String.format("Group '%s' is already registered", id));
 		}
 
 		Group group = new Group(pipeline, id);
@@ -63,7 +63,7 @@ public class MixingCore {
 
 	public Client addClient(String id, InetAddress clientHost, int clientToMatrixPort, int matrixToClientPort) {
 		if (clients.containsKey(id)) {
-			throw new InvalidMixingCoreOperationException(String.format("Client %s already registered", id));
+			throw new InvalidMixingCoreOperationException(String.format("Client '%s' is already registered", id));
 		}
 
 		Client client = new Client(pipeline, id, clientHost, clientToMatrixPort, matrixToClientPort);

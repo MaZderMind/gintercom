@@ -16,17 +16,20 @@ export class HttpErrorShowMessageInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request)
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.error instanceof ErrorEvent) {
+        catchError((response: HttpErrorResponse) => {
+          if (response.error instanceof ErrorEvent) {
             // Client-Side Error
-            this.messageService.showError(`Client-Error`, error.error.message);
+            this.messageService.showError(`Client-Error`, response.error.message);
           } else {
             // Server-Side Error
-            this.messageService.showError(`HTTP Error Code ${error.status}`, error.message);
+            const message = response.error.message ?
+              response.error.message /* Spring Boot Exception Text */ :
+              `HTTP Error Code ${response.status}` /* Generic HTTP Error */;
+            this.messageService.showError(message, response.message);
           }
 
           // Forward to following Handlers
-          return throwError(error);
+          return throwError(response);
         })
       )
   }

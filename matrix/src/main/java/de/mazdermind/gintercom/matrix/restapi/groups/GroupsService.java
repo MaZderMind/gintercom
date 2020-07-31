@@ -28,14 +28,19 @@ public class GroupsService {
 	}
 
 	public void addGroup(GroupDto groupDto) {
-		log.info("Adding Group {} to Config", groupDto.getId());
-		config.getGroups().put(groupDto.getId(), new GroupConfig()
+		String groupId = groupDto.getId();
+		if (config.getGroups().containsKey(groupId)) {
+			throw new GroupAlreadyExistsException(groupId);
+		}
+
+		log.info("Adding Group {} to Config", groupId);
+		config.getGroups().put(groupId, new GroupConfig()
 			.setDisplay(groupDto.getDisplay()));
 
 		configWriterService.writeConfig();
 
-		log.info("Adding Group {} to MixingCore", groupDto.getId());
-		mixingCore.addGroup(groupDto.getId());
+		log.info("Adding Group {} to MixingCore", groupId);
+		mixingCore.addGroup(groupId);
 	}
 
 	public Optional<GroupDto> getGroup(String groupId) {
@@ -43,15 +48,15 @@ public class GroupsService {
 			.map(groupConfig -> new GroupDto(groupId, groupConfig));
 	}
 
-	public Optional<GroupDto> deleteGroup(String groupId) {
+	public void deleteGroup(String groupId) {
+		if (!config.getGroups().containsKey(groupId)) {
+			throw new GroupAlreadyExistsException(groupId);
+		}
+
 		log.info("Removing Group {} from Config", groupId);
-		GroupConfig removedGroupConfig = config.getGroups().remove(groupId);
+		config.getGroups().remove(groupId);
 
 		log.info("Removing Group {} from MixingCore", groupId);
-		Optional.ofNullable(mixingCore.getGroupById(groupId))
-			.ifPresent(mixingCore::removeGroup);
-
-		return Optional.ofNullable(removedGroupConfig)
-			.map(groupConfig -> new GroupDto(groupId, groupConfig));
+		mixingCore.removeGroup(mixingCore.getGroupById(groupId));
 	}
 }

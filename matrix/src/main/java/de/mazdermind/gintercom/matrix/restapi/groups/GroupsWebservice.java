@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,20 +36,13 @@ public class GroupsWebservice {
 
 	@GetMapping("/{id}")
 	private GroupDto getGroup(@PathVariable @NotNull String id) {
-		return groupsService.getGroup(id)
-			.orElseThrow(() -> new GroupNotFoundException(id));
+		return groupsService.getGroup(id).orElse(null);
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	private void deleteGroup(@PathVariable @NotNull String id) {
-		groupsService.deleteGroup(id)
-			.orElseThrow(() -> new GroupNotFoundException(id));
+		groupsService.deleteGroup(id);
 	}
 
-	public static class GroupNotFoundException extends ResponseStatusException {
-		public GroupNotFoundException(String groupId) {
-			super(HttpStatus.NOT_FOUND, String.format("No Group with Id %s found", groupId));
-		}
-	}
 }

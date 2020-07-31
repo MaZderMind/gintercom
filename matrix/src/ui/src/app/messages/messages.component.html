@@ -10,6 +10,8 @@
     {{ message.text }}
     <a class="close cursor-default">&times;</a>
 
-    <code class="d-block" *ngIf="message.techDetails">{{ message.techDetails }}</code>
+    <code class="d-block text-small" *ngIf="message.techDetails">
+      {{ message.techDetails }}
+    </code>
   </ngb-toast>
 </div>
