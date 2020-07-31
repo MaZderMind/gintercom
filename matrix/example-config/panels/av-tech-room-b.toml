@@ -1,11 +1,12 @@
-display="A/V Tech Room B"
-rxGroups=["room-b", "av-tech"]
-buttonSets=["av-tech"]
-clientId="0000-0005"
+display = "A/V Tech Room B"
+clientId = "0000-0005"
+rxGroups = ["av-tech", "room-b"]
+txGroups = []
+buttonSets = ["av-tech"]
 
 [buttons.6]
-display="Room B Broadcast"
-action="push"
-direction="tx"
-targetType="group"
-target="room-b"
+display = "Room B Broadcast"
+target = "room-b"
+targetType = "GROUP"
+action = "PUSH"
+direction = "TX"

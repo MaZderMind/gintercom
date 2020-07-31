@@ -1,45 +1,36 @@
 [buttons.1]
-display="A/V Tech Broadcast"
-action="toggle"
-direction="tx"
-targetType="group"
-target="av-tech"
-
+display = "A/V Tech Broadcast"
+target = "av-tech"
+targetType = "GROUP"
+action = "TOGGLE"
+direction = "TX"
 [buttons.2]
-display="Helpdesk Broadcast"
-action="toggle"
-direction="tx"
-targetType="group"
-target="helpdesk"
-
-#######
-
+display = "Helpdesk Broadcast"
+target = "helpdesk"
+targetType = "GROUP"
+action = "TOGGLE"
+direction = "TX"
 [buttons.3]
-display="Room A Broadcast"
-action="push"
-direction="tx"
-targetType="group"
-target="room-a"
-
+display = "Room A Broadcast"
+target = "room-a"
+targetType = "GROUP"
+action = "PUSH"
+direction = "TX"
 [buttons.4]
-display="Room B Broadcast"
-action="push"
-direction="tx"
-targetType="group"
-target="room-b"
-
-#######
-
+display = "Room B Broadcast"
+target = "room-b"
+targetType = "GROUP"
+action = "PUSH"
+direction = "TX"
 [buttons.5]
-display="A/V Tech Room A"
-action="push"
-direction="tx"
-targetType="panel"
-target="av-tech-room-a"
-
+display = "A/V Tech Room A"
+target = "av-tech-room-a"
+targetType = "PANEL"
+action = "PUSH"
+direction = "TX"
 [buttons.6]
-display="A/V Tech Room B"
-action="push"
-direction="tx"
-targetType="panel"
-target="av-tech-room-b"
+display = "A/V Tech Room B"
+target = "av-tech-room-b"
+targetType = "PANEL"
+action = "PUSH"
+direction = "TX"

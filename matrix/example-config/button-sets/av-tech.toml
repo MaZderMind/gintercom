@@ -1,6 +1,6 @@
 [buttons.1]
-display="A/V Tech Group"
-action="push"
-direction="tx"
-targetType="group"
-target="av-tech"
+display = "A/V Tech Group"
+target = "av-tech"
+targetType = "GROUP"
+action = "PUSH"
+direction = "TX"

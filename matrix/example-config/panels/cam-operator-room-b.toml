@@ -1,4 +1,5 @@
-display="Cam Operator Room B"
-rxGroups=["cams-b"]
-txGroups=["cams-b"]
-clientId="0000-0006"
+display = "Cam Operator Room B"
+clientId = "0000-0006"
+rxGroups = ["cams-b"]
+txGroups = ["cams-b"]
+buttonSets = []

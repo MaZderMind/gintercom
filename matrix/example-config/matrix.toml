@@ -1,16 +1,16 @@
-display="GIntercom Example-Config"
+display = "GIntercom Example-Config"
 
 [webui]
-bind="0.0.0.0"
-port=8080
-
-[ports.clientToMatrix]
-start=20000
-limit=9999
-
-[ports.matrixToClient]
-start=10000
-limit=9999
+bind = "0.0.0.0"
+port = 8080
 
 [rtp]
-jitterbuffer=50 #ms
+jitterbuffer = 50
+
+[ports.clientToMatrix]
+start = 20000
+limit = 9999
+
+[ports.matrixToClient]
+start = 10000
+limit = 9999
