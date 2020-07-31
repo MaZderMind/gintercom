@@ -1,7 +1,7 @@
 import {STOMP_CONFIG} from 'src/app/app-stomp-config';
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -27,6 +27,7 @@ import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@s
 import {GroupAddDialogComponent} from './pages/groups/group-add-dialog/group-add-dialog.component';
 import {ValidateOnSubmitDirective} from './utils/validate-on-submit.directive';
 import {MessagesComponent} from 'src/app/messages/messages.component';
+import {HttpErrorShowMessageInterceptor} from 'src/app/messages/http-error-show-message-interceptor';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,12 @@ import {MessagesComponent} from 'src/app/messages/messages.component';
       provide: RxStompService,
       useFactory: rxStompServiceFactory,
       deps: [InjectableRxStompConfig]
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorShowMessageInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })

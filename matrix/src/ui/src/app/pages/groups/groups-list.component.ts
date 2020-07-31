@@ -3,7 +3,6 @@ import {GroupsService} from 'src/app/services/groups/groups.service';
 import {GroupDto} from 'src/app/services/groups/group-dto';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
 import {Subscription} from 'rxjs';
-import {MessageService} from 'src/app/messages/message.service';
 
 @Component({
   selector: 'app-groups-list',
@@ -16,8 +15,7 @@ export class GroupsListComponent implements OnInit, OnDestroy {
 
   constructor(
     private groupsService: GroupsService,
-    private uiUpdateService: UiUpdateService,
-    public messageService: MessageService
+    private uiUpdateService: UiUpdateService
   ) {
   }
 

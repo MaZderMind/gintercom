@@ -43,7 +43,6 @@ export class GroupEditComponent implements OnInit {
         this.messageService.showInfo(`Group ${groupDto.id} created successfully`);
         this.success.emit();
       })
-      .catch((e: HttpErrorResponse) => this.messageService.showError(`Could not create Group ${groupDto.id}`, e.message))
       .finally(() => this.groupEditForm.enable());
   }
 }
