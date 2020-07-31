@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableMap;
 
 import de.mazdermind.gintercom.matrix.events.ClientAssociatedEvent;
 import de.mazdermind.gintercom.matrix.events.ClientDeAssociatedEvent;
+import de.mazdermind.gintercom.matrix.events.GroupsChangedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +24,8 @@ public class UiUpdateService {
 	}
 
 	@EventListener({
-		ClientAssociatedEvent.class, ClientDeAssociatedEvent.class
+		ClientAssociatedEvent.class, ClientDeAssociatedEvent.class,
+		GroupsChangedEvent.class,
 	})
 	public void onUiUpdateEvent() {
 		notifyUiAboutUpdates();

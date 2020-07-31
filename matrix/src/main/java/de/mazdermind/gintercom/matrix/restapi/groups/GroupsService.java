@@ -4,11 +4,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import de.mazdermind.gintercom.matrix.configuration.ConfigWriterService;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
+import de.mazdermind.gintercom.matrix.events.GroupsChangedEvent;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ public class GroupsService {
 	private final Config config;
 	private final ConfigWriterService configWriterService;
 	private final MixingCore mixingCore;
+	private final ApplicationEventPublisher eventPublisher;
 
 	public Stream<GroupDto> getConfiguredGroups() {
 		return config.getGroups().entrySet().stream()
@@ -41,6 +44,9 @@ public class GroupsService {
 
 		log.info("Adding Group {} to MixingCore", groupId);
 		mixingCore.addGroup(groupId);
+
+		log.debug("Broadcasting GroupsChangedEvent");
+		eventPublisher.publishEvent(new GroupsChangedEvent());
 	}
 
 	public Optional<GroupDto> getGroup(String groupId) {
@@ -58,5 +64,8 @@ public class GroupsService {
 
 		log.info("Removing Group {} from MixingCore", groupId);
 		mixingCore.removeGroup(mixingCore.getGroupById(groupId));
+
+		log.debug("Broadcasting GroupsChangedEvent");
+		eventPublisher.publishEvent(new GroupsChangedEvent());
 	}
 }
