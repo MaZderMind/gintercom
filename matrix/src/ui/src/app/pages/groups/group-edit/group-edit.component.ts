@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {GroupsService} from 'src/app/services/groups/groups.service';
@@ -19,6 +19,7 @@ export class GroupEditComponent implements OnInit {
 
   groupId: string;
 
+  @Output()
   success = new EventEmitter<void>()
 
   constructor(
