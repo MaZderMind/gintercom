@@ -17,7 +17,9 @@
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "@stomp/ng2-stompjs": "^7.2.0",
     "@swimlane/ngx-charts": "^14.0.0",
+    "@types/lodash": "^4.14.158",
     "bootstrap": "^4.4.1",
+    "lodash": "^4.17.19",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

@@ -25,7 +25,8 @@ import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component
 import {ClientViewComponent} from 'src/app/pages/clients/client-view/client-view.component';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
 import {GroupAddDialogComponent} from './pages/groups/group-add-dialog/group-add-dialog.component';
-import { ValidateOnSubmitDirective } from './utils/validate-on-submit.directive';
+import {ValidateOnSubmitDirective} from './utils/validate-on-submit.directive';
+import {MessagesComponent} from 'src/app/messages/messages.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { ValidateOnSubmitDirective } from './utils/validate-on-submit.directive'
     PanelEditComponent,
     ClientViewComponent,
     GroupAddDialogComponent,
-    ValidateOnSubmitDirective
+    ValidateOnSubmitDirective,
+    MessagesComponent
   ],
   imports: [
     BrowserModule,

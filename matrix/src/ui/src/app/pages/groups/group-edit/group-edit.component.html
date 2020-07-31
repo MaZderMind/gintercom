@@ -1,13 +1,13 @@
 <form [formGroup]="groupEditForm" (validSubmit)="onSubmit()" appValidateOnSubmit class="has-validation">
   <div class="form-group">
-    <label for="groupId">Group-Id</label>
-    <input type="text" class="form-control" id="groupId" aria-describedby="groupIdHelp" formControlName="groupId" required ngbAutofocus>
-    <small id="groupIdHelp" class="form-text text-muted">The Group-Id is used to uniquely reference this group.</small>
+    <label for="id">Group-Id</label>
+    <input type="text" class="form-control" id="id" aria-describedby="idHelp" formControlName="id" required ngbAutofocus>
+    <small id="idHelp" class="form-text text-muted">The Group-Id is used to uniquely reference this group.</small>
   </div>
   <div class="form-group">
-    <label for="displayName">Display-Name</label>
-    <input type="text" class="form-control" id="displayName" aria-describedby="displayNameHelp" formControlName="displayName">
-    <small id="displayNameHelp" class="form-text text-muted">The Display-Name is used to represent the Group to a human.</small>
+    <label for="display">Display-Name</label>
+    <input type="text" class="form-control" id="display" aria-describedby="displayHelp" formControlName="display">
+    <small id="displayHelp" class="form-text text-muted">The Display-Name is used to represent the Group to a human.</small>
   </div>
 
   <button type="submit" class="btn btn-primary float-right" [class.disabled]="!groupEditForm.valid">

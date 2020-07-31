@@ -1,7 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {GroupsService} from 'src/app/services/groups/groups.service';
+import {MessageService} from 'src/app/messages/message.service';
+import {GroupDto} from 'src/app/services/groups/group-dto';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
   selector: 'app-group-edit',
@@ -10,15 +13,18 @@ import {GroupsService} from 'src/app/services/groups/groups.service';
 })
 export class GroupEditComponent implements OnInit {
   groupEditForm = new FormGroup({
-    groupId: new FormControl('', [Validators.required]),
-    displayName: new FormControl(''),
+    id: new FormControl('', [Validators.required]),
+    display: new FormControl(''),
   });
 
   groupId: string;
 
+  success = new EventEmitter<void>()
+
   constructor(
     private route: ActivatedRoute,
-    private groupsService: GroupsService
+    private groupsService: GroupsService,
+    private messageService: MessageService
   ) {
   }
 
@@ -29,7 +35,15 @@ export class GroupEditComponent implements OnInit {
   }
 
   onSubmit() {
-    // this.groupsService.addGroup()
+    const groupDto: GroupDto = this.groupEditForm.value;
+
     this.groupEditForm.disable();
+    this.groupsService.addGroup(groupDto)
+      .then(() => {
+        this.messageService.showInfo(`Group ${groupDto.id} created successfully`);
+        this.success.emit();
+      })
+      .catch((e: HttpErrorResponse) => this.messageService.showError(`Could not create Group ${groupDto.id}`, e.message))
+      .finally(() => this.groupEditForm.enable());
   }
 }

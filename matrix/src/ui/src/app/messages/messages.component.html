@@ -1,0 +1,15 @@
+<div class="toasts" aria-live="polite" aria-atomic="true">
+  <ngb-toast
+    [delay]="message.hideTimeoutMs"
+    [autohide]="!!message.hideTimeoutMs"
+    *ngFor="let message of messages"
+    [className]="message.className"
+    (hide)="hide(message)"
+    (click)="hide(message)"
+  >
+    {{ message.text }}
+    <a class="close cursor-default">&times;</a>
+
+    <code class="d-block" *ngIf="message.techDetails">{{ message.techDetails }}</code>
+  </ngb-toast>
+</div>
