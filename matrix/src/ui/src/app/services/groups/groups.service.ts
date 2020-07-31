@@ -14,14 +14,14 @@ export class GroupsService {
   }
 
   getGroup(groupId: string): Promise<GroupDto> {
-    return this.httpClient.get<GroupDto>(`/rest/group/${groupId}`).toPromise();
+    return this.httpClient.get<GroupDto>(`/rest/groups/${groupId}`).toPromise();
   }
 
   addGroup(groupDto: GroupDto): Promise<void> {
-    return this.httpClient.post<void>('/rest/group', groupDto).toPromise();
+    return this.httpClient.post<void>('/rest/groups', groupDto).toPromise();
   }
 
   deleteGroup(groupId: string): Promise<void> {
-    return this.httpClient.delete<void>(`/rest/group/${groupId}`).toPromise();
+    return this.httpClient.delete<void>(`/rest/groups/${groupId}`).toPromise();
   }
 }
