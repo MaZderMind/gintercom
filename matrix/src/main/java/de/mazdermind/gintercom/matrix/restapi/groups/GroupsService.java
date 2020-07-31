@@ -62,6 +62,8 @@ public class GroupsService {
 		log.info("Removing Group {} from Config", groupId);
 		config.getGroups().remove(groupId);
 
+		configWriterService.writeConfig();
+
 		log.info("Removing Group {} from MixingCore", groupId);
 		mixingCore.removeGroup(mixingCore.getGroupById(groupId));
 

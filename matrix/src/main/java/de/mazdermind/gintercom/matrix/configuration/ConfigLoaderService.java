@@ -74,9 +74,9 @@ public class ConfigLoaderService {
 
 	private <T> T loadConfigFile(Path configFile, Class<T> klazz) throws IOException {
 		InputStream inputStream = Files.newInputStream(configFile, StandardOpenOption.READ);
-		Map<String, Object> readMap = toml.read(inputStream).toMap();
+		Map<String, Object> map = toml.read(inputStream).toMap();
 		try {
-			return objectMapper.convertValue(readMap, klazz);
+			return objectMapper.convertValue(map, klazz);
 		} catch (IllegalArgumentException e) {
 			log.error("Error parsing Configuration-File {} as {}: {}", configFile, klazz.getSimpleName(), e.getMessage());
 			System.exit(1);
