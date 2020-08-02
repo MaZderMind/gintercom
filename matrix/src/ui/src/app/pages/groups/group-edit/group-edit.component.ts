@@ -20,7 +20,7 @@ export class GroupEditComponent implements OnInit {
   groupId: string;
 
   @Output()
-  success = new EventEmitter<void>()
+  saved = new EventEmitter<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +42,7 @@ export class GroupEditComponent implements OnInit {
     this.groupsService.addGroup(groupDto)
       .then(() => {
         this.messageService.showInfo(`Group ${groupDto.id} created successfully`);
-        this.success.emit();
+        this.saved.emit();
       })
       .finally(() => this.groupEditForm.enable());
   }

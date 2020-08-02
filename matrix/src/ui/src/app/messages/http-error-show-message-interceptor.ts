@@ -31,6 +31,6 @@ export class HttpErrorShowMessageInterceptor implements HttpInterceptor {
           // Forward to following Handlers
           return throwError(response);
         })
-      )
+      );
   }
 }

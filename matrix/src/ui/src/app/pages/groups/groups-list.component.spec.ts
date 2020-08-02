@@ -6,6 +6,8 @@ import {GroupsService} from 'src/app/services/groups/groups.service';
 import {RouterTestingModule} from '@angular/router/testing';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
 import {Subscription} from 'rxjs';
+import {MockComponent} from 'ng-mocks';
+import {GroupAddDialogComponent} from 'src/app/pages/groups/group-add-dialog/group-add-dialog.component';
 
 describe('GroupsListComponent', () => {
   let component: GroupsListComponent;
@@ -21,7 +23,10 @@ describe('GroupsListComponent', () => {
     when(uiUpdateService.subscribe(anyFunction())).thenReturn(new Subscription());
 
     TestBed.configureTestingModule({
-      declarations: [GroupsListComponent],
+      declarations: [
+        GroupsListComponent,
+        MockComponent(GroupAddDialogComponent),
+      ],
       providers: [
         {provide: GroupsService, useFactory: () => instance(groupsService)},
         {provide: UiUpdateService, useFactory: () => instance(uiUpdateService)},
