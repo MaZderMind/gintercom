@@ -68,7 +68,7 @@ public class Config {
 
 		log.debug("Validating ButtonSet-Button-Target references");
 		buttonSets.forEach((buttonSetId, buttonSet) ->
-			validateButtonReferences(buttonSet.getButtons(), String.format("ButtonSet %s", buttonSet)));
+			validateButtonReferences(buttonSet.getButtons(), String.format("ButtonSet %s", buttonSetId)));
 	}
 
 	private void validateButtonReferences(Map<String, ButtonConfig> buttons, String container) {
