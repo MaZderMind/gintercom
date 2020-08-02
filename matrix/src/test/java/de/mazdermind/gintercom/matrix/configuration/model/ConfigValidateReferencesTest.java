@@ -32,6 +32,7 @@ public class ConfigValidateReferencesTest {
 			)))
 			.setPanels(new HashMap<>(ImmutableMap.of(
 				"p1", new PanelConfig()
+					.setClientId("TEST-0001")
 					.setButtons(new HashMap<>(ImmutableMap.of(
 						"bg1", new ButtonConfig()
 							.setTarget("g1")
@@ -41,6 +42,7 @@ public class ConfigValidateReferencesTest {
 							.setTargetType(CommunicationTargetType.PANEL)
 					))),
 				"p2", new PanelConfig()
+					.setClientId("TEST-0002")
 					.setRxGroups(new HashSet<>(ImmutableSet.of("g2")))
 					.setTxGroups(new HashSet<>(ImmutableSet.of("g3")))
 					.setButtonSets(new ArrayList<>(ImmutableList.of("bs1"))),
@@ -125,5 +127,15 @@ public class ConfigValidateReferencesTest {
 		assertThatThrownBy(() -> config.validateReferences())
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("Panel p3 referenced as target from Button bsp of ButtonSet bs1 does not exist");
+	}
+
+	@Test
+	public void configFailsValidationWhenClientIdIsUsedMultipleTimes() {
+		config.getPanels().get("p1").setClientId("TEST-0000");
+		config.getPanels().get("p2").setClientId("TEST-0000");
+
+		assertThatThrownBy(() -> config.validateReferences())
+			.isInstanceOf(ValidationException.class)
+			.hasMessage("Client-ID TEST-0000 referenced from Panel p2 is also referenced from Panel p1");
 	}
 }

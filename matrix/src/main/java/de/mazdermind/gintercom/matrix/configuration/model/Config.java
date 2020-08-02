@@ -1,5 +1,6 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -69,6 +70,21 @@ public class Config {
 		log.debug("Validating ButtonSet-Button-Target references");
 		buttonSets.forEach((buttonSetId, buttonSet) ->
 			validateButtonReferences(buttonSet.getButtons(), String.format("ButtonSet %s", buttonSetId)));
+
+		log.debug("Validating Client-ID references");
+		HashMap<String, String> usedClientIds = new HashMap<>();
+		panels.forEach((panelId, value) -> {
+			String clientId = value.getClientId();
+			String firstUser = usedClientIds.get(clientId);
+
+			if (firstUser != null) {
+				throw new ValidationException(String.format(
+					"Client-ID %s referenced from Panel %s is also referenced from Panel %s",
+					clientId, panelId, firstUser));
+			}
+
+			usedClientIds.put(clientId, panelId);
+		});
 	}
 
 	private void validateButtonReferences(Map<String, ButtonConfig> buttons, String container) {
