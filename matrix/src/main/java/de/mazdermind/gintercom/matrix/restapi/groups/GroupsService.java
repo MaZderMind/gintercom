@@ -2,6 +2,7 @@ package de.mazdermind.gintercom.matrix.restapi.groups;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -11,6 +12,10 @@ import de.mazdermind.gintercom.matrix.configuration.ConfigWriterService;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
 import de.mazdermind.gintercom.matrix.events.GroupsChangedEvent;
+import de.mazdermind.gintercom.matrix.restapi.UsageDto;
+import de.mazdermind.gintercom.matrix.restapi.groups.exceptions.GroupAlreadyExistsException;
+import de.mazdermind.gintercom.matrix.restapi.groups.exceptions.GroupNotFoundException;
+import de.mazdermind.gintercom.matrix.restapi.groups.exceptions.GroupUsedException;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +61,12 @@ public class GroupsService {
 
 	public void deleteGroup(String groupId) {
 		if (!config.getGroups().containsKey(groupId)) {
-			throw new GroupAlreadyExistsException(groupId);
+			throw new GroupNotFoundException(groupId);
+		}
+
+		Set<String> groupUsers = config.getGroupUsers(groupId);
+		if (!groupUsers.isEmpty()) {
+			throw new GroupUsedException(groupId, groupUsers.size());
 		}
 
 		log.info("Removing Group {} from Config", groupId);
@@ -69,5 +79,14 @@ public class GroupsService {
 
 		log.debug("Broadcasting GroupsChangedEvent");
 		eventPublisher.publishEvent(new GroupsChangedEvent());
+	}
+
+	public UsageDto getGroupUsage(String groupId) {
+		if (!config.getGroups().containsKey(groupId)) {
+			throw new GroupNotFoundException(groupId);
+		}
+
+		Set<String> groupUsers = config.getGroupUsers(groupId);
+		return new UsageDto().setUsers(groupUsers);
 	}
 }

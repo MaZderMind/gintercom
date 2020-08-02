@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.restapi.groups;
+package de.mazdermind.gintercom.matrix.restapi.groups.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.mazdermind.gintercom.matrix.restapi.UsageDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -43,6 +44,11 @@ public class GroupsWebservice {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	private void deleteGroup(@PathVariable @NotNull String id) {
 		groupsService.deleteGroup(id);
+	}
+
+	@GetMapping("/{id}/usage")
+	private UsageDto getGroupUsage(@PathVariable @NotNull String id) {
+		return groupsService.getGroupUsage(id);
 	}
 
 }

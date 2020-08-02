@@ -2,11 +2,27 @@ package de.mazdermind.gintercom.matrix.restapi.groups;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
+import java.nio.file.Files;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.google.common.collect.ImmutableMap;
+import com.oblac.nomen.Nomen;
+
+import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
+import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
+import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.matrix.IntegrationTestBase;
+import de.mazdermind.gintercom.matrix.configuration.model.ButtonSetConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
+import de.mazdermind.gintercom.matrix.restapi.UsageDto;
+import de.mazdermind.gintercom.matrix.restapi.groups.exceptions.GroupAlreadyExistsException;
+import de.mazdermind.gintercom.matrix.restapi.groups.exceptions.GroupNotFoundException;
+import de.mazdermind.gintercom.matrix.restapi.groups.exceptions.GroupUsedException;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfig;
 import de.mazdermind.gintercom.matrix.tools.mocks.TestConfigDirectoryService;
 import de.mazdermind.gintercom.mixingcore.MixingCore;
@@ -24,8 +40,19 @@ public class GroupsServiceIT extends IntegrationTestBase {
 	@Autowired
 	private TestConfigDirectoryService testConfigDirectoryService;
 
+	private String groupId;
+
+	@Before
+	public void before() {
+		groupId = Nomen.randomName();
+	}
+
 	@Test
 	public void getConfiguredGroups() {
+		testConfig.addRandomGroup();
+		testConfig.addRandomGroup();
+		testConfig.addRandomGroup();
+
 		assertThat(groupsService.getConfiguredGroups())
 			.hasSize(testConfig.getGroups().size())
 			.extracting(GroupDto::getId)
@@ -35,24 +62,19 @@ public class GroupsServiceIT extends IntegrationTestBase {
 	@Test
 	public void addGroup() {
 		groupsService.addGroup(new GroupDto()
-			.setId("ops")
+			.setId(groupId)
 			.setDisplay("Operations"));
 
-		assertThat(testConfig.getGroups()).containsKey("ops");
-		assertThat(mixingCore.getGroupById("ops")).isNotNull();
-		assertThat(testConfigDirectoryService.getConfigDirectory().resolve("groups/ops.toml"))
+		assertThat(testConfig.getGroups()).containsKey(groupId);
+		assertThat(mixingCore.getGroupById(groupId)).isNotNull();
+		assertThat(testConfigDirectoryService.getConfigDirectory().resolve("groups/" + groupId + ".toml"))
 			.exists().isRegularFile().hasContent("display = \"Operations\"");
 	}
 
 	@Test(expected = GroupAlreadyExistsException.class)
-	public void addExistingGroup() {
-		groupsService.addGroup(new GroupDto()
-			.setId("ops")
-			.setDisplay("Operations"));
-
-		groupsService.addGroup(new GroupDto()
-			.setId("ops")
-			.setDisplay("More Operations"));
+	public void addExistingGroupFails() {
+		groupsService.addGroup(new GroupDto().setId(groupId));
+		groupsService.addGroup(new GroupDto().setId(groupId));
 	}
 
 	@Test
@@ -67,6 +89,90 @@ public class GroupsServiceIT extends IntegrationTestBase {
 
 	@Test
 	public void getNonExistingGroup() {
-		assertThat(groupsService.getGroup("blafoo")).isNotPresent();
+		assertThat(groupsService.getGroup(groupId)).isNotPresent();
+	}
+
+	@Test
+	public void deleteGroup() {
+		groupsService.addGroup(new GroupDto().setId(groupId));
+
+		assertThat(testConfig.getGroups()).containsKey(groupId);
+		assertThat(mixingCore.getGroupById(groupId)).isNotNull();
+		assertThat(testConfigDirectoryService.getConfigDirectory().resolve("groups/" + groupId + ".toml"))
+			.isRegularFile();
+
+		groupsService.deleteGroup(groupId);
+
+		assertThat(testConfig.getGroups()).doesNotContainKey(groupId);
+		assertThat(mixingCore.getGroupById(groupId)).isNull();
+		assertThat(testConfigDirectoryService.getConfigDirectory().resolve("groups/" + groupId + ".toml"))
+			.doesNotExist();
+	}
+
+	@Test(expected = GroupNotFoundException.class)
+	public void deleteNonExistingGroupFails() {
+		groupsService.deleteGroup(groupId);
+	}
+
+	@Test
+	public void deleteGroupDoesNotFailWhenConfigFileIsMissing() throws IOException {
+		groupsService.addGroup(new GroupDto().setId(groupId));
+
+		Files.delete(
+			testConfigDirectoryService.getConfigDirectory().resolve("groups/" + groupId + ".toml")
+		);
+
+		groupsService.deleteGroup(groupId);
+	}
+
+	@Test(expected = GroupUsedException.class)
+	public void deleteUsedGroupFails() {
+		groupsService.addGroup(new GroupDto().setId(groupId));
+
+		String panelId = testConfig.addRandomPanel();
+		testConfig.getPanels().get(panelId)
+			.getRxGroups().add(groupId);
+
+		groupsService.deleteGroup(groupId);
+	}
+
+
+	@Test(expected = GroupNotFoundException.class)
+	public void getUsageForNonExistingGroupFails() {
+		UsageDto groupUsage = groupsService.getGroupUsage(groupId);
+	}
+
+	@Test
+	public void getUsageReturnsUnusedForUnusedGroup() {
+		groupsService.addGroup(new GroupDto().setId(groupId));
+
+		UsageDto groupUsage = groupsService.getGroupUsage(groupId);
+		assertThat(groupUsage.isUsed()).isFalse();
+		assertThat(groupUsage.getUsers()).isEmpty();
+	}
+
+	@Test
+	public void getUsageReturnsUsersOfUsedGroup() {
+		groupsService.addGroup(new GroupDto().setId(groupId));
+
+		String panelId = testConfig.addRandomPanel();
+		testConfig.getPanels().get(panelId)
+			.getRxGroups().add(groupId);
+
+		String buttonSetId = Nomen.randomName();
+		testConfig.getButtonSets().put(buttonSetId, new ButtonSetConfig()
+			.setButtons(ImmutableMap.of(
+				"q1", new ButtonConfig()
+					.setTargetType(CommunicationTargetType.GROUP)
+					.setTarget(groupId)
+					.setDirection(CommunicationDirection.RX)
+					.setAction(ButtonAction.TOGGLE)
+			)));
+
+		UsageDto groupUsage = groupsService.getGroupUsage(groupId);
+		assertThat(groupUsage.isUsed()).isTrue();
+		assertThat(groupUsage.getUsers())
+			.hasSize(2)
+			.contains("Button-Set " + buttonSetId, "Panel " + panelId);
 	}
 }
