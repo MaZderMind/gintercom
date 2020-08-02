@@ -22,4 +22,8 @@ public class ButtonConfig {
 
 	@NotNull
 	private CommunicationDirection direction = CommunicationDirection.TX;
+
+	public boolean usesGroup(String groupId) {
+		return targetType == CommunicationTargetType.GROUP && target.equals(groupId);
+	}
 }

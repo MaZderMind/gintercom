@@ -2,9 +2,14 @@ package de.mazdermind.gintercom.matrix.configuration.model;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+
+import com.google.common.collect.Streams;
 
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
@@ -91,5 +96,19 @@ public class Config {
 			.filter(entry -> clientId.equals(entry.getValue().getClientId()))
 			.findFirst()
 			.map(Map.Entry::getKey);
+	}
+
+	public Set<String> getGroupUsers(String groupId) {
+		Stream<String> panelUsers = panels.entrySet().stream()
+			.filter(entry -> entry.getValue().usesGroup(groupId))
+			.map(panel -> "Panel " + panel.getKey());
+
+		Stream<String> buttonSetUsers = buttonSets.entrySet().stream()
+			.filter(entry -> entry.getValue().usesGroup(groupId))
+			.map(buttonSet -> "Button-Set " + buttonSet.getKey());
+
+
+		return Streams.concat(panelUsers, buttonSetUsers)
+			.collect(Collectors.toSet());
 	}
 }

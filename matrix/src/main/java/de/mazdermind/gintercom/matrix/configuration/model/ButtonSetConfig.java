@@ -15,4 +15,8 @@ public class ButtonSetConfig {
 	@NotNull
 	@Valid
 	private Map<String, ButtonConfig> buttons;
+
+	public boolean usesGroup(String groupId) {
+		return buttons.values().stream().anyMatch(button -> button.usesGroup(groupId));
+	}
 }

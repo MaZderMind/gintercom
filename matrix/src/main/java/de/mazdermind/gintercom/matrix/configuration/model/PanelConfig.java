@@ -1,9 +1,8 @@
 package de.mazdermind.gintercom.matrix.configuration.model;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,10 +22,18 @@ public class PanelConfig {
 
 	private String clientId;
 
-	private Set<String> rxGroups = emptySet();
-	private Set<String> txGroups = emptySet();
-	private List<String> buttonSets = emptyList();
+	private Set<String> rxGroups = new HashSet<>();
+	private Set<String> txGroups = new HashSet<>();
+	private List<String> buttonSets = new ArrayList<>();
 
 	@Valid
-	private Map<String, ButtonConfig> buttons = emptyMap();
+	private Map<String, ButtonConfig> buttons = new HashMap<>();
+
+	public boolean usesGroup(String groupId) {
+		return rxGroups.contains(groupId) || txGroups.contains(groupId) || hasButtonRelatingTo(groupId);
+	}
+
+	private boolean hasButtonRelatingTo(String groupId) {
+		return buttons.values().stream().anyMatch(button -> button.usesGroup(groupId));
+	}
 }
