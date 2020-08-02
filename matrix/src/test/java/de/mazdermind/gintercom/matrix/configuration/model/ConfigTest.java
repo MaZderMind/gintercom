@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-public class ConfigFindPanelIdForClientIdTest {
+public class ConfigTest {
 
 	private Config config;
 
@@ -22,7 +22,7 @@ public class ConfigFindPanelIdForClientIdTest {
 	}
 
 	@Test
-	public void canGetPanelConfigByClientId() {
+	public void findPanelIdForClientId() {
 		assertThat(config.findPanelIdForClientId("TEST-0000")).isEmpty();
 		assertThat(config.findPanelIdForClientId("TEST-0001")).hasValue("p1");
 		assertThat(config.findPanelIdForClientId("TEST-0002")).hasValue("p2");

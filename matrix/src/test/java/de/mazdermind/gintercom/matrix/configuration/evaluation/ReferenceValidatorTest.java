@@ -1,4 +1,4 @@
-package de.mazdermind.gintercom.matrix.configuration.model;
+package de.mazdermind.gintercom.matrix.configuration.evaluation;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -17,8 +17,12 @@ import com.google.common.collect.ImmutableSet;
 
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
+import de.mazdermind.gintercom.matrix.configuration.model.ButtonSetConfig;
+import de.mazdermind.gintercom.matrix.configuration.model.Config;
+import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
+import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
 
-public class ConfigValidateReferencesTest {
+public class ReferenceValidatorTest {
 	private Config config;
 
 	@Before
@@ -63,14 +67,14 @@ public class ConfigValidateReferencesTest {
 
 	@Test
 	public void correctConfigPassesValidation() {
-		config.validateReferences();
+		ReferenceValidator.validateReferences(config);
 	}
 
 	@Test
 	public void configFailsValidationWhenPanelButtonReferencesMissingGroup() {
 		config.getGroups().remove("g1");
 
-		assertThatThrownBy(() -> config.validateReferences())
+		assertThatThrownBy(() -> ReferenceValidator.validateReferences(config))
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("Group g1 referenced as target from Button bg1 of Panel p1 does not exist");
 	}
@@ -79,7 +83,7 @@ public class ConfigValidateReferencesTest {
 	public void configFailsValidationWhenPanelReferencesMissingRxGroup() {
 		config.getGroups().remove("g2");
 
-		assertThatThrownBy(() -> config.validateReferences())
+		assertThatThrownBy(() -> ReferenceValidator.validateReferences(config))
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("Group g2 referenced as rxGroup from Panel p2 does not exist");
 	}
@@ -88,7 +92,7 @@ public class ConfigValidateReferencesTest {
 	public void configFailsValidationWhenPanelReferencesMissingTxGroup() {
 		config.getGroups().remove("g3");
 
-		assertThatThrownBy(() -> config.validateReferences())
+		assertThatThrownBy(() -> ReferenceValidator.validateReferences(config))
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("Group g3 referenced as txGroup from Panel p2 does not exist");
 	}
@@ -97,7 +101,7 @@ public class ConfigValidateReferencesTest {
 	public void configFailsValidationWhenPanelReferencesMissingButtonSet() {
 		config.getButtonSets().remove("bs1");
 
-		assertThatThrownBy(() -> config.validateReferences())
+		assertThatThrownBy(() -> ReferenceValidator.validateReferences(config))
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("ButtonSet bs1 referenced from Panel p2 does not exist");
 	}
@@ -106,7 +110,7 @@ public class ConfigValidateReferencesTest {
 	public void configFailsValidationWhenPanelButtonReferencesMissingPanel() {
 		config.getPanels().remove("p2");
 
-		assertThatThrownBy(() -> config.validateReferences())
+		assertThatThrownBy(() -> ReferenceValidator.validateReferences(config))
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("Panel p2 referenced as target from Button bp2 of Panel p1 does not exist");
 	}
@@ -115,7 +119,7 @@ public class ConfigValidateReferencesTest {
 	public void configFailsValidationWhenButtonSetReferencesMissingGroup() {
 		config.getGroups().remove("g4");
 
-		assertThatThrownBy(() -> config.validateReferences())
+		assertThatThrownBy(() -> ReferenceValidator.validateReferences(config))
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("Group g4 referenced as target from Button bsg of ButtonSet bs1 does not exist");
 	}
@@ -124,7 +128,7 @@ public class ConfigValidateReferencesTest {
 	public void configFailsValidationWhenButtonSetReferencesMissingPanel() {
 		config.getPanels().remove("p3");
 
-		assertThatThrownBy(() -> config.validateReferences())
+		assertThatThrownBy(() -> ReferenceValidator.validateReferences(config))
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("Panel p3 referenced as target from Button bsp of ButtonSet bs1 does not exist");
 	}
@@ -134,7 +138,7 @@ public class ConfigValidateReferencesTest {
 		config.getPanels().get("p1").setClientId("TEST-0000");
 		config.getPanels().get("p2").setClientId("TEST-0000");
 
-		assertThatThrownBy(() -> config.validateReferences())
+		assertThatThrownBy(() -> ReferenceValidator.validateReferences(config))
 			.isInstanceOf(ValidationException.class)
 			.hasMessage("Client-ID TEST-0000 referenced from Panel p2 is also referenced from Panel p1");
 	}

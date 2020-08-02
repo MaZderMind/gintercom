@@ -25,6 +25,7 @@ import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.MatrixConfig;
 import de.mazdermind.gintercom.matrix.configuration.model.PanelConfig;
+import de.mazdermind.gintercom.matrix.configuration.evaluation.ReferenceValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,7 +62,7 @@ public class ConfigLoaderService {
 			System.exit(1);
 		}
 
-		config.validateReferences();
+		ReferenceValidator.validateReferences(config);
 
 		log.info("Loaded {} Panels, {} Groups and {} ButtonSets from Config",
 			config.getPanels().size(),
