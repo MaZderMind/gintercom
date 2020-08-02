@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -39,6 +40,7 @@ public class ConfigWriterService {
 	}
 
 	private <T> void writeConfigFile(T config, Path configFile) {
+		log.debug("Writing Config-File {}", configFile);
 		try {
 			Map<String, Object> map = objectMapper.convertValue(config, new TypeReference<Map<String, Object>>() {
 			});
@@ -49,19 +51,40 @@ public class ConfigWriterService {
 		}
 	}
 
-	private <T> void writeConfigFiles(Map<String, T> configs, Path folder) {
+	private <T> void writeConfigFiles(Map<String, T> configs, Path directory) {
 		try {
-			Files.createDirectory(folder);
+			Files.createDirectory(directory);
+			log.info("Created Directory {}", directory);
 		} catch (FileAlreadyExistsException e) {
-			// pass
+			log.debug("Directory {} already exists", directory);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new ConfigWriteException(e);
 		}
 
+		log.info("Writing Config-Files in {}", directory);
 		configs.forEach((id, config) -> {
-			Path configFile = folder.resolve(id + ".toml");
+			Path configFile = directory.resolve(id + ".toml");
 			writeConfigFile(config, configFile);
 		});
+
+		log.info("Deleting extra Config-Files from {}", directory);
+		try {
+			Files.list(directory)
+				.filter(path -> {
+					String objectId = FilenameUtils.getBaseName(path.getFileName().toString());
+					return !configs.containsKey(objectId);
+				})
+				.forEach(path -> {
+					try {
+						Files.delete(path);
+						log.debug("Deleted Config-File {}", path);
+					} catch (IOException e) {
+						log.warn("Could not delete Config-File {}", path, e);
+					}
+				});
+		} catch (IOException e) {
+			throw new ConfigWriteException(e);
+		}
 	}
 
 	private static class ConfigWriteException extends RuntimeException {

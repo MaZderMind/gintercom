@@ -83,8 +83,8 @@ public class ConfigLoaderService {
 		}
 	}
 
-	private <T> Map<String, T> loadConfigFiles(Path folder, Class<T> klazz) throws IOException {
-		return Files.list(folder).collect(Collectors.toMap(
+	private <T> Map<String, T> loadConfigFiles(Path directory, Class<T> klazz) throws IOException {
+		return Files.list(directory).collect(Collectors.toMap(
 			path -> FilenameUtils.getBaseName(path.getFileName().toString()),
 			path -> {
 				try {
