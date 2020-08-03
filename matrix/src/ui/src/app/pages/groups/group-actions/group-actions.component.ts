@@ -21,7 +21,7 @@ export class GroupActionsComponent {
   deleteGroup() {
     this.groupsService.getGroupUsage(this.group.id).then(usage => {
       if (usage.used) {
-        this.messageService.showWarning(`Group ${this.group.id} still in use by: ${usage.users.join(', ')}`);
+        this.messageService.showWarning(`Group ${this.group.id} still in use: ${usage.users.join(', ')}`);
       } else {
         this.groupsService.deleteGroup(this.group.id)
           .then(() => this.messageService.showInfo(`Group ${this.group.id} deleted successfully`));
