@@ -3,12 +3,15 @@ package de.mazdermind.gintercom.matrix.restapi.groups;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import de.mazdermind.gintercom.matrix.configuration.ConfigWriterService;
+import de.mazdermind.gintercom.matrix.configuration.evaluation.Usage;
+import de.mazdermind.gintercom.matrix.configuration.evaluation.UsageAnalyzer;
 import de.mazdermind.gintercom.matrix.configuration.model.Config;
 import de.mazdermind.gintercom.matrix.configuration.model.GroupConfig;
 import de.mazdermind.gintercom.matrix.events.GroupsChangedEvent;
@@ -64,7 +67,7 @@ public class GroupsService {
 			throw new GroupNotFoundException(groupId);
 		}
 
-		Set<String> groupUsers = config.getGroupUsers(groupId);
+		Set<Usage> groupUsers = UsageAnalyzer.getGroupUsages(config, groupId);
 		if (!groupUsers.isEmpty()) {
 			throw new GroupUsedException(groupId, groupUsers.size());
 		}
@@ -86,7 +89,9 @@ public class GroupsService {
 			throw new GroupNotFoundException(groupId);
 		}
 
-		Set<String> groupUsers = config.getGroupUsers(groupId);
-		return new UsageDto().setUsers(groupUsers);
+		Set<Usage> groupUsers = UsageAnalyzer.getGroupUsages(config, groupId);
+		return new UsageDto().setUsers(groupUsers.stream()
+			.map(Usage::getUsageDescription)
+			.collect(Collectors.toSet()));
 	}
 }

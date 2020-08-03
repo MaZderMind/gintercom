@@ -28,12 +28,4 @@ public class PanelConfig {
 
 	@Valid
 	private Map<String, ButtonConfig> buttons = new HashMap<>();
-
-	public boolean usesGroup(String groupId) {
-		return rxGroups.contains(groupId) || txGroups.contains(groupId) || hasButtonRelatingTo(groupId);
-	}
-
-	private boolean hasButtonRelatingTo(String groupId) {
-		return buttons.values().stream().anyMatch(button -> button.usesGroup(groupId));
-	}
 }

@@ -139,7 +139,7 @@ public class GroupsServiceIT extends IntegrationTestBase {
 
 	@Test(expected = GroupNotFoundException.class)
 	public void getUsageForNonExistingGroupFails() {
-		UsageDto groupUsage = groupsService.getGroupUsage(groupId);
+		groupsService.getGroupUsage(groupId);
 	}
 
 	@Test
@@ -172,7 +172,7 @@ public class GroupsServiceIT extends IntegrationTestBase {
 		UsageDto groupUsage = groupsService.getGroupUsage(groupId);
 		assertThat(groupUsage.isUsed()).isTrue();
 		assertThat(groupUsage.getUsers())
-			.hasSize(2)
-			.contains("Button-Set " + buttonSetId, "Panel " + panelId);
+			.containsOnly("Group " + groupId + " is used as rxGroup of Panel " + panelId,
+				"Group " + groupId + " is used as target of Button q1 of ButtonSet " + buttonSetId);
 	}
 }
