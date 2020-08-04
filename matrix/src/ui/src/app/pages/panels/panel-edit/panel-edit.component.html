@@ -1,1 +1,18 @@
-<p>panel-edit works: <code>{{ selectedId }}</code>!</p>
+<h4>{{ isCreation() ? 'Add Group' : 'Edit Group ' + panelId }}</h4>
+<form [formGroup]="panelEditForm" (validSubmit)="onSubmit()" validateOnSubmit class="has-validation">
+  <div class="form-group">
+    <label for="id">Panel-Id</label>
+    <input type="text" class="form-control" id="id" aria-describedby="idHelp" formControlName="id" [autofocus]="isCreation()">
+    <small id="idHelp" class="form-text text-muted">The Panel-Id is used to uniquely reference this panel.</small>
+  </div>
+  <div class="form-group">
+    <label for="display">Display-Name</label>
+    <input type="text" class="form-control" id="display" aria-describedby="displayHelp" formControlName="display"
+           [autofocus]="!isCreation()">
+    <small id="displayHelp" class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
+  </div>
+
+  <button type="submit" class="btn btn-primary float-right" [class.disabled]="!panelEditForm.valid">
+    {{ isCreation() ? 'Add' : 'Save' }}
+  </button>
+</form>
