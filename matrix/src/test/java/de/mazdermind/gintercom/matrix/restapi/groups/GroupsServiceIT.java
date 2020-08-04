@@ -66,9 +66,35 @@ public class GroupsServiceIT extends IntegrationTestBase {
 			.setDisplay("Operations"));
 
 		assertThat(testConfig.getGroups()).containsKey(groupId);
+		assertThat(testConfig.getGroups().get(groupId).getDisplay()).isEqualTo("Operations");
 		assertThat(mixingCore.getGroupById(groupId)).isNotNull();
 		assertThat(testConfigDirectoryService.getConfigDirectory().resolve("groups/" + groupId + ".toml"))
 			.exists().isRegularFile().hasContent("display = \"Operations\"");
+	}
+
+	@Test
+	public void updateGroup() {
+		groupsService.addGroup(new GroupDto()
+			.setId(groupId)
+			.setDisplay("Operations"));
+
+		groupsService.updateGroup(new GroupDto()
+			.setId(groupId)
+			.setDisplay("Ops"));
+
+		assertThat(testConfig.getGroups()).containsKey(groupId);
+		assertThat(testConfig.getGroups().get(groupId).getDisplay()).isEqualTo("Ops");
+		assertThat(mixingCore.getGroupById(groupId)).isNotNull();
+		assertThat(testConfigDirectoryService.getConfigDirectory().resolve("groups/" + groupId + ".toml"))
+			.exists().isRegularFile().hasContent("display = \"Ops\"");
+
+		groupsService.updateGroup(new GroupDto()
+			.setId(groupId)
+			.setDisplay(""));
+
+		assertThat(testConfig.getGroups().get(groupId).getDisplay()).isEqualTo("");
+		assertThat(testConfigDirectoryService.getConfigDirectory().resolve("groups/" + groupId + ".toml"))
+			.exists().isRegularFile().hasContent("display = \"\"");
 	}
 
 	@Test(expected = GroupAlreadyExistsException.class)

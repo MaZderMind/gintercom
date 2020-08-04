@@ -44,7 +44,8 @@ public class ConfigWriterService {
 		try {
 			Map<String, Object> map = objectMapper.convertValue(config, new TypeReference<Map<String, Object>>() {
 			});
-			OutputStream outputStream = Files.newOutputStream(configFile, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+			OutputStream outputStream = Files.newOutputStream(configFile,
+				StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
 			tomlWriter.write(map, outputStream);
 		} catch (IOException e) {
 			throw new ConfigWriteException(e);
