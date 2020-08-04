@@ -7,7 +7,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
 import {Subscription} from 'rxjs';
 import {MockComponent} from 'ng-mocks';
-import {GroupAddDialogComponent} from 'src/app/pages/groups/group-add-dialog/group-add-dialog.component';
+import {GroupEditDialogComponent} from 'src/app/pages/groups/group-edit-dialog/group-edit-dialog.component';
 
 describe('GroupsListComponent', () => {
   let component: GroupsListComponent;
@@ -25,7 +25,7 @@ describe('GroupsListComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         GroupsListComponent,
-        MockComponent(GroupAddDialogComponent),
+        MockComponent(GroupEditDialogComponent),
       ],
       providers: [
         {provide: GroupsService, useFactory: () => instance(groupsService)},

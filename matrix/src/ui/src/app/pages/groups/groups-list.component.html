@@ -10,7 +10,7 @@
   <tbody>
   <tr *ngFor="let group of groups">
     <td class="text-monospace">
-      <a [routerLink]="['/groups', group.id]">{{ group.id }}</a>
+      <a href (click)="editDialog.open(group.id)" appPreventDefault>{{ group.id }}</a>
     </td>
     <td>{{ group.display }}</td>
     <td>
@@ -23,5 +23,5 @@
   </tbody>
 </table>
 
-<button type="button" class="btn btn-primary" (click)="addDialogComponent.open()">Add Group</button>
-<app-group-add-dialog #addDialogComponent></app-group-add-dialog>
+<button type="button" class="btn btn-primary" (click)="editDialog.open()">Add Group</button>
+<app-group-edit-dialog #editDialog></app-group-edit-dialog>

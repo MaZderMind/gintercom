@@ -12,8 +12,8 @@ export class ValidateOnSubmitDirective {
     el.nativeElement.noValidate = true;
   }
 
-  @HostListener('submit')
-  onSubmit($event) {
+  @HostListener('submit', ['$event'])
+  onSubmit($event: UIEvent) {
     const classList: DOMTokenList = this.el.nativeElement.classList;
     classList.add('was-validated');
 

@@ -24,10 +24,11 @@ import {GroupEditComponent} from './pages/groups/group-edit/group-edit.component
 import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component';
 import {ClientViewComponent} from 'src/app/pages/clients/client-view/client-view.component';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
-import {GroupAddDialogComponent} from './pages/groups/group-add-dialog/group-add-dialog.component';
+import {GroupEditDialogComponent} from 'src/app/pages/groups/group-edit-dialog/group-edit-dialog.component';
 import {ValidateOnSubmitDirective} from './utils/validate-on-submit.directive';
 import {MessagesComponent} from 'src/app/messages/messages.component';
 import {HttpErrorShowMessageInterceptor} from 'src/app/messages/http-error-show-message-interceptor';
+import {PreventDefaultDirective} from 'src/app/utils/prevent-default.directive';
 
 @NgModule({
   declarations: [
@@ -47,9 +48,10 @@ import {HttpErrorShowMessageInterceptor} from 'src/app/messages/http-error-show-
     GroupEditComponent,
     PanelEditComponent,
     ClientViewComponent,
-    GroupAddDialogComponent,
+    GroupEditDialogComponent,
     ValidateOnSubmitDirective,
-    MessagesComponent
+    MessagesComponent,
+    PreventDefaultDirective
   ],
   imports: [
     BrowserModule,

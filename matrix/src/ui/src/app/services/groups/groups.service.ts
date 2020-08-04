@@ -22,6 +22,10 @@ export class GroupsService {
     return this.httpClient.post<void>('/rest/groups', groupDto).toPromise();
   }
 
+  updateGroup(groupDto: GroupDto) {
+    return this.httpClient.put<void>('/rest/groups', groupDto).toPromise();
+  }
+
   deleteGroup(groupId: string): Promise<void> {
     return this.httpClient.delete<void>(`/rest/groups/${groupId}`).toPromise();
   }
