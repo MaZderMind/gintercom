@@ -11,6 +11,7 @@ const routes: Routes = [
   {path: '', pathMatch: 'full', component: DashboardComponent},
   {path: 'groups', component: GroupsListComponent},
   {path: 'panels', component: PanelsListComponent},
+  {path: 'panels/new', component: PanelEditComponent},
   {path: 'panels/:id', component: PanelEditComponent},
   {path: 'clients', component: ClientsListComponent},
   {path: 'clients/:id', component: ClientViewComponent},
