@@ -10,7 +10,7 @@
   <tbody>
   <tr *ngFor="let group of groups">
     <td class="text-monospace">
-      <a href (click)="editDialog.open(group.id)" appPreventDefault>{{ group.id }}</a>
+      <a href (click)="editDialog.open(group.id)" preventDefault>{{ group.id }}</a>
     </td>
     <td>{{ group.display }}</td>
     <td>

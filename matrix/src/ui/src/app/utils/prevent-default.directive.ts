@@ -1,7 +1,7 @@
 import {Directive, HostListener} from '@angular/core';
 
 @Directive({
-  selector: '[appPreventDefault]',
+  selector: '[preventDefault]',
 })
 export class PreventDefaultDirective {
   @HostListener('click', ['$event'])

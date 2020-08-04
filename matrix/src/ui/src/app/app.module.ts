@@ -29,6 +29,7 @@ import {ValidateOnSubmitDirective} from './utils/validate-on-submit.directive';
 import {MessagesComponent} from 'src/app/messages/messages.component';
 import {HttpErrorShowMessageInterceptor} from 'src/app/messages/http-error-show-message-interceptor';
 import {PreventDefaultDirective} from 'src/app/utils/prevent-default.directive';
+import { AutofocusDirective } from 'src/app/utils/autofocus.directive';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import {PreventDefaultDirective} from 'src/app/utils/prevent-default.directive';
     GroupEditDialogComponent,
     ValidateOnSubmitDirective,
     MessagesComponent,
-    PreventDefaultDirective
+    PreventDefaultDirective,
+    AutofocusDirective
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 import {Directive, ElementRef, EventEmitter, HostListener, Output} from '@angular/core';
 
 @Directive({
-  selector: '[appValidateOnSubmit]'
+  selector: '[validateOnSubmit]'
 })
 export class ValidateOnSubmitDirective {
 
