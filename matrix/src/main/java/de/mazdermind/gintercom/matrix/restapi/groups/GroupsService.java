@@ -57,6 +57,22 @@ public class GroupsService {
 		eventPublisher.publishEvent(new GroupsChangedEvent());
 	}
 
+	public void updateGroup(GroupDto groupDto) {
+		String groupId = groupDto.getId();
+		if (!config.getGroups().containsKey(groupId)) {
+			throw new GroupNotFoundException(groupId);
+		}
+
+		log.info("Modifying Group {} in Config", groupId);
+		config.getGroups().get(groupId)
+			.setDisplay(groupDto.getDisplay());
+
+		configWriterService.writeConfig();
+
+		log.debug("Broadcasting GroupsChangedEvent");
+		eventPublisher.publishEvent(new GroupsChangedEvent());
+	}
+
 	public Optional<GroupDto> getGroup(String groupId) {
 		return Optional.ofNullable(config.getGroups().get(groupId))
 			.map(groupConfig -> new GroupDto(groupId, groupConfig));

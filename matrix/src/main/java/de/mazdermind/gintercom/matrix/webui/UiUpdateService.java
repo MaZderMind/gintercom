@@ -18,16 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 public class UiUpdateService {
 	private final SimpMessageSendingOperations simpMessageSendingOperations;
 
-	public void notifyUiAboutUpdates() {
-		log.info("Updating UI");
-		simpMessageSendingOperations.convertAndSend("/ui/update", ImmutableMap.of("type", "update"));
-	}
-
 	@EventListener({
 		ClientAssociatedEvent.class, ClientDeAssociatedEvent.class,
 		GroupsChangedEvent.class,
 	})
-	public void onUiUpdateEvent() {
-		notifyUiAboutUpdates();
+	public void notifyUiAboutUpdates() {
+		log.info("Updating UI");
+		simpMessageSendingOperations.convertAndSend("/ui/update", ImmutableMap.of("type", "update"));
 	}
 }
