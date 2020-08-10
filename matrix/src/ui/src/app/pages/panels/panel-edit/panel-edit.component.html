@@ -1,18 +1,59 @@
 <h4>{{ isCreation() ? 'Add Group' : 'Edit Group ' + panelId }}</h4>
-<form [formGroup]="panelEditForm" (validSubmit)="onSubmit()" validateOnSubmit class="has-validation">
+<form [formGroup]="panelEditForm" (validSubmit)="onSubmit()" validateOnSubmit class="has-validation"
+      novalidate>
   <div class="form-group">
-    <label for="id">Panel-Id</label>
-    <input type="text" class="form-control" id="id" aria-describedby="idHelp" formControlName="id" [autofocus]="isCreation()">
-    <small id="idHelp" class="form-text text-muted">The Panel-Id is used to uniquely reference this panel.</small>
+    <label class="d-block">
+      Panel-Id
+      <input type="text" class="form-control" formControlName="id" [autofocus]="isCreation()">
+    </label>
+    <small class="form-text text-muted">The Panel-Id is used to uniquely reference this panel.</small>
   </div>
   <div class="form-group">
-    <label for="display">Display-Name</label>
-    <input type="text" class="form-control" id="display" aria-describedby="displayHelp" formControlName="display"
-           [autofocus]="!isCreation()">
-    <small id="displayHelp" class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
+    <label class="d-block">
+      Display-Name
+      <input type="text" class="form-control" formControlName="display" [autofocus]="!isCreation()">
+    </label>
+    <small class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
   </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <label>Static Receive-Groups</label>
+        <app-checkbox-multi-select
+          [options]="groups"
+          formControlName="rxGroups"
+          [valueGetter]="groupValueGetter"
+        >
+          <ng-template let-group>
+            {{ group.display }}
+          </ng-template>
+        </app-checkbox-multi-select>
+
+        <small class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <label>Static Transmit-Groups</label>
+        <app-checkbox-multi-select
+          [options]="groups"
+          formControlName="txGroups"
+          [valueGetter]="groupValueGetter"
+        >
+          <ng-template let-group>
+            {{ group.display }}
+          </ng-template>
+        </app-checkbox-multi-select>
+
+        <small class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
+      </div>
+    </div>
+  </div>
+
 
   <button type="submit" class="btn btn-primary float-right" [class.disabled]="!panelEditForm.valid">
     {{ isCreation() ? 'Add' : 'Save' }}
   </button>
+  {{ foo | json }}
 </form>

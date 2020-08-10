@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {GroupsService} from 'src/app/services/groups/groups.service';
 import {MessageService} from 'src/app/messages/message.service';
@@ -47,20 +46,28 @@ export class GroupEditComponent implements OnInit {
 
     this.groupEditForm.disable();
     if (this.isCreation()) {
-      this.groupsService.addGroup(groupDto)
-        .then(() => {
-          this.messageService.showInfo(`Group ${groupDto.id} created successfully`);
-          this.saved.emit();
-        })
-        .finally(() => this.groupEditForm.enable());
+      this.addGroup(groupDto);
     } else {
-      groupDto.id = this.groupId;
-      this.groupsService.updateGroup(groupDto)
-        .then(() => {
-          this.messageService.showInfo(`Group ${groupDto.id} created saved`);
-          this.saved.emit();
-        })
-        .finally(() => this.groupEditForm.enable());
+      this.changeGroup(groupDto);
     }
+  }
+
+  private changeGroup(groupDto: GroupDto) {
+    groupDto.id = this.groupId;
+    this.groupsService.updateGroup(groupDto)
+      .then(() => {
+        this.messageService.showInfo(`Group ${groupDto.id} created saved`);
+        this.saved.emit();
+      })
+      .finally(() => this.groupEditForm.enable());
+  }
+
+  private addGroup(groupDto: GroupDto) {
+    this.groupsService.addGroup(groupDto)
+      .then(() => {
+        this.messageService.showInfo(`Group ${groupDto.id} created successfully`);
+        this.saved.emit();
+      })
+      .finally(() => this.groupEditForm.enable());
   }
 }

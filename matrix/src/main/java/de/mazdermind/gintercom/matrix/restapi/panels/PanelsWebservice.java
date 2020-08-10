@@ -15,27 +15,27 @@ public class PanelsWebservice {
 	private final PanelsService panelsService;
 
 	@GetMapping
-	private Stream<PanelDto> getConfiguredPanels() {
+	private Stream<PanelInfoDto> getConfiguredPanels() {
 		return panelsService.getConfiguredPanels();
 	}
 
 	@GetMapping("/assigned")
-	private Stream<PanelDto> getAssignedPanels() {
+	private Stream<PanelInfoDto> getAssignedPanels() {
 		return panelsService.getAssignedPanels();
 	}
 
 	@GetMapping("/unassigned")
-	private Stream<PanelDto> getUnassignedPanels() {
+	private Stream<PanelInfoDto> getUnassignedPanels() {
 		return panelsService.getUnassignedPanels();
 	}
 
 	@GetMapping("/online")
-	private Stream<PanelDto> getOnlinePanels() {
+	private Stream<PanelInfoDto> getOnlinePanels() {
 		return panelsService.getOnlinePanels();
 	}
 
 	@GetMapping("/offline")
-	private Stream<PanelDto> getOfflinePanels() {
+	private Stream<PanelInfoDto> getOfflinePanels() {
 		return panelsService.getOfflinePanels();
 	}
 }

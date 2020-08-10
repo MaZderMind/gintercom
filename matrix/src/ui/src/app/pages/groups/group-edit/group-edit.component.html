@@ -1,4 +1,4 @@
-<form [formGroup]="groupEditForm" (validSubmit)="onSubmit()" validateOnSubmit class="has-validation">
+<form [formGroup]="groupEditForm" (validSubmit)="onSubmit()" validateOnSubmit class="has-validation" novalidate>
   <div class="form-group">
     <label for="id">Group-Id</label>
     <input type="text" class="form-control" id="id" aria-describedby="idHelp" formControlName="id" [autofocus]="isCreation()">

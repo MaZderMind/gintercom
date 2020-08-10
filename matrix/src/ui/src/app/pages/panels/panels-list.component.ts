@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PanelsService} from 'src/app/services/panels/panels.service';
-import {PanelDto} from 'src/app/services/panels/panel-dto';
+import {PanelInfoDto} from 'src/app/services/panels/panel-info-dto';
 import {ActivatedRoute} from '@angular/router';
 import {Filter, Filters} from 'src/app/utils/filter-util';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
@@ -12,7 +12,7 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./panels-list.component.scss']
 })
 export class PanelsListComponent implements OnInit, OnDestroy {
-  private static readonly filters: Filters<PanelDto> = new Filters(
+  private static readonly filters: Filters<PanelInfoDto> = new Filters(
     'Configured Panels',
     new Filter('online', 'Online Panels', panel => panel.online),
     new Filter('offline', 'Offline Panels', panel => !panel.online),
@@ -20,9 +20,9 @@ export class PanelsListComponent implements OnInit, OnDestroy {
     new Filter('unassigned', 'Unassigned Panels', panel => !panel.assigned),
   );
 
-  panels: Array<PanelDto>;
-  filter: Filter<PanelDto>;
-  private allPanels: Array<PanelDto>;
+  panels: Array<PanelInfoDto>;
+  filter: Filter<PanelInfoDto>;
+  private allPanels: Array<PanelInfoDto>;
   private uiUpdateSubscription: Subscription;
 
   constructor(

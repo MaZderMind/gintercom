@@ -56,14 +56,14 @@ public class PanelsServiceIT extends IntegrationTestBase {
 		PanelConfig panelConfig = testConfig.getPanels().get(panelId);
 
 		assertThat(panelsService.getConfiguredPanels()).hasSize(1)
-			.extracting(PanelDto::getId).contains(panelId);
+			.extracting(PanelInfoDto::getId).contains(panelId);
 
 		assertThat(panelsService.getAssignedPanels()).isEmpty();
 		assertThat(panelsService.getUnassignedPanels()).hasSize(1);
 		assertThat(panelsService.getOnlinePanels()).isEmpty();
 		assertThat(panelsService.getOfflinePanels()).hasSize(1);
 
-		PanelDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
+		PanelInfoDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
 		assertThat(panel.getId()).isEqualTo(panelId);
 		assertThat(panel.getDisplay()).isEqualTo(panelConfig.getDisplay());
 		assertThat(panel.getClientId()).isEqualTo(null);
@@ -76,14 +76,14 @@ public class PanelsServiceIT extends IntegrationTestBase {
 		PanelConfig panelConfig = testConfig.getPanels().get(panelId);
 
 		assertThat(panelsService.getConfiguredPanels()).hasSize(1)
-			.flatExtracting(PanelDto::getId).contains(panelId);
+			.flatExtracting(PanelInfoDto::getId).contains(panelId);
 
 		assertThat(panelsService.getAssignedPanels()).hasSize(1);
 		assertThat(panelsService.getUnassignedPanels()).isEmpty();
 		assertThat(panelsService.getOnlinePanels()).isEmpty();
 		assertThat(panelsService.getOfflinePanels()).hasSize(1);
 
-		PanelDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
+		PanelInfoDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
 		assertThat(panel.getId()).isEqualTo(panelId);
 		assertThat(panel.getDisplay()).isEqualTo(panelConfig.getDisplay());
 		assertThat(panel.getClientId()).isEqualTo(clientId);
@@ -97,14 +97,14 @@ public class PanelsServiceIT extends IntegrationTestBase {
 		associatedClientsManager.associate(SOCKET_ADDRESS, clientId, CLIENT_MODEL);
 
 		assertThat(panelsService.getConfiguredPanels()).hasSize(1)
-			.extracting(PanelDto::getId).contains(panelId);
+			.extracting(PanelInfoDto::getId).contains(panelId);
 
 		assertThat(panelsService.getAssignedPanels()).hasSize(1);
 		assertThat(panelsService.getUnassignedPanels()).isEmpty();
 		assertThat(panelsService.getOnlinePanels()).hasSize(1);
 		assertThat(panelsService.getOfflinePanels()).isEmpty();
 
-		PanelDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
+		PanelInfoDto panel = panelsService.getConfiguredPanels().findFirst().orElseThrow(AssertionError::new);
 		assertThat(panel.getId()).isEqualTo(panelId);
 		assertThat(panel.getDisplay()).isEqualTo(panelConfig.getDisplay());
 		assertThat(panel.getClientId()).isEqualTo(clientId);

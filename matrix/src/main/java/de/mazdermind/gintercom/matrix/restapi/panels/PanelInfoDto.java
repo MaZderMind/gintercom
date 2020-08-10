@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 @NoArgsConstructor
-public class PanelDto {
+public class PanelInfoDto {
 	private String id;
 	private String display;
 	private boolean online;
@@ -21,7 +21,7 @@ public class PanelDto {
 	@Nullable
 	private String clientModel;
 
-	public PanelDto(String id, PanelConfig config, boolean online) {
+	public PanelInfoDto(String id, PanelConfig config, boolean online) {
 		this.id = id;
 		display = config.getDisplay();
 		clientId = config.getClientId();

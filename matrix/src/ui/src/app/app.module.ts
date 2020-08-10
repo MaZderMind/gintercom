@@ -29,7 +29,8 @@ import {ValidateOnSubmitDirective} from './utils/validate-on-submit.directive';
 import {MessagesComponent} from 'src/app/messages/messages.component';
 import {HttpErrorShowMessageInterceptor} from 'src/app/messages/http-error-show-message-interceptor';
 import {PreventDefaultDirective} from 'src/app/utils/prevent-default.directive';
-import { AutofocusDirective } from 'src/app/utils/autofocus.directive';
+import {AutofocusDirective} from 'src/app/utils/autofocus.directive';
+import {CheckboxMultiSelectComponent} from './components/checkbox-multi-select/checkbox-multi-select.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { AutofocusDirective } from 'src/app/utils/autofocus.directive';
     ValidateOnSubmitDirective,
     MessagesComponent,
     PreventDefaultDirective,
-    AutofocusDirective
+    AutofocusDirective,
+    CheckboxMultiSelectComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,7 +81,7 @@ import { AutofocusDirective } from 'src/app/utils/autofocus.directive';
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorShowMessageInterceptor,
       multi: true
-    },
+    }
   ],
   bootstrap: [AppComponent]
 })

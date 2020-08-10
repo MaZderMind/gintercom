@@ -20,17 +20,17 @@ public class PanelsService {
 	private final Config config;
 	private final AssociatedClientsManager associatedClientsManager;
 
-	public Stream<PanelDto> getConfiguredPanels() {
+	public Stream<PanelInfoDto> getConfiguredPanels() {
 		return config.getPanels().entrySet().stream()
 			.sorted(Map.Entry.comparingByKey())
 			.map(entry -> buildPanelDto(entry.getKey(), entry.getValue()));
 	}
 
-	private PanelDto buildPanelDto(String panelId, PanelConfig panelConfig) {
+	private PanelInfoDto buildPanelDto(String panelId, PanelConfig panelConfig) {
 		Optional<ClientAssociation> clientAssociation = Optional.ofNullable(panelConfig.getClientId())
 			.flatMap(associatedClientsManager::findAssociation);
 
-		return new PanelDto()
+		return new PanelInfoDto()
 			.setId(panelId)
 			.setClientId(panelConfig.getClientId())
 			.setDisplay(panelConfig.getDisplay())
@@ -40,24 +40,24 @@ public class PanelsService {
 				.orElse(null));
 	}
 
-	public Stream<PanelDto> getAssignedPanels() {
+	public Stream<PanelInfoDto> getAssignedPanels() {
 		return getConfiguredPanels()
-			.filter(PanelDto::isAssigned);
+			.filter(PanelInfoDto::isAssigned);
 	}
 
-	public Stream<PanelDto> getUnassignedPanels() {
+	public Stream<PanelInfoDto> getUnassignedPanels() {
 		return getConfiguredPanels()
-			.filter(not(PanelDto::isAssigned));
+			.filter(not(PanelInfoDto::isAssigned));
 	}
 
-	public Stream<PanelDto> getOnlinePanels() {
+	public Stream<PanelInfoDto> getOnlinePanels() {
 		return getConfiguredPanels()
-			.filter(PanelDto::isOnline);
+			.filter(PanelInfoDto::isOnline);
 	}
 
-	public Stream<PanelDto> getOfflinePanels() {
+	public Stream<PanelInfoDto> getOfflinePanels() {
 		return getConfiguredPanels()
-			.filter(not(PanelDto::isOnline));
+			.filter(not(PanelInfoDto::isOnline));
 	}
 
 }

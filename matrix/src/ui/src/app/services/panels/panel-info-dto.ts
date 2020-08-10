@@ -1,4 +1,4 @@
-export interface PanelDto {
+export interface PanelInfoDto {
   id: string;
   display: string;
   clientModel: string;

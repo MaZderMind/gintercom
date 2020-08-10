@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import de.mazdermind.gintercom.matrix.tools.TestClientIdGenerator;
 
-public class PanelDtoTest {
+public class PanelInfoDtoTest {
 
 	private String clientId;
 
@@ -18,7 +18,7 @@ public class PanelDtoTest {
 
 	@Test
 	public void provisionedState() {
-		PanelDto dto = new PanelDto();
+		PanelInfoDto dto = new PanelInfoDto();
 		assertThat(dto.getClientId()).isNull();
 		assertThat(dto.isAssigned()).isFalse();
 

@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {PanelDto} from 'src/app/services/panels/panel-dto';
+import {PanelInfoDto} from 'src/app/services/panels/panel-info-dto';
 
 @Component({
   selector: 'app-panel-status',
@@ -8,5 +8,5 @@ import {PanelDto} from 'src/app/services/panels/panel-dto';
 })
 export class PanelStatusComponent {
   @Input()
-  panel: PanelDto;
+  panel: PanelInfoDto;
 }
