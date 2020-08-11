@@ -2,35 +2,28 @@
 display = "A/V Tech Broadcast"
 target = "av-tech"
 targetType = "GROUP"
-action = "TOGGLE"
-direction = "TX"
+
 [buttons.2]
 display = "Helpdesk Broadcast"
 target = "helpdesk"
 targetType = "GROUP"
-action = "TOGGLE"
-direction = "TX"
+
 [buttons.3]
 display = "Room A Broadcast"
 target = "room-a"
 targetType = "GROUP"
-action = "PUSH"
-direction = "TX"
+
 [buttons.4]
 display = "Room B Broadcast"
 target = "room-b"
 targetType = "GROUP"
-action = "PUSH"
-direction = "TX"
+
 [buttons.5]
 display = "A/V Tech Room A"
 target = "av-tech-room-a"
 targetType = "PANEL"
-action = "PUSH"
-direction = "TX"
+
 [buttons.6]
 display = "A/V Tech Room B"
 target = "av-tech-room-b"
 targetType = "PANEL"
-action = "PUSH"
-direction = "TX"

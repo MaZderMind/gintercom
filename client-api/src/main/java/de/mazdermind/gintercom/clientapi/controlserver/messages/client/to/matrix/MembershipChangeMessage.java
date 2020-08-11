@@ -2,7 +2,6 @@ package de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matri
 
 import javax.validation.constraints.NotNull;
 
-import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.wrapper.WrappedClientMessage;
 import lombok.Data;
@@ -19,9 +18,6 @@ public class MembershipChangeMessage {
 
 	@NotNull
 	private CommunicationTargetType targetType = CommunicationTargetType.GROUP;
-
-	@NotNull
-	private CommunicationDirection direction = CommunicationDirection.TX;
 
 	public enum Change {
 		JOIN,

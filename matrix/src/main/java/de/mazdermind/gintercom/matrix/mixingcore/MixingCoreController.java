@@ -5,7 +5,6 @@ import javax.annotation.PreDestroy;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.MembershipChangeMessage;
 import de.mazdermind.gintercom.matrix.controlserver.ClientAssociation;
@@ -53,18 +52,13 @@ public class MixingCoreController {
 		Client client = mixingCore.getClientById(clientMessage.getClientId());
 
 		MembershipChangeMessage.Change change = membershipChangeMessage.getChange();
-		CommunicationDirection direction = membershipChangeMessage.getDirection();
 
 		if (membershipChangeMessage.getTargetType() == CommunicationTargetType.GROUP) {
 			Group group = mixingCore.getGroupById(membershipChangeMessage.getTarget());
 
-			if (change == MembershipChangeMessage.Change.JOIN && direction == CommunicationDirection.RX) {
-				client.startReceivingFrom(group);
-			} else if (change == MembershipChangeMessage.Change.LEAVE && direction == CommunicationDirection.RX) {
-				client.stopReceivingFrom(group);
-			} else if (change == MembershipChangeMessage.Change.JOIN && direction == CommunicationDirection.TX) {
+			if (change == MembershipChangeMessage.Change.JOIN) {
 				client.startTransmittingTo(group);
-			} else if (change == MembershipChangeMessage.Change.LEAVE && direction == CommunicationDirection.TX) {
+			} else if (change == MembershipChangeMessage.Change.LEAVE) {
 				client.stopTransmittingTo(group);
 			}
 		} else if (membershipChangeMessage.getTargetType() == CommunicationTargetType.PANEL) {

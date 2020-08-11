@@ -16,10 +16,4 @@ public class ButtonConfig {
 
 	@NotNull
 	private CommunicationTargetType targetType = CommunicationTargetType.GROUP;
-
-	@NotNull
-	private ButtonAction action = ButtonAction.PUSH;
-
-	@NotNull
-	private CommunicationDirection direction = CommunicationDirection.TX;
 }
