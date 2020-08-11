@@ -7,7 +7,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.MembershipChangeMessage;
 import de.mazdermind.gintercom.matrix.ControlServerTestBase;
@@ -45,7 +44,6 @@ public class MembershipChangeMessageIT extends ControlServerTestBase {
 
 		client.transmit(new MembershipChangeMessage()
 			.setChange(MembershipChangeMessage.Change.JOIN)
-			.setDirection(CommunicationDirection.TX)
 			.setTargetType(CommunicationTargetType.GROUP)
 			.setTarget(groupId));
 
@@ -66,48 +64,11 @@ public class MembershipChangeMessageIT extends ControlServerTestBase {
 
 		this.client.transmit(new MembershipChangeMessage()
 			.setChange(MembershipChangeMessage.Change.LEAVE)
-			.setDirection(CommunicationDirection.TX)
 			.setTargetType(CommunicationTargetType.GROUP)
 			.setTarget(groupId));
 
 		eventReceiver.awaitEvent(MembershipChangeMessage.ClientMessage.class);
 		assertThat(client.getTxGroups()).isEmpty();
-	}
-
-	@Test
-	public void canJoinRxGroup() {
-
-		assertThat(mixingCore.getClientById(clientId).getRxGroups()).isEmpty();
-
-		client.transmit(new MembershipChangeMessage()
-			.setChange(MembershipChangeMessage.Change.JOIN)
-			.setDirection(CommunicationDirection.RX)
-			.setTargetType(CommunicationTargetType.GROUP)
-			.setTarget(groupId));
-
-		eventReceiver.awaitEvent(MembershipChangeMessage.ClientMessage.class);
-		assertThat(mixingCore.getClientById(clientId).getRxGroups())
-			.extracting(Group::getId)
-			.containsExactly(groupId);
-	}
-
-	@Test
-	public void canLeaveRxGroup() {
-		Client client = mixingCore.getClientById(clientId);
-		client.startReceivingFrom(mixingCore.getGroupById(groupId));
-
-		assertThat(client.getRxGroups())
-			.extracting(Group::getId)
-			.containsExactly(groupId);
-
-		this.client.transmit(new MembershipChangeMessage()
-			.setChange(MembershipChangeMessage.Change.LEAVE)
-			.setDirection(CommunicationDirection.RX)
-			.setTargetType(CommunicationTargetType.GROUP)
-			.setTarget(groupId));
-
-		eventReceiver.awaitEvent(MembershipChangeMessage.ClientMessage.class);
-		assertThat(client.getRxGroups()).isEmpty();
 	}
 
 	@Test
@@ -119,18 +80,6 @@ public class MembershipChangeMessageIT extends ControlServerTestBase {
 	@Test
 	@Ignore("Feature not yet Implemented")
 	public void canStopTxPanel() {
-
-	}
-
-	@Test
-	@Ignore("Feature not yet Implemented")
-	public void canStartRxToPanel() {
-
-	}
-
-	@Test
-	@Ignore("Feature not yet Implemented")
-	public void canStopRxPanel() {
 
 	}
 }

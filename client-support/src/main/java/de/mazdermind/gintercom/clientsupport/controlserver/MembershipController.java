@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
-import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.clientapi.controlserver.messages.client.to.matrix.MembershipChangeMessage;
 import lombok.AllArgsConstructor;
@@ -21,8 +20,8 @@ public class MembershipController {
 
 	private final Set<Membership> activeMemberships = new HashSet<>();
 
-	public void changeMembership(MembershipChangeMessage.Change change, CommunicationDirection direction, CommunicationTargetType targetType, String target) {
-		Membership membership = new Membership(direction, targetType, target);
+	public void changeMembership(MembershipChangeMessage.Change change, CommunicationTargetType targetType, String target) {
+		Membership membership = new Membership(targetType, target);
 		if (change == MembershipChangeMessage.Change.JOIN) {
 			activeMemberships.add(membership);
 		} else if (change == MembershipChangeMessage.Change.LEAVE) {
@@ -35,7 +34,6 @@ public class MembershipController {
 	private void sendMembershipChangeMessage(MembershipChangeMessage.Change change, Membership membership) {
 		sendMembershipChangeMessage(new MembershipChangeMessage()
 			.setChange(change)
-			.setDirection(membership.getDirection())
 			.setTargetType(membership.getTargetType())
 			.setTarget(membership.getTarget()));
 	}
@@ -57,7 +55,6 @@ public class MembershipController {
 	@Data
 	@AllArgsConstructor
 	private static class Membership {
-		private CommunicationDirection direction;
 		private CommunicationTargetType targetType;
 		private String target;
 	}

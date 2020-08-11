@@ -7,9 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
-import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.testutils.JsonMap;
 import de.mazdermind.gintercom.testutils.JsonMapUtils;
@@ -42,9 +40,7 @@ public class PanelConfigTest {
 		assertThat(panelConfig.getButtons()).containsKey("6");
 		ButtonConfig buttonConfig = panelConfig.getButtons().get("6");
 		assertThat(buttonConfig.getDisplay()).isEqualTo("Room A Broadcast");
-		assertThat(buttonConfig.getAction()).isEqualTo(ButtonAction.PUSH);
 		assertThat(buttonConfig.getTargetType()).isEqualTo(CommunicationTargetType.GROUP);
-		assertThat(buttonConfig.getDirection()).isEqualTo(CommunicationDirection.TX);
 		assertThat(buttonConfig.getTarget()).isEqualTo("room-a");
 	}
 

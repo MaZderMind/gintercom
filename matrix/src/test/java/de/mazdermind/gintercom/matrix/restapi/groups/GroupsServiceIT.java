@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.ImmutableMap;
 import com.oblac.nomen.Nomen;
 
-import de.mazdermind.gintercom.clientapi.configuration.ButtonAction;
 import de.mazdermind.gintercom.clientapi.configuration.ButtonConfig;
-import de.mazdermind.gintercom.clientapi.configuration.CommunicationDirection;
 import de.mazdermind.gintercom.clientapi.configuration.CommunicationTargetType;
 import de.mazdermind.gintercom.matrix.IntegrationTestBase;
 import de.mazdermind.gintercom.matrix.configuration.model.ButtonSetConfig;
@@ -191,8 +189,6 @@ public class GroupsServiceIT extends IntegrationTestBase {
 				"q1", new ButtonConfig()
 					.setTargetType(CommunicationTargetType.GROUP)
 					.setTarget(groupId)
-					.setDirection(CommunicationDirection.RX)
-					.setAction(ButtonAction.TOGGLE)
 			)));
 
 		UsageDto groupUsage = groupsService.getGroupUsage(groupId);

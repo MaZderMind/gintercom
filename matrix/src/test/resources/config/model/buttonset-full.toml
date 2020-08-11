@@ -1,13 +1,9 @@
 [buttons.1]
-display="A/V Tech Broadcast"
-action="push"
-direction="tx"
-targetType="group"
-target="av-tech"
+display = "A/V Tech Broadcast"
+targetType = "group"
+target = "av-tech"
 
 [buttons.2]
-display="Room A Broadcast"
-action="push"
-direction="tx"
-targetType="group"
-target="room-a"
+display = "Room A Broadcast"
+targetType = "group"
+target = "room-a"

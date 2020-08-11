@@ -2,5 +2,3 @@
 display = "A/V Tech Group"
 target = "av-tech"
 targetType = "GROUP"
-action = "PUSH"
-direction = "TX"

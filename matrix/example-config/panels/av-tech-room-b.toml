@@ -8,5 +8,3 @@ buttonSets = ["av-tech"]
 display = "Room B Broadcast"
 target = "room-b"
 targetType = "GROUP"
-action = "PUSH"
-direction = "TX"
