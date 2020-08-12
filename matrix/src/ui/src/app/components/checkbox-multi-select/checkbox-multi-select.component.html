@@ -1,11 +1,13 @@
-<div class="form-check" *ngFor="let option of options; index as i">
-  <label class="form-check-label">
-    <input
-      class="form-check-input"
-      type="checkbox"
-      (change)="onCheckboxChange($event, option)"
-      [checked]="isOptionActive(option)"
-    >
+<div class="custom-control custom-checkbox" *ngFor="let option of options; index as i">
+  <input
+    class="custom-control-input"
+    type="checkbox"
+    generatedId
+    #checkbox
+    (change)="onCheckboxChange($event, option)"
+    [checked]="isOptionActive(option)"
+  >
+  <label class="custom-control-label" [autoFor]="checkbox">
     <ng-container *ngTemplateOutlet="labelTemplate || defaultLabelTemplate; context: {'$implicit': option}"></ng-container>
   </label>
 </div>

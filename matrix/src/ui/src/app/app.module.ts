@@ -32,6 +32,8 @@ import {PreventDefaultDirective} from 'src/app/utils/prevent-default.directive';
 import {AutofocusDirective} from 'src/app/utils/autofocus.directive';
 import {CheckboxMultiSelectComponent} from './components/checkbox-multi-select/checkbox-multi-select.component';
 import {GroupMultiSelectComponent} from './components/group-multi-select/group-multi-select.component';
+import {GeneratedIdDirective} from './utils/id-handling/generated-id.directive';
+import {AutoForDirective} from './utils/id-handling/auto-for.directive';
 
 @NgModule({
   declarations: [
@@ -58,6 +60,8 @@ import {GroupMultiSelectComponent} from './components/group-multi-select/group-m
     AutofocusDirective,
     CheckboxMultiSelectComponent,
     GroupMultiSelectComponent,
+    GeneratedIdDirective,
+    AutoForDirective,
   ],
   imports: [
     BrowserModule,
