@@ -20,15 +20,7 @@
     <div class="col-6">
       <div class="form-group">
         <label>Static Receive-Groups</label>
-        <app-checkbox-multi-select
-          [options]="groups"
-          formControlName="rxGroups"
-          [valueGetter]="groupValueGetter"
-        >
-          <ng-template let-group>
-            {{ group.display }}
-          </ng-template>
-        </app-checkbox-multi-select>
+        <app-group-multi-select formControlName="rxGroups"></app-group-multi-select>
 
         <small class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
       </div>
@@ -36,15 +28,7 @@
     <div class="col-6">
       <div class="form-group">
         <label>Static Transmit-Groups</label>
-        <app-checkbox-multi-select
-          [options]="groups"
-          formControlName="txGroups"
-          [valueGetter]="groupValueGetter"
-        >
-          <ng-template let-group>
-            {{ group.display }}
-          </ng-template>
-        </app-checkbox-multi-select>
+        <app-group-multi-select formControlName="txGroups"></app-group-multi-select>
 
         <small class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
       </div>

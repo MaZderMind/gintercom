@@ -1,0 +1,8 @@
+<app-checkbox-multi-select
+  [options]="groups"
+  [valueGetter]="groupValueGetter"
+>
+  <ng-template let-group>
+    {{ group.display }}
+  </ng-template>
+</app-checkbox-multi-select>

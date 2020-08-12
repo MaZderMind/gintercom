@@ -31,6 +31,7 @@ import {HttpErrorShowMessageInterceptor} from 'src/app/messages/http-error-show-
 import {PreventDefaultDirective} from 'src/app/utils/prevent-default.directive';
 import {AutofocusDirective} from 'src/app/utils/autofocus.directive';
 import {CheckboxMultiSelectComponent} from './components/checkbox-multi-select/checkbox-multi-select.component';
+import {GroupMultiSelectComponent} from './components/group-multi-select/group-multi-select.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import {CheckboxMultiSelectComponent} from './components/checkbox-multi-select/c
     PreventDefaultDirective,
     AutofocusDirective,
     CheckboxMultiSelectComponent,
+    GroupMultiSelectComponent,
   ],
   imports: [
     BrowserModule,
