@@ -1,6 +1,6 @@
 import {Component, ContentChild, Input, TemplateRef} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import * as lodash from 'lodash';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-checkbox-multi-select',
@@ -53,7 +53,7 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
     if (checked) {
       this.selectedOptions.push(value);
     } else {
-      lodash.pull(this.selectedOptions, value);
+      _.pull(this.selectedOptions, value);
     }
     this.onChange(this.selectedOptions);
   }

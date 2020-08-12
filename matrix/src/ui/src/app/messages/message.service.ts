@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Message} from 'src/app/messages/message';
-import * as lodash from 'lodash';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,7 @@ export class MessageService {
   }
 
   hide(message: Message) {
-    lodash.pull(this._messages, message);
+    _.pull(this._messages, message);
   }
 
   get messages(): Array<Message> {
