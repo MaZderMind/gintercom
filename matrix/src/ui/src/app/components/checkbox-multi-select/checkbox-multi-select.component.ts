@@ -27,6 +27,8 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
   labelTemplate: TemplateRef<any>;
 
   private onChange: any;
+  isDisabled = false;
+
   private selectedOptions = [];
 
   registerOnChange(fn: any): void {
@@ -37,6 +39,7 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
   }
 
   writeValue(obj: any): void {

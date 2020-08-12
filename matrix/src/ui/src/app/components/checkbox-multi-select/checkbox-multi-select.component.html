@@ -6,6 +6,7 @@
     #checkbox
     (change)="onCheckboxChange($event, option)"
     [checked]="isOptionActive(option)"
+    [disabled]="isDisabled"
   >
   <label class="custom-control-label" [referenceId]="checkbox">
     <ng-container *ngTemplateOutlet="labelTemplate || defaultLabelTemplate; context: {'$implicit': option}"></ng-container>
