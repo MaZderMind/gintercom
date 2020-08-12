@@ -7,7 +7,7 @@
     (change)="onCheckboxChange($event, option)"
     [checked]="isOptionActive(option)"
   >
-  <label class="custom-control-label" [autoFor]="checkbox">
+  <label class="custom-control-label" [referenceId]="checkbox">
     <ng-container *ngTemplateOutlet="labelTemplate || defaultLabelTemplate; context: {'$implicit': option}"></ng-container>
   </label>
 </div>
