@@ -23,7 +23,9 @@ function log(...args: any[]) {
   // nop
 }
 
-export function Cache(maxAgeMs) {
+const DEFAULT_CACHE_DURATION = 150;
+
+export function Cache(maxAgeMs = DEFAULT_CACHE_DURATION) {
   const cache: CacheEntry[] = [];
 
   return (target: any, key: any, descriptor: any) => {
