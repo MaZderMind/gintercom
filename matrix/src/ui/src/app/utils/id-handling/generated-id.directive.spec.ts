@@ -1,15 +1,12 @@
 import {GeneratedIdDirective} from './generated-id.directive';
 
 describe('GeneratedIdDirective', () => {
-  let elementSpy;
-  let elementRef;
+  let element: HTMLElement;
   let directive: GeneratedIdDirective;
 
   beforeEach(() => {
-    elementSpy = jasmine.createSpyObj('element', ['setAttribute']);
-    elementRef = {nativeElement: elementSpy};
-
-    directive = new GeneratedIdDirective(elementRef);
+    element = document.createElement('div');
+    directive = new GeneratedIdDirective({nativeElement: element});
   });
 
   it('should create an instance', () => {
@@ -18,19 +15,23 @@ describe('GeneratedIdDirective', () => {
 
   it('should generate an id', () => {
     directive.ngOnInit();
-    expect(elementSpy.setAttribute).toHaveBeenCalledWith('id', jasmine.stringMatching(/^n[0-9]+$/));
+    expect(element.getAttribute('id')).toMatch(/^n[0-9]+$/);
   });
 
   it('should generate different ids for each Element', () => {
-    directive.ngOnInit();
-    const arg1 = elementSpy.setAttribute.calls.mostRecent().args[1];
+    const element1 = document.createElement('div');
+    const directive1 = new GeneratedIdDirective({nativeElement: element1});
+    directive1.ngOnInit();
 
-    const directive2 = new GeneratedIdDirective(elementRef);
+    const element2 = document.createElement('div');
+    const directive2 = new GeneratedIdDirective({nativeElement: element2});
     directive2.ngOnInit();
-    const arg2 = elementSpy.setAttribute.calls.mostRecent().args[1];
 
-    expect(arg1).toMatch(/^n[0-9]+$/);
-    expect(arg2).toMatch(/^n[0-9]+$/);
-    expect(arg1).not.toEqual(arg2);
+    const id1 = element1.getAttribute('id');
+    const id2 = element2.getAttribute('id');
+    expect(id1).toMatch(/^n[0-9]+$/);
+    expect(id2).toMatch(/^n[0-9]+$/);
+
+    expect(id1).not.toEqual(id2);
   });
 });

@@ -2,14 +2,11 @@ import {AutofocusDirective} from 'src/app/utils/autofocus.directive';
 
 describe('AutofocusDirective', () => {
   let elementSpy;
-  let elementRef;
   let directive: AutofocusDirective;
 
   beforeEach(() => {
     elementSpy = jasmine.createSpyObj('element', ['focus']);
-    elementRef = {nativeElement: elementSpy};
-
-    directive = new AutofocusDirective(elementRef);
+    directive = new AutofocusDirective({nativeElement: elementSpy});
   });
 
   it('should create an instance', () => {
