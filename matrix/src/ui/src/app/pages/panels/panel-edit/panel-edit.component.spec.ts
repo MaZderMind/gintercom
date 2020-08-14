@@ -4,7 +4,6 @@ import {PanelEditComponent} from './panel-edit.component';
 import {ActivatedRoute} from '@angular/router';
 import {EMPTY, Subscription} from 'rxjs';
 import {anyFunction, instance, mock, when} from 'ts-mockito';
-import {GroupsService} from 'src/app/services/groups/groups.service';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
 import {PanelsService} from 'src/app/services/panels/panels.service';
 
