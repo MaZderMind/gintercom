@@ -1,16 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { GroupMultiSelectComponent } from './group-multi-select.component';
+import {GroupMultiSelectComponent} from './group-multi-select.component';
+import {instance, mock, when} from 'ts-mockito';
+import {GroupsService} from 'src/app/services/groups/groups.service';
 
 describe('GroupMultiSelectComponent', () => {
   let component: GroupMultiSelectComponent;
   let fixture: ComponentFixture<GroupMultiSelectComponent>;
+  let groupsService: GroupsService;
 
   beforeEach(async(() => {
+    groupsService = mock(GroupsService);
+    when(groupsService.getConfiguredGroups()).thenResolve([]);
+
     TestBed.configureTestingModule({
-      declarations: [ GroupMultiSelectComponent ]
-    })
-    .compileComponents();
+      declarations: [GroupMultiSelectComponent],
+      providers: [
+        {provide: GroupsService, useFactory: () => instance(groupsService)},
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

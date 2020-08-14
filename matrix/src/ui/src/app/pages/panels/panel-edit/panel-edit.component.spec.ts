@@ -2,16 +2,31 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {PanelEditComponent} from './panel-edit.component';
 import {ActivatedRoute} from '@angular/router';
-import {EMPTY} from 'rxjs';
+import {EMPTY, Subscription} from 'rxjs';
+import {anyFunction, instance, mock, when} from 'ts-mockito';
+import {GroupsService} from 'src/app/services/groups/groups.service';
+import {UiUpdateService} from 'src/app/services/ui-update.service';
+import {PanelsService} from 'src/app/services/panels/panels.service';
 
 describe('PanelEditComponent', () => {
   let component: PanelEditComponent;
   let fixture: ComponentFixture<PanelEditComponent>;
 
+  let panelService: PanelsService;
+  let uiUpdateService: UiUpdateService;
+
   beforeEach(async(() => {
+    panelService = mock(PanelsService);
+    when(panelService.getConfiguredPanels()).thenResolve([]);
+
+    uiUpdateService = mock(UiUpdateService);
+    when(uiUpdateService.subscribe(anyFunction())).thenReturn(new Subscription());
+
     TestBed.configureTestingModule({
       declarations: [PanelEditComponent],
       providers: [
+        {provide: PanelsService, useFactory: () => instance(panelService)},
+        {provide: UiUpdateService, useFactory: () => instance(uiUpdateService)},
         {
           provide: ActivatedRoute, useValue: {
             paramMap: EMPTY,
