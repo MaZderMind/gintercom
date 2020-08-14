@@ -28,7 +28,7 @@ class ExampleService {
   }
 }
 
-fdescribe('cache-decorator', () => {
+describe('cache-decorator', () => {
   let exampleService: ExampleService;
 
   beforeEach(() => {

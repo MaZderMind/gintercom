@@ -1,6 +1,6 @@
 import {AutofocusDirective} from 'src/app/utils/autofocus.directive';
 
-describe('FocusDirective', () => {
+describe('AutofocusDirective', () => {
   let elementSpy;
   let elementRef;
   let directive: AutofocusDirective;
@@ -11,6 +11,7 @@ describe('FocusDirective', () => {
 
     directive = new AutofocusDirective(elementRef);
   });
+
   it('should create an instance', () => {
     expect(directive).toBeTruthy();
   });
