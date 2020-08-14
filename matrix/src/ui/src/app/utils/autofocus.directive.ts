@@ -4,19 +4,15 @@ import {AfterViewInit, Directive, ElementRef, Input} from '@angular/core';
   selector: '[autofocus]'
 })
 export class AutofocusDirective implements AfterViewInit {
-  private doAutofocus = true;
+  @Input()
+  autofocus = true;
 
   constructor(private el: ElementRef) {
   }
 
   ngAfterViewInit() {
-    if (this.doAutofocus) {
+    if (this.autofocus) {
       this.el.nativeElement.focus();
     }
-  }
-
-  @Input()
-  set autofocus(condition: boolean) {
-    this.doAutofocus = condition;
   }
 }
