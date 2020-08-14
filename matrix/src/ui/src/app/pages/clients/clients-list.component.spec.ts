@@ -6,6 +6,7 @@ import {anyFunction, instance, mock, when} from 'ts-mockito';
 import {ActivatedRoute} from '@angular/router';
 import {of, Subscription} from 'rxjs';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
+import {CommonModule} from '@angular/common';
 
 describe('ClientsListComponent', () => {
   let component: ClientsListComponent;
@@ -31,8 +32,7 @@ describe('ClientsListComponent', () => {
           }
         },
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

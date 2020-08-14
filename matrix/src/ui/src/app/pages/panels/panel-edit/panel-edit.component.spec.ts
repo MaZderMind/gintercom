@@ -6,6 +6,8 @@ import {EMPTY, Subscription} from 'rxjs';
 import {anyFunction, instance, mock, when} from 'ts-mockito';
 import {UiUpdateService} from 'src/app/services/ui-update.service';
 import {PanelsService} from 'src/app/services/panels/panels.service';
+import {MockComponent} from 'ng-mocks';
+import {GroupMultiSelectComponent} from 'src/app/components/group-multi-select/group-multi-select.component';
 
 describe('PanelEditComponent', () => {
   let component: PanelEditComponent;
@@ -22,7 +24,10 @@ describe('PanelEditComponent', () => {
     when(uiUpdateService.subscribe(anyFunction())).thenReturn(new Subscription());
 
     TestBed.configureTestingModule({
-      declarations: [PanelEditComponent],
+      declarations: [
+        PanelEditComponent,
+        MockComponent(GroupMultiSelectComponent),
+      ],
       providers: [
         {provide: PanelsService, useFactory: () => instance(panelService)},
         {provide: UiUpdateService, useFactory: () => instance(uiUpdateService)},
