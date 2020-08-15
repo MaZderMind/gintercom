@@ -34,6 +34,7 @@ import {CheckboxMultiSelectComponent} from './components/checkbox-multi-select/c
 import {GroupMultiSelectComponent} from './components/group-multi-select/group-multi-select.component';
 import {GeneratedIdDirective} from './utils/id-handling/generated-id.directive';
 import {ReferenceIdDirective} from 'src/app/utils/id-handling/reference-id';
+import {ButtonsEditorComponent} from './components/buttons-editor/buttons-editor.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import {ReferenceIdDirective} from 'src/app/utils/id-handling/reference-id';
     GroupMultiSelectComponent,
     GeneratedIdDirective,
     ReferenceIdDirective,
+    ButtonsEditorComponent,
   ],
   imports: [
     BrowserModule,

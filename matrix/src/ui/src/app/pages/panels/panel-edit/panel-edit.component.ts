@@ -14,7 +14,8 @@ export class PanelEditComponent implements OnInit {
     display: new FormControl(''),
 
     rxGroups: new FormControl([]),
-    txGroups: new FormControl([])
+    txGroups: new FormControl([]),
+    buttons: new FormControl([])
   });
 
   panelId: string;
@@ -28,7 +29,6 @@ export class PanelEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.route.paramMap.subscribe(params => {
       this.panelId = params.get('id');
 

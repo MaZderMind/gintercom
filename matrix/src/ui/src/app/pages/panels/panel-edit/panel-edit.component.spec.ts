@@ -8,6 +8,7 @@ import {UiUpdateService} from 'src/app/services/ui-update.service';
 import {PanelsService} from 'src/app/services/panels/panels.service';
 import {MockComponent} from 'ng-mocks';
 import {GroupMultiSelectComponent} from 'src/app/components/group-multi-select/group-multi-select.component';
+import {ButtonsEditorComponent} from 'src/app/components/buttons-editor/buttons-editor.component';
 
 describe('PanelEditComponent', () => {
   let component: PanelEditComponent;
@@ -27,6 +28,7 @@ describe('PanelEditComponent', () => {
       declarations: [
         PanelEditComponent,
         MockComponent(GroupMultiSelectComponent),
+        MockComponent(ButtonsEditorComponent),
       ],
       providers: [
         {provide: PanelsService, useFactory: () => instance(panelService)},

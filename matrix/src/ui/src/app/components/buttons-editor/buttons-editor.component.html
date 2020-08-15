@@ -1,0 +1,27 @@
+<ul class="list-group mb-3" *ngIf="buttons.length > 0">
+  <li class="list-group-item" *ngFor="let buttonControl of buttons.controls">
+    <div class="row" [formGroup]="buttonControl">
+
+      <div class="col-6">
+        <div class="form-group">
+          <label class="d-block">
+            Panel-Id
+            <input type="text" class="form-control" formControlName="id">
+          </label>
+          <small class="form-text text-muted">The Panel-Id is used to uniquely reference this panel.</small>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label class="d-block">
+            Display-Name
+            <input type="text" class="form-control" formControlName="display">
+          </label>
+          <small class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
+        </div>
+      </div>
+
+    </div>
+  </li>
+</ul>
+<button type="button" (click)="addButtonBottom()" class="btn btn-secondary">Add Button</button>
