@@ -45,7 +45,7 @@ export class GroupMultiSelectComponent implements OnInit, ControlValueAccessor {
     this.multiselect.setDisabledState(isDisabled);
   }
 
-  writeValue(obj: any): void {
+  writeValue(obj: string[]): void {
     this.multiselect.writeValue(obj);
   }
 }

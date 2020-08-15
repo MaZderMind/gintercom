@@ -39,7 +39,7 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
-  writeValue(obj: any): void {
+  writeValue(obj: any[]): void {
     this.selectedOptions = obj;
   }
 
