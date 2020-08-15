@@ -18,9 +18,6 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
   options: any[] = [];
 
   @Input()
-  equalityPredicate: (a: any, b: any) => boolean;
-
-  @Input()
   valueGetter: (option: any) => any;
 
   @ContentChild(TemplateRef)
@@ -61,8 +58,6 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
   isOptionActive(option: any) {
     const value = this.valueGetter ? this.valueGetter(option) : option;
 
-    return this.equalityPredicate ?
-      this.selectedOptions.some(v => this.equalityPredicate(v, value)) :
-      this.selectedOptions.includes(value);
+    return this.selectedOptions.includes(value);
   }
 }
