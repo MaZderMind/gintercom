@@ -1,4 +1,5 @@
 import {Directive, ElementRef, EventEmitter, HostListener, Output} from '@angular/core';
+import {ControlContainer} from '@angular/forms';
 
 @Directive({
   selector: '[validateOnSubmit]'
@@ -8,16 +9,15 @@ export class ValidateOnSubmitDirective {
   @Output()
   validSubmit = new EventEmitter();
 
-  constructor(private el: ElementRef) {
+  constructor(private el: ElementRef, private controlContainer: ControlContainer) {
     el.nativeElement.noValidate = true;
   }
 
   @HostListener('submit', ['$event'])
   onSubmit($event: UIEvent) {
-    const classList: DOMTokenList = this.el.nativeElement.classList;
-    classList.add('was-validated');
+    this.controlContainer.control.markAllAsTouched();
 
-    if (!classList.contains('ng-invalid')) {
+    if (this.controlContainer.valid) {
       this.validSubmit.emit($event);
     }
   }

@@ -1,6 +1,8 @@
 <div class="custom-control custom-checkbox" *ngFor="let option of options; index as i">
   <input
     class="custom-control-input"
+    [class.is-valid]="showValid"
+    [class.is-invalid]="showInvalid"
     type="checkbox"
     generatedId
     #checkbox

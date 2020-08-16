@@ -35,7 +35,8 @@ import {GroupMultiSelectComponent} from './components/group-multi-select/group-m
 import {GeneratedIdDirective} from './utils/id-handling/generated-id.directive';
 import {ReferenceIdDirective} from 'src/app/utils/id-handling/reference-id';
 import {ButtonsEditorComponent} from './components/buttons-editor/buttons-editor.component';
-import { ButtonEditorComponent } from './components/buttons-editor/button-editor/button-editor.component';
+import {ButtonEditorComponent} from './components/buttons-editor/button-editor/button-editor.component';
+import {BootstrapFormValidationFieldAdapterDirective} from 'src/app/utils/bootstrap-form-validation-adapter/bootstrap-form-validation-field-adapter.directive';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { ButtonEditorComponent } from './components/buttons-editor/button-editor
     ReferenceIdDirective,
     ButtonsEditorComponent,
     ButtonEditorComponent,
+    BootstrapFormValidationFieldAdapterDirective,
   ],
   imports: [
     BrowserModule,

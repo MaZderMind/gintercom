@@ -15,7 +15,7 @@ export class PanelEditComponent implements OnInit {
     display: new FormControl(''),
 
     rxGroups: new FormControl([]),
-    txGroups: new FormControl([]),
+    txGroups: new FormControl([], Validators.required),
     buttons: ButtonsEditorComponent.createControl(),
   });
 

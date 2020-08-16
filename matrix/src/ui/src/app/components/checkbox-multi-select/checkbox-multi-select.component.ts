@@ -1,5 +1,5 @@
 import {Component, ContentChild, Input, TemplateRef} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {ControlContainer, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
 import * as _ from 'lodash';
 
 @Component({
@@ -27,12 +27,17 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
   isDisabled = false;
 
   private selectedOptions = [];
+  private onTouched: any = () => null;
+
+  constructor(private control: NgControl) {
+  }
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
   }
 
   registerOnTouched(fn: any): void {
+    this.onTouched = fn;
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -53,11 +58,20 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
       _.pull(this.selectedOptions, value);
     }
     this.onChange(this.selectedOptions);
+    this.onTouched();
   }
 
   isOptionActive(option: any) {
     const value = this.valueGetter ? this.valueGetter(option) : option;
 
     return this.selectedOptions.includes(value);
+  }
+
+  get showValid() {
+    return this.control.touched && this.control.valid;
+  }
+
+  get showInvalid() {
+    return this.control.touched && !this.control.valid;
   }
 }
