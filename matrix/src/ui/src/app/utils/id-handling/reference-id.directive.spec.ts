@@ -21,7 +21,7 @@ describe('ReferenceIdDirective', () => {
   });
 
   it('should copy referenced id into for-attribute', () => {
-    directive.ngOnInit();
+    directive.ngAfterViewInit();
 
     const forAttribute = targetElement.getAttribute('for');
     expect(forAttribute).toEqual(THE_ID);
@@ -29,7 +29,7 @@ describe('ReferenceIdDirective', () => {
 
   it('should accept custom target attribute', () => {
     directive.attributeName = 'aria-labelledby';
-    directive.ngOnInit();
+    directive.ngAfterViewInit();
 
     const ariaAttribute = targetElement.getAttribute('aria-labelledby');
     expect(ariaAttribute).toEqual(THE_ID);

@@ -1,9 +1,9 @@
-import {Directive, ElementRef, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, Input} from '@angular/core';
 
 @Directive({
   selector: '[referenceId]'
 })
-export class ReferenceIdDirective implements OnInit {
+export class ReferenceIdDirective implements AfterViewInit {
   @Input('referenceId')
   referencedElement: HTMLElement;
 
@@ -13,7 +13,7 @@ export class ReferenceIdDirective implements OnInit {
   constructor(private targetElement: ElementRef) {
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.targetElement.nativeElement.setAttribute(this.attributeName,
       this.referencedElement.getAttribute('id'));
   }
