@@ -25,7 +25,7 @@ import {PanelEditComponent} from './pages/panels/panel-edit/panel-edit.component
 import {ClientViewComponent} from 'src/app/pages/clients/client-view/client-view.component';
 import {InjectableRxStompConfig, RxStompService, rxStompServiceFactory} from '@stomp/ng2-stompjs';
 import {GroupEditDialogComponent} from 'src/app/pages/groups/group-edit-dialog/group-edit-dialog.component';
-import {ValidateOnSubmitDirective} from './utils/validate-on-submit.directive';
+import {ValidSubmitDirective} from 'src/app/utils/valid-submit.directive';
 import {MessagesComponent} from 'src/app/messages/messages.component';
 import {HttpErrorShowMessageInterceptor} from 'src/app/messages/http-error-show-message-interceptor';
 import {PreventDefaultDirective} from 'src/app/utils/prevent-default.directive';
@@ -36,7 +36,8 @@ import {GeneratedIdDirective} from './utils/id-handling/generated-id.directive';
 import {ReferenceIdDirective} from 'src/app/utils/id-handling/reference-id';
 import {ButtonsEditorComponent} from './components/buttons-editor/buttons-editor.component';
 import {ButtonEditorComponent} from './components/buttons-editor/button-editor/button-editor.component';
-import {BootstrapFormValidationFieldAdapterDirective} from 'src/app/utils/bootstrap-form-validation-adapter/bootstrap-form-validation-field-adapter.directive';
+import {BootstrapValidateFieldAdapterDirective} from 'src/app/utils/bootstrap-form-validation-adapter/bootstrap-validate-field-adapter.directive';
+import {BootstrapValidateDirective} from './utils/bootstrap-form-validation-adapter/bootstrap-validate.directive';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,7 @@ import {BootstrapFormValidationFieldAdapterDirective} from 'src/app/utils/bootst
     PanelEditComponent,
     ClientViewComponent,
     GroupEditDialogComponent,
-    ValidateOnSubmitDirective,
+    ValidSubmitDirective,
     MessagesComponent,
     PreventDefaultDirective,
     AutofocusDirective,
@@ -67,7 +68,8 @@ import {BootstrapFormValidationFieldAdapterDirective} from 'src/app/utils/bootst
     ReferenceIdDirective,
     ButtonsEditorComponent,
     ButtonEditorComponent,
-    BootstrapFormValidationFieldAdapterDirective,
+    BootstrapValidateFieldAdapterDirective,
+    BootstrapValidateDirective,
   ],
   imports: [
     BrowserModule,

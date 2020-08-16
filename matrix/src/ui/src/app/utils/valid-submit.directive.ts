@@ -2,9 +2,9 @@ import {Directive, ElementRef, EventEmitter, HostListener, Output} from '@angula
 import {ControlContainer} from '@angular/forms';
 
 @Directive({
-  selector: '[validateOnSubmit]'
+  selector: '[validSubmit]'
 })
-export class ValidateOnSubmitDirective {
+export class ValidSubmitDirective {
 
   @Output()
   validSubmit = new EventEmitter();
