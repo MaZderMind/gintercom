@@ -1,6 +1,5 @@
-<ul class="list-group mb-3" *ngIf="buttons.length > 0">
-  <li class="list-group-item" *ngFor="let buttonControl of buttons.controls">
-    <app-button-editor [control]="buttonControl"></app-button-editor>
-  </li>
-</ul>
+<div *ngFor="let buttonControl of buttons.controls; let index = index" class="mb-2">
+  <app-button-editor [control]="buttonControl" [hideLabels]="index > 0"></app-button-editor>
+</div>
+
 <button type="button" (click)="addButton()" class="btn btn-secondary">Add Button</button>

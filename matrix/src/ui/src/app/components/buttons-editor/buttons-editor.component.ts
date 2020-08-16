@@ -20,6 +20,6 @@ export class ButtonsEditorComponent {
   }
 
   addButton() {
-    this.buttons.push(ButtonEditorComponent.createControl());
+    this.buttons.push(ButtonEditorComponent.createControl(this.buttons.length + 1));
   }
 }

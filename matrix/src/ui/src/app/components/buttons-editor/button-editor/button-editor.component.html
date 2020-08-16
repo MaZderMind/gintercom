@@ -1,23 +1,29 @@
-<div class="row" [formGroup]="buttonForm">
+<ng-container [formGroup]="buttonForm">
+  <div class="form-row">
+    <div class="col-1">
+      <label [class.d-none]="hideLabels" [referenceId]="id">Id</label>
+      <input type="text" class="form-control" formControlName="id" placeholder="" generatedId #id>
+    </div>
 
-  <div class="col-4">
-    <div class="form-group">
-      <label class="d-block">
-        Button-Id
-        <input type="text" class="form-control" formControlName="id">
-      </label>
-      <small class="form-text text-muted">The Panel-Id is used to uniquely reference this panel.</small>
+    <div class="col-4">
+      <label [class.d-none]="hideLabels" [referenceId]="display">Display-Name</label>
+      <input type="text" class="form-control" formControlName="display" [placeholder]="getDisplayPlaceholder()" generatedId #display>
+    </div>
+
+    <div class="col-3">
+      <label [class.d-none]="hideLabels" [referenceId]="targetType">Target-Type</label>
+      <select class="form-control" formControlName="targetType" generatedId #targetType>
+        <option value="GROUP">Group</option>
+        <option value="PANEL">Panel</option>
+      </select>
+    </div>
+
+    <div class="col-4">
+      <label [class.d-none]="hideLabels" [referenceId]="target">Target</label>
+      <select class="form-control" formControlName="target" generatedId #target>
+        <option></option>
+        <option *ngFor="let target of targets" [value]="target.id">{{ target.display }}</option>
+      </select>
     </div>
   </div>
-
-  <div class="col-8">
-    <div class="form-group">
-      <label class="d-block">
-        Display-Name
-        <input type="text" class="form-control" formControlName="display" placeholder="(Optional)">
-      </label>
-      <small class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
-    </div>
-  </div>
-
-</div>
+</ng-container>
