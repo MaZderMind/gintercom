@@ -35,6 +35,7 @@ import {GroupMultiSelectComponent} from './components/group-multi-select/group-m
 import {GeneratedIdDirective} from './utils/id-handling/generated-id.directive';
 import {ReferenceIdDirective} from 'src/app/utils/id-handling/reference-id';
 import {ButtonsEditorComponent} from './components/buttons-editor/buttons-editor.component';
+import { ButtonEditorComponent } from './components/buttons-editor/button-editor/button-editor.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import {ButtonsEditorComponent} from './components/buttons-editor/buttons-editor
     GeneratedIdDirective,
     ReferenceIdDirective,
     ButtonsEditorComponent,
+    ButtonEditorComponent,
   ],
   imports: [
     BrowserModule,

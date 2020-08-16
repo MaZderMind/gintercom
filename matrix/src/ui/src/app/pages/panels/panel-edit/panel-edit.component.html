@@ -47,5 +47,8 @@
     {{ isCreation() ? 'Add Panel' : 'Save Panel' }}
   </button>
 
-  {{ foo | json }}
+  <pre>
+  {{ formValue | json }}
+  </pre>
+  Status: {{ formStatus }}
 </form>

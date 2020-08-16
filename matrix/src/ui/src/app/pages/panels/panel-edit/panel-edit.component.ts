@@ -20,7 +20,8 @@ export class PanelEditComponent implements OnInit {
 
   panelId: string;
 
-  foo: any;
+  formValue: any;
+  formStatus: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,8 +42,10 @@ export class PanelEditComponent implements OnInit {
       }
     });
 
-    this.panelEditForm.valueChanges.subscribe(value => this.foo = value);
-    this.foo = this.panelEditForm.value;
+    this.panelEditForm.valueChanges.subscribe(value => this.formValue = value);
+    this.panelEditForm.statusChanges.subscribe(status => this.formStatus = status);
+    this.formValue = this.panelEditForm.value;
+    this.formStatus = this.panelEditForm.status;
   }
 
   isCreation(): boolean {

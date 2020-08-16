@@ -1,0 +1,23 @@
+<div class="row" [formGroup]="buttonForm">
+
+  <div class="col-4">
+    <div class="form-group">
+      <label class="d-block">
+        Button-Id
+        <input type="text" class="form-control" formControlName="id">
+      </label>
+      <small class="form-text text-muted">The Panel-Id is used to uniquely reference this panel.</small>
+    </div>
+  </div>
+
+  <div class="col-8">
+    <div class="form-group">
+      <label class="d-block">
+        Display-Name
+        <input type="text" class="form-control" formControlName="display" placeholder="(Optional)">
+      </label>
+      <small class="form-text text-muted">The Display-Name is used to represent the Panel to End-Users.</small>
+    </div>
+  </div>
+
+</div>
