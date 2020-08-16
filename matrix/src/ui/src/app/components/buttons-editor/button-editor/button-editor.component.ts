@@ -1,25 +1,23 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AbstractSubForm} from 'src/app/components/abstract-sub-form';
 
 @Component({
   selector: 'app-button-editor',
   templateUrl: './button-editor.component.html',
   styleUrls: ['./button-editor.component.scss'],
-  providers: AbstractSubForm.providers(ButtonEditorComponent),
 })
-export class ButtonEditorComponent extends AbstractSubForm {
-  public static readonly INITIAL_VALUE = {
-    id: '',
-    display: ''
-  };
+export class ButtonEditorComponent {
+  @Input()
+  control: AbstractControl;
 
-  buttonForm = new FormGroup({
-    id: new FormControl(null, Validators.required),
-    display: new FormControl('')
-  });
+  get buttonForm(): FormGroup {
+    return this.control as FormGroup;
+  }
 
-  getSubForm(): AbstractControl {
-    return this.buttonForm;
+  static createControl(): AbstractControl {
+    return new FormGroup({
+      id: new FormControl(null, Validators.required),
+      display: new FormControl('')
+    });
   }
 }

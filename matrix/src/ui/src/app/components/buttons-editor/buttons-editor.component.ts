@@ -1,22 +1,25 @@
-import {Component} from '@angular/core';
-import {AbstractControl, FormArray, FormControl, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {AbstractSubForm} from 'src/app/components/abstract-sub-form';
+import {Component, Input} from '@angular/core';
+import {AbstractControl, FormArray} from '@angular/forms';
 import {ButtonEditorComponent} from 'src/app/components/buttons-editor/button-editor/button-editor.component';
 
 @Component({
   selector: 'app-buttons-editor',
   templateUrl: './buttons-editor.component.html',
   styleUrls: ['./buttons-editor.component.scss'],
-  providers: AbstractSubForm.providers(ButtonsEditorComponent),
 })
-export class ButtonsEditorComponent extends AbstractSubForm {
-  buttons = new FormArray([]);
+export class ButtonsEditorComponent {
+  @Input()
+  control: AbstractControl;
 
-  addButtonBottom() {
-    this.buttons.push(new FormControl());
+  get buttons(): FormArray {
+    return this.control as FormArray;
   }
 
-  getSubForm(): AbstractControl {
-    return this.buttons;
+  static createControl(): AbstractControl {
+    return new FormArray([]);
+  }
+
+  addButton() {
+    this.buttons.push(ButtonEditorComponent.createControl());
   }
 }

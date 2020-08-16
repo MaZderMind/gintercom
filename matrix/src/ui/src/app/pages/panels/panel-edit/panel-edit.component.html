@@ -39,7 +39,7 @@
 
   <label>Buttons</label>
   <app-buttons-editor
-    formControlName="buttons"
+    [control]="panelEditForm.get('buttons')"
     class="d-block mb-3"
   ></app-buttons-editor>
 

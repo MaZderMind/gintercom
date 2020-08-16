@@ -4,15 +4,25 @@
   color: white;
 }
 
+form.has-validation {
+  .ng-touched.ng-invalid {
+    @extend .is-invalid;
+  }
 
-form.has-validation .ng-touched.ng-invalid {
-  @extend .is-invalid;
+  .ng-touched.ng-valid {
+    @extend .is-valid;
+  }
 }
 
-form.has-validation .ng-touched.ng-valid {
-  @extend .is-valid;
-}
+form.was-validated {
+  .ng-invalid {
+    @extend .is-invalid;
+  }
 
+  .ng-valid {
+    @extend .is-valid;
+  }
+}
 
 .cursor-pointer {
   cursor: pointer;
