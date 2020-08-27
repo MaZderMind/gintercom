@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PanelsService} from 'src/app/services/panels/panels.service';
-import {ButtonsEditorComponent} from 'src/app/components/buttons-editor/buttons-editor.component';
+import {ButtonsEditorComponent} from 'src/app/pages/panels/components/buttons-editor/buttons-editor.component';
 
 @Component({
   selector: 'app-panel-edit',

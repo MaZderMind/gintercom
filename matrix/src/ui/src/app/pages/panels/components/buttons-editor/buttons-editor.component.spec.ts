@@ -2,7 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ButtonsEditorComponent} from './buttons-editor.component';
 import {MockComponent} from 'ng-mocks';
-import {ButtonEditorComponent} from 'src/app/components/buttons-editor/button-editor/button-editor.component';
+import {ButtonEditorComponent} from 'src/app/pages/panels/components/buttons-editor/button-editor/button-editor.component';
 
 describe('ButtonsEditorComponent', () => {
   let component: ButtonsEditorComponent;

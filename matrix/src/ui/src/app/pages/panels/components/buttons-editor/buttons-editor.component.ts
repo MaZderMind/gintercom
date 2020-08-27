@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {AbstractControl, FormArray} from '@angular/forms';
-import {ButtonEditorComponent} from 'src/app/components/buttons-editor/button-editor/button-editor.component';
+import {ButtonEditorComponent} from 'src/app/pages/panels/components/buttons-editor/button-editor/button-editor.component';
 import * as _ from 'lodash';
 
 @Component({

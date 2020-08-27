@@ -34,8 +34,8 @@ import {CheckboxMultiSelectComponent} from './components/checkbox-multi-select/c
 import {GroupMultiSelectComponent} from './components/group-multi-select/group-multi-select.component';
 import {GeneratedIdDirective} from './utils/id-handling/generated-id.directive';
 import {ReferenceIdDirective} from 'src/app/utils/id-handling/reference-id';
-import {ButtonsEditorComponent} from './components/buttons-editor/buttons-editor.component';
-import {ButtonEditorComponent} from './components/buttons-editor/button-editor/button-editor.component';
+import {ButtonsEditorComponent} from './pages/panels/components/buttons-editor/buttons-editor.component';
+import {ButtonEditorComponent} from './pages/panels/components/buttons-editor/button-editor/button-editor.component';
 import {BootstrapValidateFieldAdapterDirective} from 'src/app/utils/bootstrap-form-validation-adapter/bootstrap-validate-field-adapter.directive';
 import {BootstrapValidateDirective} from './utils/bootstrap-form-validation-adapter/bootstrap-validate.directive';
 
