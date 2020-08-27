@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {GroupsService} from 'src/app/services/groups/groups.service';
 import {PanelsService} from 'src/app/services/panels/panels.service';
@@ -15,7 +15,13 @@ export class ButtonEditorComponent implements OnInit {
   control: AbstractControl;
 
   @Input()
-  hideLabels = false;
+  showLabels = false;
+
+  @Input()
+  showDelete = false;
+
+  @Output()
+  delete = new EventEmitter<void>();
 
   targets: PanelInfoDto[] | GroupDto[];
 

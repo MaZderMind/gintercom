@@ -1,17 +1,17 @@
 <ng-container [formGroup]="buttonForm">
   <div class="form-row">
     <div class="col-1">
-      <label [class.d-none]="hideLabels" [referenceId]="id">Id</label>
+      <label [class.d-none]="!showLabels" [referenceId]="id">Id</label>
       <input type="text" class="form-control" formControlName="id" placeholder="" generatedId #id>
     </div>
 
     <div class="col-4">
-      <label [class.d-none]="hideLabels" [referenceId]="display">Display-Name</label>
+      <label [class.d-none]="!showLabels" [referenceId]="display">Display-Name</label>
       <input type="text" class="form-control" formControlName="display" [placeholder]="getDisplayPlaceholder()" generatedId #display>
     </div>
 
     <div class="col-3">
-      <label [class.d-none]="hideLabels" [referenceId]="targetType">Target-Type</label>
+      <label [class.d-none]="!showLabels" [referenceId]="targetType">Target-Type</label>
       <select class="form-control" formControlName="targetType" generatedId #targetType>
         <option value="GROUP">Group</option>
         <option value="PANEL">Panel</option>
@@ -19,11 +19,17 @@
     </div>
 
     <div class="col-4">
-      <label [class.d-none]="hideLabels" [referenceId]="target">Target</label>
-      <select class="form-control" formControlName="target" generatedId #target>
-        <option></option>
-        <option *ngFor="let target of targets" [value]="target.id">{{ target.display }}</option>
-      </select>
+      <label [class.d-none]="!showLabels" [referenceId]="target">Target</label>
+      <div class="d-flex">
+        <select class="form-control" formControlName="target" generatedId #target>
+          <option></option>
+          <option *ngFor="let target of targets" [value]="target.id">{{ target.display }}</option>
+        </select>
+
+        <button type="button" class="close ml-2" ngbTooltip="Delete Button-Config" (click)="delete.emit()" *ngIf="showDelete">
+          <i class="far fa-trash-alt"></i>
+        </button>
+      </div>
     </div>
   </div>
 </ng-container>
