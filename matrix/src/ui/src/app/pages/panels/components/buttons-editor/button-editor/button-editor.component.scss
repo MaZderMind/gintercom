@@ -1,0 +1,10 @@
+.btn-editor {
+  .btn.delete {
+    visibility: hidden;
+    padding: 0;
+  }
+
+  &:hover .btn.delete {
+    visibility: visible;
+  }
+}

@@ -38,6 +38,9 @@ import {ButtonsEditorComponent} from './pages/panels/components/buttons-editor/b
 import {ButtonEditorComponent} from './pages/panels/components/buttons-editor/button-editor/button-editor.component';
 import {BootstrapValidateFieldAdapterDirective} from 'src/app/utils/bootstrap-form-validation-adapter/bootstrap-validate-field-adapter.directive';
 import {BootstrapValidateDirective} from './utils/bootstrap-form-validation-adapter/bootstrap-validate.directive';
+import {ListgroupMultiSelectComponent} from './components/listgroup-multi-select/listgroup-multi-select.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ButtonSetsMultiSelectComponent } from './components/button-sets-multi-select/button-sets-multi-select.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +73,8 @@ import {BootstrapValidateDirective} from './utils/bootstrap-form-validation-adap
     ButtonEditorComponent,
     BootstrapValidateFieldAdapterDirective,
     BootstrapValidateDirective,
+    ListgroupMultiSelectComponent,
+    ButtonSetsMultiSelectComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,7 +84,8 @@ import {BootstrapValidateDirective} from './utils/bootstrap-form-validation-adap
     NgbModule,
     LineChartModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
   providers: [
     {

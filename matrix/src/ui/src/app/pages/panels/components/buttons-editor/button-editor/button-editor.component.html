@@ -1,4 +1,4 @@
-<ng-container [formGroup]="buttonForm">
+<div [formGroup]="buttonForm" class="btn-editor">
   <div class="form-row">
     <div class="col-1">
       <label [class.d-none]="!showLabels" [referenceId]="id">Id</label>
@@ -26,10 +26,10 @@
           <option *ngFor="let target of targets" [value]="target.id">{{ target.display }}</option>
         </select>
 
-        <button type="button" class="close ml-2" ngbTooltip="Delete Button-Config" (click)="delete.emit()" *ngIf="showDelete">
+        <button type="button" class="btn btn-link delete ml-2" ngbTooltip="Delete Button-Config" (click)="delete.emit()" *ngIf="showDelete">
           <i class="far fa-trash-alt"></i>
         </button>
       </div>
     </div>
   </div>
-</ng-container>
+</div>

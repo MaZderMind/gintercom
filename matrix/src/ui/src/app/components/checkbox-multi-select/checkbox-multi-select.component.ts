@@ -1,5 +1,5 @@
 import {Component, ContentChild, Input, TemplateRef} from '@angular/core';
-import {ControlContainer, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
 import * as _ from 'lodash';
 
 @Component({
@@ -23,10 +23,10 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
   @ContentChild(TemplateRef)
   labelTemplate: TemplateRef<any>;
 
-  private onChange: any;
   isDisabled = false;
-
   private selectedOptions = [];
+
+  private onChange: any = () => null;
   private onTouched: any = () => null;
 
   constructor(private control: NgControl) {
@@ -44,8 +44,8 @@ export class CheckboxMultiSelectComponent implements ControlValueAccessor {
     this.isDisabled = isDisabled;
   }
 
-  writeValue(obj: any[]): void {
-    this.selectedOptions = obj;
+  writeValue(selectedOptions: any[]): void {
+    this.selectedOptions = selectedOptions;
   }
 
   onCheckboxChange($event: Event, option: any) {

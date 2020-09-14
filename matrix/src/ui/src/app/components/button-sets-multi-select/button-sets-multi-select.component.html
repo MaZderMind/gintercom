@@ -1,0 +1,6 @@
+<app-listgroup-multi-select
+  [options]="buttonSets"
+  [valueGetter]="buttonSetValueGetter"
+>
+  <ng-template let-buttonSet>{{ buttonSet.id }} </ng-template>
+</app-listgroup-multi-select>

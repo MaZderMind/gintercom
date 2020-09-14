@@ -1,0 +1,30 @@
+<ul class="list-group" cdkDropList (cdkDropListDropped)="onItemDrop($event)">
+  <li
+    *ngFor="let option of selectedOptions"
+    class="list-group-item d-flex align-items-center"
+    cdkDrag
+  >
+    <ng-container *ngTemplateOutlet="labelTemplate || defaultLabelTemplate; context: {'$implicit': option}"></ng-container>
+
+    <button type="button" ngbTooltip="Delete {{ itemLabel }}" class="btn btn-link ml-auto delete" (click)="onDeleteClicked(option)">
+      <i class="far fa-trash-alt"></i>
+    </button>
+
+    <div class="drag-handle"></div>
+  </li>
+
+  <li class="list-group-item" *ngIf="availableOptions.length > 0">
+    <select class="form-control" generatedId (ngModelChange)="onItemToAddSelected($event)" [ngModel]="null">
+      <option selected [ngValue]="null">Select {{ itemLabel }} to add</option>
+      <option
+        *ngFor="let option of availableOptions"
+        [ngValue]="option"
+      >
+        <ng-container *ngTemplateOutlet="labelTemplate || defaultLabelTemplate; context: {'$implicit': option}"></ng-container>
+      </option>
+    </select>
+  </li>
+
+</ul>
+
+<ng-template #defaultLabelTemplate let-option>{{ option }}</ng-template>

@@ -1,8 +1,8 @@
 import {CommunicationTargetType} from 'src/app/services/communication-target-type';
 
-export interface ButtonEditDto {
+export interface ButtonDto {
   id: string;
-  display: string | null;
+  display: string;
   target: string;
   targetType: CommunicationTargetType;
 }

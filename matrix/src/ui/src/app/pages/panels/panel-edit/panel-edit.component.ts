@@ -3,6 +3,8 @@ import {ActivatedRoute} from '@angular/router';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {PanelsService} from 'src/app/services/panels/panels.service';
 import {ButtonsEditorComponent} from 'src/app/pages/panels/components/buttons-editor/buttons-editor.component';
+import {ButtonSetsService} from 'src/app/services/button-sets/button-sets.service';
+import {ButtonSetDto} from 'src/app/services/button-sets/button-set-dto';
 
 @Component({
   selector: 'app-panel-edit',
@@ -17,6 +19,9 @@ export class PanelEditComponent implements OnInit {
     rxGroups: new FormControl([], Validators.required),
     txGroups: new FormControl([]),
     buttons: ButtonsEditorComponent.createControl(),
+    buttonSets: new FormControl([
+      'helpdesk',
+    ]),
   });
 
   panelId: string;
