@@ -24,6 +24,6 @@ export class BootstrapValidateFieldAdapterDirective {
   get bootstrapValidationEnabled(): boolean {
     const el = this.el.nativeElement as HTMLElement;
     const form = el.closest('form');
-    return form && form.hasAttribute('bootstrapValidate');
+    return !el.hasAttribute('noBootstrapValidate') && form && form.hasAttribute('bootstrapValidate');
   }
 }

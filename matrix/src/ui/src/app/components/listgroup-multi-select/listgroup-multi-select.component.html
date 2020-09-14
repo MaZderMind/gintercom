@@ -13,8 +13,8 @@
     <div class="drag-handle"></div>
   </li>
 
-  <li class="list-group-item" *ngIf="availableOptions.length > 0">
-    <select class="form-control" generatedId (ngModelChange)="onItemToAddSelected($event)" [ngModel]="null">
+  <li class="list-group-item for-select" *ngIf="availableOptions.length > 0">
+    <select class="form-control" (ngModelChange)="onItemToAddSelected($event)" [ngModel]="null" noBootstrapValidate>
       <option selected [ngValue]="null">Select {{ itemLabel }} to add</option>
       <option
         *ngFor="let option of availableOptions"
